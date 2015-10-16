@@ -6,11 +6,7 @@
 
 
 <module rename-to='se7en'>
-	<replace-with class="com.manning.gwtia.ch15.client.mvp.ClientFactoryImpl">
-		   
-		<when-type-is class="com.manning.gwtia.ch15.client.mvp.ClientFactory" />
-		 
-	</replace-with>
+
 
 	<!-- Inherit the core Web Toolkit stuff. -->
 	<inherits name='com.google.gwt.user.User' />
