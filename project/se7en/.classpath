@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/gwtbootstrap3-0.9.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://gwtbootstrap3.github.io/gwtbootstrap3-demo/apidocs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/gwt-charts-0.9.10.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://gwt-charts.googlecode.com/svn/site/0.9.10/apidocs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/gwtbootstrap3-extras-0.9.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/vagrant/Dev/gwtbootstrap3-extras-0.9.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+</classpath>
