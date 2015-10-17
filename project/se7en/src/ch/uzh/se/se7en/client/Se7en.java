@@ -20,11 +20,12 @@ public class Se7en implements EntryPoint {
 		//The following Lines are just demo content
 		
 		Panel container = new Panel();
-		RootPanel.get().add(new NavigationBar());
+		NavigationBar navBar = new NavigationBar();
+		RootPanel.get().add(navBar);
 		RootPanel.get().add(container);
 		container.setPaddingTop(40);
 		
-		AppController app = new AppController();
+		AppController app = new AppController(navBar);
 		app.go(container);
 		History.fireCurrentHistoryState();
 		//Demo Content end

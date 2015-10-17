@@ -11,6 +11,8 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
+import ch.uzh.se.se7en.client.mvp.Tokens;
+
 public class NavigationBar extends Composite {
 
 	private static NavigationBarUiBinder uiBinder = GWT.create(NavigationBarUiBinder.class);
@@ -27,37 +29,57 @@ public class NavigationBar extends Composite {
 		barSetup();
 	}
 	
+	public void setActive(String navToken)
+	{
+		if (navToken.equals(Tokens.HOME))
+		{
+			updateNavigationBar(true, false, false);
+		}
+		else if (navToken.equals(Tokens.MAP))
+		{
+			updateNavigationBar(false, true, false);
+		}
+		else if (navToken.equals(Tokens.TABLE))
+		{
+			updateNavigationBar(false, false, true);
+		}
+	}
+	
 	private void barSetup()
 	{
 		homeNav.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				homeNav.setActive(true);
-				mapNav.setActive(false);
-				tableNav.setActive(false);
-				History.newItem("");
+				updateNavigationBar(true, false, false);
+				History.newItem(Tokens.HOME);
 			}
 		});
 		
 		mapNav.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				homeNav.setActive(false);
-				mapNav.setActive(true);
-				tableNav.setActive(false);
-				History.newItem("map");
+				updateNavigationBar(false, true, false);
+				History.newItem(Tokens.MAP);
 			}
 		});
 		
 		tableNav.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				homeNav.setActive(false);
-				mapNav.setActive(false);
-				tableNav.setActive(true);
-				History.newItem("table");
+				updateNavigationBar(false, false, true);
+				History.newItem(Tokens.TABLE);
 			}
 		});
+	}
+
+	private void updateNavigationBar(boolean isHomeActive, boolean isMapActive, boolean isTableActive)
+	{
+		homeNav.setFocus(false);
+		mapNav.setFocus(false);
+		tableNav.setFocus(false);
+		homeNav.setActive(isHomeActive);
+		mapNav.setActive(isMapActive);
+		tableNav.setActive(isTableActive);
 	}
 
 }
