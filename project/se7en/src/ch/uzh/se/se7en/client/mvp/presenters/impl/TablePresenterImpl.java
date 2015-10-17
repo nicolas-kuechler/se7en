@@ -1,15 +1,19 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 import ch.uzh.se.se7en.client.mvp.ClientFactory;
-import ch.uzh.se.se7en.client.mvp.events.TableDataReadyEvent;
-import ch.uzh.se.se7en.client.mvp.events.TableDataReadyHandler;
+import ch.uzh.se.se7en.client.mvp.LoadingStates;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
+import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class TablePresenterImpl implements TablePresenter {
@@ -23,9 +27,11 @@ public class TablePresenterImpl implements TablePresenter {
 	{
 		//FilmdataModel not setup
 		filmDataModel = clientFactory.getFilmDataModel();
+		filmDataModel.setPresenter(this); //needs to set itself as the presenter
 		eventBus = clientFactory.getEventBus();
 		this.tableView = tableView;
 		bind();
+		setLoadingState(LoadingStates.DEFAULT);
 	}
 	
 	@Override
@@ -37,15 +43,6 @@ public class TablePresenterImpl implements TablePresenter {
 	@Override
 	public void bind() {
 		tableView.setPresenter(this);
-		
-		//DEMO setup event handling, as soon as new table data is ready, this handler catches the event and updates the view.
-		eventBus.addHandler(TableDataReadyEvent.getType(), new TableDataReadyHandler(){
-			@Override
-			public void onTableDataReadyEvent(TableDataReadyEvent event) {
-				tableView.setTable(filmDataModel.getFilms());
-			}
-		});
-
 	}
 
 	@Override
@@ -54,6 +51,43 @@ public class TablePresenterImpl implements TablePresenter {
 		FilmFilter filter = new FilmFilter();
 		filmDataModel.search(filter);
 		//Demo code end
+	}
+
+	@Override
+	public void setLoadingState(String state) {
+		if (state.equals(LoadingStates.ERROR))
+		{
+			List<Film> error = new ArrayList<Film>(1);
+			Film stub = new Film();
+			stub.setName("Error Loading Data Please Try Again");
+			error.add(stub);
+			tableView.setTable(error);
+			tableView.setLoadingState(LoadingStates.ERROR);
+		}
+		else if(state.equals(LoadingStates.LOADING))
+		{
+			List<Film> loading = new ArrayList<Film>(1);
+			Film stub = new Film();
+			stub.setName("Loading");
+			loading.add(stub);
+			tableView.setTable(loading);
+			tableView.setLoadingState(LoadingStates.LOADING);
+		}
+		else if(state.equals(LoadingStates.SUCCESS))
+		{
+			tableView.setTable(filmDataModel.getFilms());
+			tableView.setLoadingState(LoadingStates.SUCCESS);
+		}
+		else if (state.equals(LoadingStates.DEFAULT))
+		{
+			List<Film> defList = new ArrayList<Film>(1);
+			Film stub = new Film();
+			stub.setName("No Search Results");
+			defList.add(stub);
+			tableView.setTable(defList);
+			tableView.setLoadingState(LoadingStates.DEFAULT);
+		}
+		
 	}
 
 }

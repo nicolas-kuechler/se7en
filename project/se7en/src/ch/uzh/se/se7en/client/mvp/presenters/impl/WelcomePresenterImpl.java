@@ -32,4 +32,10 @@ public class WelcomePresenterImpl implements WelcomePresenter {
 		welcomeView.setPresenter(this);
 	}
 
+	@Override
+	public void setLoadingState(String state) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

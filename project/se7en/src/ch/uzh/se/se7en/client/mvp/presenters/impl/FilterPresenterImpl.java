@@ -57,4 +57,10 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 	}
 
+	@Override
+	public void setLoadingState(String state) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

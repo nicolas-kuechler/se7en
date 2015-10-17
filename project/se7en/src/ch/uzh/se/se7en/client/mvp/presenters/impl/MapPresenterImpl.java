@@ -19,6 +19,8 @@ public class MapPresenterImpl implements MapPresenter {
 	public MapPresenterImpl(final MapView mapView)
 	{
 		//filmDataModel needs to be set up
+		filmDataModel = clientFactory.getFilmDataModel();
+		filmDataModel.setPresenter(this);
 		this.mapView = mapView;
 		eventBus = clientFactory.getEventBus();
 		bind();
@@ -39,6 +41,12 @@ public class MapPresenterImpl implements MapPresenter {
 	public void onNewMapDataNeeded() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void setLoadingState(String state) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

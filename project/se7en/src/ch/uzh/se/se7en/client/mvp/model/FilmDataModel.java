@@ -10,8 +10,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.charts.client.DataTable;
 
 import ch.uzh.se.se7en.client.mvp.ClientFactory;
-import ch.uzh.se.se7en.client.mvp.events.LoadingTableEvent;
-import ch.uzh.se.se7en.client.mvp.events.TableDataReadyEvent;
+import ch.uzh.se.se7en.client.mvp.LoadingStates;
+import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
+import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
+import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.rpc.FilmServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -40,11 +42,30 @@ public class FilmDataModel {
 	private EventBus eventBus;
 	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
 	
+	private TablePresenter tablePresenter;
+	private MapPresenter mapPresenter;
+	private FilterPresenter filterPresenter;
+	
 	
 	public FilmDataModel()
 	{
 		filmService = clientFactory.getFilmServiceAsync();
 		eventBus = clientFactory.getEventBus();
+	}
+	
+	public void setPresenter(TablePresenter presenter)
+	{
+		tablePresenter = presenter;
+	}
+	
+	public void setPresenter(MapPresenter presenter)
+	{
+		mapPresenter = presenter;
+	}
+	
+	public void setPresenter(FilterPresenter presenter)
+	{
+		filterPresenter = presenter;
 	}
 	
 	/**
@@ -64,37 +85,39 @@ public class FilmDataModel {
 		//2. call rpc Service getFilmList()
 		
 		//2.1 Fire Loading Table Event
-		eventBus.fireEvent(new LoadingTableEvent()); //ATM it is not implemented, but within the table there could be an information about the loading process
+		tablePresenter.setLoadingState(LoadingStates.LOADING);
 		filmService.getFilmList(filter, new AsyncCallback<List<Film>>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				//ERROR HANDLING NEEDS TO BE DEFINED
-				Window.alert("Error getFilmList: ERROR HANDLING NEEDS TO BE DEFINED");
+				tablePresenter.setLoadingState(LoadingStates.ERROR);
+				//Development Error Handling could be implemented here (Log to Console)
 			}
 			@Override
 			public void onSuccess(List<Film> result) {
 				//3. setFilm List here
 				films = result;
-				eventBus.fireEvent(new TableDataReadyEvent());
-				
+				tablePresenter.setLoadingState(LoadingStates.SUCCESS);
 			}
 		});
 		
 		//4. Adjust Filter
 		FilmFilter countryFilter = adjustFilter(filter, Country.YEAR_OFFSET, clientFactory.getCurrentYear(), filter.getCountries()); //TBD IF COUNTRY FILTER APPLIES FOR MAP ASWELL
 		
-		//5. call rpc Service getCountryList() with new Filter													
+		//5. call rpc Service getCountryList() with new Filter	
+		
+		mapPresenter.setLoadingState(LoadingStates.LOADING);
 		filmService.getCountryList(countryFilter, new AsyncCallback<List<Country>>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				//ERROR HANDLING NEEDS TO BE DEFINED
-				Window.alert("Error getCountryList: ERROR HANDLING NEEDS TO BE DEFINED");
+				mapPresenter.setLoadingState(LoadingStates.ERROR);
+				//Development Error Handling could be implemented here (Log to Console)
 			}
 			@Override
 			public void onSuccess(List<Country> result) {
 				//6. convert List to DataTable
 				//7. set DataTable here
 				countries = convertListToDataTable(result);
+				mapPresenter.setLoadingState(LoadingStates.SUCCESS);
 			}
 		});		
 	}
