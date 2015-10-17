@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.MapPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.TablePresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.WelcomePresenterImpl;
+import ch.uzh.se.se7en.client.mvp.views.widgets.NavigationBar;
 
 
 /**
@@ -28,9 +29,11 @@ public class AppController implements ValueChangeHandler<String> {
 	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
 	private EventBus eventBus;
 	private HasWidgets container; 
+	private NavigationBar navBar;
 	
-	public AppController()
+	public AppController(final NavigationBar navBar)
 	{
+		this.navBar = navBar;
 		eventBus = clientFactory.getEventBus();
 		bind();
 	}
@@ -102,7 +105,8 @@ public class AppController implements ValueChangeHandler<String> {
 	private void doMapView()
 	{
 		//combination of mapView and filterView needs to be implemented
-		new MapPresenterImpl(clientFactory.getMapView()).go(container);
+		navBar.setActive(Tokens.MAP);
+		clientFactory.getMapPresenter().go(container);
 	}
 
 	/**
@@ -114,7 +118,8 @@ public class AppController implements ValueChangeHandler<String> {
 	private void doTableView()
 	{
 		//combination of tableView and filterView needs to be implemented
-		new TablePresenterImpl(clientFactory.getTableView()).go(container);
+		navBar.setActive(Tokens.TABLE);
+		clientFactory.getTablePresenter().go(container);
 	}
 
 	/**
@@ -126,8 +131,8 @@ public class AppController implements ValueChangeHandler<String> {
 	private void doWelcomeView()
 	{
 		//welcome view needs to be implemente
-		new WelcomePresenterImpl(clientFactory.getWelcomeView()).go(container);
-
+		navBar.setActive(Tokens.HOME);
+		clientFactory.getWelcomePresenter().go(container);
 	}
 
 
