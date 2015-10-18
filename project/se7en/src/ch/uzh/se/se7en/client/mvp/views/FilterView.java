@@ -19,4 +19,12 @@ public interface FilterView extends IsWidget {
 	public HasValue<List<String>> getGenreSelect();
 	
 	//provide access for setting options in MultiSelects
+	
+	/**
+	@author Nicolas Küchler
+	@pre	-
+	@post	filterView UI is in the state mode and display
+	@param 	state == LoadingStates.DEFAULT || state == LoadingStates.LOADING || state == LoadingStates.ERROR || state == LoadingStates.SUCCESS
+	 */
+	public void setLoadingState(String state);
 }

@@ -25,12 +25,12 @@ public class FilmServiceImpl extends RemoteServiceServlet implements FilmService
 		// The following code is just a dummy for a db call
 		List<Film> demo = new ArrayList<Film>();
 		Film f1 = new Film();
-		f1.setName("Test Film 1");
+		f1.setName("Test Film 1: " + filter.getName());
 		f1.setCountry("Test Country");
 		demo.add(f1);
 		
 		Film f2 = new Film();
-		f2.setName("Test Film 2");
+		f2.setName("Test Film 2 " + filter.getName());
 		f2.setCountry("Test Country");
 		demo.add(f2);
 		

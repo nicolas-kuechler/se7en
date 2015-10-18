@@ -29,7 +29,8 @@ public class AppController implements ValueChangeHandler<String> {
 
 	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
 	private EventBus eventBus;
-	private HasWidgets container; 
+	private HasWidgets container;
+	private HasWidgets subContainer;
 	private NavigationBar navBar;
 	
 	public AppController(final NavigationBar navBar)
@@ -37,6 +38,11 @@ public class AppController implements ValueChangeHandler<String> {
 		this.navBar = navBar;
 		eventBus = clientFactory.getEventBus();
 		bind();
+		
+		//Makes sure that the global search is possible
+		clientFactory.getFilterPresenter();
+		clientFactory.getMapPresenter();
+		clientFactory.getTablePresenter();
 	}
 	
 	/**
@@ -45,8 +51,9 @@ public class AppController implements ValueChangeHandler<String> {
 	@post	-
 	@param 	container The container where all the views are loaded in
 	 */
-	public void go(HasWidgets container) {
+	public void go(HasWidgets container, HasWidgets subContainer) {
 		this.container = container;
+		this.subContainer = subContainer;
 	}
 	
 	
@@ -107,6 +114,7 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//combination of mapView and filterView needs to be implemented
 		navBar.setActive(Tokens.MAP);
+		clientFactory.getFilterPresenter().go(subContainer);
 		clientFactory.getMapPresenter().go(container);
 	}
 
@@ -120,6 +128,7 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//combination of tableView and filterView needs to be implemented
 		navBar.setActive(Tokens.TABLE);
+		clientFactory.getFilterPresenter().go(subContainer);
 		clientFactory.getTablePresenter().go(container);
 	}
 
@@ -133,6 +142,7 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//welcome view needs to be implemente
 		navBar.setActive(Tokens.HOME);
+		subContainer.clear();
 		clientFactory.getWelcomePresenter().go(container);
 	}
 

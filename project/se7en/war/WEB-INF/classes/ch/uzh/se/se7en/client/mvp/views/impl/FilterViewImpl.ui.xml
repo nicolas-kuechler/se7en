@@ -2,9 +2,9 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
-	<ui:style>
-	
-	</ui:style>
 	<g:HTMLPanel>
+	<g:Label>Hi I'm the Filter View</g:Label>
+	<b:TextBox ui:field="nameBox"></b:TextBox>
+	<b:Button ui:field="searchBtn">Search</b:Button>
 	</g:HTMLPanel>
 </ui:UiBinder> 

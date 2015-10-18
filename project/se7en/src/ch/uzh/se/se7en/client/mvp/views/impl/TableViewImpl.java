@@ -32,14 +32,11 @@ public class TableViewImpl extends Composite implements TableView{
 	private TablePresenter tablePresenter;
 	
 	//DEMO PURPOSE
-	@UiField Button tableViewButton;
 	@UiField ListGroup	resultListGroup;
 	
 	public TableViewImpl() {
 		initWidget(uiBinder.createAndBindUi(this));
 		
-		tableViewButton.setDataLoadingText("Loading...");
-		setLoadingState(LoadingStates.DEFAULT);
 	}
 
 	@Override
@@ -61,39 +58,10 @@ public class TableViewImpl extends Composite implements TableView{
 		//Demo Code End
 	}
 	
-	//DEMO PURPOSE
-	@UiHandler("tableViewButton")
-	public void onButtonClick(final ClickEvent event)
-	{
-		tablePresenter.onNewFilmDataNeeded();
-	}
 
-	//Entspricht nicht dem MVP PATTERN UND MUSS DARUM GEÄNDERT WERDEN ??? Oder nicht
-	//Presenter hat Zugriff auf alle UI Komponenten und muss diese steuern.
 	@Override
 	public void setLoadingState(String state) {
-		if (state.equals(LoadingStates.ERROR))
-		{
-			tableViewButton.state().reset();
-			tableViewButton.setType(ButtonType.DANGER);
-	
-		}
-		else if(state.equals(LoadingStates.LOADING))
-		{
-			tableViewButton.state().loading();
-
-		}
-		else if(state.equals(LoadingStates.SUCCESS))
-		{
-			tableViewButton.state().reset();
-			tableViewButton.setType(ButtonType.SUCCESS);
-		}		
-		else if(state.equals(LoadingStates.DEFAULT))
-		{
-			tableViewButton.state().reset();
-			tableViewButton.setType(ButtonType.PRIMARY);
-
-		}
+		//tbd if table has loading state
 	}
 
 }

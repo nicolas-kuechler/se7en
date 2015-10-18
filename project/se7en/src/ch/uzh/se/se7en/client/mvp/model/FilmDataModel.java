@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.charts.client.DataTable;
@@ -51,18 +52,43 @@ public class FilmDataModel {
 	{
 		filmService = clientFactory.getFilmServiceAsync();
 		eventBus = clientFactory.getEventBus();
+		films = pseudoFilm("No Search Results");
 	}
 	
+	/**
+	Binds the tablePresenter and the client side data model FilmDataModel together
+	@author Nicolas Küchler
+	@pre	-
+	@post	tablePresenter == presenter
+	
+	@param presenter TablePresenter instance
+	 */
 	public void setPresenter(TablePresenter presenter)
 	{
 		tablePresenter = presenter;
 	}
 	
+	/**
+	Binds the mapPresenter and the client side data model FilmDataModel together
+	@author Nicolas Küchler
+	@pre	-
+	@post	mapPresenter == presenter
+	
+	@param presenter MapPresenter instance
+	 */
 	public void setPresenter(MapPresenter presenter)
 	{
 		mapPresenter = presenter;
 	}
 	
+	/**
+	Binds the filterPresenter and the client side data model FilmDataModel together
+	@author Nicolas Küchler
+	@pre	-
+	@post	filterPresenter == presenter
+	
+	@param presenter filterPresenter instance
+	 */
 	public void setPresenter(FilterPresenter presenter)
 	{
 		filterPresenter = presenter;
@@ -72,7 +98,7 @@ public class FilmDataModel {
 	Starts a server search according to the applied filter and updates the client side data model with the result. 
 	Always both data-models (films & countries) are updated at the same time.
 	@author Nicolas Küchler
-	@pre	-
+	@pre	tablePresenter != null && mapPresenter != null && filterPresenter != null
 	@post 	appliedFilter == filter && films==filmService.getFilmList(filter) && countries == filmService.getCountryList(filter)
 	@param	filter FilmFilter object which is applied for the search for new map and table data
 	 */
@@ -80,16 +106,20 @@ public class FilmDataModel {
 	{
 		//1. change applied filter
 		appliedFilter = filter;
-		
-		
+		filterPresenter.setLoadingState(LoadingStates.LOADING);
 		//2. call rpc Service getFilmList()
 		
-		//2.1 Fire Loading Table Event
+		//2.1 Informs the tablePresenter about the loading state
+		films = pseudoFilm("Loading ...");
 		tablePresenter.setLoadingState(LoadingStates.LOADING);
+		
+	
 		filmService.getFilmList(filter, new AsyncCallback<List<Film>>(){
 			@Override
 			public void onFailure(Throwable caught) {
+				films = pseudoFilm("Error Loading Films, please try again!");
 				tablePresenter.setLoadingState(LoadingStates.ERROR);
+				filterPresenter.setLoadingState(LoadingStates.ERROR);
 				//Development Error Handling could be implemented here (Log to Console)
 			}
 			@Override
@@ -97,6 +127,7 @@ public class FilmDataModel {
 				//3. setFilm List here
 				films = result;
 				tablePresenter.setLoadingState(LoadingStates.SUCCESS);
+				filterPresenter.setLoadingState(LoadingStates.SUCCESS);
 			}
 		});
 		
@@ -105,11 +136,13 @@ public class FilmDataModel {
 		
 		//5. call rpc Service getCountryList() with new Filter	
 		
+		
 		mapPresenter.setLoadingState(LoadingStates.LOADING);
 		filmService.getCountryList(countryFilter, new AsyncCallback<List<Country>>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				mapPresenter.setLoadingState(LoadingStates.ERROR);
+				filterPresenter.setLoadingState(LoadingStates.ERROR);
 				//Development Error Handling could be implemented here (Log to Console)
 			}
 			@Override
@@ -118,6 +151,7 @@ public class FilmDataModel {
 				//7. set DataTable here
 				countries = convertListToDataTable(result);
 				mapPresenter.setLoadingState(LoadingStates.SUCCESS);
+				filterPresenter.setLoadingState(LoadingStates.SUCCESS);
 			}
 		});		
 	}
@@ -242,6 +276,15 @@ public class FilmDataModel {
 		adjustedFilter.setGenres(filter.getGenres());
 		
 		return adjustedFilter;
+	}
+	
+	private List<Film> pseudoFilm(String info)
+	{
+		List<Film> loading = new ArrayList<Film>(1);
+		Film stub = new Film();
+		stub.setName(info);
+		loading.add(stub);
+		return loading;
 	}
 	
 	
