@@ -1,9 +1,6 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
-import org.gwtbootstrap3.client.ui.Panel;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 import ch.uzh.se.se7en.client.mvp.ClientFactory;
@@ -11,21 +8,22 @@ import ch.uzh.se.se7en.client.mvp.LoadingStates;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
-import ch.uzh.se.se7en.shared.model.FilmFilter;
 
+/**
+ * THIS CLASS CONTAINS DEMO CODE WHICH CANNOT BE USED FOR THE FINAL VERSION
+ * @author Nicolas Küchler
+ *
+ */
 public class TablePresenterImpl implements TablePresenter {
 	
 	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
-	private EventBus eventBus;
 	private TableView tableView;
 	private FilmDataModel filmDataModel;
 
 	public TablePresenterImpl(final TableView tableView)
 	{
-		//FilmdataModel not setup
 		filmDataModel = clientFactory.getFilmDataModel();
 		filmDataModel.setPresenter(this); //needs to set itself as the presenter
-		eventBus = clientFactory.getEventBus();
 		this.tableView = tableView;
 		bind();
 		setLoadingState(LoadingStates.DEFAULT);
@@ -43,12 +41,8 @@ public class TablePresenterImpl implements TablePresenter {
 	}
 
 	@Override
-	public void onNewFilmDataNeeded() {
-		tableView.setTable(filmDataModel.getFilms());
-	}
-
-	@Override
 	public void setLoadingState(String state) {
+		//DEMO CODE
 		if (state.equals(LoadingStates.ERROR))
 		{
 			tableView.setTable(filmDataModel.getFilms());
@@ -69,7 +63,14 @@ public class TablePresenterImpl implements TablePresenter {
 			tableView.setTable(filmDataModel.getFilms());
 			tableView.setLoadingState(LoadingStates.DEFAULT);
 		}
-		
+		//DEMO CODE END
+	}
+
+	@Override
+	public void updateFilmTable() {
+		//DEMO CODE
+		tableView.setTable(filmDataModel.getFilms());
+		//DEMO CODE END
 	}
 
 }

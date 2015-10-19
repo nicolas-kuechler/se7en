@@ -1,6 +1,7 @@
 package ch.uzh.se.se7en.client.mvp.views.widgets;
 
 import org.gwtbootstrap3.client.ui.AnchorListItem;
+import org.gwtbootstrap3.client.ui.NavbarHeader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

@@ -11,12 +11,10 @@ import ch.uzh.se.se7en.client.mvp.views.WelcomeView;
 public class WelcomePresenterImpl implements WelcomePresenter {
 
 	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
-	private EventBus eventBus;
 	private WelcomeView welcomeView;
 	
 	public WelcomePresenterImpl(final WelcomeView welcomeView)
 	{
-		eventBus = clientFactory.getEventBus();
 		this.welcomeView = welcomeView;
 		bind();
 	}
@@ -31,11 +29,4 @@ public class WelcomePresenterImpl implements WelcomePresenter {
 	public void bind() {
 		welcomeView.setPresenter(this);
 	}
-
-	@Override
-	public void setLoadingState(String state) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

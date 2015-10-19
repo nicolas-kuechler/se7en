@@ -35,12 +35,16 @@ import ch.uzh.se.se7en.shared.model.Genre;
 public class FilmDataModel {
 	
 	private List<Film> films;
-	private DataTable countries;
+	
+	private DataTable countries;		//used for GeoChart
+	private List<Country> countryList;	//used to adjust GeoChart with YearRangeSlider
+	
+	private List<Genre> genreList;		//used for genreTable
+	private DataTable genres; 			//used for GenrePieChart
+	
 	private FilmFilter appliedFilter;
-	private List<Genre> genres;
 	
 	private FilmServiceAsync filmService;
-	private EventBus eventBus;
 	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
 	
 	private TablePresenter tablePresenter;
@@ -51,7 +55,6 @@ public class FilmDataModel {
 	public FilmDataModel()
 	{
 		filmService = clientFactory.getFilmServiceAsync();
-		eventBus = clientFactory.getEventBus();
 		films = pseudoFilm("No Search Results");
 	}
 	
@@ -137,11 +140,11 @@ public class FilmDataModel {
 		//5. call rpc Service getCountryList() with new Filter	
 		
 		
-		mapPresenter.setLoadingState(LoadingStates.LOADING);
+		mapPresenter.setLoadingStateGeoChart(LoadingStates.LOADING);
 		filmService.getCountryList(countryFilter, new AsyncCallback<List<Country>>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				mapPresenter.setLoadingState(LoadingStates.ERROR);
+				mapPresenter.setLoadingStateGeoChart(LoadingStates.ERROR);
 				filterPresenter.setLoadingState(LoadingStates.ERROR);
 				//Development Error Handling could be implemented here (Log to Console)
 			}
@@ -150,7 +153,7 @@ public class FilmDataModel {
 				//6. convert List to DataTable
 				//7. set DataTable here
 				countries = convertListToDataTable(result);
-				mapPresenter.setLoadingState(LoadingStates.SUCCESS);
+				mapPresenter.setLoadingStateGeoChart(LoadingStates.SUCCESS);
 				filterPresenter.setLoadingState(LoadingStates.SUCCESS);
 			}
 		});		
@@ -195,11 +198,23 @@ public class FilmDataModel {
 	/**
 	Provides access to the GenreList for the genretable
 	@author Nicolas Küchler
-	@pre genres != null
+	@pre genreList != null
 	@post -
 	@return List<Genre> with all the Genres matching the current applied filter and the selected Country on the map and the years from the map range slider
 	 */
 	public List<Genre> getGenreList()
+	{
+		return genreList;
+	}
+	
+	/**
+	Provides access to the GenreList for the genrePiechart
+	@author Nicolas Küchler
+	@pre genres != null
+	@post -
+	@return DataTable with all the Genres matching the current applied filter and the selected Country on the map and the years from the map range slider
+	 */
+	public DataTable getGenreDataTable()
 	{
 		return genres;
 	}
@@ -215,24 +230,11 @@ public class FilmDataModel {
 	 */
 	public void searchGenreList(int yearStart, int yearEnd, int rowOfDataTable)
 	{
-		genres = null;
-		List<String> countryList = new ArrayList<String>();
-		//countryList.add()
-		//
-		// 	NEEDS TO BE IMPLEMENTED ROW MATCHING IN DATATABLE --> GET COUNTRY NAME ACCORDING TO ROW
-		//
-		FilmFilter filter = adjustFilter(appliedFilter, yearStart, yearEnd, countryList);
-		filmService.getGenreList(filter, new AsyncCallback<List<Genre>>(){
-			@Override
-			public void onFailure(Throwable caught) {
-				//ERROR HANDLING NEEDS TO BE DEFINED
-				Window.alert("Error searchGenreList: ERROR HANDLING NEEDS TO BE DEFINED");
-			}
-			@Override
-			public void onSuccess(List<Genre> result) {
-				genres = result;
-			}
-		});
+		//TODO Implement searchGenreList
+		//1. match paramteters with applied filter
+		//2. start rpc call
+		//3. inform presenter about new data
+		//Always inform presenter about the curent loading state
 	}
 	
 	
@@ -247,7 +249,7 @@ public class FilmDataModel {
 	private DataTable convertListToDataTable(List<Country> countries)
 	{
 		DataTable table = DataTable.create();
-		//NEEDS TO BE IMPLEMENTED
+		//TODO Conversion List to Datatable needs to be implemented
 		return table;
 	}
 	
@@ -278,6 +280,7 @@ public class FilmDataModel {
 		return adjustedFilter;
 	}
 	
+	//Generates a pseudo film list with the information from the parameter
 	private List<Film> pseudoFilm(String info)
 	{
 		List<Film> loading = new ArrayList<Film>(1);

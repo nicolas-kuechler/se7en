@@ -40,6 +40,7 @@ public class AppController implements ValueChangeHandler<String> {
 		bind();
 		
 		//Makes sure that the global search is possible
+		clientFactory.getFilmDataModel();
 		clientFactory.getFilterPresenter();
 		clientFactory.getMapPresenter();
 		clientFactory.getTablePresenter();

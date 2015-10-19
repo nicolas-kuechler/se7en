@@ -7,6 +7,7 @@ import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.ListGroup;
 import org.gwtbootstrap3.client.ui.ListGroupItem;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,13 +31,13 @@ public class TableViewImpl extends Composite implements TableView{
 	}
 	
 	private TablePresenter tablePresenter;
+	private DataGrid filmTable;
 	
 	//DEMO PURPOSE
 	@UiField ListGroup	resultListGroup;
 	
 	public TableViewImpl() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class TableViewImpl extends Composite implements TableView{
 
 	@Override
 	public void setTable(List<Film> films) {
-		//The following Code is just to demonstrate the EventBus Function
+		//The following Code is just to demonstrate the setTable Function
 		resultListGroup.clear();
 		for(int i = 0; i < films.size(); i++)
 		{
@@ -62,6 +63,11 @@ public class TableViewImpl extends Composite implements TableView{
 	@Override
 	public void setLoadingState(String state) {
 		//tbd if table has loading state
+	}
+	
+	private void buildTable()
+	{
+		//sets up the table with all the sortable columns, headers etc.
 	}
 
 }
