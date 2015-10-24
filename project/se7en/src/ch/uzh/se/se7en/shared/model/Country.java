@@ -8,18 +8,33 @@ import java.io.Serializable;
  @author Nicolas Küchler
  */
 public class Country implements Serializable{
-	
+
 	private static final long serialVersionUID = 1L;
 
 	public static final int YEAR_OFFSET = 1900; //each index in numberOfFilms represents a year, 
-								//but because there are no films before 1900 allowed, to save memory, there is a year offset.
-	
+	//but because there are no films before 1900 allowed, to save memory, there is a year offset.
+
 	private String name;
 	private String code; //2 letter iso country code
-	
+
 	private int[] numberOfFilms; //index 1 holds the numberOfFilms in the year 1900
-									//index 2 holds the numberOfFilms from year 1900 too year 1901
-	
+	//index 2 holds the numberOfFilms from year 1900 too year 1901
+
+	public Country()
+	{
+
+	}
+
+	public Country(String name) {
+		this.name = name;
+	}
+
+	public Country(String name, String code, int[] numberOfFilms) 
+	{
+		this.name = name;
+		this.code = code;
+		this.numberOfFilms = numberOfFilms;
+	}
 
 	/**
 	Calculates the number of films which were produced between two given years 
@@ -47,7 +62,7 @@ public class Country implements Serializable{
 			return 0;
 		}
 	}
-	
+
 	/**
 	Set up for the NumberOfFilms attribute
 	@pre filmsInEachYear.length == currentYear-YEAR_OFFSET 
@@ -58,14 +73,14 @@ public class Country implements Serializable{
 	{
 		numberOfFilms = new int[filmsInEachYear.length + 1]; //in filmsInEachYear year 1899 is not part of the array, therefore + 1
 		numberOfFilms[0] = 0; //represents year 1899, and is used to prevent arrayIndexOutOfBounds exceptions
-		
+
 		for(int i = 1; i < numberOfFilms.length; i++)
 		{
 			numberOfFilms[i] = numberOfFilms[i-1] + filmsInEachYear[i-1]; //films up to the year before + films current year = films up to current year
 		}
 	}
 
-	
+
 	/**
 	@pre name!= null
 	@post -
@@ -79,7 +94,7 @@ public class Country implements Serializable{
 	@pre -
 	@post name==name
 	@param name the name to set
-	*/
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -97,11 +112,11 @@ public class Country implements Serializable{
 	@pre -
 	@post code==code
 	@param code the code to set
-	*/
+	 */
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
-	
+
+
 
 }

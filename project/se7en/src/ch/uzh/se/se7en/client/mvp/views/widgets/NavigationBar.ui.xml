@@ -2,10 +2,11 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
-
+<ui:with field='res' type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources'/>
+	
 	<b:Navbar position="FIXED_TOP" type="INVERSE">
-		<b:NavbarHeader>
-			<b:NavbarBrand>Se7en</b:NavbarBrand>
+		<b:NavbarHeader width="150px">
+			<b:Image resource='{res.sevenWhite}'></b:Image>
 		</b:NavbarHeader>
 		<b:NavbarCollapse>
 			<b:NavbarNav>

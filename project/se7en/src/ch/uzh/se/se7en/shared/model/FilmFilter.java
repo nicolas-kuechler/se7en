@@ -13,7 +13,7 @@ public class FilmFilter implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	//WE MIGHT WANT TO USE DEFAULT VALUES TO INDICATE THAT A CERTAIN FIELD OF THE FILTER IS NOT SET
+	//TODO WE MIGHT WANT TO USE DEFAULT VALUES TO INDICATE THAT A CERTAIN FIELD OF THE FILTER IS NOT SET
 	private String name;
 	private int lengthStart; 	//start point from the length range
 	private int lengthEnd; 		//end point from the length range
@@ -23,6 +23,28 @@ public class FilmFilter implements Serializable{
 	private List<String> languages;
 	private List<String> genres;
 	
+	
+	public FilmFilter()
+	{
+		
+	}
+	
+	public FilmFilter(String name) {
+		this.name = name;
+	}
+
+	public FilmFilter(String name, int lengthStart, int lengthEnd, int yearStart, int yearEnd, List<String> countries,
+			List<String> languages, List<String> genres) {
+		this.name = name;
+		this.lengthStart = lengthStart;
+		this.lengthEnd = lengthEnd;
+		this.yearStart = yearStart;
+		this.yearEnd = yearEnd;
+		this.countries = countries;
+		this.languages = languages;
+		this.genres = genres;
+	}
+
 	/**
 	@pre name!= null
 	@post -

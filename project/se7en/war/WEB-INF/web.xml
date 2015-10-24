@@ -1,25 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5"
-         xmlns="http://java.sun.com/xml/ns/javaee">
+	version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
 
-  <!-- Servlets -->
-  
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>Se7en.html</welcome-file>
-  </welcome-file-list>
-  
-  	<servlet>
-		<servlet-name>filmServiceImpl</servlet-name>
-		<servlet-class>ch.uzh.se.se7en.server.model.FilmServiceImpl</servlet-class>
+	<!-- Servlets -->
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>Se7en.html</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<servlet-name>filmListServiceImpl</servlet-name>
+		<servlet-class>ch.uzh.se.se7en.server.model.FilmListServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>filmServiceImpl</servlet-name>
-		<url-pattern>/se7en/service</url-pattern>
+		<servlet-name>filmListServiceImpl</servlet-name>
+		<url-pattern>/se7en/filmListService</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>filmListExportServiceImpl</servlet-name>
+		<servlet-class>ch.uzh.se.se7en.server.model.FilmListExportServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>filmListExportServiceImpl</servlet-name>
+		<url-pattern>/se7en/filmListExportService</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>triggerImportServiceImpl</servlet-name>
+		<servlet-class>ch.uzh.se.se7en.server.model.TriggerImportServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>triggerImportServiceImpl</servlet-name>
+		<url-pattern>/se7en/triggerImportService</url-pattern>
+	</servlet-mapping>
+
+
+
 
 </web-app>

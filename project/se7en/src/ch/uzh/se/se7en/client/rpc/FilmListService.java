@@ -13,8 +13,8 @@ import ch.uzh.se.se7en.shared.model.Genre;
 /**
  * The service interface for the Film server-side service.
  */
-@RemoteServiceRelativePath("service")
-public interface FilmService extends RemoteService{
+@RemoteServiceRelativePath("filmListService")
+public interface FilmListService extends RemoteService{
 	
 	public List<Country> getCountryList(FilmFilter filter);
 	
