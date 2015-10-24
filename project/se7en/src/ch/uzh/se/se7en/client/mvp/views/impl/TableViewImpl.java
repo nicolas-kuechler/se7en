@@ -3,10 +3,8 @@ package ch.uzh.se.se7en.client.mvp.views.impl;
 import java.util.List;
 
 import org.gwtbootstrap3.client.ui.Button;
-import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.ListGroup;
 import org.gwtbootstrap3.client.ui.ListGroupItem;
-import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 
 import com.google.gwt.core.client.GWT;
@@ -18,7 +16,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
-import ch.uzh.se.se7en.client.mvp.LoadingStates;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -33,7 +30,9 @@ public class TableViewImpl extends Composite implements TableView{
 	private TablePresenter tablePresenter;
 	private DataGrid filmTable;
 	
-	//DEMO PURPOSE
+	@UiField Button downloadBtn;
+	
+	//DEMO PURPOSE is replaced by datagrid
 	@UiField ListGroup	resultListGroup;
 	
 	public TableViewImpl() {
@@ -48,6 +47,8 @@ public class TableViewImpl extends Composite implements TableView{
 
 	@Override
 	public void setTable(List<Film> films) {
+		//TODO refresh Table with new film List
+		
 		//The following Code is just to demonstrate the setTable Function
 		resultListGroup.clear();
 		for(int i = 0; i < films.size(); i++)
@@ -59,15 +60,23 @@ public class TableViewImpl extends Composite implements TableView{
 		//Demo Code End
 	}
 	
-
-	@Override
-	public void setLoadingState(String state) {
-		//tbd if table has loading state
+	@UiHandler("downloadBtn")
+	public void onDownloadBtnClicked(final ClickEvent event)
+	{
+		tablePresenter.onDownloadStarted();
 	}
 	
 	private void buildTable()
 	{
+		//TODO Build Datagrid with all columns...
 		//sets up the table with all the sortable columns, headers etc.
+	}
+	
+
+	@Override
+	public void startDownload(String downloadUrl) {
+		// TODO Start the download Window.open(download url.....)
+		Window.alert("Demo Download Started; Url: " + downloadUrl);
 	}
 
 }

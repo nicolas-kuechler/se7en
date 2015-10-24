@@ -26,7 +26,7 @@ public class Se7en implements EntryPoint {
 		RootPanel.get().add(navBar);
 		RootPanel.get().add(subContainer);
 		RootPanel.get().add(container);
-		subContainer.setPaddingTop(40);
+		subContainer.setMarginTop(80);
 		
 		AppController app = new AppController(navBar);
 		app.go(container, subContainer);

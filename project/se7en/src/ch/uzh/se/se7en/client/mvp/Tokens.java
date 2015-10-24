@@ -10,4 +10,5 @@ public class Tokens {
 	public static final String MAP = "map";
 	public static final String TABLE = "table";
 	public static final String HOME = "";
+	public static final String IMPORT = "import";
 }

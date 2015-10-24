@@ -17,37 +17,4 @@ public interface MapPresenter extends RootPresenter {
 	 */
 	public void onCountrySelected();
 	
-	/**
-	Whenever there is new country data available this method handles the update
-	@author Nicolas Küchler
-	@pre	filmDataModel != null && mapView != null
-	@post	geoChart in view is redrawn according to the current data
-	 */
-	public void updateGeoChart();
-	
-	/**
-	Whenever there is new genre data available this method handles the update
-	@author Nicolas Küchler
-	@pre	filmDataModel != null && mapView != null
-	@post	genreTable and genrePiechart in view is redrawn according to the current data
-	 */
-	public void updateGenre();
-	
-	/**
-	Provides the presenter with information about the current loading state of the geoChart data
-	@author Nicolas Küchler
-	@pre	filmDataModel != null && mapView != null
-	@post	mapView knows about the current state
-	@param	state state == LoadingStates.DEFAULT || state == LoadingStates.LOADING || state == LoadingStates.ERROR || state == LoadingStates.SUCCESS 
-	 */
-	public void setLoadingStateGeoChart(String state);
-	
-	/**
-	Provides the presenter with information about the current loading state of the genre data
-	@author Nicolas Küchler
-	@pre	filmDataModel != null && mapView != null
-	@post	mapView knows about the current state
-	@param	state state == LoadingStates.DEFAULT || state == LoadingStates.LOADING || state == LoadingStates.ERROR || state == LoadingStates.SUCCESS 
-	 */
-	public void setLoadingStateGenres(String state);
 }

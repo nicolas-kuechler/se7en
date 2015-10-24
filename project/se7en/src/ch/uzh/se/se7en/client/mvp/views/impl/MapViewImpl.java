@@ -52,8 +52,7 @@ public class MapViewImpl extends Composite implements MapView{
 
 	@Override
 	public void setGeoChart(DataTable countries) {
-		// TODO Auto-generated method stub
-		
+		// TODO refresh geoChart with new Datatable
 	}
 
 	@Override
@@ -64,31 +63,18 @@ public class MapViewImpl extends Composite implements MapView{
 
 	@Override
 	public HasValue<Range> getYearSlider() {
-		// TODO Auto-generated method stub
-		return null;
+		return yearSlider;
 	}
 
 	@Override
 	public void setGenreTable(List<Genre> genres) {
-		// TODO Auto-generated method stub
+		// TODO refresh genreTable with new List
 		
 	}
 
 	@Override
 	public void setGenrePieChart(DataTable genres) {
-		// TODO Auto-generated method stub
-		
+		// TODO refresh genrePieChart with new DataTable
 	}
 
-	@Override
-	public void setLoadingStateGeoChart(String state) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setLoadingStateGenres(String state) {
-		// TODO Auto-generated method stub
-		
-	}
 }

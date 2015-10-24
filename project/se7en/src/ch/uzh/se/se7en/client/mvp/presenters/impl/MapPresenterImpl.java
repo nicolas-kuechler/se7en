@@ -1,36 +1,47 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
-import org.gwtbootstrap3.extras.slider.client.ui.Range;
+import java.util.List;
+
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 import ch.uzh.se.se7en.client.mvp.ClientFactory;
-import ch.uzh.se.se7en.client.mvp.LoadingStates;
+import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
+import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
+import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
+import ch.uzh.se.se7en.shared.model.Country;
 
 public class MapPresenterImpl implements MapPresenter {
 	
 	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
 	private MapView mapView;
+	private EventBus eventBus;
+	private FilmListServiceAsync filmListService;
 	private FilmDataModel filmDataModel;
+	
 
 	public MapPresenterImpl(final MapView mapView)
 	{
 		filmDataModel = clientFactory.getFilmDataModel();
-		filmDataModel.setPresenter(this);
+		eventBus = clientFactory.getEventBus();
+		filmListService = clientFactory.getFilmListServiceAsync();
 		this.mapView = mapView;
 		bind();
-		setLoadingStateGeoChart(LoadingStates.DEFAULT);
-		setLoadingStateGenres(LoadingStates.DEFAULT);
+		setupMapUpdate();
 	}
 	
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
 		container.add(mapView.asWidget());
+		
 	}
 
 	@Override
@@ -41,46 +52,50 @@ public class MapPresenterImpl implements MapPresenter {
 	@Override
 	public void onRangeSliderChanged() {
 		// TODO Auto-generated method stub
-		//Call update GeoChart
+		// 1. get RangeSlider Info
+		// 2. Create new DataTable from List<Country> FilmDataModel with RangeSliderYear Info
+		// 3. mapView.setgeoChart(DataTable)
 	}
 
 	@Override
 	public void onCountrySelected() {
 		// TODO Auto-generated method stub
-		// 1. clear genreTable & genrePieChart (or from within filmDataModel)
+		// 1. clear genreTable & genrePieChart
 		// 2. get year range from view
 		// 3. get Information which Country was selected (getGeoChartSelection() tbd if row index or what)
-		// 4. searchGenre(range.getMinValue, range.getMaxValue, row) from FilmDataModel
+		// 4. getAppliedFilter Info from filmDataModel
+		// 5. start rpc call 
+		// 6. setGenretable, setGenrePieChart
 	}
+	
+	private void setupMapUpdate(){
+		//listens to FilterAppliedEvents in the EventBus
+		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
+			@Override
+			public void onFilterAppliedEvent(FilterAppliedEvent event) {
+				//as soon as new filter is applied, starts async call to server to get the new list of countries matching the filter
+				filmListService.getCountryList(filmDataModel.getAppliedFilter(), new AsyncCallback<List<Country>>(){
 
-	@Override
-	public void updateGeoChart() {
-		// TODO Auto-generated method stub
-		// 1. clear Old geoChart ?
-		// 2. get year range from view
-		// 3. getCountries() from FilmDataModel tbd where conversion with year range list-> datatable takes places
-		// 4. setGeoChart(dataTable) from view
-	}
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO ERROR HANDLING NEEDS TO BE IMPLEMENTED
+						
+					}
 
-	@Override
-	public void updateGenre() {
-		// TODO Auto-generated method stub
-		// ? clearOldGenreStuff
-		// 1. is called from filmDataModel when rpc call from searchGenre is back
-		// 2. setGenreTable(filmDataModel.getGenreList());
-		// 3. setGenrePieChart(filmDataModel.getGenreDataTable());
-	}
-
-	@Override
-	public void setLoadingStateGeoChart(String state) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setLoadingStateGenres(String state) {
-		// TODO Auto-generated method stub
-		
+					@Override
+					public void onSuccess(List<Country> result) {
+						//updates the list in the client side datamodel
+						filmDataModel.setCountryList(result);
+						
+						//TODO Convert List to DataTable
+						//TODO mapView.setGeochart(DataTable)
+						//TODO Map Range Slider according to Slider from Filter 				
+						//mapView.getYearSlider().setValue(Range.fromString(filmDataModel.getAppliedFilter().getYearStart() + ":" 
+						//T														+ filmDataModel.getAppliedFilter().getYearEnd()));
+					}
+				});
+			}
+		});
 	}
 
 }

@@ -67,21 +67,4 @@ public interface MapView extends IsWidget{
 	 */
 	public void setGenrePieChart(DataTable genres);
 	
-	/**
-	Provides the view with information about the current loading state of the geoChart data
-	@author Nicolas Küchler
-	@pre	presenter != null
-	@post	geoChart is displayed according to the state
-	@param	state state == LoadingStates.DEFAULT || state == LoadingStates.LOADING || state == LoadingStates.ERROR || state == LoadingStates.SUCCESS 
-	 */
-	public void setLoadingStateGeoChart(String state);
-	
-	/**
-	Provides the view with information about the current loading state of the genre data
-	@author Nicolas Küchler
-	@pre	presenter != null
-	@post	genrePiechart and genreTable are displayed according to the state
-	@param	state state == LoadingStates.DEFAULT || state == LoadingStates.LOADING || state == LoadingStates.ERROR || state == LoadingStates.SUCCESS 
-	 */
-	public void setLoadingStateGenres(String state);
 }

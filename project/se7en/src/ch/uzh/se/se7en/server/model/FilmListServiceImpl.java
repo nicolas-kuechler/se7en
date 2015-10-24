@@ -5,13 +5,13 @@ import java.util.List;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import ch.uzh.se.se7en.client.rpc.FilmService;
+import ch.uzh.se.se7en.client.rpc.FilmListService;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.Genre;
 
-public class FilmServiceImpl extends RemoteServiceServlet implements FilmService {
+public class FilmListServiceImpl extends RemoteServiceServlet implements FilmListService {
 
 	@Override
 	public List<Country> getCountryList(FilmFilter filter) {

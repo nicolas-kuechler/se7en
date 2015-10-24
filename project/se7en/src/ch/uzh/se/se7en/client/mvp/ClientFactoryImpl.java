@@ -8,9 +8,9 @@ import java.util.Date;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.user.client.Window;
 
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
+import ch.uzh.se.se7en.client.mvp.model.FilmDataModelImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
@@ -27,8 +27,10 @@ import ch.uzh.se.se7en.client.mvp.views.impl.FilterViewImpl;
 import ch.uzh.se.se7en.client.mvp.views.impl.MapViewImpl;
 import ch.uzh.se.se7en.client.mvp.views.impl.TableViewImpl;
 import ch.uzh.se.se7en.client.mvp.views.impl.WelcomeViewImpl;
-import ch.uzh.se.se7en.client.rpc.FilmService;
-import ch.uzh.se.se7en.client.rpc.FilmServiceAsync;
+import ch.uzh.se.se7en.client.rpc.FilmListExportService;
+import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
+import ch.uzh.se.se7en.client.rpc.FilmListService;
+import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 
 /**
 Provides central access to all the application wide, resource intensive objects.
@@ -37,8 +39,9 @@ Provides central access to all the application wide, resource intensive objects.
 public class ClientFactoryImpl implements ClientFactory {
 	
 	private static EventBus eventBus;
-	private static FilmServiceAsync rpcService;
-	private static FilmDataModel filmDataModel;
+	private static FilmListServiceAsync filmListService;
+	private static FilmListExportServiceAsync filmListExportService; 
+	private static FilmDataModelImpl filmDataModel;
 	private static int year;
 	
 	private static MapView mapView;
@@ -62,12 +65,21 @@ public class ClientFactoryImpl implements ClientFactory {
 	}
 
 	@Override
-	public FilmServiceAsync getFilmServiceAsync() {
-		if (rpcService == null) 
+	public FilmListServiceAsync getFilmListServiceAsync() {
+		if (filmListService == null) 
 		{
-			rpcService = GWT.create(FilmService.class);
+			filmListService = GWT.create(FilmListService.class);
 		}
-		return rpcService;
+		return filmListService;
+	}
+	
+	@Override
+	public FilmListExportServiceAsync getFilmListExportServiceAsync() {
+		if (filmListExportService == null) 
+		{
+			filmListExportService = GWT.create(FilmListExportService.class);
+		}
+		return filmListExportService;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -121,7 +133,7 @@ public class ClientFactoryImpl implements ClientFactory {
 	public FilmDataModel getFilmDataModel() {
 		if(filmDataModel == null)
 		{
-			filmDataModel = new FilmDataModel();
+			filmDataModel = new FilmDataModelImpl();
 		}
 		return filmDataModel;
 	}
@@ -161,5 +173,7 @@ public class ClientFactoryImpl implements ClientFactory {
 		}
 		return filterPresenter;
 	}
+
+
 
 }

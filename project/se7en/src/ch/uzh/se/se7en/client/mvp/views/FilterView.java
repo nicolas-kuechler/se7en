@@ -81,14 +81,16 @@ public interface FilterView extends IsWidget {
 	@post	appliedFilter == filter
 	@param	filter valid FilmFilter instance
 	 */
-	public void setAppliedFilter(FilmFilter filter);
+	public void setAppliedFilter(List<String> appliedFilter);
 	
 	/**
+	Is responsible for enabling/disabling the filter boxes for map/table view
+	Changes the appliedFilter Box for the map/table view
 	@author Nicolas Küchler
-	@pre	All filter boxes are initialized
-	@post	filterView UI is in the state mode and display
-	@param 	state == LoadingStates.DEFAULT || state == LoadingStates.LOADING || state == LoadingStates.ERROR || state == LoadingStates.SUCCESS
+	@pre	-
+	@post	filterBoxes are enabled/disabled according to the mode, appliedFilter Box is set according to the mode
+	@param 	mode mode.equals(Tokens.MAP) || mode.equals(Tokens.TABLE) 
 	 */
-	public void setLoadingState(String state);
+	public void setMode(String mode);
 	
 }

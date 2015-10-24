@@ -18,8 +18,28 @@ public class Film implements Serializable {
 	private int year;
 	private String genre; //if there are more than one genre: genre1 - genre2
 	
+	public Film()
+	{
+		
+	}
+	
+	public Film(String name)
+	{
+		setName(name);
+	}
 	
 	
+	
+	public Film(String name, int length, String country, String language, int year, String genre) 
+	{
+		this.name = name;
+		this.length = length;
+		this.country = country;
+		this.language = language;
+		this.year = year;
+		this.genre = genre;
+	}
+
 	/**
 	@pre name!= null
 	@post -

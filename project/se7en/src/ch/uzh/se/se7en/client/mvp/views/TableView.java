@@ -27,11 +27,11 @@ public interface TableView extends IsWidget {
 	public void setTable(List<Film> films);
 	
 	/**
+	When the download Url is ready, the download can be started from the Ui
 	@author Nicolas Küchler
 	@pre	-
-	@post	tableView UI is in the state mode and display
-	@param 	state == LoadingStates.DEFAULT || state == LoadingStates.LOADING || state == LoadingStates.ERROR || state == LoadingStates.SUCCESS
+	@post	Download Window with Csv File opened
+	@param 	downloadUrl 
 	 */
-	public void setLoadingState(String state);
-
+	public void startDownload(String downloadUrl);
 }

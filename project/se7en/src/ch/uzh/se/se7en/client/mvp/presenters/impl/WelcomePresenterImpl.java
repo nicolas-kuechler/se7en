@@ -1,16 +1,12 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.HasWidgets;
 
-import ch.uzh.se.se7en.client.mvp.ClientFactory;
 import ch.uzh.se.se7en.client.mvp.presenters.WelcomePresenter;
 import ch.uzh.se.se7en.client.mvp.views.WelcomeView;
 
 public class WelcomePresenterImpl implements WelcomePresenter {
 
-	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
 	private WelcomeView welcomeView;
 	
 	public WelcomePresenterImpl(final WelcomeView welcomeView)

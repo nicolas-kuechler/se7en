@@ -14,6 +14,17 @@ public class Genre implements Serializable {
 	private String name;
 	private int numberOfFilms;
 	
+	public Genre()
+	{
+		
+	}
+	
+	public Genre(String name, int numberOfFilms) 
+	{
+		this.name = name;
+		this.numberOfFilms = numberOfFilms;
+	}
+
 	/**
 	@pre name!= null
 	@post -

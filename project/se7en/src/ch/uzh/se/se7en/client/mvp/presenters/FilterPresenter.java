@@ -18,6 +18,16 @@ public interface FilterPresenter extends RootPresenter {
 	public void onClear();
 	
 	/**
+	Gives the AppControl the possibility to set a Filter. (Used for Filter in UrlToken parsing)
+	@author Nicolas Küchler
+	@pre	-
+	@post	FilterViewImpl FilterFields have the values from the parsed filterToken
+	
+	@param filterToken matches the defined parsing pattern
+	 */
+	public void setFilter(String filterToken);
+	
+	/**
 	Is responsible for enabling/disabling the filter boxes for map/table view
 	Changes the appliedFilter Box for the map/table view
 	@author Nicolas Küchler
@@ -27,12 +37,4 @@ public interface FilterPresenter extends RootPresenter {
 	 */
 	public void setMode(String mode);
 	
-	/**
-	Provides the filterPresenter with the information of the current data loading state
-	@author Nicolas Küchler
-	@pre	filmDataModel != null
-	@post	presenter handled the change of the loading state
-	@param state state.equals(LoadingStates.DEFAULT) || state.equals(LoadingStates.LOADING) || state.equals(LoadingStates.ERROR) || state.equals(LoadingStates.SUCCESS)
-	 */
-	public void setLoadingState(String state);
 }

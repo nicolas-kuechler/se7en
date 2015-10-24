@@ -1,13 +1,21 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 import ch.uzh.se.se7en.client.mvp.ClientFactory;
-import ch.uzh.se.se7en.client.mvp.LoadingStates;
+import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
+import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
+import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
+import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
+import ch.uzh.se.se7en.shared.model.Film;
 
 /**
  * THIS CLASS CONTAINS DEMO CODE WHICH CANNOT BE USED FOR THE FINAL VERSION
@@ -17,16 +25,23 @@ import ch.uzh.se.se7en.client.mvp.views.TableView;
 public class TablePresenterImpl implements TablePresenter {
 	
 	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
+	private EventBus eventBus;
 	private TableView tableView;
 	private FilmDataModel filmDataModel;
+	
+	private FilmListServiceAsync filmListService;
+	private FilmListExportServiceAsync filmListExportService;
+	
 
 	public TablePresenterImpl(final TableView tableView)
 	{
 		filmDataModel = clientFactory.getFilmDataModel();
-		filmDataModel.setPresenter(this); //needs to set itself as the presenter
 		this.tableView = tableView;
+		eventBus = clientFactory.getEventBus();
+		filmListService = clientFactory.getFilmListServiceAsync();
+		filmListExportService = clientFactory.getFilmListExportServiceAsync();
 		bind();
-		setLoadingState(LoadingStates.DEFAULT);
+		setupTableUpdate();
 	}
 	
 	@Override
@@ -41,36 +56,40 @@ public class TablePresenterImpl implements TablePresenter {
 	}
 
 	@Override
-	public void setLoadingState(String state) {
-		//DEMO CODE
-		if (state.equals(LoadingStates.ERROR))
-		{
-			tableView.setTable(filmDataModel.getFilms());
-			tableView.setLoadingState(LoadingStates.ERROR);
-		}
-		else if(state.equals(LoadingStates.LOADING))
-		{
-			tableView.setTable(filmDataModel.getFilms());
-			tableView.setLoadingState(LoadingStates.LOADING);
-		}
-		else if(state.equals(LoadingStates.SUCCESS))
-		{
-			tableView.setTable(filmDataModel.getFilms());
-			tableView.setLoadingState(LoadingStates.SUCCESS);
-		}
-		else if (state.equals(LoadingStates.DEFAULT))
-		{
-			tableView.setTable(filmDataModel.getFilms());
-			tableView.setLoadingState(LoadingStates.DEFAULT);
-		}
-		//DEMO CODE END
+	public void onDownloadStarted() {
+		// TODO Handle CSV Download 
+		
+		filmListExportService.getFilmListDownloadUrl(filmDataModel.getAppliedFilter(), new AsyncCallback<String>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void onSuccess(String result) {
+				tableView.startDownload(result);
+			}
+		});
 	}
-
-	@Override
-	public void updateFilmTable() {
-		//DEMO CODE
-		tableView.setTable(filmDataModel.getFilms());
-		//DEMO CODE END
+	
+	private void setupTableUpdate()
+	{
+		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
+			@Override
+			public void onFilterAppliedEvent(FilterAppliedEvent event) {
+				filmListService.getFilmList(filmDataModel.getAppliedFilter(), new AsyncCallback<List<Film>>(){
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO ERROR HANDLING NEEDS TO BE DEFINED (e.g. --> tableView.setTable(new List with info that reload necessary)
+					}
+					@Override
+					public void onSuccess(List<Film> result) {
+						filmDataModel.setFilmList(result);
+						tableView.setTable(result);
+					}
+				});
+			}
+		});
 	}
 
 }
