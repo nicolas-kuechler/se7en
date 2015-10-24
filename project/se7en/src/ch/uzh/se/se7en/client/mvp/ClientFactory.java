@@ -30,7 +30,6 @@ public interface ClientFactory {
 	public TableView getTableView();
 	public FilterView getFilterView();
 	public WelcomeView	getWelcomeView();
-	public int getCurrentYear();
 	public FilmDataModel getFilmDataModel();
 	
 	public TablePresenter getTablePresenter();

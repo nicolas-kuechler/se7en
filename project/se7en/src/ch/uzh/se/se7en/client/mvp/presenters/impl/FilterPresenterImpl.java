@@ -4,11 +4,14 @@ package ch.uzh.se.se7en.client.mvp.presenters.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.gwtbootstrap3.extras.slider.client.ui.Range;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 
+import ch.uzh.se.se7en.client.mvp.Boundaries;
 import ch.uzh.se.se7en.client.mvp.ClientFactory;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
@@ -48,8 +51,8 @@ public class FilterPresenterImpl implements FilterPresenter {
 	public void onSearch() {
 		FilmFilter currentFilter = new FilmFilter();
 		currentFilter.setName(filterView.getNameBox().getValue());
-		currentFilter.setLengthStart((int)filterView.getLengthSlider().getValue().getMinValue()); //TODO test if minValue is right method, test if typecast does not matter
-		currentFilter.setLengthEnd((int)filterView.getLengthSlider().getValue().getMaxValue()); //TODO test if maxValue is right method
+		currentFilter.setLengthStart((int)filterView.getLengthSlider().getValue().getMinValue());
+		currentFilter.setLengthEnd((int)filterView.getLengthSlider().getValue().getMaxValue());
 		currentFilter.setYearStart((int)filterView.getYearSlider().getValue().getMinValue());
 		currentFilter.setYearEnd((int)filterView.getYearSlider().getValue().getMaxValue());
 		currentFilter.setCountries(filterView.getCountrySelect().getValue());
@@ -57,15 +60,19 @@ public class FilterPresenterImpl implements FilterPresenter {
 		currentFilter.setLanguages(filterView.getLanguageSelect().getValue());
 		
 		filmDataModel.setAppliedFilter(currentFilter);
-		eventBus.fireEvent(new FilterAppliedEvent());
-		
-		filterView.setAppliedFilter(convertFilmFilterToList(currentFilter));
 		onClear();
+		eventBus.fireEvent(new FilterAppliedEvent());
+		filterView.setAppliedFilter(convertFilmFilterToList(currentFilter));
 	}
 
 	@Override
 	public void onClear() {
-		// TODO reset Filter to default
+		filterView.getNameBox().setValue("");
+		filterView.getLengthSlider().setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
+		filterView.getYearSlider().setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
+		filterView.getCountrySelect().setValue(new ArrayList<String>());
+		filterView.getLanguageSelect().setValue(new ArrayList<String>());
+		filterView.getGenreSelect().setValue(new ArrayList<String>());
 	}
 
 	@Override
@@ -76,7 +83,37 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private List<String> convertFilmFilterToList(FilmFilter filter)
 	{
 		List<String> filterList = new ArrayList<String>();
-		//TODO Convert Filter into String List for AppliedFilterBox Widget
+		
+		//name
+		if(filter.getName()!= null && !filter.getName().equals(""))
+		{
+			filterList.add("Film Name = " + filter.getName());
+		}
+		
+		//length
+		filterList.add("Film Length = " +filter.getLengthStart() + "-" + filter.getLengthEnd());
+		
+		//year
+		filterList.add("Production Year = " +filter.getYearStart() + "-" + filter.getYearEnd());
+		
+		//country
+		for(int i = 0; i < filter.getCountries().size(); i++)
+		{
+			filterList.add("Production Country = " + filter.getCountries().get(i));
+		}
+		
+		//language
+		for(int i = 0; i < filter.getLanguages().size(); i++)
+		{
+			filterList.add("Film Language = " + filter.getLanguages().get(i));
+		}
+		
+		//genre
+		for(int i = 0; i < filter.getGenres().size(); i++)
+		{
+			filterList.add("Film Genre = " + filter.getGenres().get(i));
+		}
+		
 		return filterList;
 	}
 
