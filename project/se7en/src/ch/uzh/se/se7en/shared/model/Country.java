@@ -1,71 +1,117 @@
 package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
- Container to hold the numberOfFilms which were produced in each Country.
- Is used to transport this information from server to client side.
- @author Nicolas Küchler
+ * Container to hold the numberOfFilms which were produced in each Country. Is
+ * used to transport this information from server to client side.
+ * 
+ * @author Nicolas Küchler, Roland Schläfli
  */
-public class Country implements Serializable{
-	
+@Entity
+@Table(name = "countries")
+public class Country implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
-	public static final int YEAR_OFFSET = 1900; //each index in numberOfFilms represents a year, 
-								//but because there are no films before 1900 allowed, to save memory, there is a year offset.
-	
+	// each index in numberOfFilms represents a year, but because there are no
+	// films before 1900 allowed, to save memory, there is a year offset.
+	public static final int YEAR_OFFSET = 1900;
+
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
+	private int id;
+
+	@Column(name = "name")
 	private String name;
-	private String code; //2 letter iso country code
-	
-	private int[] numberOfFilms; //index 1 holds the numberOfFilms in the year 1900
-									//index 2 holds the numberOfFilms from year 1900 too year 1901
-	
+
+	@Column(name = "code")
+	private String code; // 2 letter iso country code
+
+	// index 1 holds the numberOfFilms in the year 1900
+	// index 2 holds the numberOfFilms from year 1900 too year 1901
+	@Transient
+	private int[] numberOfFilms;
 
 	/**
-	Calculates the number of films which were produced between two given years 
-	(including the films from the two given years)
-	@pre startYear >= 1900 && startYear <= currentYear && 
-			startYear <=endYear && endYear >= 1900 && endYear <= currentYear
-	@post -
-	@param startYear the year from which the calculation begins (must be >= 1900 && <= currentYear)
-	@param endYear the year where the calculation stops (must be >= 1900 && <= currentYear)
-	@return the number of films produced 
+	 * Calculates the number of films which were produced between two given
+	 * years (including the films from the two given years)
+	 * 
+	 * @pre startYear >= 1900 && startYear <= currentYear && startYear <=endYear
+	 *      && endYear >= 1900 && endYear <= currentYear
+	 * @post -
+	 * @param startYear
+	 *            the year from which the calculation begins (must be >= 1900 &&
+	 *            <= currentYear)
+	 * @param endYear
+	 *            the year where the calculation stops (must be >= 1900 && <=
+	 *            currentYear)
+	 * @return the number of films produced
 	 */
-	public int getNumberOfFilms(int startYear, int endYear)
-	{
-		//test if preconditions are true
-		if(startYear>= YEAR_OFFSET && startYear <= numberOfFilms.length+YEAR_OFFSET-1 && //calculates the current year using the array length
-				startYear <= endYear && endYear>= YEAR_OFFSET 
-				&& endYear <= numberOfFilms.length+YEAR_OFFSET-1) //calculates the current year using the array length
-		{
-			return numberOfFilms[endYear-YEAR_OFFSET] - numberOfFilms[startYear-YEAR_OFFSET-1]; 
-			//numberOfFilms up to the endYear - numberOfFilms up to the year before the startYear = numberOfFilms between start- and endYear
-		}
-		//preconditions not valid, so result is 0
-		else
-		{
+	@Transient
+	public int getNumberOfFilms(int startYear, int endYear) {
+		// if any precondition fails, return 0 as a result
+		if (startYear < YEAR_OFFSET || startYear > numberOfFilms.length + YEAR_OFFSET - 1 || startYear > endYear
+				|| endYear < YEAR_OFFSET || endYear > numberOfFilms.length + YEAR_OFFSET - 1) {
 			return 0;
 		}
+
+		// calculates the current year using the array length
+		// numberOfFilms up to the endYear - numberOfFilms up to the year
+		// before the startYear = numberOfFilms between start- and endYear
+		return numberOfFilms[endYear - YEAR_OFFSET] - numberOfFilms[startYear - YEAR_OFFSET - 1];
+	}
+
+	/**
+	 * Set up for the NumberOfFilms attribute
+	 * 
+	 * @pre filmsInEachYear.length == currentYear-YEAR_OFFSET
+	 * @post numberOfFilms holds in every index the numberOfFilms which were
+	 *       produced up to that year since YEAR_OFFSET
+	 * @param filmsInEachYear
+	 *            in each field there is the number of films which were produced
+	 *            in that year (year calculation: index-YEAR_OFFSET)
+	 */
+	@Transient
+	public void setNumberOfFilms(int[] filmsInEachYear) {
+		// in filmsInEachYear year 1899 is not part of the array, therefore + 1
+		numberOfFilms = new int[filmsInEachYear.length + 1];
+
+		// represents year 1899, and is used to prevent arrayIndexOutOfBounds
+		numberOfFilms[0] = 0;
+
+		for (int i = 1; i < numberOfFilms.length; i++) {
+			// films up to the year before + films current year = films up to
+			// current year
+			numberOfFilms[i] = numberOfFilms[i - 1] + filmsInEachYear[i - 1];
+		}
 	}
 	
 	/**
-	Set up for the NumberOfFilms attribute
-	@pre filmsInEachYear.length == currentYear-YEAR_OFFSET 
-	@post numberOfFilms holds in every index the numberOfFilms which were produced up to that year since YEAR_OFFSET
-	@param filmsInEachYear in each field there is the number of films which were produced in that year (year calculation: index-YEAR_OFFSET)
+	@pre id!= null
+	@post -
+	@return the id
 	 */
-	public void setNumberOfFilms(int[] filmsInEachYear)
-	{
-		numberOfFilms = new int[filmsInEachYear.length + 1]; //in filmsInEachYear year 1899 is not part of the array, therefore + 1
-		numberOfFilms[0] = 0; //represents year 1899, and is used to prevent arrayIndexOutOfBounds exceptions
-		
-		for(int i = 1; i < numberOfFilms.length; i++)
-		{
-			numberOfFilms[i] = numberOfFilms[i-1] + filmsInEachYear[i-1]; //films up to the year before + films current year = films up to current year
-		}
+	public int getId() {
+		return id;
 	}
 
-	
+	/**
+	@pre -
+	@post id==id
+	@param id the id to set
+	*/
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	/**
 	@pre name!= null
 	@post -
@@ -101,7 +147,4 @@ public class Country implements Serializable{
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
-	
-
 }
