@@ -1,0 +1,3 @@
+# Module se7en
+# RPC service class, partial path of RPC policy file
+ch.uzh.se.se7en.client.rpc.FilmService, DD82957EADCCCD7C4230526F288DDF0C.gwt.rpc

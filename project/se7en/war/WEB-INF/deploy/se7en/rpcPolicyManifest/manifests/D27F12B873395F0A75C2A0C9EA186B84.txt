@@ -1,0 +1,2 @@
+serviceClass: ch.uzh.se.se7en.client.rpc.FilmService
+path: DD82957EADCCCD7C4230526F288DDF0C.gwt.rpc
