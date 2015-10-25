@@ -34,6 +34,22 @@ public class Country implements Serializable {
 
 	@Column(name = "code")
 	private String code; // 2 letter iso country code
+	
+	public Country()
+	{
+
+	}
+
+	public Country(String name) {
+		this.name = name;
+	}
+
+	public Country(String name, String code, int[] numberOfFilms) 
+	{
+		this.name = name;
+		this.code = code;
+		this.numberOfFilms = numberOfFilms;
+	}
 
 	// index 1 holds the numberOfFilms in the year 1900
 	// index 2 holds the numberOfFilms from year 1900 too year 1901
@@ -93,7 +109,7 @@ public class Country implements Serializable {
 			numberOfFilms[i] = numberOfFilms[i - 1] + filmsInEachYear[i - 1];
 		}
 	}
-	
+
 	/**
 	@pre id!= null
 	@post -
@@ -125,7 +141,7 @@ public class Country implements Serializable {
 	@pre -
 	@post name==name
 	@param name the name to set
-	*/
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -143,7 +159,7 @@ public class Country implements Serializable {
 	@pre -
 	@post code==code
 	@param code the code to set
-	*/
+	 */
 	public void setCode(String code) {
 		this.code = code;
 	}

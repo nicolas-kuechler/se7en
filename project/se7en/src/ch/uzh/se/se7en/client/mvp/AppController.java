@@ -8,12 +8,17 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 import ch.uzh.se.se7en.client.mvp.presenters.impl.MapPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.TablePresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.WelcomePresenterImpl;
 import ch.uzh.se.se7en.client.mvp.views.widgets.NavigationBar;
+import ch.uzh.se.se7en.client.rpc.FilmListService;
+import ch.uzh.se.se7en.client.rpc.TriggerImportService;
+import ch.uzh.se.se7en.client.rpc.TriggerImportServiceAsync;
 
 
 /**
@@ -28,7 +33,8 @@ public class AppController implements ValueChangeHandler<String> {
 
 	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
 	private EventBus eventBus;
-	private HasWidgets container; 
+	private HasWidgets container;
+	private HasWidgets subContainer;
 	private NavigationBar navBar;
 	
 	public AppController(final NavigationBar navBar)
@@ -36,6 +42,12 @@ public class AppController implements ValueChangeHandler<String> {
 		this.navBar = navBar;
 		eventBus = clientFactory.getEventBus();
 		bind();
+		
+		//Makes sure that the global search is possible
+		clientFactory.getFilmDataModel();
+		clientFactory.getFilterPresenter();
+		clientFactory.getMapPresenter();
+		clientFactory.getTablePresenter();
 	}
 	
 	/**
@@ -44,8 +56,9 @@ public class AppController implements ValueChangeHandler<String> {
 	@post	-
 	@param 	container The container where all the views are loaded in
 	 */
-	public void go(HasWidgets container) {
+	public void go(HasWidgets container, HasWidgets subContainer) {
 		this.container = container;
+		this.subContainer = subContainer;
 	}
 	
 	
@@ -64,7 +77,6 @@ public class AppController implements ValueChangeHandler<String> {
 		{
 			if (token.startsWith(Tokens.MAP)) 					//it's the map token
 			{
-				
 				//Filter Parsing needs to be implemented
 				doMapView();
 			} 
@@ -72,6 +84,11 @@ public class AppController implements ValueChangeHandler<String> {
 			{
 				//Filter Parsing needs to be implemented
 				doTableView();
+			}
+			else if(token.startsWith(Tokens.IMPORT))
+			{
+				doImport(token);
+				doWelcomeView();
 			}
 		} 
 		else 													//if there is no token --> welcomePage
@@ -106,6 +123,7 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//combination of mapView and filterView needs to be implemented
 		navBar.setActive(Tokens.MAP);
+		clientFactory.getFilterPresenter().go(subContainer);
 		clientFactory.getMapPresenter().go(container);
 	}
 
@@ -119,6 +137,7 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//combination of tableView and filterView needs to be implemented
 		navBar.setActive(Tokens.TABLE);
+		clientFactory.getFilterPresenter().go(subContainer);
 		clientFactory.getTablePresenter().go(container);
 	}
 
@@ -132,7 +151,28 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//welcome view needs to be implemente
 		navBar.setActive(Tokens.HOME);
+		subContainer.clear();
 		clientFactory.getWelcomePresenter().go(container);
+	}
+	
+	private void doImport(String token)
+	{
+		//TODO Import RPC Service
+		String fileName = token.substring(Tokens.IMPORT.length()+1); //token has format: import=filename.csv
+		TriggerImportServiceAsync triggerImportService = GWT.create(TriggerImportService.class);
+		triggerImportService.importFile(fileName, new AsyncCallback<Boolean>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Error Handling Import Trigger
+			}
+
+			@Override
+			public void onSuccess(Boolean result) {
+				//TODO Import Successfull message
+				Window.alert("Successfull Import");
+			}
+		});
+		
 	}
 
 

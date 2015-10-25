@@ -27,7 +27,7 @@ public class Film implements Serializable {
 
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "length", nullable=true)
 	private Integer length;
 	
@@ -45,6 +45,26 @@ public class Film implements Serializable {
 	// TODO: will be in a different relation
 	@Column(name = "genre", nullable=true)
 	private String genre;
+	
+	public Film()
+	{
+		
+	}
+	
+	public Film(String name)
+	{
+		setName(name);
+	}
+	
+	public Film(String name, int length, String country, String language, int year, String genre) 
+	{
+		this.name = name;
+		this.length = length;
+		this.country = country;
+		this.language = language;
+		this.year = year;
+		this.genre = genre;
+	}
 
 	/**
 	@pre id!= null

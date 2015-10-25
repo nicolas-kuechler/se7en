@@ -7,7 +7,7 @@ import javax.persistence.*;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.appengine.api.utils.SystemProperty;
 
-import ch.uzh.se.se7en.client.rpc.FilmService;
+import ch.uzh.se.se7en.client.rpc.FilmListService;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
@@ -18,7 +18,7 @@ import ch.uzh.se.se7en.shared.model.Genre;
  * 
  * @author Roland Schläfli
  */
-public class FilmServiceImpl extends RemoteServiceServlet implements FilmService {
+public class FilmListServiceImpl extends RemoteServiceServlet implements FilmListService {
 	// create the entity manager factory to spawn entityManagers later on
 	private static final EntityManagerFactory entityManagerFactory = Persistence
 			.createEntityManagerFactory("ch.uzh.se.se7en.hibernate");

@@ -9,7 +9,7 @@ import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.Genre;
 
-public interface FilmServiceAsync {
+public interface FilmListServiceAsync {
 
 	void getCountryList(FilmFilter filter, AsyncCallback<List<Country>> callback);
 

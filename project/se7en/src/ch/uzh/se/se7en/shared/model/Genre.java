@@ -32,6 +32,15 @@ public class Genre implements Serializable {
 	@Transient
 	private int numberOfFilms;
 
+	public Genre() {
+
+	}
+
+	public Genre(String name, int numberOfFilms) {
+		this.name = name;
+		this.numberOfFilms = numberOfFilms;
+	}
+
 	/**
 	 * @pre id!= null
 	 * @post -
