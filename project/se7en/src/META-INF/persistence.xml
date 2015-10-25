@@ -25,11 +25,11 @@
 				name="javax.persistence.jdbc.password" value="" /> -->
 
 			<!-- Setup access to the db from local development environment -->
-			<property name="javax.persistence.jdbc.driver"
+			<!-- <property name="javax.persistence.jdbc.driver"
 				value="com.google.appengine.api.rdbms.AppEngineDriver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:google:rdbms://173.194.250.0/se7en" />
 			<property name="javax.persistence.jdbc.user" value="se7en" />
-			<property name="javax.persistence.jdbc.password" value="k1vttuIYXqOPe5!" />
+			<property name="javax.persistence.jdbc.password" value="k1vttuIYXqOPe5!" />-->
 		</properties>
 
 	</persistence-unit>

@@ -2,6 +2,8 @@ package ch.uzh.se.se7en.server.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import javax.persistence.*;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -20,11 +22,10 @@ import ch.uzh.se.se7en.shared.model.Genre;
  */
 public class FilmListServiceImpl extends RemoteServiceServlet implements FilmListService {
 	// create the entity manager factory to spawn entityManagers later on
-	private static final EntityManagerFactory entityManagerFactory = Persistence
-			.createEntityManagerFactory("ch.uzh.se.se7en.hibernate");
+	private static EntityManagerFactory entityManagerFactory = createFactory();
 
 	@Override
-	public List<Film> getFilmList(FilmFilter filter) {
+	public List<Film> getFilmList(FilmFilter filter) {	
 		// create an empty list of movies
 		List<Film> movies = new ArrayList<Film>();
 
@@ -87,6 +88,26 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// return the filled list of genres
 		return genres;
+	}
+	
+	private static EntityManagerFactory createFactory() {
+		Map<String, String> properties = new HashMap<String, String>();
+		
+		// set the properties of the db connection depending on production/development environment
+		if(SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+			properties.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.GoogleDriver");
+			properties.put("javax.persistence.jdbc.url", "jdbc:google:mysql://se-team-se7en:db/se7en");
+			properties.put("javax.persistence.jdbc.user", "root");
+			properties.put("javax.persistence.jdbc.password", "");
+		} else {
+			properties.put("javax.persistence.jdbc.driver", "com.google.appengine.api.rdbms.AppEngineDriver");
+			properties.put("javax.persistence.jdbc.url", "jdbc:google:rdbms://173.194.250.0/se7en");
+			properties.put("javax.persistence.jdbc.user", "se7en");
+			properties.put("javax.persistence.jdbc.password", "k1vttuIYXqOPe5!");
+		}
+		
+		// return a new entity manager factory
+		return Persistence.createEntityManagerFactory("ch.uzh.se.se7en.hibernate", properties);
 	}
 
 }
