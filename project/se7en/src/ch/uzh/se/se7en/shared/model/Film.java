@@ -1,22 +1,50 @@
 package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
-Container to hold the film data on client side and server side.
-Is used to transport the filmdata between client and server.
-@author Nicolas Küchler
-*/
+ * Container to hold the film data on client side and server side. Is used to
+ * transport the movie data between client and server.
+ * 
+ * @author Nicolas Küchler, Roland Schläfli
+ */
+@Entity
+@Table(name = "movies")
 public class Film implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
+	private int id;
+
+	@Column(name = "name")
 	private String name;
-	private int length;
-	private String country; //if there are more than one country: country1 - country2
-	private String language; //if there are more than one language: language1 - language2
-	private int year;
-	private String genre; //if there are more than one genre: genre1 - genre2
+
+	@Column(name = "length", nullable=true)
+	private Integer length;
+	
+	@Column(name = "year", nullable=true)
+	private Integer year;
+	
+	// TODO: will be in a different relation
+	@Column(name = "country", nullable=true)
+	private String country;
+	
+	// TODO: will be in a different relation
+	@Column(name = "language", nullable=true)
+	private String language;
+	
+	// TODO: will be in a different relation
+	@Column(name = "genre", nullable=true)
+	private String genre;
 	
 	public Film()
 	{
@@ -27,8 +55,6 @@ public class Film implements Serializable {
 	{
 		setName(name);
 	}
-	
-	
 	
 	public Film(String name, int length, String country, String language, int year, String genre) 
 	{
@@ -41,6 +67,24 @@ public class Film implements Serializable {
 	}
 
 	/**
+	@pre id!= null
+	@post -
+	@return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	@pre -
+	@post id==id
+	@param id the id to set
+	*/
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
 	@pre name!= null
 	@post -
 	@return the name
@@ -48,7 +92,7 @@ public class Film implements Serializable {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	@pre -
 	@post name==name
@@ -57,25 +101,43 @@ public class Film implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	@pre length!= null
 	@post -
 	@return the length
 	 */
-	public int getLength() {
+	public Integer getLength() {
 		return length;
 	}
-	
+
 	/**
 	@pre -
 	@post length==length
 	@param length the length to set
 	*/
-	public void setLength(int length) {
+	public void setLength(Integer length) {
 		this.length = length;
 	}
-	
+
+	/**
+	@pre year!= null
+	@post -
+	@return the year
+	 */
+	public Integer getYear() {
+		return year;
+	}
+
+	/**
+	@pre -
+	@post year==year
+	@param year the year to set
+	*/
+	public void setYear(Integer year) {
+		this.year = year;
+	}
+
 	/**
 	@pre country!= null
 	@post -
@@ -84,7 +146,7 @@ public class Film implements Serializable {
 	public String getCountry() {
 		return country;
 	}
-	
+
 	/**
 	@pre -
 	@post country==country
@@ -93,7 +155,7 @@ public class Film implements Serializable {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	
+
 	/**
 	@pre language!= null
 	@post -
@@ -102,7 +164,7 @@ public class Film implements Serializable {
 	public String getLanguage() {
 		return language;
 	}
-	
+
 	/**
 	@pre -
 	@post language==language
@@ -111,25 +173,7 @@ public class Film implements Serializable {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
-	
-	/**
-	@pre year!= null
-	@post -
-	@return the year
-	 */
-	public int getYear() {
-		return year;
-	}
-	
-	/**
-	@pre -
-	@post year==year
-	@param year the year to set
-	*/
-	public void setYear(int year) {
-		this.year = year;
-	}
-	
+
 	/**
 	@pre genre!= null
 	@post -
@@ -138,7 +182,7 @@ public class Film implements Serializable {
 	public String getGenre() {
 		return genre;
 	}
-	
+
 	/**
 	@pre -
 	@post genre==genre
@@ -147,6 +191,4 @@ public class Film implements Serializable {
 	public void setGenre(String genre) {
 		this.genre = genre;
 	}
-
-
 }
