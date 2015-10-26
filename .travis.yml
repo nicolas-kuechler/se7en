@@ -1,6 +1,8 @@
 language: java
 notifications:
   slack: team-se7en:1ngqFcl4EfdFRA0y3grHQFu0
+install:
+  - echo "No installation to do."
 script:
   - echo "No script to run."
 deploy:
