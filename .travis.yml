@@ -10,7 +10,4 @@ deploy:
   keyfile: misc/se-team-se7en-35f976fe4c75.json
   default: true
   project: se-team-se7en
-  on:
-    branch:
-      - master
-  	  - dev
+  on: dev
