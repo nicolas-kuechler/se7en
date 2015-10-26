@@ -29,7 +29,7 @@ public class ServerUtil {
 	public static EntityManagerFactory createFactory() {
 		// if createFactory is called and no factory has been initialized yet,
 		// create one
-		if (entityManagerFactory != null) {
+		if (entityManagerFactory == null) {
 			Map<String, String> properties = new HashMap<String, String>();
 
 			// set the properties of the db connection depending on
