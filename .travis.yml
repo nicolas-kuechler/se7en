@@ -11,5 +11,6 @@ deploy:
   default: true
   project: se-team-se7en
   on:
-  	- master
-  	- dev
+    branch:
+      - master
+  	  - dev
