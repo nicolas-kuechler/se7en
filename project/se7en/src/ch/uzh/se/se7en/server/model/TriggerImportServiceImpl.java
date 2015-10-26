@@ -44,9 +44,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		}
 		
 		//insert method for adding films to DB here
-		for (Film film : importedFilms){
-			System.err.println(film.getName());
-		}
+
 		return true;
 	}
 
