@@ -19,6 +19,7 @@ public class Se7en implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		
 		//The following Lines are just demo content
 		Panel container = new Panel();
 		Panel subContainer = new Panel();

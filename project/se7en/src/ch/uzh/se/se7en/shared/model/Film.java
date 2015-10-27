@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.googlecode.jcsv.annotations.MapToColumn;
+
 /**
  * Container to hold the film data on client side and server side. Is used to
  * transport the movie data between client and server.
@@ -26,24 +28,30 @@ public class Film implements Serializable {
 	private int id;
 
 	@Column(name = "name")
+	@MapToColumn(column=0)
 	private String name;
 
 	@Column(name = "length", nullable=true)
+	@MapToColumn(column=1)
 	private Integer length;
-	
-	@Column(name = "year", nullable=true)
-	private Integer year;
 	
 	// TODO: will be in a different relation
 	@Column(name = "country", nullable=true)
+	@MapToColumn(column=2)
 	private String country;
-	
+		
 	// TODO: will be in a different relation
 	@Column(name = "language", nullable=true)
+	@MapToColumn(column=3)
 	private String language;
+	
+	@Column(name = "year", nullable=true)
+	@MapToColumn(column=4)
+	private Integer year;
 	
 	// TODO: will be in a different relation
 	@Column(name = "genre", nullable=true)
+	@MapToColumn(column=5)
 	private String genre;
 	
 	public Film()
