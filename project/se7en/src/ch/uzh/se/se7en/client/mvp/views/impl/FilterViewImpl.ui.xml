@@ -4,6 +4,7 @@
 	xmlns:slider="urn:import:org.gwtbootstrap3.extras.slider.client.ui"
 	xmlns:own="urn:import:ch.uzh.se.se7en.client.mvp.views.widgets">
 	<b:Container fluid="true">
+		<g:FocusPanel ui:field="focusPanel">
 		<b:Form>
 			<b:FieldSet>
 				<b:Row>
@@ -18,8 +19,7 @@
 						<b:FormGroup>
 							<b:FormLabel>Film Length</b:FormLabel>
 							<b:HelpBlock text="" />
-							<slider:RangeSlider ui:field="lengthSlider"
-								min="0" max="200" value="[0, 200]"></slider:RangeSlider>
+							<slider:RangeSlider ui:field="lengthSlider"></slider:RangeSlider>
 						</b:FormGroup>
 					</b:Column>
 
@@ -27,8 +27,7 @@
 						<b:FormGroup>
 							<b:FormLabel>Production Year</b:FormLabel>
 							<b:HelpBlock text="" />
-							<slider:RangeSlider ui:field="yearSlider" min="1900"
-								max="2015" value="[1900, 2015]"></slider:RangeSlider>
+							<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
 						</b:FormGroup>
 					</b:Column>
 
@@ -78,5 +77,6 @@
 				<own:AppliedFilterBox ui:field="appliedFilter"></own:AppliedFilterBox>
 			</b:Row>
 		</b:Form>
+		</g:FocusPanel>
 	</b:Container>
 </ui:UiBinder> 

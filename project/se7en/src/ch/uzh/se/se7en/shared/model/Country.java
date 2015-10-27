@@ -1,4 +1,4 @@
-package ch.uzh.se.se7en.shared.model;
+﻿package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -20,9 +20,8 @@ public class Country implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	// each index in numberOfFilms represents a year, but because there are no
-	// films before 1900 allowed, to save memory, there is a year offset.
-	public static final int YEAR_OFFSET = 1900;
+	public static final int YEAR_OFFSET = 1890; //each index in numberOfFilms represents a year, 
+	//but because there are no films before 1890 allowed, to save memory, there is a year offset.
 
 	@Id
 	@GeneratedValue

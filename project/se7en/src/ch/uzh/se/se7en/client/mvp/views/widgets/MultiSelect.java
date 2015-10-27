@@ -1,5 +1,6 @@
 package ch.uzh.se.se7en.client.mvp.views.widgets;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -32,7 +33,7 @@ public class MultiSelect extends Composite implements HasValue<List<String>>{
 	@Override
 	public List<String> getValue() {
 		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<String>();
 	}
 
 	@Override

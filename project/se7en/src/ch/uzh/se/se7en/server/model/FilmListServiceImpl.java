@@ -1,4 +1,4 @@
-package ch.uzh.se.se7en.server.model;
+﻿package ch.uzh.se.se7en.server.model;
 
 import java.util.ArrayList;
 import java.util.List;

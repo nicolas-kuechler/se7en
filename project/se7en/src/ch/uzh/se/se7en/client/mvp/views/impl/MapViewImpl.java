@@ -6,16 +6,23 @@ import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
 import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideStopEvent;
+import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideStopHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.gwt.charts.client.ChartLoader;
+import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.DataTable;
 import com.googlecode.gwt.charts.client.corechart.PieChart;
 import com.googlecode.gwt.charts.client.geochart.GeoChart;
+import com.googlecode.gwt.charts.client.geochart.GeoChartOptions;
 
+import ch.uzh.se.se7en.client.mvp.Boundaries;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.shared.model.Genre;
@@ -31,9 +38,13 @@ public class MapViewImpl extends Composite implements MapView{
 	private GeoChart geoChart;
 	private DataGrid genreTable;
 	private PieChart genrePieChart;
-	private RangeSlider yearSlider;
+	@UiField (provided = true) RangeSlider yearSlider;
 
 	public MapViewImpl() {
+		yearSlider = new RangeSlider();
+		yearSlider.setMin(Boundaries.MIN_YEAR);
+		yearSlider.setMax(Boundaries.MAX_YEAR);
+		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 	
@@ -51,7 +62,7 @@ public class MapViewImpl extends Composite implements MapView{
 	}
 
 	@Override
-	public void setGeoChart(DataTable countries) {
+	public void setGeoChart(final DataTable countries) {
 		// TODO refresh geoChart with new Datatable
 	}
 

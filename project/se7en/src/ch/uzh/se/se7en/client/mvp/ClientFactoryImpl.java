@@ -3,7 +3,6 @@
  */
 package ch.uzh.se.se7en.client.mvp;
 
-import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
@@ -80,17 +79,6 @@ public class ClientFactoryImpl implements ClientFactory {
 			filmListExportService = GWT.create(FilmListExportService.class);
 		}
 		return filmListExportService;
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public int getCurrentYear() {
-		if (year == 0)
-		{
-			Date date = new Date();
-			year = date.getYear(); //should be fine because its just a placeholder for gwt, gets replaced by the compiler with a js function
-		}
-		return year; 
 	}
 
 	@Override

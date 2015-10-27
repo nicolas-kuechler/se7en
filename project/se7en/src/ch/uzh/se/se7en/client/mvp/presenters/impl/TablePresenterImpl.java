@@ -1,9 +1,11 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 
@@ -18,7 +20,8 @@ import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Film;
 
 /**
- * THIS CLASS CONTAINS DEMO CODE WHICH CANNOT BE USED FOR THE FINAL VERSION
+ * This class connects the TableView (UI of the Table) and the Model of Films.
+ * Whenever a filter is applied, this class makes sure that the new filmlist is represented in the tableview.
  * @author Nicolas Küchler
  *
  */
@@ -72,24 +75,77 @@ public class TablePresenterImpl implements TablePresenter {
 		});
 	}
 	
+	/**
+	Sets up the listening to FilterAppliedEvents and whenever a FilterAppliedEvent is fired, the user is informed about the loading,
+	an rpc call to the server gets the filmdata and when they are ready, they are given to the tableView to display them in the table.
+	@author Nicolas Küchler
+	@pre 	eventBus != null && filmListService != null &&filmDataModel != null
+	@post	eventhandling is setup
+	 */
 	private void setupTableUpdate()
 	{
+		//initialize table with message
+		updateTable(createPseudoFilmList("No Search Results Found"));
+		
 		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
 			@Override
 			public void onFilterAppliedEvent(FilterAppliedEvent event) {
+				//create pseudo film that informs the user about the loading
+				updateTable(createPseudoFilmList("Loading..."));
+				
 				filmListService.getFilmList(filmDataModel.getAppliedFilter(), new AsyncCallback<List<Film>>(){
 					@Override
 					public void onFailure(Throwable caught) {
-						// TODO ERROR HANDLING NEEDS TO BE DEFINED (e.g. --> tableView.setTable(new List with info that reload necessary)
+						//rpc did not get back to client -> display error to the user
+						updateTable(createPseudoFilmList("Error while loading films, please try again"));
+						//TODO Logging to console?
 					}
 					@Override
 					public void onSuccess(List<Film> result) {
-						filmDataModel.setFilmList(result);
-						tableView.setTable(result);
+						if(result.size()==0)
+						{
+							//no films match the filter, so the result is empty --> inform user with pseudoFilmList
+							updateTable(createPseudoFilmList("No Search Results Found"));
+						}
+						else
+						{
+							//result is back and contains films --> display films and save them to the FilmDataModel
+							updateTable(result);
+						}
 					}
 				});
 			}
 		});
 	}
+	
+	/**
+	Helper method that updates the table and saves the new list in the filmDataModel
+	@author Nicolas Küchler
+	@pre	filmDataModel != null && tableView != null
+	@post	table is updated
+	@param films films.size()>0
+	 */
+	private void updateTable(List<Film> films)
+	{
+		filmDataModel.setFilmList(films);
+		tableView.setTable(films);
+	}
+	
+	/**
+	Helper Method to create a pseudo film list to display a message to the user (no results found, error, loading)
+	@author Nicolas Küchler
+	@pre	-
+	@post	-
+	@param 	message String with the information which should be displayed to the user
+	@return List<Film> containing 1 film with the message from the parameter
+	 */
+	private List<Film> createPseudoFilmList(String message)
+	{
+		List<Film> pseudoFilm = new ArrayList<Film>();
+		pseudoFilm.add(new Film(message));
+		return pseudoFilm;
+	}
+	
+	
 
 }
