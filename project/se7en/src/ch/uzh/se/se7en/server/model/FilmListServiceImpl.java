@@ -32,6 +32,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public List<Film> getFilmList(FilmFilter filter) {
+		
 		// create an empty list of movies
 		List<Film> movies = new ArrayList<Film>();
 
