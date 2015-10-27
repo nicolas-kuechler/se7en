@@ -1,4 +1,4 @@
-﻿package ch.uzh.se.se7en.shared.model;
+package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
 import javax.persistence.Column;
