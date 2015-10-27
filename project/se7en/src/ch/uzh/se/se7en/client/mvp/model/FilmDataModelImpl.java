@@ -3,6 +3,7 @@ package ch.uzh.se.se7en.client.mvp.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.user.client.Window;
 import com.googlecode.gwt.charts.client.DataTable;
 
 import ch.uzh.se.se7en.shared.model.Country;

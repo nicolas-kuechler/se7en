@@ -16,7 +16,17 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Override
 	public List<Country> getCountryList(FilmFilter filter) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Country> demo = new ArrayList<Country>();
+		int[] demoProd = new int[127];
+		demoProd[0] = 0;
+		for(int i = 1; i < demoProd.length; i++)
+		{
+			demoProd[i] = demoProd[i-1] + 4;
+		}
+		
+		demo.add(new Country("Germany", "CH", demoProd));
+		demo.add(new Country("United Kingdom", "GB", demoProd));
+		return demo;
 	}
 
 	@Override
