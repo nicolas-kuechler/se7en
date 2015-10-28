@@ -1,4 +1,4 @@
-package ch.uzh.se.se7en.server.model;
+package ch.uzh.se.se7en.server;
 
 /***
  * This class is used for server side logging
