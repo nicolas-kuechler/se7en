@@ -1,0 +1,307 @@
+MapViewImpl:
+
+@Override
+	public void setGeoChart(final DataTable countries) {
+		// TODO refresh geoChart with new Datatable
+		ChartLoader chartLoader = new ChartLoader(ChartPackage.GEOCHART);
+		chartLoader.loadApi(new Runnable(){
+			@Override
+			public void run() {
+				GeoChartOptions options = GeoChartOptions.create();
+				options.setHeight(500);
+				if(geoChart == null)
+				{
+					geoChart = new GeoChart();
+					//panel.clear();
+					panel.add(geoChart);
+					geoChart.draw(countries, options);
+				}
+				geoChart.draw(countries, options);
+			}
+		});
+	}
+
+
+
+
+
+
+DemoCreateCountryList
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import ch.uzh.se.se7en.shared.model.Country;
+
+public class DemoCreateCountryList {
+	public static List<Country> createDummy()
+	{
+		List<Country> demo = new ArrayList<Country>();
+		
+		demo.add(new Country("Andorra"));
+		demo.add(new Country("United Arab Emirates"));
+		demo.add(new Country("Afghanistan"));
+		demo.add(new Country("Antigua and Barbuda"));
+		demo.add(new Country("Anguilla"));
+		demo.add(new Country("Albania"));
+		demo.add(new Country("Armenia"));
+		demo.add(new Country("Angola"));
+		demo.add(new Country("Antarctica"));
+		demo.add(new Country("Argentina"));
+		demo.add(new Country("American Samoa"));
+		demo.add(new Country("Austria"));
+		demo.add(new Country("Australia"));
+		demo.add(new Country("Aruba"));
+		demo.add(new Country("Åland Islands"));
+		demo.add(new Country("Azerbaijan"));
+		demo.add(new Country("Bosnia and Herzegovina"));
+		demo.add(new Country("Barbados"));
+		demo.add(new Country("Bangladesh"));
+		demo.add(new Country("Belgium"));
+		demo.add(new Country("Burkina Faso"));
+		demo.add(new Country("Bulgaria"));
+		demo.add(new Country("Bahrain"));
+		demo.add(new Country("Burundi"));
+		demo.add(new Country("Benin"));
+		demo.add(new Country("Saint Barthélemy"));
+		demo.add(new Country("Bermuda"));
+		demo.add(new Country("Brunei Darussalam"));
+		demo.add(new Country("Bolivia"));
+		demo.add(new Country("Bonaire, Sint Eustatius and Saba"));
+		demo.add(new Country("Brazil"));
+		demo.add(new Country("Bahamas"));
+		demo.add(new Country("Bhutan"));
+		demo.add(new Country("Bouvet Island"));
+		demo.add(new Country("Botswana"));
+		demo.add(new Country("Belarus"));
+		demo.add(new Country("Belize"));
+		demo.add(new Country("Canada"));
+		demo.add(new Country("Cocos (Keeling) Islands"));
+		demo.add(new Country("Democratic Republic of the Congo"));
+		demo.add(new Country("Central African Republic"));
+		demo.add(new Country("Congo"));
+		demo.add(new Country("Switzerland"));
+		demo.add(new Country("Côte d'Ivoire"));
+		demo.add(new Country("Cook Islands"));
+		demo.add(new Country("Chile"));
+		demo.add(new Country("Cameroon"));
+		demo.add(new Country("China"));
+		demo.add(new Country("Colombia"));
+		demo.add(new Country("Costa Rica"));
+		demo.add(new Country("Cuba"));
+		demo.add(new Country("Cabo Verde"));
+		demo.add(new Country("Curaçao"));
+		demo.add(new Country("Christmas Island"));
+		demo.add(new Country("Cyprus"));
+		demo.add(new Country("Czech Republic"));
+		demo.add(new Country("Germany"));
+		demo.add(new Country("Djibouti"));
+		demo.add(new Country("Denmark"));
+		demo.add(new Country("Dominica"));
+		demo.add(new Country("Dominican Republic"));
+		demo.add(new Country("Algeria"));
+		demo.add(new Country("Ecuador"));
+		demo.add(new Country("Estonia"));
+		demo.add(new Country("Egypt"));
+		demo.add(new Country("Western Sahara"));
+		demo.add(new Country("Eritrea"));
+		demo.add(new Country("Spain"));
+		demo.add(new Country("Ethiopia"));
+		demo.add(new Country("Finland"));
+		demo.add(new Country("Fiji"));
+		demo.add(new Country("Falkland Islands (Malvinas)"));
+		demo.add(new Country("Micronesia, Federated States of"));
+		demo.add(new Country("Faroe Islands"));
+		demo.add(new Country("France"));
+		demo.add(new Country("Gabon"));
+		demo.add(new Country("United Kingdom"));
+		demo.add(new Country("Grenada"));
+		demo.add(new Country("Georgia"));
+		demo.add(new Country("French Guiana"));
+		demo.add(new Country("Guernsey"));
+		demo.add(new Country("Ghana"));
+		demo.add(new Country("Gibraltar"));
+		demo.add(new Country("Greenland"));
+		demo.add(new Country("Gambia"));
+		demo.add(new Country("Guinea"));
+		demo.add(new Country("Guadeloupe"));
+		demo.add(new Country("Equatorial Guinea"));
+		demo.add(new Country("Greece"));
+		demo.add(new Country("South Georgia and the South Sandwich Islands"));
+		demo.add(new Country("Guatemala"));
+		demo.add(new Country("Guam"));
+		demo.add(new Country("Guinea-Bissau"));
+		demo.add(new Country("Guyana"));
+		demo.add(new Country("Hong Kong"));
+		demo.add(new Country("Heard Island and McDonald Islands"));
+		demo.add(new Country("Honduras"));
+		demo.add(new Country("Croatia"));
+		demo.add(new Country("Haiti"));
+		demo.add(new Country("Hungary"));
+		demo.add(new Country("Indonesia"));
+		demo.add(new Country("Ireland"));
+		demo.add(new Country("Israel"));
+		demo.add(new Country("Isle of Man"));
+		demo.add(new Country("India"));
+		demo.add(new Country("British Indian Ocean Territory"));
+		demo.add(new Country("Iraq"));
+		demo.add(new Country("Iran"));
+		demo.add(new Country("Iceland"));
+		demo.add(new Country("Italy"));
+		demo.add(new Country("Jersey"));
+		demo.add(new Country("Jamaica"));
+		demo.add(new Country("Jordan"));
+		demo.add(new Country("Japan"));
+		demo.add(new Country("Kenya"));
+		demo.add(new Country("Kyrgyzstan"));
+		demo.add(new Country("Cambodia"));
+		demo.add(new Country("Kiribati"));
+		demo.add(new Country("Comoros"));
+		demo.add(new Country("Saint Kitts and Nevis"));
+		demo.add(new Country("North Korea"));
+		demo.add(new Country("South Korea"));
+		demo.add(new Country("Kuwait"));
+		demo.add(new Country("Cayman Islands"));
+		demo.add(new Country("Kazakhstan"));
+		demo.add(new Country("Lao People's Democratic Republic"));
+		demo.add(new Country("Lebanon"));
+		demo.add(new Country("Saint Lucia"));
+		demo.add(new Country("Liechtenstein"));
+		demo.add(new Country("Sri Lanka"));
+		demo.add(new Country("Liberia"));
+		demo.add(new Country("Lesotho"));
+		demo.add(new Country("Lithuania"));
+		demo.add(new Country("Luxembourg"));
+		demo.add(new Country("Latvia"));
+		demo.add(new Country("Libya"));
+		demo.add(new Country("Morocco"));
+		demo.add(new Country("Monaco"));
+		demo.add(new Country("Moldova, Republic of"));
+		demo.add(new Country("Montenegro"));
+		demo.add(new Country("Saint Martin (French part)"));
+		demo.add(new Country("Madagascar"));
+		demo.add(new Country("Marshall Islands"));
+		demo.add(new Country("Macedonia"));
+		demo.add(new Country("Mali"));
+		demo.add(new Country("Myanmar"));
+		demo.add(new Country("Mongolia"));
+		demo.add(new Country("Macao"));
+		demo.add(new Country("Northern Mariana Islands"));
+		demo.add(new Country("Martinique"));
+		demo.add(new Country("Mauritania"));
+		demo.add(new Country("Montserrat"));
+		demo.add(new Country("Malta"));
+		demo.add(new Country("Mauritius"));
+		demo.add(new Country("Maldives"));
+		demo.add(new Country("Malawi"));
+		demo.add(new Country("Mexico"));
+		demo.add(new Country("Malaysia"));
+		demo.add(new Country("Mozambique"));
+		demo.add(new Country("Namibia"));
+		demo.add(new Country("New Caledonia"));
+		demo.add(new Country("Niger"));
+		demo.add(new Country("Norfolk Island"));
+		demo.add(new Country("Nigeria"));
+		demo.add(new Country("Nicaragua"));
+		demo.add(new Country("Netherlands"));
+		demo.add(new Country("Norway"));
+		demo.add(new Country("Nepal"));
+		demo.add(new Country("Nauru"));
+		demo.add(new Country("Niue"));
+		demo.add(new Country("New Zealand"));
+		demo.add(new Country("Oman"));
+		demo.add(new Country("Panama"));
+		demo.add(new Country("Peru"));
+		demo.add(new Country("French Polynesia"));
+		demo.add(new Country("Papua New Guinea"));
+		demo.add(new Country("Philippines"));
+		demo.add(new Country("Pakistan"));
+		demo.add(new Country("Poland"));
+		demo.add(new Country("Saint Pierre and Miquelon"));
+		demo.add(new Country("Pitcairn"));
+		demo.add(new Country("Puerto Rico"));
+		demo.add(new Country("State of Palestine"));
+		demo.add(new Country("Portugal"));
+		demo.add(new Country("Palau"));
+		demo.add(new Country("Paraguay"));
+		demo.add(new Country("Qatar"));
+		demo.add(new Country("Réunion"));
+		demo.add(new Country("Romania"));
+		demo.add(new Country("Serbia"));
+		demo.add(new Country("Russia"));
+		demo.add(new Country("Rwanda"));
+		demo.add(new Country("Saudi Arabia"));
+		demo.add(new Country("Solomon Islands"));
+		demo.add(new Country("Seychelles"));
+		demo.add(new Country("Sudan"));
+		demo.add(new Country("Sweden"));
+		demo.add(new Country("Singapore"));
+		demo.add(new Country("Saint Helena, Ascension and Tristan da Cunha"));
+		demo.add(new Country("Slovenia"));
+		demo.add(new Country("Svalbard and Jan Mayen"));
+		demo.add(new Country("Slovakia"));
+		demo.add(new Country("Sierra Leone"));
+		demo.add(new Country("San Marino"));
+		demo.add(new Country("Senegal"));
+		demo.add(new Country("Somalia"));
+		demo.add(new Country("Suriname"));
+		demo.add(new Country("South Sudan"));
+		demo.add(new Country("Sao Tome and Principe"));
+		demo.add(new Country("El Salvador"));
+		demo.add(new Country("Sint Maarten (Dutch part)"));
+		demo.add(new Country("Syrian Arab Republic"));
+		demo.add(new Country("Swaziland"));
+		demo.add(new Country("Turks and Caicos Islands"));
+		demo.add(new Country("Chad"));
+		demo.add(new Country("French Southern Territories"));
+		demo.add(new Country("Togo"));
+		demo.add(new Country("Thailand"));
+		demo.add(new Country("Tajikistan"));
+		demo.add(new Country("Tokelau"));
+		demo.add(new Country("Timor-Leste"));
+		demo.add(new Country("Turkmenistan"));
+		demo.add(new Country("Tunisia"));
+		demo.add(new Country("Tonga"));
+		demo.add(new Country("Turkey"));
+		demo.add(new Country("Trinidad and Tobago"));
+		demo.add(new Country("Tuvalu"));
+		demo.add(new Country("Taiwan"));
+		demo.add(new Country("Tanzania, United Republic of"));
+		demo.add(new Country("Ukraine"));
+		demo.add(new Country("Uganda"));
+		demo.add(new Country("United States Minor Outlying Islands"));
+		demo.add(new Country("United States of America"));
+		demo.add(new Country("Uruguay"));
+		demo.add(new Country("Uzbekistan"));
+		demo.add(new Country("Holy See"));
+		demo.add(new Country("Saint Vincent and the Grenadines"));
+		demo.add(new Country("Venezuela"));
+		demo.add(new Country("Virgin Islands, British"));
+		demo.add(new Country("Virgin Islands, U.S."));
+		demo.add(new Country("Vietnam"));
+		demo.add(new Country("Vanuatu"));
+		demo.add(new Country("Wallis and Futuna"));
+		demo.add(new Country("Samoa"));
+		demo.add(new Country("Yemen"));
+		demo.add(new Country("Mayotte"));
+		demo.add(new Country("South Africa"));
+		demo.add(new Country("Zambia"));
+		demo.add(new Country("Zimbabwe"));
+		
+		Random random = new Random();
+		for(int i = 0; i<demo.size(); i++)
+		{
+			int[] filmsInEachYear = new int[125];
+			for(int j=1; j < filmsInEachYear.length; j++)
+			{
+				filmsInEachYear[j] = random.nextInt(15);
+			}
+			demo.get(i).setNumberOfFilms(filmsInEachYear);
+		}
+		
+		return demo;
+	}
+
+}
+

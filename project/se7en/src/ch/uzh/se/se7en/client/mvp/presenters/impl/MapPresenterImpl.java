@@ -82,14 +82,13 @@ public class MapPresenterImpl implements MapPresenter {
 	 */
 	private void setupMapUpdate(){
 		//initialize with empty map
-		
 		filmDataModel.setCountryList(new ArrayList<Country>());
 		updateGeoChart();
+		
 		//listens to FilterAppliedEvents in the EventBus
 		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
 			@Override
 			public void onFilterAppliedEvent(FilterAppliedEvent event) {
-				
 				//update of the yearSlider in the mapView
 				mapView.getYearSlider().setValue(new Range(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd()));
 				
