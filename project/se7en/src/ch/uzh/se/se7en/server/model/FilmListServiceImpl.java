@@ -32,7 +32,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public List<Film> getFilmList(FilmFilter filter) {
-		
+
 		// create an empty list of movies
 		List<Film> movies = new ArrayList<Film>();
 
@@ -58,6 +58,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public List<Country> getCountryList(FilmFilter filter) {
+	
 		// create an empty list of countries
 		List<Country> countries = new ArrayList<Country>();
 
@@ -76,6 +77,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// return the filled list of countries
 		return countries;
+	
 	}
 
 	/**

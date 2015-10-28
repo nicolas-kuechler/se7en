@@ -16,6 +16,7 @@
 	<inherits name="com.googlecode.gwt.charts.Charts" />
 	<inherits name="org.gwtbootstrap3.extras.select.Select" />
 	<inherits name="org.gwtbootstrap3.extras.slider.Slider" />
+	<inherits name="org.gwtbootstrap3.extras.animate.Animate"/>
 
 	<inherits name='com.google.gwt.user.theme.clean.Clean' />
 	<!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->

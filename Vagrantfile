@@ -51,7 +51,7 @@ Vagrant.configure(2) do |config|
     vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-    vb.memory = "2000"
+    vb.memory = "2500"
   end
   #
   # View the documentation for the provider you are using for more

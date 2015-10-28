@@ -189,4 +189,15 @@ public class FilmFilter implements Serializable{
 		this.genres = genres;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "FilmFilter [name=" + name + ", lengthStart=" + lengthStart + ", lengthEnd=" + lengthEnd + ", yearStart="
+				+ yearStart + ", yearEnd=" + yearEnd + ", countries=" + countries + ", languages=" + languages
+				+ ", genres=" + genres + "]";
+	}
+	
+
 }

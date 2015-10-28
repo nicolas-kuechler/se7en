@@ -50,8 +50,8 @@ public class Country implements Serializable {
 		this.numberOfFilms = numberOfFilms;
 	}
 
-	// index 1 holds the numberOfFilms in the year 1900
-	// index 2 holds the numberOfFilms from year 1900 too year 1901
+	// index 1 holds the numberOfFilms in the year 1889
+	// index 2 holds the numberOfFilms from year 1889 too year 1890
 	@Transient
 	private int[] numberOfFilms;
 
@@ -81,7 +81,7 @@ public class Country implements Serializable {
 		// calculates the current year using the array length
 		// numberOfFilms up to the endYear - numberOfFilms up to the year
 		// before the startYear = numberOfFilms between start- and endYear
-		return numberOfFilms[endYear - YEAR_OFFSET] - numberOfFilms[startYear - YEAR_OFFSET - 1];
+		return numberOfFilms[endYear - YEAR_OFFSET+1] - numberOfFilms[startYear - YEAR_OFFSET];
 	}
 
 	/**
