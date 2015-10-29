@@ -17,6 +17,7 @@ import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
+import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 
@@ -50,14 +51,49 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@Override
 	public void onSearch() {
 		FilmFilter currentFilter = new FilmFilter();
-		currentFilter.setName(filterView.getNameBox().getValue());
+		
+		//setting value to null if no name filter is applied 
+		String name = filterView.getNameBox().getValue();
+		if (name.equals("") || name == null)
+		{
+			name = null;
+		}
+		currentFilter.setName(name);
+		
 		currentFilter.setLengthStart((int)filterView.getLengthSlider().getValue().getMinValue());
 		currentFilter.setLengthEnd((int)filterView.getLengthSlider().getValue().getMaxValue());
 		currentFilter.setYearStart((int)filterView.getYearSlider().getValue().getMinValue());
 		currentFilter.setYearEnd((int)filterView.getYearSlider().getValue().getMaxValue());
-		currentFilter.setCountries(filterView.getCountrySelect().getValue());
-		currentFilter.setGenres(filterView.getGenreSelect().getValue());
-		currentFilter.setLanguages(filterView.getLanguageSelect().getValue());
+		
+		//setting value to null if no country filter is applied
+		if (filterView.getCountrySelect().getValue() == null || filterView.getCountrySelect().getValue().size()==0)
+		{
+			currentFilter.setCountries(null);
+		}
+		else
+		{
+			currentFilter.setCountries(filterView.getCountrySelect().getValue());
+		}
+		
+		//setting value to null if no genre filter is applied
+		if (filterView.getGenreSelect().getValue() == null || filterView.getGenreSelect().getValue().size()==0)
+		{
+			currentFilter.setGenres(null);
+		}
+		else
+		{
+			currentFilter.setGenres(filterView.getGenreSelect().getValue());
+		}
+		
+		//setting value to null if no language filter is applied
+		if (filterView.getLanguageSelect().getValue() == null || filterView.getLanguageSelect().getValue().size()==0)
+		{
+			currentFilter.setLanguages(null);
+		}
+		else
+		{
+			currentFilter.setLanguages(filterView.getLanguageSelect().getValue());
+		}
 		
 		filmDataModel.setAppliedFilter(currentFilter);
 		onClear();
@@ -97,19 +133,19 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filterList.add("Production Year = " +filter.getYearStart() + "-" + filter.getYearEnd());
 		
 		//country
-		for(int i = 0; i < filter.getCountries().size(); i++)
+		for(int i = 0; filter != null && i < filter.getCountries().size(); i++)
 		{
 			filterList.add("Production Country = " + filter.getCountries().get(i));
 		}
 		
 		//language
-		for(int i = 0; i < filter.getLanguages().size(); i++)
+		for(int i = 0; filter != null &&  i < filter.getLanguages().size(); i++)
 		{
 			filterList.add("Film Language = " + filter.getLanguages().get(i));
 		}
 		
 		//genre
-		for(int i = 0; i < filter.getGenres().size(); i++)
+		for(int i = 0; filter != null && i < filter.getGenres().size(); i++)
 		{
 			filterList.add("Film Genre = " + filter.getGenres().get(i));
 		}
