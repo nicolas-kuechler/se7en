@@ -196,7 +196,7 @@ public class MapPresenterImpl implements MapPresenter {
 		filter.setYearEnd(Boundaries.MAX_YEAR);
 		
 		//removing the country filter because in the map always all the countries should be considered
-		filter.setCountries(new ArrayList<String>());
+		filter.setCountries(null);
 		
 		return filter;
 	}
