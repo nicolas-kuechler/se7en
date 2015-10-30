@@ -149,9 +149,9 @@ public class Film implements Serializable {
 	}
 
 	/**
-	@pre country!= null
+	@pre countries!= null
 	@post -
-	@return the country
+	@return the countries
 	 */
 	public List<String> getCountries() {
 		return countries;
@@ -159,17 +159,17 @@ public class Film implements Serializable {
 
 	/**
 	@pre -
-	@post country==country
-	@param country the country to set
+	@post countries==countries
+	@param countries the countries to set
 	*/
 	public void setCountries(List<String> countries) {
 		this.countries = countries;
 	}
 
 	/**
-	@pre language!= null
+	@pre languages!= null
 	@post -
-	@return the language
+	@return the languages
 	 */
 	public List<String> getLanguages() {
 		return languages;
@@ -177,17 +177,17 @@ public class Film implements Serializable {
 
 	/**
 	@pre -
-	@post language==language
-	@param language the language to set
+	@post languages==languages
+	@param languages the languages to set
 	*/
 	public void setLanguages(List<String> languages) {
 		this.languages = languages;
 	}
 
 	/**
-	@pre genre!= null
+	@pre genres!= null
 	@post -
-	@return the genre
+	@return the genres
 	 */
 	public List<String> getGenres() {
 		return genres;
@@ -195,8 +195,8 @@ public class Film implements Serializable {
 
 	/**
 	@pre -
-	@post genre==genre
-	@param genre the genre to set
+	@post genres==genres
+	@param genres the genres to set
 	*/
 	public void setGenre(List<String> genres) {
 		this.genres = genres;
