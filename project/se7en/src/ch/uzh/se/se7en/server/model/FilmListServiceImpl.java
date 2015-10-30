@@ -7,6 +7,8 @@ import java.util.HashMap;
 import javax.persistence.*;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.appengine.api.utils.SystemProperty;
 
 import ch.uzh.se.se7en.server.ServerUtil;
@@ -23,6 +25,7 @@ import ch.uzh.se.se7en.shared.model.Genre;
  * 
  * @author Roland Schläfli
  */
+@Singleton
 public class FilmListServiceImpl extends RemoteServiceServlet implements FilmListService {
 	// initialize the entity manager factory
 	private EntityManagerFactory entityManagerFactory = ServerUtil.createFactory();
@@ -50,6 +53,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		entityManager.close();
 
 		// return the filled list of movies
+		
 		return movies;
 	}
 

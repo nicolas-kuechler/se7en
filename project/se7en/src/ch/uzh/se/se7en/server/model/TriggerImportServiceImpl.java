@@ -14,6 +14,8 @@ import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.googlecode.jcsv.annotations.internal.ValueProcessorProvider;
 import com.googlecode.jcsv.reader.CSVReader;
 import com.googlecode.jcsv.reader.internal.AnnotationEntryParser;
@@ -30,6 +32,7 @@ import ch.uzh.se.se7en.shared.model.Film;
  * @author Cyrill Halter, Roland Schläfli
  *
  */
+@Singleton
 public class TriggerImportServiceImpl extends RemoteServiceServlet implements TriggerImportService {
 	// initialize the entity manager factory
 	private EntityManagerFactory entityManagerFactory = ServerUtil.createFactory();
