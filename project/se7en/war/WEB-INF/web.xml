@@ -10,39 +10,19 @@
 	<welcome-file-list>
 		<welcome-file>Se7en.html</welcome-file>
 	</welcome-file-list>
-
-	<servlet>
-		<servlet-name>filmListServiceImpl</servlet-name>
-		<servlet-class>ch.uzh.se.se7en.server.model.FilmListServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>filmListServiceImpl</servlet-name>
-		<url-pattern>/se7en/filmListService</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>filmListExportServiceImpl</servlet-name>
-		<servlet-class>ch.uzh.se.se7en.server.model.FilmListExportServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>filmListExportServiceImpl</servlet-name>
-		<url-pattern>/se7en/filmListExportService</url-pattern>
-	</servlet-mapping>
-
-
-	<servlet>
-		<servlet-name>triggerImportServiceImpl</servlet-name>
-		<servlet-class>ch.uzh.se.se7en.server.model.TriggerImportServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>triggerImportServiceImpl</servlet-name>
-		<url-pattern>/se7en/triggerImportService</url-pattern>
-	</servlet-mapping>
-
-
-
+	
+	<filter>
+	    <filter-name>guiceFilter</filter-name>
+	    <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+  	</filter>
+  	
+  	<filter-mapping>
+    	<filter-name>guiceFilter</filter-name>
+    	<url-pattern>/*</url-pattern>
+  	</filter-mapping>
+  	
+  	<listener>
+  		<listener-class>ch.uzh.se.se7en.server.guice.GirGuiceServletContextListener</listener-class>
+	</listener>
 
 </web-app>
