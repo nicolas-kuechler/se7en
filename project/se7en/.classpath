@@ -60,5 +60,8 @@
 			<attribute name="javadoc_location" value="jar:file:/vagrant/dependencies/jcsv/jcsv-1.4.0-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/testing/guice-4.0.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/testing/gwtmockito-1.1.5.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/testing/mockito-all-1.10.19.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
