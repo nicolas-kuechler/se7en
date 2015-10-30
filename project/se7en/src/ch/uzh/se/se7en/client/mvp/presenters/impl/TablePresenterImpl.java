@@ -27,7 +27,7 @@ import ch.uzh.se.se7en.shared.model.Film;
  */
 public class TablePresenterImpl implements TablePresenter {
 	
-	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
+	//private ClientFactory clientFactory = GWT.create(ClientFactory.class);
 	private EventBus eventBus;
 	private TableView tableView;
 	private FilmDataModel filmDataModel;
@@ -36,17 +36,32 @@ public class TablePresenterImpl implements TablePresenter {
 	private FilmListExportServiceAsync filmListExportService;
 	
 
-	public TablePresenterImpl(final TableView tableView)
-	{
-		filmDataModel = clientFactory.getFilmDataModel();
+//	public TablePresenterImpl(final TableView tableView)
+//	{
+//		filmDataModel = clientFactory.getFilmDataModel();
+//		this.tableView = tableView;
+//		eventBus = clientFactory.getEventBus();
+//		filmListService = clientFactory.getFilmListServiceAsync();
+//		filmListExportService = clientFactory.getFilmListExportServiceAsync();
+//		bind();
+//		setupTableUpdate();
+//	}
+//	
+	
+	
+	public TablePresenterImpl(EventBus eventBus, TableView tableView, FilmDataModel filmDataModel,
+			FilmListServiceAsync filmListService, FilmListExportServiceAsync filmListExportService) {
+		this.eventBus = eventBus;
 		this.tableView = tableView;
-		eventBus = clientFactory.getEventBus();
-		filmListService = clientFactory.getFilmListServiceAsync();
-		filmListExportService = clientFactory.getFilmListExportServiceAsync();
+		this.filmDataModel = filmDataModel;
+		this.filmListService = filmListService;
+		this.filmListExportService = filmListExportService;
 		bind();
 		setupTableUpdate();
 	}
-	
+
+
+
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();

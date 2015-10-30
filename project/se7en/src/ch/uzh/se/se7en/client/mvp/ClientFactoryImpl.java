@@ -130,7 +130,7 @@ public class ClientFactoryImpl implements ClientFactory {
 	public TablePresenter getTablePresenter() {
 		if(tablePresenter == null)
 		{
-			tablePresenter = new TablePresenterImpl(getTableView());
+			//tablePresenter = new TablePresenterImpl(getTableView());
 		}
 		return tablePresenter;
 	}
