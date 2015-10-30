@@ -60,5 +60,30 @@
 			<attribute name="javadoc_location" value="jar:file:/vagrant/dependencies/jcsv/jcsv-1.4.0-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/gin-2.1.2/aopalliance.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/vagrant/gin-2.1.2/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/gin-2.1.2/gin-2.1.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/vagrant/gin-2.1.2/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/gin-2.1.2/guice-3.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/vagrant/gin-2.1.2/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/gin-2.1.2/guice-assistedinject-3.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/vagrant/gin-2.1.2/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/gin-2.1.2/javax.inject.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/vagrant/gin-2.1.2/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
