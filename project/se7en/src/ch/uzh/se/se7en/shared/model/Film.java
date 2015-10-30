@@ -1,6 +1,8 @@
 package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,12 +40,12 @@ public class Film implements Serializable {
 	// TODO: will be in a different relation
 	@Column(name = "country", nullable=true)
 	@MapToColumn(column=2)
-	private String country;
+	private List<String> countries;
 		
 	// TODO: will be in a different relation
 	@Column(name = "language", nullable=true)
 	@MapToColumn(column=3)
-	private String language;
+	private List<String> languages;
 	
 	@Column(name = "year", nullable=true)
 	@MapToColumn(column=4)
@@ -52,7 +54,7 @@ public class Film implements Serializable {
 	// TODO: will be in a different relation
 	@Column(name = "genre", nullable=true)
 	@MapToColumn(column=5)
-	private String genre;
+	private List<String> genres;
 	
 	public Film()
 	{
@@ -64,14 +66,14 @@ public class Film implements Serializable {
 		setName(name);
 	}
 	
-	public Film(String name, int length, String country, String language, int year, String genre) 
+	public Film(String name, int length, List<String> countries, List<String> languages, int year, List<String> genres) 
 	{
 		this.name = name;
 		this.length = length;
-		this.country = country;
-		this.language = language;
+		this.countries = countries;
+		this.languages = languages;
 		this.year = year;
-		this.genre = genre;
+		this.genres = genres;
 	}
 
 	/**
@@ -151,8 +153,8 @@ public class Film implements Serializable {
 	@post -
 	@return the country
 	 */
-	public String getCountry() {
-		return country;
+	public List<String> getCountries() {
+		return countries;
 	}
 
 	/**
@@ -160,8 +162,8 @@ public class Film implements Serializable {
 	@post country==country
 	@param country the country to set
 	*/
-	public void setCountry(String country) {
-		this.country = country;
+	public void setCountries(List<String> countries) {
+		this.countries = countries;
 	}
 
 	/**
@@ -169,8 +171,8 @@ public class Film implements Serializable {
 	@post -
 	@return the language
 	 */
-	public String getLanguage() {
-		return language;
+	public List<String> getLanguages() {
+		return languages;
 	}
 
 	/**
@@ -178,8 +180,8 @@ public class Film implements Serializable {
 	@post language==language
 	@param language the language to set
 	*/
-	public void setLanguage(String language) {
-		this.language = language;
+	public void setLanguages(List<String> languages) {
+		this.languages = languages;
 	}
 
 	/**
@@ -187,8 +189,8 @@ public class Film implements Serializable {
 	@post -
 	@return the genre
 	 */
-	public String getGenre() {
-		return genre;
+	public List<String> getGenres() {
+		return genres;
 	}
 
 	/**
@@ -196,7 +198,7 @@ public class Film implements Serializable {
 	@post genre==genre
 	@param genre the genre to set
 	*/
-	public void setGenre(String genre) {
-		this.genre = genre;
+	public void setGenre(List<String> genres) {
+		this.genres = genres;
 	}
 }
