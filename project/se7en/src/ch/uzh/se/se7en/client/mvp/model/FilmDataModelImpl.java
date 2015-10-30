@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.client.Window;
+import com.google.inject.Inject;
 import com.googlecode.gwt.charts.client.DataTable;
 
 import ch.uzh.se.se7en.shared.model.Country;
@@ -18,6 +19,9 @@ public class FilmDataModelImpl implements FilmDataModel{
 	private List<Country> countries;		//used to adjust GeoChart with YearRangeSlider
 	private FilmFilter appliedFilter;
 	
+
+	
+	@Inject
 	public FilmDataModelImpl()
 	{
 		films = new ArrayList<Film>();		

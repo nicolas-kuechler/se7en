@@ -9,6 +9,8 @@ import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModelImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.TablePresenterImpl;
+import ch.uzh.se.se7en.client.mvp.views.TableView;
+import ch.uzh.se.se7en.client.mvp.views.impl.TableViewImpl;
 
 public class MyAppGinModule extends AbstractGinModule {
 
@@ -17,6 +19,7 @@ public class MyAppGinModule extends AbstractGinModule {
 		bind(TablePresenter.class).to(TablePresenterImpl.class).in(Singleton.class);
 		bind(FilmDataModel.class).to(FilmDataModelImpl.class).in(Singleton.class);
 		bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
+		bind(TableView.class).to(TableViewImpl.class).in(Singleton.class);
 		
 		
 		//TODO Configure the rest

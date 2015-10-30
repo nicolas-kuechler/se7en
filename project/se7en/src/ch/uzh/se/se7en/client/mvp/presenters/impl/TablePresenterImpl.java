@@ -8,6 +8,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.ClientFactory;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
@@ -48,7 +49,7 @@ public class TablePresenterImpl implements TablePresenter {
 //	}
 //	
 	
-	
+	@Inject
 	public TablePresenterImpl(EventBus eventBus, TableView tableView, FilmDataModel filmDataModel,
 			FilmListServiceAsync filmListService, FilmListExportServiceAsync filmListExportService) {
 		this.eventBus = eventBus;

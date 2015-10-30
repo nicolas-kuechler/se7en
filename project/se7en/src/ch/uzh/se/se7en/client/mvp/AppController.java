@@ -12,6 +12,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 
+import ch.uzh.se.se7en.client.gin.MyAppGinjector;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.MapPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.TablePresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.WelcomePresenterImpl;
@@ -32,6 +33,8 @@ import ch.uzh.se.se7en.client.rpc.TriggerImportServiceAsync;
 public class AppController implements ValueChangeHandler<String> {
 
 	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
+	
+	private final MyAppGinjector injector = GWT.create(MyAppGinjector.class);
 	private EventBus eventBus;
 	private HasWidgets container;
 	private HasWidgets subContainer;
@@ -137,8 +140,10 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//combination of tableView and filterView needs to be implemented
 		navBar.setActive(Tokens.TABLE);
+		
 		clientFactory.getFilterPresenter().go(subContainer);
-		clientFactory.getTablePresenter().go(container);
+		//clientFactory.getTablePresenter().go(container);
+		injector.getTablePresenter().go(container);
 	}
 
 	/**
