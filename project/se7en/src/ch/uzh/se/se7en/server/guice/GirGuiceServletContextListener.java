@@ -1,7 +1,6 @@
 package ch.uzh.se.se7en.server.guice;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Properties;
 
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.inject.Guice;
@@ -38,8 +37,8 @@ public class GirGuiceServletContextListener extends GuiceServletContextListener 
 			protected void configureServlets() {
 				// create the jpa module for hibernate and set the relevant
 				// properties
-				final JpaPersistModule persist = new JpaPersistModule("ch.uzh.se.se7en.hibernate");
-				persist.properties(getProperties());
+				final JpaPersistModule persist = new JpaPersistModule("ch.uzh.se.se7en.hibernate")
+						.properties(getProperties());
 				install(persist);
 
 				// filter all requests through the jpa module (create one
@@ -61,10 +60,10 @@ public class GirGuiceServletContextListener extends GuiceServletContextListener 
 	 * @author Roland Schläfli
 	 * @pre -
 	 * @post -
-	 * @return Map<String, String> properties The map of properties
+	 * @return Properties properties The map of properties
 	 */
-	private Map<String, String> getProperties() {
-		Map<String, String> properties = new HashMap<String, String>();
+	private Properties getProperties() {
+		Properties properties = new Properties();
 
 		// check whether the app is deployed or in local development
 		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
