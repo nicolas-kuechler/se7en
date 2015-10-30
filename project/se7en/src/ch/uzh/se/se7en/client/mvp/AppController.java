@@ -12,7 +12,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 
-import ch.uzh.se.se7en.client.gin.MyAppGinjector;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.MapPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.TablePresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.WelcomePresenterImpl;
@@ -41,15 +40,8 @@ public class AppController implements ValueChangeHandler<String> {
 	public AppController(final NavigationBar navBar)
 	{
 		this.navBar = navBar;
-//		eventBus = clientFactory.getEventBus();
 		bind();
-		
-//		//Makes sure that the global search is possible
-//		clientFactory.getFilmDataModel();
-//		clientFactory.getFilterPresenter();
-//		clientFactory.getMapPresenter();
-//		clientFactory.getTablePresenter();
-		
+
 		injector.getFilmDataModel();
 		injector.getFilterPresenter();
 		injector.getMapPresenter();
@@ -129,8 +121,6 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//combination of mapView and filterView needs to be implemented
 		navBar.setActive(Tokens.MAP);
-//		clientFactory.getFilterPresenter().go(subContainer);
-//		clientFactory.getMapPresenter().go(container);
 		
 		injector.getFilterPresenter().go(subContainer);
 		injector.getMapPresenter().go(container);
@@ -147,9 +137,6 @@ public class AppController implements ValueChangeHandler<String> {
 		//combination of tableView and filterView needs to be implemented
 		navBar.setActive(Tokens.TABLE);
 		
-		//clientFactory.getFilterPresenter().go(subContainer);
-		//clientFactory.getTablePresenter().go(container);
-		
 		injector.getFilterPresenter().go(subContainer);
 		injector.getTablePresenter().go(container);
 	}
@@ -165,7 +152,6 @@ public class AppController implements ValueChangeHandler<String> {
 		//welcome view needs to be implemente
 		navBar.setActive(Tokens.HOME);
 		subContainer.clear();
-		//clientFactory.getWelcomePresenter().go(container);
 		injector.getWelcomePresenter().go(container);
 	}
 	

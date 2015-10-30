@@ -1,4 +1,4 @@
-package ch.uzh.se.se7en.client.gin;
+package ch.uzh.se.se7en.client.mvp;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
