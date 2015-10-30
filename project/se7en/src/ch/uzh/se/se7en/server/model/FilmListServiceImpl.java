@@ -2,16 +2,13 @@ package ch.uzh.se.se7en.server.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import javax.persistence.*;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.appengine.api.utils.SystemProperty;
-
-import ch.uzh.se.se7en.server.ServerUtil;
+import com.google.inject.persist.Transactional;
 
 import ch.uzh.se.se7en.client.rpc.FilmListService;
 
@@ -27,83 +24,70 @@ import ch.uzh.se.se7en.shared.model.Genre;
  */
 @Singleton
 public class FilmListServiceImpl extends RemoteServiceServlet implements FilmListService {
-	// initialize the entity manager factory
-	private EntityManagerFactory entityManagerFactory = ServerUtil.createFactory();
+	@Inject
+	Provider<EntityManager> em;
 
 	/**
 	 * Returns a list of films to the client
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param FilmFilter
+	 *            filter A filter object
 	 */
 	@Override
+	@Transactional
 	public List<Film> getFilmList(FilmFilter filter) {
-
 		// create an empty list of movies
 		List<Film> movies = new ArrayList<Film>();
 
-		// create an entity manager
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-		// start a new transaction with the database
-		entityManager.getTransaction().begin();
-
 		// select all movies from the database
-		movies = entityManager.createQuery("from Film", Film.class).getResultList();
-
-		// commit the transaction and close the entity manager
-		entityManager.getTransaction().commit();
-		entityManager.close();
+		movies = em.get().createQuery("from Film", Film.class).getResultList();
 
 		// return the filled list of movies
-		
 		return movies;
 	}
 
 	/**
 	 * Returns a list of countries to the client
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param FilmFilter
+	 *            filter A filter object
 	 */
 	@Override
+	@Transactional
 	public List<Country> getCountryList(FilmFilter filter) {
-	
 		// create an empty list of countries
 		List<Country> countries = new ArrayList<Country>();
 
-		// create an entity manager
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-		// start a new transaction with the database
-		entityManager.getTransaction().begin();
-
 		// select all countries from the database
-		countries = entityManager.createQuery("from Country", Country.class).getResultList();
-
-		// commit the transaction and close the entity manager
-		entityManager.getTransaction().commit();
-		entityManager.close();
+		countries = em.get().createQuery("from Country", Country.class).getResultList();
 
 		// return the filled list of countries
 		return countries;
-	
 	}
 
 	/**
 	 * Returns a list of genres to the client
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param FilmFilter
+	 *            filter A filter object
 	 */
 	@Override
+	@Transactional
 	public List<Genre> getGenreList(FilmFilter filter) {
 		// create an empty list of genres
 		List<Genre> genres = new ArrayList<Genre>();
 
-		// create an entity manager
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-		// start a new transaction with the database
-		entityManager.getTransaction().begin();
-
 		// select all genres from the database
-		genres = entityManager.createQuery("from Genre", Genre.class).getResultList();
-
-		// commit the transaction and close the entity manager
-		entityManager.getTransaction().commit();
-		entityManager.close();
+		genres = em.get().createQuery("from Genre", Genre.class).getResultList();
 
 		// return the filled list of genres
 		return genres;

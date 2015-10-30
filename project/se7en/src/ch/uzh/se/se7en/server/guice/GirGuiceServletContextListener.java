@@ -16,36 +16,57 @@ import ch.uzh.se.se7en.server.model.FilmListServiceImpl;
 import ch.uzh.se.se7en.server.model.TriggerImportServiceImpl;
 
 /**
+ * Creates the servlet context and maps guice servlets to their corresponding
+ * url
  * 
  * @author Roland Schläfli
- *
  */
 public class GirGuiceServletContextListener extends GuiceServletContextListener {
 
+	/**
+	 * Initializes the JPA and GIR modules and maps servlets to urls
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 */
 	@Override
 	protected Injector getInjector() {
 		return Guice.createInjector(new ServletModule() {
 
 			@Override
 			protected void configureServlets() {
+				// create the jpa module for hibernate and set the relevant
+				// properties
 				final JpaPersistModule persist = new JpaPersistModule("ch.uzh.se.se7en.hibernate");
 				persist.properties(getProperties());
-				
 				install(persist);
+
+				// filter all requests through the jpa module (create one
+				// session per http request)
 				filter("/*").through(PersistFilter.class);
-				
+
+				// servlet-to-url mapping
 				serve("/se7en/filmListService").with(FilmListServiceImpl.class);
 				serve("/se7en/filmListExportService").with(FilmListExportServiceImpl.class);
 				serve("/se7en/triggerImportService").with(TriggerImportServiceImpl.class);
 			}
 		}, new GirGuiceModule());
 	}
-	
+
+	/**
+	 * Creates a map of properties for JPA, depending on the environment (local
+	 * dev or app engine)
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @return Map<String, String> properties The map of properties
+	 */
 	private Map<String, String> getProperties() {
 		Map<String, String> properties = new HashMap<String, String>();
 
-		// set the properties of the db connection depending on
-		// production/development environment
+		// check whether the app is deployed or in local development
 		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
 			// app engine production environment
 			properties.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.GoogleDriver");
@@ -59,7 +80,7 @@ public class GirGuiceServletContextListener extends GuiceServletContextListener 
 			properties.put("javax.persistence.jdbc.user", "se7en");
 			properties.put("javax.persistence.jdbc.password", "k1vttuIYXqOPe5!");
 		}
-		
+
 		return properties;
 	}
 
