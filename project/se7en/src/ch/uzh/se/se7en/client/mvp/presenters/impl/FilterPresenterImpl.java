@@ -10,6 +10,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.Boundaries;
 import ch.uzh.se.se7en.client.mvp.ClientFactory;
@@ -28,14 +29,23 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private FilterView filterView;
 	private FilmDataModel filmDataModel;
 	
-
-	public FilterPresenterImpl(final FilterView filterView)
-	{
-		filmDataModel = clientFactory.getFilmDataModel();
-		eventBus = clientFactory.getEventBus();
+	
+	@Inject
+	public FilterPresenterImpl(EventBus eventBus, FilterView filterView, FilmDataModel filmDataModel) {
+		super();
+		this.eventBus = eventBus;
 		this.filterView = filterView;
+		this.filmDataModel = filmDataModel;
 		bind();
 	}
+
+//	public FilterPresenterImpl(final FilterView filterView)
+//	{
+//		filmDataModel = clientFactory.getFilmDataModel();
+//		eventBus = clientFactory.getEventBus();
+//		this.filterView = filterView;
+//		bind();
+//	}
 
 	@Override
 	public void go(HasWidgets container) {

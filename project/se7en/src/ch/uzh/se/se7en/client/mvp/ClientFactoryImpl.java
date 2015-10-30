@@ -139,7 +139,7 @@ public class ClientFactoryImpl implements ClientFactory {
 	public MapPresenter getMapPresenter() {
 		if(mapPresenter == null)
 		{
-			mapPresenter = new MapPresenterImpl(getMapView());
+			//mapPresenter = new MapPresenterImpl(getMapView());
 		}
 		return mapPresenter;
 	}
@@ -157,7 +157,7 @@ public class ClientFactoryImpl implements ClientFactory {
 	public FilterPresenter getFilterPresenter() {
 		if(filterPresenter == null)
 		{
-			filterPresenter = new FilterPresenterImpl(getFilterView());
+			//filterPresenter = new FilterPresenterImpl(getFilterView());
 		}
 		return filterPresenter;
 	}

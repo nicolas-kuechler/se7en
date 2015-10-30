@@ -43,14 +43,19 @@ public class AppController implements ValueChangeHandler<String> {
 	public AppController(final NavigationBar navBar)
 	{
 		this.navBar = navBar;
-		eventBus = clientFactory.getEventBus();
+//		eventBus = clientFactory.getEventBus();
 		bind();
 		
-		//Makes sure that the global search is possible
-		clientFactory.getFilmDataModel();
-		clientFactory.getFilterPresenter();
-		clientFactory.getMapPresenter();
-		clientFactory.getTablePresenter();
+//		//Makes sure that the global search is possible
+//		clientFactory.getFilmDataModel();
+//		clientFactory.getFilterPresenter();
+//		clientFactory.getMapPresenter();
+//		clientFactory.getTablePresenter();
+		
+		injector.getFilmDataModel();
+		injector.getFilterPresenter();
+		injector.getMapPresenter();
+		injector.getTablePresenter();
 	}
 	
 	/**
@@ -126,8 +131,11 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//combination of mapView and filterView needs to be implemented
 		navBar.setActive(Tokens.MAP);
-		clientFactory.getFilterPresenter().go(subContainer);
-		clientFactory.getMapPresenter().go(container);
+//		clientFactory.getFilterPresenter().go(subContainer);
+//		clientFactory.getMapPresenter().go(container);
+		
+		injector.getFilterPresenter().go(subContainer);
+		injector.getMapPresenter().go(container);
 	}
 
 	/**
@@ -141,8 +149,10 @@ public class AppController implements ValueChangeHandler<String> {
 		//combination of tableView and filterView needs to be implemented
 		navBar.setActive(Tokens.TABLE);
 		
-		clientFactory.getFilterPresenter().go(subContainer);
+		//clientFactory.getFilterPresenter().go(subContainer);
 		//clientFactory.getTablePresenter().go(container);
+		
+		injector.getFilterPresenter().go(subContainer);
 		injector.getTablePresenter().go(container);
 	}
 
@@ -157,7 +167,8 @@ public class AppController implements ValueChangeHandler<String> {
 		//welcome view needs to be implemente
 		navBar.setActive(Tokens.HOME);
 		subContainer.clear();
-		clientFactory.getWelcomePresenter().go(container);
+		//clientFactory.getWelcomePresenter().go(container);
+		injector.getWelcomePresenter().go(container);
 	}
 	
 	private void doImport(String token)
