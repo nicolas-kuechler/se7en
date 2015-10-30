@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.Boundaries;
-import ch.uzh.se.se7en.client.mvp.ClientFactory;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
@@ -24,7 +23,6 @@ import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class FilterPresenterImpl implements FilterPresenter {
 
-	private ClientFactory clientFactory  = GWT.create(ClientFactory.class);
 	private EventBus eventBus;
 	private FilterView filterView;
 	private FilmDataModel filmDataModel;
@@ -38,14 +36,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 		this.filmDataModel = filmDataModel;
 		bind();
 	}
-
-//	public FilterPresenterImpl(final FilterView filterView)
-//	{
-//		filmDataModel = clientFactory.getFilmDataModel();
-//		eventBus = clientFactory.getEventBus();
-//		this.filterView = filterView;
-//		bind();
-//	}
 
 	@Override
 	public void go(HasWidgets container) {

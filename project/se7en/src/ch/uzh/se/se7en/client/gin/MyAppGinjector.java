@@ -36,7 +36,4 @@ public interface MyAppGinjector extends Ginjector {
 	FilmListServiceAsync getFilmListServiceAsync();
 	
 	FilmListExportServiceAsync getFilmListExportServiceAsync();
-	
-
-
 }

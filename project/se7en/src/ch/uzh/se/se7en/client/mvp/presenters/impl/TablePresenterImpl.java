@@ -10,7 +10,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 
-import ch.uzh.se.se7en.client.mvp.ClientFactory;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
@@ -35,19 +34,7 @@ public class TablePresenterImpl implements TablePresenter {
 	
 	private FilmListServiceAsync filmListService;
 	private FilmListExportServiceAsync filmListExportService;
-	
 
-//	public TablePresenterImpl(final TableView tableView)
-//	{
-//		filmDataModel = clientFactory.getFilmDataModel();
-//		this.tableView = tableView;
-//		eventBus = clientFactory.getEventBus();
-//		filmListService = clientFactory.getFilmListServiceAsync();
-//		filmListExportService = clientFactory.getFilmListExportServiceAsync();
-//		bind();
-//		setupTableUpdate();
-//	}
-//	
 	
 	@Inject
 	public TablePresenterImpl(EventBus eventBus, TableView tableView, FilmDataModel filmDataModel,
@@ -60,8 +47,6 @@ public class TablePresenterImpl implements TablePresenter {
 		bind();
 		setupTableUpdate();
 	}
-
-
 
 	@Override
 	public void go(HasWidgets container) {
