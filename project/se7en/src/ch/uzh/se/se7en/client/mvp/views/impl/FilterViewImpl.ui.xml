@@ -7,15 +7,17 @@
 		<g:FocusPanel ui:field="focusPanel">
 		<b:Form>
 			<b:FieldSet>
+			
+
 				<b:Row>
-					<b:Column size="MD_4">
+					<b:Column size="MD_4" styleName="filterColLeft">
 						<b:FormGroup>
 							<b:FormLabel>Film Name</b:FormLabel>
 							<b:TextBox ui:field="nameBox"></b:TextBox>
 						</b:FormGroup>
 					</b:Column>
 
-					<b:Column size="MD_4">
+					<b:Column size="MD_4" styleName="filterColMiddle">
 						<b:FormGroup>
 							<b:FormLabel>Film Length</b:FormLabel>
 							<b:HelpBlock text="" />
@@ -23,7 +25,7 @@
 						</b:FormGroup>
 					</b:Column>
 
-					<b:Column size="MD_4">
+					<b:Column size="MD_4" styleName="filterColRight">
 						<b:FormGroup>
 							<b:FormLabel>Production Year</b:FormLabel>
 							<b:HelpBlock text="" />
@@ -34,21 +36,21 @@
 				</b:Row>
 
 				<b:Row>
-					<b:Column size="MD_4">
+					<b:Column size="MD_4" styleName="filterColLeft">
 						<b:FormGroup>
 							<b:FormLabel>Production Country</b:FormLabel>
 							<own:MultiSelect ui:field="countrySelect"></own:MultiSelect>
 						</b:FormGroup>
 					</b:Column>
 
-					<b:Column size="MD_4">
+					<b:Column size="MD_4" styleName="filterColMiddle">
 						<b:FormGroup>
 							<b:FormLabel>Film Genre</b:FormLabel>
 							<own:MultiSelect ui:field="genreSelect"></own:MultiSelect>
 						</b:FormGroup>
 					</b:Column>
 
-					<b:Column size="MD_4">
+					<b:Column size="MD_4" styleName="filterColRight">
 						<b:FormGroup>
 							<b:FormLabel>Film Language</b:FormLabel>
 							<own:MultiSelect ui:field="languageSelect"></own:MultiSelect>
@@ -67,7 +69,7 @@
 					
 				</b:Column>
 
-				<b:Column size="MD_4">
+				<b:Column size="MD_4" styleName="filterColSearch">
 					<b:Button ui:field="clearBtn">Clear</b:Button>
 					<b:Button ui:field="searchBtn">Search</b:Button>
 				</b:Column>

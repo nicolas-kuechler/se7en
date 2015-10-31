@@ -34,6 +34,7 @@ import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.Boundaries;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
+import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.Genre;
 
 public class MapViewImpl extends Composite implements MapView{
@@ -52,6 +53,7 @@ public class MapViewImpl extends Composite implements MapView{
 	
 	@UiField (provided = true) RangeSlider yearSlider;
 	@UiField PanelBody panel;
+	@UiField DataGrid<Film> dataGrid;
 
 	@Inject
 	public MapViewImpl() {
