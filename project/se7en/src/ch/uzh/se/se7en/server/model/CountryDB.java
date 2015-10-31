@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -33,6 +35,9 @@ public class CountryDB implements DTO {
 	private String code;
 	
 	@ManyToMany(targetEntity = FilmDB.class)
+	@JoinTable(name = "film_countries",
+		joinColumns={@JoinColumn(name = "country_id")},
+		inverseJoinColumns={@JoinColumn(name = "film_id")})
 	private List<FilmDB> films;
 	
 	/**
@@ -43,10 +48,7 @@ public class CountryDB implements DTO {
 	 * @return Country The CountryDB entity converted to a country data transfer object
 	 */
 	public Country toCountry() {
-		// TODO: fill with the real number of films
-		int [] numOfFilms = {0, 1, 2, 3};
-
-		return new Country(id, name, code, numOfFilms);
+		return new Country(id, name, code);
 	}
 
 	/**
