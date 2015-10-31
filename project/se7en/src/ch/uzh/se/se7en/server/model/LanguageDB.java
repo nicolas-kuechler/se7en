@@ -2,6 +2,7 @@ package ch.uzh.se.se7en.server.model;
 
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +11,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import ch.uzh.se.se7en.shared.model.DTO;
 import ch.uzh.se.se7en.shared.model.Language;
@@ -20,6 +24,8 @@ import ch.uzh.se.se7en.shared.model.Language;
  * @author Roland Schläfli
  */
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE) 
 @Table(name = "languages")
 public class LanguageDB implements DTO {
 	@Id

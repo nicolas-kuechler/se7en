@@ -2,12 +2,16 @@ package ch.uzh.se.se7en.server.model;
 
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import ch.uzh.se.se7en.server.model.FilmDB;
 import ch.uzh.se.se7en.shared.model.Country;
@@ -19,6 +23,8 @@ import ch.uzh.se.se7en.shared.model.DTO;
  * @author Roland Schläfli
  */
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE) 
 @Table(name = "countries")
 public class CountryDB implements DTO {
 	@Id

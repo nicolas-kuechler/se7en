@@ -6,20 +6,16 @@ import java.io.Reader;
 import java.nio.channels.Channels;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
-import com.googlecode.jcsv.annotations.MapToColumn;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,6 +28,7 @@ import com.googlecode.jcsv.reader.internal.AnnotationEntryParser;
 import com.googlecode.jcsv.reader.internal.CSVReaderBuilder;
 
 import ch.uzh.se.se7en.client.rpc.TriggerImportService;
+import ch.uzh.se.se7en.server.FilmHelper;
 import ch.uzh.se.se7en.shared.model.Film;
 
 /**

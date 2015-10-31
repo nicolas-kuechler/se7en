@@ -2,12 +2,16 @@ package ch.uzh.se.se7en.server.model;
 
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import ch.uzh.se.se7en.shared.model.DTO;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -20,6 +24,8 @@ import ch.uzh.se.se7en.shared.model.Genre;
  * 
  */
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE) 
 @Table(name = "genres")
 public class GenreDB implements DTO {
 	@Id

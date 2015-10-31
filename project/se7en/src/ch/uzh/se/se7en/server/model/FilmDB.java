@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import ch.uzh.se.se7en.shared.model.DTO;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -22,6 +26,8 @@ import ch.uzh.se.se7en.shared.model.Film;
  * @author Roland Schläfli
  */
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE) 
 @Table(name = "films")
 public class FilmDB implements DTO {
 	@Id
