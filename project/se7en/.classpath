@@ -77,5 +77,8 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="/vagrant/dependencies/guice/guice-assistedinject-3.0.jar"/>
 	<classpathentry kind="lib" path="/vagrant/dependencies/guice/javax.inject.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/hibernate/optional/ehcache/ehcache-core-2.4.3.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/hibernate/optional/ehcache/hibernate-ehcache-4.2.21.Final.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/hibernate/optional/ehcache/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
