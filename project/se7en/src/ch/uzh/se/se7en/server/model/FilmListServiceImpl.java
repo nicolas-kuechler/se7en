@@ -28,7 +28,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	Provider<EntityManager> em;
 
 	/**
-	 * Returns a list of films to the client
+	 * Returns a filtered list of films to the client
 	 * 
 	 * @author Roland Schläfli
 	 * @pre -
@@ -50,7 +50,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	}
 
 	/**
-	 * Returns a list of countries to the client
+	 * Returns a filtered list of countries to the client
 	 * 
 	 * @author Roland Schläfli
 	 * @pre -
@@ -72,7 +72,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	}
 
 	/**
-	 * Returns a list of genres to the client
+	 * Returns a filtered list of genres to the client
 	 * 
 	 * @author Roland Schläfli
 	 * @pre -
