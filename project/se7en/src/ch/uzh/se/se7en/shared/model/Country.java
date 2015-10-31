@@ -33,11 +33,15 @@ public class Country implements Serializable, DTO {
 		this.name = name;
 	}
 
-	public Country(int id, String name, String code, int[] numberOfFilms) {
-		this.id = id;
+	public Country(String name, String code) {
 		this.name = name;
 		this.code = code;
-		this.numberOfFilms = numberOfFilms;
+	}
+	
+	public Country(int id, String name, String code) {
+		this(name, code);
+		
+		this.id = id;
 	}
 	
 	/**
