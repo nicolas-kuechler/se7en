@@ -1,6 +1,7 @@
 package ch.uzh.se.se7en.server.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -51,8 +52,6 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// create an empty list of movies
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
 		List<Film> films = new ArrayList<Film>();
-		
-		System.out.println(filter);
 
 		// instantiate an entity manager
 		EntityManager manager = em.get();
@@ -64,16 +63,20 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		CriteriaQuery<FilmDB> q = cb.createQuery(FilmDB.class);
 		Root<FilmDB> filmRoot = q.from(FilmDB.class);
 		
+		
 		// define the parameters
 		ParameterExpression<Integer> minLength = cb.parameter(Integer.class);
 		ParameterExpression<Integer> maxLength = cb.parameter(Integer.class);
 		ParameterExpression<Integer> minYear = cb.parameter(Integer.class);
 		ParameterExpression<Integer> maxYear = cb.parameter(Integer.class);
 		ParameterExpression<String> findName = cb.parameter(String.class);
+		
+		// specify which information we need from the current row
 		Path<Integer> length = filmRoot.get("length");
 		Path<Integer> year = filmRoot.get("year");
 		Path<String> name = filmRoot.get("name");
 		
+		// initialize an empty list of predicates for where clause
 		List<Predicate> criteria = new ArrayList<Predicate>();
 		
 		// add length and year (always valid numbers)
@@ -85,10 +88,26 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			criteria.add(cb.like(name, findName));
 		}
 		
+		// if at least one country is in the list of filter countries
+		if(filter.getCountries() != null) {
+			// TODO
+		}
+		
+		// if at least one genre is in the list of filter genres
+		if(filter.getGenres() != null) {
+			// TODO
+		}
+		
+		// if at least one language is in the list of filter languages
+		if(filter.getLanguages() != null) {
+			// TODO
+		}
+				
 		// build the query
 		q.select(filmRoot).where(
 				criteria.toArray(new Predicate[criteria.size()])
 		);
+		
 		
 		// create a typed query from our criteria query
 		TypedQuery<FilmDB> query = manager.createQuery(q);
@@ -101,20 +120,23 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		query.setParameter(minYear, filter.getYearStart());
 		query.setParameter(maxYear, filter.getYearEnd());
 		
+		// if the name in the filter is set, set the param
 		if(filter.getName() != null) {
 			query.setParameter(findName, "%" + filter.getName() + "%");
 		}
 		
+		
 		// execute the query
 		dbFilms = query.getResultList();
 
+		
 		// convert each FilmDB instance to a Film DataTransferObject
 		for (FilmDB film : dbFilms) {
 			Film f = film.toFilm();
-			System.out.println(f);
 			films.add(f);
 		}
 
+		
 		// return the filled list of movies
 		return films;
 	}
@@ -136,14 +158,44 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// create an empty list of countries
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 		List<Country> countries = new ArrayList<Country>();
-
+		
 		// select all countries from the database
 		dbCountries = em.get().createQuery("from CountryDB", CountryDB.class).getResultList();
-
+				
+		// get the current year
+		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+		
 		// convert each CountryDB instance to a Country DataTransferObject
 		for (CountryDB country : dbCountries) {
 			Country c = country.toCountry();
-			System.out.println(c);
+			
+			// initialize a new array for all years
+			int[] filmsPerYear = new int[currentYear - Country.YEAR_OFFSET + 1];
+			
+			// iterate through all the films of this country
+			List<FilmDB> films = country.getFilms();
+			for(FilmDB film : films) {
+				// TODO: there have to be better ways to do this..
+				if(film.getYear() != null
+						&& filter.getLengthStart() < film.getLength() 
+						&& filter.getLengthEnd() > film.getLength()
+						&& filter.getYearStart() < film.getYear()
+						&& filter.getYearEnd() > film.getYear()
+						&& (
+								filter.getName() == null 
+								||
+								film.getName().toLowerCase().contains(filter.getName().toLowerCase())
+							)
+					) {
+					// increment the value at the year of the current film by 1
+					filmsPerYear[film.getYear() - Country.YEAR_OFFSET + 1]++;
+				}
+			}
+			
+			// start the number of films array transformation
+			c.setNumberOfFilms(filmsPerYear);
+			
+			// add the country to the result list
 			countries.add(c);
 		}
 
@@ -169,7 +221,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 		List<Genre> genres = new ArrayList<Genre>();
 
-		// select all countries from the database
+		// select all genres from the database
 		dbGenres = em.get().createQuery("from GenreDB", GenreDB.class).getResultList();
 
 		// convert each GenreDB instance to a Genre DataTransferObject
