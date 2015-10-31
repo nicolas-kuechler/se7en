@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import org.hibernate.ejb.QueryHints;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -44,8 +46,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
 		List<Film> films = new ArrayList<Film>();
 
-		// select all movies from the database
-		dbFilms = em.get().createQuery("from FilmDB", FilmDB.class).getResultList();
+		// create a query
+		TypedQuery query = em.get()
+				.createQuery("from FilmDB", FilmDB.class)
+				// allow the query to cache it's results
+				.setHint(QueryHints.HINT_CACHEABLE, Boolean.TRUE);
+		
+		// execute the query
+		dbFilms = query.getResultList();
 
 		// convert each FilmDB instance to a Film DataTransferObject
 		for (FilmDB film : dbFilms) {
@@ -76,8 +84,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 		List<Country> countries = new ArrayList<Country>();
 
-		// select all countries from the database
-		dbCountries = em.get().createQuery("from CountryDB", CountryDB.class).getResultList();
+		// create a query
+		TypedQuery query = em.get()
+				.createQuery("from CountryDB", CountryDB.class)
+				// allow the query to cache it's results
+				.setHint("org.hibernate.cacheable", Boolean.TRUE);
+				
+		// execute the query
+		dbCountries = query.getResultList();
 
 		// convert each CountryDB instance to a Country DataTransferObject
 		for (CountryDB country : dbCountries) {
@@ -108,8 +122,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 		List<Genre> genres = new ArrayList<Genre>();
 
-		// select all countries from the database
-		dbGenres = em.get().createQuery("from GenreDB", GenreDB.class).getResultList();
+		// create a query
+		TypedQuery query = em.get()
+				.createQuery("from GenreDB", GenreDB.class)
+				// allow the query to cache it's results
+				.setHint("org.hibernate.cacheable", Boolean.TRUE);
+				
+		// execute the query
+		dbGenres = query.getResultList();
 
 		// convert each GenreDB instance to a Genre DataTransferObject
 		for (GenreDB genre : dbGenres) {
