@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.Boundaries;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
@@ -51,6 +52,7 @@ public class FilterViewImpl extends Composite implements FilterView{
 	@UiField AppliedFilterBox appliedFilter;
 	@UiField FocusPanel focusPanel;
 	
+	@Inject
 	public FilterViewImpl() {
 		//Setting the Range for the Sliders
 		lengthSlider = new RangeSlider();

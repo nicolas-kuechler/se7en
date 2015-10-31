@@ -75,5 +75,7 @@
 			<attribute name="javadoc_location" value="jar:file:/vagrant/dependencies/guice/guice-servlet-3.0-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/guice/guice-assistedinject-3.0.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/guice/javax.inject.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
