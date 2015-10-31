@@ -15,6 +15,7 @@ public final class ServerLog {
 	
 	@return -
 	 */
+	//This method may not be working correctly, don't use for the moment.. writeErr works fine
 	public static void writeMsg(String message){
 		System.out.println(message);
 	}

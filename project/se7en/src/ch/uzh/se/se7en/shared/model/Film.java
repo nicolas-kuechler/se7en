@@ -21,22 +21,27 @@ public class Film implements Serializable, DTO {
 	private List<String> genres;
 
 	public Film() {
-
 	}
 
 	public Film(String name) {
 		this.name = name;
 	}
 
-	public Film(int id, String name, int length, int year, List<String> countries, List<String> languages,
+	public Film(String name, int length, int year, List<String> countries, List<String> languages,
 			List<String> genres) {
-		this.id = id;
 		this.name = name;
 		this.length = length;
 		this.countries = countries;
 		this.languages = languages;
 		this.year = year;
 		this.genres = genres;
+	}
+	
+	public Film(int id, String name, int length, int year, List<String> countries, List<String> languages,
+			List<String> genres) {
+		this(name, length, year, countries, languages, genres);
+		
+		this.id = id;
 	}
 
 	/**
@@ -51,136 +56,129 @@ public class Film implements Serializable, DTO {
 	public String toString() {
 		return "Id: " + id + " - Name: " + name + " - Länge: " + length + " - Länder: " + countries + " - Sprachen: " + languages + " - Genres: " + genres;
 	}
-	
+
 	/**
-	 * @pre id!= null
-	 * @post -
-	 * @return the id
+	@pre id!= null
+	@post -
+	@return the id
 	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * @pre -
-	 * @post id==id
-	 * @param id
-	 *            the id to set
-	 */
+	@pre -
+	@post id==id
+	@param id the id to set
+	*/
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	/**
-	 * @pre name!= null
-	 * @post -
-	 * @return the name
+	@pre name!= null
+	@post -
+	@return the name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @pre -
-	 * @post name==name
-	 * @param name
-	 *            the name to set
-	 */
+	@pre -
+	@post name==name
+	@param name the name to set
+	*/
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @pre length!= null
-	 * @post -
-	 * @return the length
+	@pre length!= null
+	@post -
+	@return the length
 	 */
 	public Integer getLength() {
 		return length;
 	}
 
 	/**
-	 * @pre -
-	 * @post length==length
-	 * @param length
-	 *            the length to set
-	 */
+	@pre -
+	@post length==length
+	@param length the length to set
+	*/
 	public void setLength(Integer length) {
 		this.length = length;
 	}
 
 	/**
-	 * @pre year!= null
-	 * @post -
-	 * @return the year
+	@pre year!= null
+	@post -
+	@return the year
 	 */
 	public Integer getYear() {
 		return year;
 	}
 
 	/**
-	 * @pre -
-	 * @post year==year
-	 * @param year
-	 *            the year to set
-	 */
+	@pre -
+	@post year==year
+	@param year the year to set
+	*/
 	public void setYear(Integer year) {
 		this.year = year;
 	}
 
 	/**
-	 * @pre countries!= null
-	 * @post -
-	 * @return the countries
+	@pre countries!= null
+	@post -
+	@return the countries
 	 */
 	public List<String> getCountries() {
 		return countries;
 	}
 
 	/**
-	 * @pre -
-	 * @post countries==countries
-	 * @param countries
-	 *            the countries to set
-	 */
+	@pre -
+	@post countries==countries
+	@param countries the countries to set
+	*/
 	public void setCountries(List<String> countries) {
 		this.countries = countries;
 	}
 
 	/**
-	 * @pre languages!= null
-	 * @post -
-	 * @return the languages
+	@pre languages!= null
+	@post -
+	@return the languages
 	 */
 	public List<String> getLanguages() {
 		return languages;
 	}
 
 	/**
-	 * @pre -
-	 * @post languages==languages
-	 * @param languages
-	 *            the languages to set
-	 */
+	@pre -
+	@post languages==languages
+	@param languages the languages to set
+	*/
 	public void setLanguages(List<String> languages) {
 		this.languages = languages;
 	}
 
 	/**
-	 * @pre genres!= null
-	 * @post -
-	 * @return the genres
+	@pre genres!= null
+	@post -
+	@return the genres
 	 */
 	public List<String> getGenres() {
 		return genres;
 	}
 
 	/**
-	 * @pre -
-	 * @post genres==genres
-	 * @param genres
-	 *            the genres to set
-	 */
+	@pre -
+	@post genres==genres
+	@param genres the genres to set
+	*/
 	public void setGenres(List<String> genres) {
 		this.genres = genres;
 	}
