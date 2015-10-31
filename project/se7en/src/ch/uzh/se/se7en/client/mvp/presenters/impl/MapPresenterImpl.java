@@ -9,13 +9,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.inject.Inject;
 import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.ColumnType;
 import com.googlecode.gwt.charts.client.DataTable;
 
 import ch.uzh.se.se7en.client.mvp.Boundaries;
-import ch.uzh.se.se7en.client.mvp.ClientFactory;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
@@ -27,23 +27,22 @@ import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class MapPresenterImpl implements MapPresenter {
 	
-	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
 	private MapView mapView;
 	private EventBus eventBus;
 	private FilmListServiceAsync filmListService;
 	private FilmDataModel filmDataModel;
 	
-
-	public MapPresenterImpl(final MapView mapView)
-	{
-		filmDataModel = clientFactory.getFilmDataModel();
-		eventBus = clientFactory.getEventBus();
-		filmListService = clientFactory.getFilmListServiceAsync();
+	@Inject
+	public MapPresenterImpl(MapView mapView, EventBus eventBus, FilmListServiceAsync filmListService,
+			FilmDataModel filmDataModel) {
 		this.mapView = mapView;
+		this.eventBus = eventBus;
+		this.filmListService = filmListService;
+		this.filmDataModel = filmDataModel;
 		bind();
 		setupMapUpdate();
 	}
-	
+
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
