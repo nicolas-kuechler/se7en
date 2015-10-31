@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.Boundaries;
+import ch.uzh.se.se7en.client.mvp.Tokens;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
@@ -26,6 +27,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private EventBus eventBus;
 	private FilterView filterView;
 	private FilmDataModel filmDataModel;
+	private String mode;
 	
 	
 	@Inject
@@ -95,10 +97,14 @@ public class FilterPresenterImpl implements FilterPresenter {
 			currentFilter.setLanguages(filterView.getLanguageSelect().getValue());
 		}
 		
+		
 		filmDataModel.setAppliedFilter(currentFilter);
+		filmDataModel.setAppliedMapFilter(adjustedMapFilter(currentFilter));
+		
 		onClear();
 		eventBus.fireEvent(new FilterAppliedEvent());
-		filterView.setAppliedFilter(convertFilmFilterToList(currentFilter));
+		updateAppliedFilterBox();
+		
 	}
 
 	@Override
@@ -113,7 +119,21 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 	@Override
 	public void setMode(String mode) {
+		this.mode = mode;
+		updateAppliedFilterBox();
 		filterView.setMode(mode);
+	}
+	
+	private void updateAppliedFilterBox()
+	{
+		if (mode.equals(Tokens.MAP))
+		{
+			filterView.setAppliedFilterBox(convertFilmFilterToList(filmDataModel.getAppliedMapFilter()));
+		}
+		else
+		{
+			filterView.setAppliedFilterBox(convertFilmFilterToList(filmDataModel.getAppliedFilter()));
+		}
 	}
 	
 	private List<String> convertFilmFilterToList(FilmFilter filter)
@@ -160,5 +180,37 @@ public class FilterPresenterImpl implements FilterPresenter {
 		// --> could have a combination decided by "autoSearch" in filterToken
 		
 	}
+	
+	/**
+	Helper method to adjust the currently appliedFilter for the map. Because the filtering of the year 
+	for the map is done on clientside and the country filter doesn't apply in the map
+	@author Nicolas Küchler
+	@pre 	filmDataModel != null && filmDataModel.getAppliedFilter()!=null
+	@post	filmDataModel.getAppliedFilter() == filmDataModel.getAppliedFilter() @pre
+	@return FilmFilter that contains the boundaries for the years (because filtering of year 
+			is done on clientside for the map) and the filter for the countries is removed.
+	 */
+	private FilmFilter adjustedMapFilter(FilmFilter appliedFilter)
+	{
+		//taking applied filter from filmDataModel
+		FilmFilter filter = new FilmFilter();
+		
+		//copying the filter fields that are considered for the map as well
+		filter.setName(appliedFilter.getName());
+		filter.setLengthStart(appliedFilter.getLengthStart());
+		filter.setLengthEnd(appliedFilter.getLengthEnd());
+		filter.setGenres(appliedFilter.getGenres());
+		filter.setLanguages(appliedFilter.getLanguages());
+		
+		//adjusting year range because filtering of that is done in the map on client side
+		filter.setYearStart(Boundaries.MIN_YEAR);
+		filter.setYearEnd(Boundaries.MAX_YEAR);
+		
+		//removing the country filter because in the map always all the countries should be considered
+		filter.setCountries(null);
+		
+		return filter;
+	}
+
 
 }

@@ -18,7 +18,7 @@ public class FilmDataModelImpl implements FilmDataModel{
 	private DataTable countryDataTable;		//used for GeoChart
 	private List<Country> countries;		//used to adjust GeoChart with YearRangeSlider
 	private FilmFilter appliedFilter;
-	
+	private FilmFilter appliedMapFilter;
 
 	
 	@Inject
@@ -62,6 +62,15 @@ public class FilmDataModelImpl implements FilmDataModel{
 	@Override
 	public FilmFilter getAppliedFilter() {
 		return appliedFilter;
+	}
+	@Override
+	public void setAppliedMapFilter(FilmFilter filter) {
+		this.appliedMapFilter=filter;
+		
+	}
+	@Override
+	public FilmFilter getAppliedMapFilter() {
+		return appliedMapFilter;
 	}
 
 }

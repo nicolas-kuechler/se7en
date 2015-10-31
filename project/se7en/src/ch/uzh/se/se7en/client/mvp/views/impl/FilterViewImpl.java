@@ -128,7 +128,7 @@ public class FilterViewImpl extends Composite implements FilterView{
 	}
 
 	@Override
-	public void setAppliedFilter(List<String> appliedFilter) {
+	public void setAppliedFilterBox(List<String> appliedFilter) {
 		this.appliedFilter.setValue(appliedFilter);
 	}
 

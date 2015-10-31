@@ -21,4 +21,7 @@ public interface FilmDataModel {
 	
 	public void setAppliedFilter(FilmFilter filter);
 	public FilmFilter getAppliedFilter();
+	
+	public void setAppliedMapFilter(FilmFilter filter);
+	public FilmFilter getAppliedMapFilter();
 }
