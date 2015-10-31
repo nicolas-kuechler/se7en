@@ -67,14 +67,15 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 					.entryParser(new AnnotationEntryParser<FilmHelper>(FilmHelper.class, vpp)).build();
 			
 
-			//read csv to FilmHelper objects, convert them to Film objects and add them to the imortedFilms List
-			FilmHelper tempFilm = null;
+			//read csv to FilmHelper objects, convert them to Film objects and add them to the importedFilms List
+			FilmHelper tempFilm;
 			while((tempFilm = filmReader.readNext()) != null){
 				importedFilms.add(new Film(tempFilm.name, tempFilm.length, 
 						new HashSet<String>(Arrays.asList(tempFilm.countries.split("--"))),
 						new HashSet<String>(Arrays.asList(tempFilm.languages.split("--"))),
 						tempFilm.year, new HashSet<String>(Arrays.asList(tempFilm.genres.split("--")))));
 			}
+
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -118,32 +119,6 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		// TODO: return a real success / error bool
 		return true;
 	}
-	/***
-	 * This class is used to help with importing the csv file to java objects. Objects of this class
-	 * are later converted to real Film objects.
-	 * @author Cyrill Halter
-	 *
-	 */
-	private class FilmHelper{
-		
-		@MapToColumn(column = 0)
-		private String name;
-		
-		@MapToColumn(column = 1)
-		private Integer length;
-		
-		@MapToColumn(column = 2)
-		private String countries;
-		
-		@MapToColumn(column = 3)
-		private String languages;
-		
-		@MapToColumn(column = 4)
-		private Integer year;
-		
-		@MapToColumn(column = 5)
-		private String genres;
-		
-	}
+
 
 }
