@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.channels.Channels;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -14,6 +17,7 @@ import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.googlecode.jcsv.annotations.MapToColumn;
 import com.googlecode.jcsv.annotations.internal.ValueProcessorProvider;
 import com.googlecode.jcsv.reader.CSVReader;
 import com.googlecode.jcsv.reader.internal.AnnotationEntryParser;
@@ -49,17 +53,28 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	public boolean importFile(String nameOfFile) {
 		GcsService gcsService = GcsServiceFactory.createGcsService();
 		GcsFilename gcsFilename = new GcsFilename("se-team-se7en", nameOfFile);
-		List<Film> importedFilms = null;
+		List<Film> importedFilms = new LinkedList<Film>();
 
 		try {
-
+			
+			//open GCS channel for specified file name and create reader
 			GcsInputChannel csvReadChannel = gcsService.openReadChannel(gcsFilename, 0);
 			Reader csvFileReader = new InputStreamReader(Channels.newInputStream(csvReadChannel));
-
+			
+			//create csv reader on inputstream reader
 			ValueProcessorProvider vpp = new ValueProcessorProvider();
-			CSVReader<Film> filmReader = new CSVReaderBuilder<Film>(csvFileReader)
-					.entryParser(new AnnotationEntryParser<Film>(Film.class, vpp)).build();
-			importedFilms = filmReader.readAll();
+			CSVReader<FilmHelper> filmReader = new CSVReaderBuilder<FilmHelper>(csvFileReader)
+					.entryParser(new AnnotationEntryParser<FilmHelper>(FilmHelper.class, vpp)).build();
+			
+
+			//read csv to FilmHelper objects, convert them to Film objects and add them to the imortedFilms List
+			FilmHelper tempFilm = null;
+			while((tempFilm = filmReader.readNext()) != null){
+				importedFilms.add(new Film(tempFilm.name, tempFilm.length, 
+						new HashSet<String>(Arrays.asList(tempFilm.countries.split("--"))),
+						new HashSet<String>(Arrays.asList(tempFilm.languages.split("--"))),
+						tempFilm.year, new HashSet<String>(Arrays.asList(tempFilm.genres.split("--")))));
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -102,6 +117,33 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		
 		// TODO: return a real success / error bool
 		return true;
+	}
+	/***
+	 * This class is used to help with importing the csv file to java objects. Objects of this class
+	 * are later converted to real Film objects.
+	 * @author Cyrill Halter
+	 *
+	 */
+	private class FilmHelper{
+		
+		@MapToColumn(column = 0)
+		private String name;
+		
+		@MapToColumn(column = 1)
+		private Integer length;
+		
+		@MapToColumn(column = 2)
+		private String countries;
+		
+		@MapToColumn(column = 3)
+		private String languages;
+		
+		@MapToColumn(column = 4)
+		private Integer year;
+		
+		@MapToColumn(column = 5)
+		private String genres;
+		
 	}
 
 }

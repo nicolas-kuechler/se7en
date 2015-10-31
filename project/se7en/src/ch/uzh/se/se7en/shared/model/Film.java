@@ -2,6 +2,7 @@ package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,12 +41,12 @@ public class Film implements Serializable {
 	// TODO: will be in a different relation
 	@Column(name = "country", nullable=true)
 	@MapToColumn(column=2)
-	private List<String> countries;
+	private Set<String> countries;
 		
 	// TODO: will be in a different relation
 	@Column(name = "language", nullable=true)
 	@MapToColumn(column=3)
-	private List<String> languages;
+	private Set<String> languages;
 	
 	@Column(name = "year", nullable=true)
 	@MapToColumn(column=4)
@@ -54,7 +55,7 @@ public class Film implements Serializable {
 	// TODO: will be in a different relation
 	@Column(name = "genre", nullable=true)
 	@MapToColumn(column=5)
-	private List<String> genres;
+	private Set<String> genres;
 	
 	public Film()
 	{
@@ -66,7 +67,7 @@ public class Film implements Serializable {
 		setName(name);
 	}
 	
-	public Film(String name, int length, List<String> countries, List<String> languages, int year, List<String> genres) 
+	public Film(String name, int length, Set<String> countries, Set<String> languages, int year, Set<String> genres) 
 	{
 		this.name = name;
 		this.length = length;
@@ -153,7 +154,7 @@ public class Film implements Serializable {
 	@post -
 	@return the countries
 	 */
-	public List<String> getCountries() {
+	public Set<String> getCountries() {
 		return countries;
 	}
 
@@ -162,7 +163,7 @@ public class Film implements Serializable {
 	@post countries==countries
 	@param countries the countries to set
 	*/
-	public void setCountries(List<String> countries) {
+	public void setCountries(Set<String> countries) {
 		this.countries = countries;
 	}
 
@@ -171,7 +172,7 @@ public class Film implements Serializable {
 	@post -
 	@return the languages
 	 */
-	public List<String> getLanguages() {
+	public Set<String> getLanguages() {
 		return languages;
 	}
 
@@ -180,7 +181,7 @@ public class Film implements Serializable {
 	@post languages==languages
 	@param languages the languages to set
 	*/
-	public void setLanguages(List<String> languages) {
+	public void setLanguages(Set<String> languages) {
 		this.languages = languages;
 	}
 
@@ -189,7 +190,7 @@ public class Film implements Serializable {
 	@post -
 	@return the genres
 	 */
-	public List<String> getGenres() {
+	public Set<String> getGenres() {
 		return genres;
 	}
 
@@ -198,7 +199,7 @@ public class Film implements Serializable {
 	@post genres==genres
 	@param genres the genres to set
 	*/
-	public void setGenre(List<String> genres) {
+	public void setGenre(Set<String> genres) {
 		this.genres = genres;
 	}
 }
