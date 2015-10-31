@@ -2,79 +2,59 @@ package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import com.googlecode.jcsv.annotations.MapToColumn;
 
 /**
  * Container to hold the film data on client side and server side. Is used to
  * transport the movie data between client and server.
  * 
- * @author Nicolas Küchler, Roland Schläfli
+ * @author Nicolas Küchler
  */
-@Entity
-@Table(name = "movies")
-public class Film implements Serializable {
+public class Film implements Serializable, DTO {
 
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue
-	@Column(name = "id")
 	private int id;
-
-	@Column(name = "name")
-	@MapToColumn(column=0)
 	private String name;
-
-	@Column(name = "length", nullable=true)
-	@MapToColumn(column=1)
 	private Integer length;
-	
-	// TODO: will be in a different relation
-	@Column(name = "country", nullable=true)
-	@MapToColumn(column=2)
-	private Set<String> countries;
-		
-	// TODO: will be in a different relation
-	@Column(name = "language", nullable=true)
-	@MapToColumn(column=3)
-	private Set<String> languages;
-	
-	@Column(name = "year", nullable=true)
-	@MapToColumn(column=4)
 	private Integer year;
-	
-	// TODO: will be in a different relation
-	@Column(name = "genre", nullable=true)
-	@MapToColumn(column=5)
-	private Set<String> genres;
-	
-	public Film()
-	{
-		
+	private List<String> countries;
+	private List<String> languages;
+	private List<String> genres;
+
+	public Film() {
 	}
-	
-	public Film(String name)
-	{
-		setName(name);
+
+	public Film(String name) {
+		this.name = name;
 	}
-	
-	public Film(String name, int length, Set<String> countries, Set<String> languages, int year, Set<String> genres) 
-	{
+
+	public Film(String name, int length, int year, List<String> countries, List<String> languages,
+			List<String> genres) {
 		this.name = name;
 		this.length = length;
 		this.countries = countries;
 		this.languages = languages;
 		this.year = year;
 		this.genres = genres;
+	}
+	
+	public Film(int id, String name, int length, int year, List<String> countries, List<String> languages,
+			List<String> genres) {
+		this(name, length, year, countries, languages, genres);
+		
+		this.id = id;
+	}
+
+	/**
+	 * Returns a string representation of this Film
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @return String The string representation of this instance
+	 */
+	@Override
+	public String toString() {
+		return "Id: " + id + " - Name: " + name + " - Länge: " + length + " - Länder: " + countries + " - Sprachen: " + languages + " - Genres: " + genres;
 	}
 
 	/**
@@ -154,7 +134,7 @@ public class Film implements Serializable {
 	@post -
 	@return the countries
 	 */
-	public Set<String> getCountries() {
+	public List<String> getCountries() {
 		return countries;
 	}
 
@@ -163,7 +143,7 @@ public class Film implements Serializable {
 	@post countries==countries
 	@param countries the countries to set
 	*/
-	public void setCountries(Set<String> countries) {
+	public void setCountries(List<String> countries) {
 		this.countries = countries;
 	}
 
@@ -172,7 +152,7 @@ public class Film implements Serializable {
 	@post -
 	@return the languages
 	 */
-	public Set<String> getLanguages() {
+	public List<String> getLanguages() {
 		return languages;
 	}
 
@@ -181,7 +161,7 @@ public class Film implements Serializable {
 	@post languages==languages
 	@param languages the languages to set
 	*/
-	public void setLanguages(Set<String> languages) {
+	public void setLanguages(List<String> languages) {
 		this.languages = languages;
 	}
 
@@ -190,7 +170,7 @@ public class Film implements Serializable {
 	@post -
 	@return the genres
 	 */
-	public Set<String> getGenres() {
+	public List<String> getGenres() {
 		return genres;
 	}
 
@@ -199,7 +179,7 @@ public class Film implements Serializable {
 	@post genres==genres
 	@param genres the genres to set
 	*/
-	public void setGenre(Set<String> genres) {
+	public void setGenres(List<String> genres) {
 		this.genres = genres;
 	}
 }

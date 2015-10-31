@@ -35,18 +35,27 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @post -
 	 * @param FilmFilter
 	 *            filter A filter object
+	 * @return List<Film> films The filtered list of film data transfer objects
 	 */
 	@Override
 	@Transactional
 	public List<Film> getFilmList(FilmFilter filter) {
 		// create an empty list of movies
-		List<Film> movies = new ArrayList<Film>();
+		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
+		List<Film> films = new ArrayList<Film>();
 
 		// select all movies from the database
-		movies = em.get().createQuery("from Film", Film.class).getResultList();
+		dbFilms = em.get().createQuery("from FilmDB", FilmDB.class).getResultList();
+
+		// convert each FilmDB instance to a Film DataTransferObject
+		for (FilmDB film : dbFilms) {
+			Film f = film.toFilm();
+			System.out.println(f);
+			films.add(f);
+		}
 
 		// return the filled list of movies
-		return movies;
+		return films;
 	}
 
 	/**
@@ -57,15 +66,25 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @post -
 	 * @param FilmFilter
 	 *            filter A filter object
+	 * @return List<Country> countries The filtered list of country data
+	 *         transfer objects
 	 */
 	@Override
 	@Transactional
 	public List<Country> getCountryList(FilmFilter filter) {
 		// create an empty list of countries
+		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 		List<Country> countries = new ArrayList<Country>();
 
 		// select all countries from the database
-		countries = em.get().createQuery("from Country", Country.class).getResultList();
+		dbCountries = em.get().createQuery("from CountryDB", CountryDB.class).getResultList();
+
+		// convert each CountryDB instance to a Country DataTransferObject
+		for (CountryDB country : dbCountries) {
+			Country c = country.toCountry();
+			System.out.println(c);
+			countries.add(c);
+		}
 
 		// return the filled list of countries
 		return countries;
@@ -79,17 +98,27 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @post -
 	 * @param FilmFilter
 	 *            filter A filter object
+	 * @return List<Genre> genres The filtered list of genre data transfer
+	 *         objects
 	 */
 	@Override
 	@Transactional
 	public List<Genre> getGenreList(FilmFilter filter) {
-		// create an empty list of genres
+		// create an empty list of countries
+		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 		List<Genre> genres = new ArrayList<Genre>();
 
-		// select all genres from the database
-		genres = em.get().createQuery("from Genre", Genre.class).getResultList();
+		// select all countries from the database
+		dbGenres = em.get().createQuery("from GenreDB", GenreDB.class).getResultList();
 
-		// return the filled list of genres
+		// convert each GenreDB instance to a Genre DataTransferObject
+		for (GenreDB genre : dbGenres) {
+			Genre g = genre.toGenre();
+			System.out.println(g);
+			genres.add(g);
+		}
+
+		// return the filled list of countries
 		return genres;
 	}
 }

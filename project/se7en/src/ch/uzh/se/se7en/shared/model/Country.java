@@ -1,41 +1,31 @@
 package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * Container to hold the numberOfFilms which were produced in each Country. Is
  * used to transport this information from server to client side.
  * 
- * @author Nicolas Küchler, Roland Schläfli
+ * @author Nicolas Küchler
  */
-@Entity
-@Table(name = "countries")
-public class Country implements Serializable {
+public class Country implements Serializable, DTO {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final int YEAR_OFFSET = 1890; //each index in numberOfFilms represents a year, 
-	//but because there are no films before 1890 allowed, to save memory, there is a year offset.
+	public static final int YEAR_OFFSET = 1890; // each index in numberOfFilms
+												// represents a year,
+	// but because there are no films before 1890 allowed, to save memory, there
+	// is a year offset.
 
-	@Id
-	@GeneratedValue
-	@Column(name = "id")
 	private int id;
-
-	@Column(name = "name")
 	private String name;
-
-	@Column(name = "code")
 	private String code; // 2 letter iso country code
-	
-	public Country()
-	{
+
+	// index 1 holds the numberOfFilms in the year 1889
+	// index 2 holds the numberOfFilms from year 1889 too year 1890
+	private int[] numberOfFilms;
+
+	public Country() {
 
 	}
 
@@ -43,17 +33,25 @@ public class Country implements Serializable {
 		this.name = name;
 	}
 
-	public Country(String name, String code, int[] numberOfFilms) 
-	{
+	public Country(int id, String name, String code, int[] numberOfFilms) {
+		this.id = id;
 		this.name = name;
 		this.code = code;
 		this.numberOfFilms = numberOfFilms;
 	}
-
-	// index 1 holds the numberOfFilms in the year 1889
-	// index 2 holds the numberOfFilms from year 1889 too year 1890
-	@Transient
-	private int[] numberOfFilms;
+	
+	/**
+	 * Returns a string representation of this Country
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @return String The string representation of this instance
+	 */
+	@Override
+	public String toString() {
+		return "Id: " + id + " - Name: " + name + " - Code: " + code + " - Anzahl Filme: " + numberOfFilms;
+	}
 
 	/**
 	 * Calculates the number of films which were produced between two given
@@ -70,7 +68,6 @@ public class Country implements Serializable {
 	 *            currentYear)
 	 * @return the number of films produced
 	 */
-	@Transient
 	public int getNumberOfFilms(int startYear, int endYear) {
 		// if any precondition fails, return 0 as a result
 		if (startYear < YEAR_OFFSET || startYear > numberOfFilms.length + YEAR_OFFSET - 1 || startYear > endYear
@@ -81,7 +78,7 @@ public class Country implements Serializable {
 		// calculates the current year using the array length
 		// numberOfFilms up to the endYear - numberOfFilms up to the year
 		// before the startYear = numberOfFilms between start- and endYear
-		return numberOfFilms[endYear - YEAR_OFFSET+1] - numberOfFilms[startYear - YEAR_OFFSET];
+		return numberOfFilms[endYear - YEAR_OFFSET + 1] - numberOfFilms[startYear - YEAR_OFFSET];
 	}
 
 	/**
@@ -94,7 +91,6 @@ public class Country implements Serializable {
 	 *            in each field there is the number of films which were produced
 	 *            in that year (year calculation: index-YEAR_OFFSET)
 	 */
-	@Transient
 	public void setNumberOfFilms(int[] filmsInEachYear) {
 		// in filmsInEachYear year 1899 is not part of the array, therefore + 1
 		numberOfFilms = new int[filmsInEachYear.length + 1];
@@ -110,54 +106,57 @@ public class Country implements Serializable {
 	}
 
 	/**
-	@pre id!= null
-	@post -
-	@return the id
+	 * @pre id!= null
+	 * @post -
+	 * @return the id
 	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	@pre -
-	@post id==id
-	@param id the id to set
-	*/
+	 * @pre -
+	 * @post id==id
+	 * @param id
+	 *            the id to set
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	/**
-	@pre name!= null
-	@post -
-	@return the name
+	 * @pre name!= null
+	 * @post -
+	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	@pre -
-	@post name==name
-	@param name the name to set
+	 * @pre -
+	 * @post name==name
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	@pre code!= null
-	@post -
-	@return the code
+	 * @pre code!= null
+	 * @post -
+	 * @return the code
 	 */
 	public String getCode() {
 		return code;
 	}
 
 	/**
-	@pre -
-	@post code==code
-	@param code the code to set
+	 * @pre -
+	 * @post code==code
+	 * @param code
+	 *            the code to set
 	 */
 	public void setCode(String code) {
 		this.code = code;

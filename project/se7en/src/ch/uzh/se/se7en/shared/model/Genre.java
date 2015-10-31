@@ -1,44 +1,42 @@
 package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * Container to hold information about a genre. Is used to transport the
  * genreData between client and server.
  * 
- * @author Nicolas Küchler, Roland Schläfli
+ * @author Nicolas Küchler
  * 
  */
-@Entity
-@Table(name = "genres")
-public class Genre implements Serializable {
+public class Genre implements Serializable, DTO {
 
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue
-	@Column(name = "id")
 	private int id;
-
-	@Column(name = "name")
 	private String name;
-
-	@Transient
 	private int numberOfFilms;
 
 	public Genre() {
 
 	}
 
-	public Genre(String name, int numberOfFilms) {
+	public Genre(int id, String name, int numberOfFilms) {
+		this.id = id;
 		this.name = name;
 		this.numberOfFilms = numberOfFilms;
+	}
+	
+	/**
+	 * Returns a string representation of this Genre
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @return String The string representation of this instance
+	 */
+	@Override
+	public String toString() {
+		return "Id: " + id + " - Name: " + name + " - Anzahl Filme: " + numberOfFilms;
 	}
 
 	/**

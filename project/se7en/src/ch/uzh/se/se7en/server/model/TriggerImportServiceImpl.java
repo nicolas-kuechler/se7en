@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.channels.Channels;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -77,10 +78,10 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			//read csv to FilmHelper objects, convert them to Film objects and add them to the importedFilms List
 			FilmHelper tempFilm;
 			while((tempFilm = filmReader.readNext()) != null){
-				importedFilms.add(new Film(tempFilm.getName(), tempFilm.getLength(), 
-						new HashSet<String>(Arrays.asList(tempFilm.getCountries().split("--"))),
-						new HashSet<String>(Arrays.asList(tempFilm.getLanguages().split("--"))),
-						tempFilm.getYear(), new HashSet<String>(Arrays.asList(tempFilm.getGenres().split("--")))));
+				importedFilms.add(new Film(tempFilm.getName(), tempFilm.getLength(), tempFilm.getYear(),
+						new ArrayList<String>(Arrays.asList(tempFilm.getCountries().split("--"))),
+						new ArrayList<String>(Arrays.asList(tempFilm.getLanguages().split("--"))),
+						new ArrayList<String>(Arrays.asList(tempFilm.getGenres().split("--")))));
 			}
 
 
@@ -111,6 +112,8 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	 */
 	@Transactional
 	public boolean importFilmsToDB(List<Film> films) {
+		// TODO: update for new DB structure
+		
 		// add each film to the transaction
 		for (Film film : films) {
 			em.get().persist(film);
