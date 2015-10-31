@@ -70,10 +70,10 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			//read csv to FilmHelper objects, convert them to Film objects and add them to the importedFilms List
 			FilmHelper tempFilm;
 			while((tempFilm = filmReader.readNext()) != null){
-				importedFilms.add(new Film(tempFilm.name, tempFilm.length, 
-						new HashSet<String>(Arrays.asList(tempFilm.countries.split("--"))),
-						new HashSet<String>(Arrays.asList(tempFilm.languages.split("--"))),
-						tempFilm.year, new HashSet<String>(Arrays.asList(tempFilm.genres.split("--")))));
+				importedFilms.add(new Film(tempFilm.getName(), tempFilm.getLength(), 
+						new HashSet<String>(Arrays.asList(tempFilm.getCountries().split("--"))),
+						new HashSet<String>(Arrays.asList(tempFilm.getLanguages().split("--"))),
+						tempFilm.getYear(), new HashSet<String>(Arrays.asList(tempFilm.getGenres().split("--")))));
 			}
 
 

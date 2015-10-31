@@ -11,28 +11,51 @@ import com.googlecode.jcsv.annotations.MapToColumn;
 public class FilmHelper{
 	
 	@MapToColumn(column = 0)
-	public String name;
+	private String name;
 	
 	@MapToColumn(column = 1)
-	public Integer length;
+	private Integer length;
 	
 	@MapToColumn(column = 2)
-	public String countries;
+	private String countries;
 	
 	@MapToColumn(column = 3)
-	public String languages;
+	private String languages;
 	
 	@MapToColumn(column = 4)
-	public Integer year;
+	private Integer year;
 	
 	@MapToColumn(column = 5)
-	public String genres;
+	private String genres;
 	
 	public FilmHelper()
 	{
 		
 	}
 	
+	public String getName(){
+		return name;
+	}
+	
+	public Integer getLength(){
+		return length;
+	}
+	
+	public String getCountries(){
+		return countries;
+	}
+	
+	public String getLanguages(){
+		return languages;
+	}
+	
+	public Integer getYear(){
+		return year;
+	}
+	
+	public String getGenres(){
+		return genres;
+	}
 
 	
 }
