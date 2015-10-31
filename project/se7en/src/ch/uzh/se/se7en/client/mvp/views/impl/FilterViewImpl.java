@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.Boundaries;
+import ch.uzh.se.se7en.client.mvp.Tokens;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.mvp.views.widgets.AppliedFilterBox;
@@ -133,6 +134,15 @@ public class FilterViewImpl extends Composite implements FilterView{
 
 	@Override
 	public void setMode(String mode) {
-		// TODO mode logic for change of filter view needs to be implemented
+		if (mode.equals(Tokens.MAP))
+		{
+			countrySelect.setVisible(false);
+			yearSlider.setVisible(false);
+		}
+		else
+		{
+			countrySelect.setVisible(true);
+			yearSlider.setVisible(true);
+		}
 	}
 }
