@@ -3,6 +3,14 @@ package ch.uzh.se.se7en.server.model;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.criterion.Restrictions;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Inject;
@@ -43,9 +51,62 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// create an empty list of movies
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
 		List<Film> films = new ArrayList<Film>();
+		
+		System.out.println(filter);
 
-		// select all movies from the database
-		dbFilms = em.get().createQuery("from FilmDB", FilmDB.class).getResultList();
+		// instantiate an entity manager
+		EntityManager manager = em.get();
+		
+		// instantiate a criteria builder for dynamic queries
+		CriteriaBuilder cb = manager.getCriteriaBuilder();
+		
+		// create a new query
+		CriteriaQuery<FilmDB> q = cb.createQuery(FilmDB.class);
+		Root<FilmDB> filmRoot = q.from(FilmDB.class);
+		
+		// define the parameters
+		ParameterExpression<Integer> minLength = cb.parameter(Integer.class);
+		ParameterExpression<Integer> maxLength = cb.parameter(Integer.class);
+		ParameterExpression<Integer> minYear = cb.parameter(Integer.class);
+		ParameterExpression<Integer> maxYear = cb.parameter(Integer.class);
+		ParameterExpression<String> findName = cb.parameter(String.class);
+		Path<Integer> length = filmRoot.get("length");
+		Path<Integer> year = filmRoot.get("year");
+		Path<String> name = filmRoot.get("name");
+		
+		List<Predicate> criteria = new ArrayList<Predicate>();
+		
+		// add length and year (always valid numbers)
+		criteria.add(cb.between(length, minLength, maxLength));
+		criteria.add(cb.between(year, minYear, maxYear));
+		
+		// if the name in the filter is set
+		if(filter.getName() != null) {
+			criteria.add(cb.like(name, findName));
+		}
+		
+		// build the query
+		q.select(filmRoot).where(
+				criteria.toArray(new Predicate[criteria.size()])
+		);
+		
+		// create a typed query from our criteria query
+		TypedQuery<FilmDB> query = manager.createQuery(q);
+		
+		// set the min & max length params
+		query.setParameter(minLength, filter.getLengthStart());
+		query.setParameter(maxLength, filter.getLengthEnd());
+		
+		// set the min & max year params
+		query.setParameter(minYear, filter.getYearStart());
+		query.setParameter(maxYear, filter.getYearEnd());
+		
+		if(filter.getName() != null) {
+			query.setParameter(findName, "%" + filter.getName() + "%");
+		}
+		
+		// execute the query
+		dbFilms = query.getResultList();
 
 		// convert each FilmDB instance to a Film DataTransferObject
 		for (FilmDB film : dbFilms) {
