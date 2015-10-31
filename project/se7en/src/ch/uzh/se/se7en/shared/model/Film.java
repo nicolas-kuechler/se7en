@@ -1,6 +1,9 @@
 package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,12 +41,12 @@ public class Film implements Serializable {
 	// TODO: will be in a different relation
 	@Column(name = "country", nullable=true)
 	@MapToColumn(column=2)
-	private String country;
+	private Set<String> countries;
 		
 	// TODO: will be in a different relation
 	@Column(name = "language", nullable=true)
 	@MapToColumn(column=3)
-	private String language;
+	private Set<String> languages;
 	
 	@Column(name = "year", nullable=true)
 	@MapToColumn(column=4)
@@ -52,7 +55,7 @@ public class Film implements Serializable {
 	// TODO: will be in a different relation
 	@Column(name = "genre", nullable=true)
 	@MapToColumn(column=5)
-	private String genre;
+	private Set<String> genres;
 	
 	public Film()
 	{
@@ -64,14 +67,14 @@ public class Film implements Serializable {
 		setName(name);
 	}
 	
-	public Film(String name, int length, String country, String language, int year, String genre) 
+	public Film(String name, int length, Set<String> countries, Set<String> languages, int year, Set<String> genres) 
 	{
 		this.name = name;
 		this.length = length;
-		this.country = country;
-		this.language = language;
+		this.countries = countries;
+		this.languages = languages;
 		this.year = year;
-		this.genre = genre;
+		this.genres = genres;
 	}
 
 	/**
@@ -147,56 +150,56 @@ public class Film implements Serializable {
 	}
 
 	/**
-	@pre country!= null
+	@pre countries!= null
 	@post -
-	@return the country
+	@return the countries
 	 */
-	public String getCountry() {
-		return country;
+	public Set<String> getCountries() {
+		return countries;
 	}
 
 	/**
 	@pre -
-	@post country==country
-	@param country the country to set
+	@post countries==countries
+	@param countries the countries to set
 	*/
-	public void setCountry(String country) {
-		this.country = country;
+	public void setCountries(Set<String> countries) {
+		this.countries = countries;
 	}
 
 	/**
-	@pre language!= null
+	@pre languages!= null
 	@post -
-	@return the language
+	@return the languages
 	 */
-	public String getLanguage() {
-		return language;
+	public Set<String> getLanguages() {
+		return languages;
 	}
 
 	/**
 	@pre -
-	@post language==language
-	@param language the language to set
+	@post languages==languages
+	@param languages the languages to set
 	*/
-	public void setLanguage(String language) {
-		this.language = language;
+	public void setLanguages(Set<String> languages) {
+		this.languages = languages;
 	}
 
 	/**
-	@pre genre!= null
+	@pre genres!= null
 	@post -
-	@return the genre
+	@return the genres
 	 */
-	public String getGenre() {
-		return genre;
+	public Set<String> getGenres() {
+		return genres;
 	}
 
 	/**
 	@pre -
-	@post genre==genre
-	@param genre the genre to set
+	@post genres==genres
+	@param genres the genres to set
 	*/
-	public void setGenre(String genre) {
-		this.genre = genre;
+	public void setGenre(Set<String> genres) {
+		this.genres = genres;
 	}
 }
