@@ -23,8 +23,8 @@
 						</b:FormGroup>
 					</b:Column>
 
-					<b:Column size="MD_4">
-						<b:FormGroup>
+					<b:Column size="MD_4" >
+						<b:FormGroup ui:field="yearColumn">
 							<b:FormLabel>Production Year</b:FormLabel>
 							<b:HelpBlock text="" />
 							<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
@@ -34,12 +34,6 @@
 				</b:Row>
 
 				<b:Row>
-					<b:Column size="MD_4">
-						<b:FormGroup>
-							<b:FormLabel>Production Country</b:FormLabel>
-							<own:MultiSelect ui:field="countrySelect"></own:MultiSelect>
-						</b:FormGroup>
-					</b:Column>
 
 					<b:Column size="MD_4">
 						<b:FormGroup>
@@ -52,6 +46,13 @@
 						<b:FormGroup>
 							<b:FormLabel>Film Language</b:FormLabel>
 							<own:MultiSelect ui:field="languageSelect"></own:MultiSelect>
+						</b:FormGroup>
+					</b:Column>
+					
+					<b:Column size="MD_4" >
+						<b:FormGroup ui:field="countryColumn">
+							<b:FormLabel>Production Country</b:FormLabel>
+							<own:MultiSelect ui:field="countrySelect"></own:MultiSelect>
 						</b:FormGroup>
 					</b:Column>
 

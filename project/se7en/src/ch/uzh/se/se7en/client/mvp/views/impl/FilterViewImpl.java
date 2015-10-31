@@ -26,6 +26,8 @@ import ch.uzh.se.se7en.client.mvp.views.widgets.AppliedFilterBox;
 import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
 
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Column;
+import org.gwtbootstrap3.client.ui.FormGroup;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
@@ -52,6 +54,9 @@ public class FilterViewImpl extends Composite implements FilterView{
 	
 	@UiField AppliedFilterBox appliedFilter;
 	@UiField FocusPanel focusPanel;
+	
+	@UiField FormGroup yearColumn;
+	@UiField FormGroup countryColumn;
 	
 	@Inject
 	public FilterViewImpl() {
@@ -136,13 +141,13 @@ public class FilterViewImpl extends Composite implements FilterView{
 	public void setMode(String mode) {
 		if (mode.equals(Tokens.MAP))
 		{
-			countrySelect.setVisible(false);
-			yearSlider.setVisible(false);
+			countryColumn.setVisible(false);
+			yearColumn.setVisible(false);
 		}
 		else
 		{
-			countrySelect.setVisible(true);
-			yearSlider.setVisible(true);
+			countryColumn.setVisible(true);
+			yearColumn.setVisible(true);
 		}
 	}
 }

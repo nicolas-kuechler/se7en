@@ -27,6 +27,7 @@ public class FilmDataModelImpl implements FilmDataModel{
 		films = new ArrayList<Film>();		
 		countries = new ArrayList<Country>();
 		appliedFilter = new FilmFilter();
+		appliedMapFilter = new FilmFilter();
 	}
 	@Override
 	public void setCountryList(List<Country> countries) {
