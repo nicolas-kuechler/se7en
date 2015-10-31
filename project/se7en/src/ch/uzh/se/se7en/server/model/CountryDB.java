@@ -1,6 +1,6 @@
 package ch.uzh.se.se7en.server.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +33,7 @@ public class CountryDB implements DTO {
 	private String code;
 	
 	@ManyToMany(targetEntity = FilmDB.class)
-	private Set<FilmDB> films;
+	private List<FilmDB> films;
 	
 	/**
 	 * Converts this entity to a data transfer object
@@ -108,7 +108,7 @@ public class CountryDB implements DTO {
 	@post -
 	@return the films
 	 */
-	public Set<FilmDB> getFilms() {
+	public List<FilmDB> getFilms() {
 		return films;
 	}
 
@@ -117,7 +117,7 @@ public class CountryDB implements DTO {
 	@post films==films
 	@param films the films to set
 	*/
-	public void setFilms(Set<FilmDB> films) {
+	public void setFilms(List<FilmDB> films) {
 		this.films = films;
 	}
 }
