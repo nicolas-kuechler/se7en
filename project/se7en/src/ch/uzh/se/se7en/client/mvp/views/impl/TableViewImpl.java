@@ -15,6 +15,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
@@ -35,6 +36,8 @@ public class TableViewImpl extends Composite implements TableView{
 	//DEMO PURPOSE is replaced by datagrid
 	@UiField ListGroup	resultListGroup;
 	
+	
+	@Inject
 	public TableViewImpl() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}

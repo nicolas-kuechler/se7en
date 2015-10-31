@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.DataTable;
@@ -52,6 +53,7 @@ public class MapViewImpl extends Composite implements MapView{
 	@UiField (provided = true) RangeSlider yearSlider;
 	@UiField PanelBody panel;
 
+	@Inject
 	public MapViewImpl() {
 		yearSlider = new RangeSlider();
 		yearSlider.setMin(Boundaries.MIN_YEAR);
