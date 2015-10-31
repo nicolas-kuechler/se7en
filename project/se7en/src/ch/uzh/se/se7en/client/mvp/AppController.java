@@ -121,7 +121,7 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//combination of mapView and filterView needs to be implemented
 		navBar.setActive(Tokens.MAP);
-		
+		injector.getFilterPresenter().setMode(Tokens.MAP);
 		injector.getFilterPresenter().go(subContainer);
 		injector.getMapPresenter().go(container);
 	}
@@ -136,7 +136,7 @@ public class AppController implements ValueChangeHandler<String> {
 	{
 		//combination of tableView and filterView needs to be implemented
 		navBar.setActive(Tokens.TABLE);
-		
+		injector.getFilterPresenter().setMode(Tokens.TABLE);
 		injector.getFilterPresenter().go(subContainer);
 		injector.getTablePresenter().go(container);
 	}
