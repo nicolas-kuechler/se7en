@@ -4,7 +4,6 @@
 	xmlns:c="urn:import:org.gwtbootstrap3.client.ui.gwt">
 
 	<g:HTMLPanel styleName="dataContainer">
-		<b:Button ui:field='sortButton'>Sort Name</b:Button>
 		<c:DataGrid ui:field='dataGrid' />
 		<b:Button ui:field='downloadButton'>Download</b:Button>
 	</g:HTMLPanel>
