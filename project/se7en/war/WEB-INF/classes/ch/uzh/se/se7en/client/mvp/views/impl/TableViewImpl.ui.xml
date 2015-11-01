@@ -3,8 +3,19 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
 	xmlns:c="urn:import:org.gwtbootstrap3.client.ui.gwt">
 
-	<g:HTMLPanel styleName="dataContainer">
-		<c:DataGrid ui:field='dataGrid' />
-		<b:Button ui:field='downloadButton'>Download</b:Button>
+	
+		<g:HTMLPanel  styleName="dataContainer">
+		<b:Panel>
+			<b:PanelHeader>
+				<b:Heading size="H3" text="Film Table View" />
+			</b:PanelHeader>
+			<b:PanelBody ui:field="panel">
+				<c:DataGrid ui:field='dataGrid' />
+			</b:PanelBody>
+			<b:PanelFooter>
+				<b:Heading size="H5" text="Download" />
+				<b:Button ui:field='downloadButton'>Download</b:Button>
+			</b:PanelFooter>
+		</b:Panel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -121,6 +121,7 @@ public class AppController implements ValueChangeHandler<String> {
 	private void doMapView()
 	{
 		navBar.setActive(Tokens.MAP);
+		Window.setTitle("GIR | Map");
 		RootPanel.get("subContainer").setVisible(true);
 		injector.getFilterPresenter().go(subContainer);
 		injector.getFilterPresenter().setMode(Tokens.MAP);		
@@ -136,6 +137,7 @@ public class AppController implements ValueChangeHandler<String> {
 	private void doTableView()
 	{
 		navBar.setActive(Tokens.TABLE);
+		Window.setTitle("GIR | Table");
 		RootPanel.get("subContainer").setVisible(true);
 		injector.getFilterPresenter().go(subContainer);
 		injector.getFilterPresenter().setMode(Tokens.TABLE);
@@ -150,6 +152,7 @@ public class AppController implements ValueChangeHandler<String> {
 	 */
 	private void doWelcomeView()
 	{
+		Window.setTitle("GIR | Welcome");
 		navBar.setActive(Tokens.HOME);
 		subContainer.clear();
 		RootPanel.get("subContainer").setVisible(false);
