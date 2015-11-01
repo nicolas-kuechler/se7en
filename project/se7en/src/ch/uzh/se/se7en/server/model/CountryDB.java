@@ -1,11 +1,13 @@
 package ch.uzh.se.se7en.server.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -33,7 +35,10 @@ public class CountryDB implements DTO {
 	private String code;
 	
 	@ManyToMany(targetEntity = FilmDB.class)
-	private Set<FilmDB> films;
+	@JoinTable(name = "film_countries",
+		joinColumns={@JoinColumn(name = "country_id")},
+		inverseJoinColumns={@JoinColumn(name = "film_id")})
+	private List<FilmDB> films;
 	
 	/**
 	 * Converts this entity to a data transfer object
@@ -43,10 +48,7 @@ public class CountryDB implements DTO {
 	 * @return Country The CountryDB entity converted to a country data transfer object
 	 */
 	public Country toCountry() {
-		// TODO: fill with the real number of films
-		int [] numOfFilms = {0, 1, 2, 3};
-
-		return new Country(id, name, code, numOfFilms);
+		return new Country(id, name, code);
 	}
 
 	/**
@@ -108,7 +110,7 @@ public class CountryDB implements DTO {
 	@post -
 	@return the films
 	 */
-	public Set<FilmDB> getFilms() {
+	public List<FilmDB> getFilms() {
 		return films;
 	}
 
@@ -117,7 +119,7 @@ public class CountryDB implements DTO {
 	@post films==films
 	@param films the films to set
 	*/
-	public void setFilms(Set<FilmDB> films) {
+	public void setFilms(List<FilmDB> films) {
 		this.films = films;
 	}
 }
