@@ -61,21 +61,21 @@
 				</b:FieldSet>
 
 				<b:Row>
-					<b:Column size="MD_4">
-
+					<b:Column size="MD_4" styleName="appliedFilter">
+						<own:AppliedFilterBox ui:field="appliedFilter"></own:AppliedFilterBox>
 					</b:Column>
-					<b:Column size="MD_4">
-
-					</b:Column>
+					
 
 					<b:Column size="MD_4" styleName="filterColSearch">
-						<b:Button ui:field="clearBtn">Clear</b:Button>
 						<b:Button ui:field="searchBtn">Search</b:Button>
+						<b:Button ui:field="clearBtn">Clear</b:Button>
+					</b:Column>
+					
+					<b:Column size="MD_4" styleName="expandFilter">
+						<b:Button>EXPAND</b:Button>
 					</b:Column>
 
-				</b:Row>
-				<b:Row>
-					<own:AppliedFilterBox ui:field="appliedFilter"></own:AppliedFilterBox>
+					
 				</b:Row>
 			</b:Form>
 		</g:FocusPanel>
