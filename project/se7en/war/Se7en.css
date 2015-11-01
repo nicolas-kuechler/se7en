@@ -108,12 +108,25 @@ margin-top:-1%;
 }
 
 #footerBar .navbar-collapse{
-	margin-left:15% !important;
+	margin-left:0% !important;
 	padding-top:1%;
+	width:100% !important;
+	padding-left:15% !important;
+	padding-right:15% !important;
 }
+
+#footerBar .footerSe7en{
+	width:33%;
+	float:left;
+}
+#footerBar .footerAd{
+	width:33%;
+	text-align:center;
+	float:left;
+}
+
 
 #footerBar .footerLicence{
 	float:right;
 	position:relative;
 }
-
