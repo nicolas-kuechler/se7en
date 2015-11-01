@@ -11,6 +11,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.RootPanel;
 
 import ch.uzh.se.se7en.client.mvp.presenters.impl.MapPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.TablePresenterImpl;
@@ -119,11 +120,10 @@ public class AppController implements ValueChangeHandler<String> {
 	 */
 	private void doMapView()
 	{
-		//combination of mapView and filterView needs to be implemented
 		navBar.setActive(Tokens.MAP);
-		
+		RootPanel.get("subContainer").setVisible(true);
 		injector.getFilterPresenter().go(subContainer);
-		injector.getFilterPresenter().setMode(Tokens.MAP);
+		injector.getFilterPresenter().setMode(Tokens.MAP);		
 		injector.getMapPresenter().go(container);
 	}
 
@@ -135,9 +135,8 @@ public class AppController implements ValueChangeHandler<String> {
 	 */
 	private void doTableView()
 	{
-		//combination of tableView and filterView needs to be implemented
 		navBar.setActive(Tokens.TABLE);
-		
+		RootPanel.get("subContainer").setVisible(true);
 		injector.getFilterPresenter().go(subContainer);
 		injector.getFilterPresenter().setMode(Tokens.TABLE);
 		injector.getTablePresenter().go(container);
@@ -151,9 +150,9 @@ public class AppController implements ValueChangeHandler<String> {
 	 */
 	private void doWelcomeView()
 	{
-		//welcome view needs to be implemente
 		navBar.setActive(Tokens.HOME);
 		subContainer.clear();
+		RootPanel.get("subContainer").setVisible(false);
 		injector.getWelcomePresenter().go(container);
 	}
 	

@@ -5,79 +5,79 @@
 	xmlns:own="urn:import:ch.uzh.se.se7en.client.mvp.views.widgets">
 	<b:Container fluid="true">
 		<g:FocusPanel ui:field="focusPanel">
-		<b:Form>
-			<b:FieldSet>
+			<b:Form>
+				<b:FieldSet>
+					<b:Row>
+						<b:Column size="MD_4" styleName="filterColLeft">
+							<b:FormGroup>
+								<b:FormLabel>Film Name</b:FormLabel>
+								<b:TextBox ui:field="nameBox"></b:TextBox>
+							</b:FormGroup>
+						</b:Column>
+
+						<b:Column size="MD_4" styleName="filterColMiddle">
+							<b:FormGroup>
+								<b:FormLabel>Film Length</b:FormLabel>
+								<b:HelpBlock text="" />
+								<slider:RangeSlider ui:field="lengthSlider"></slider:RangeSlider>
+							</b:FormGroup>
+						</b:Column>
+
+
+						<b:Column size="MD_4" styleName="filterColRight">
+							<b:FormGroup ui:field="yearColumn">
+								<b:FormLabel>Production Year</b:FormLabel>
+								<b:HelpBlock text="" />
+								<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
+							</b:FormGroup>
+						</b:Column>
+
+					</b:Row>
+
+					<b:Row>
+						<b:Column size="MD_4" styleName="filterColLeft">
+							<b:FormGroup>
+								<b:FormLabel>Film Genre</b:FormLabel>
+								<own:MultiSelect ui:field="genreSelect"></own:MultiSelect>
+							</b:FormGroup>
+						</b:Column>
+
+						<b:Column size="MD_4" styleName="filterColMiddle">
+							<b:FormGroup>
+								<b:FormLabel>Film Language</b:FormLabel>
+								<own:MultiSelect ui:field="languageSelect"></own:MultiSelect>
+							</b:FormGroup>
+						</b:Column>
+
+						<b:Column size="MD_4" styleName="filterColRight">
+							<b:FormGroup ui:field="countryColumn">
+								<b:FormLabel>Production Country</b:FormLabel>
+								<own:MultiSelect ui:field="countrySelect"></own:MultiSelect>
+							</b:FormGroup>
+						</b:Column>
+
+					</b:Row>
+
+				</b:FieldSet>
+
 				<b:Row>
 					<b:Column size="MD_4">
-						<b:FormGroup>
-							<b:FormLabel>Film Name</b:FormLabel>
-							<b:TextBox ui:field="nameBox"></b:TextBox>
-						</b:FormGroup>
-					</b:Column>
 
+					</b:Column>
 					<b:Column size="MD_4">
-						<b:FormGroup>
-							<b:FormLabel>Film Length</b:FormLabel>
-							<b:HelpBlock text="" />
-							<slider:RangeSlider ui:field="lengthSlider"></slider:RangeSlider>
-						</b:FormGroup>
+
 					</b:Column>
 
-					<b:Column size="MD_4" >
-						<b:FormGroup ui:field="yearColumn">
-							<b:FormLabel>Production Year</b:FormLabel>
-							<b:HelpBlock text="" />
-							<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
-						</b:FormGroup>
+					<b:Column size="MD_4" styleName="filterColSearch">
+						<b:Button ui:field="clearBtn">Clear</b:Button>
+						<b:Button ui:field="searchBtn">Search</b:Button>
 					</b:Column>
 
 				</b:Row>
-
 				<b:Row>
-
-					<b:Column size="MD_4">
-						<b:FormGroup>
-							<b:FormLabel>Film Genre</b:FormLabel>
-							<own:MultiSelect ui:field="genreSelect"></own:MultiSelect>
-						</b:FormGroup>
-					</b:Column>
-
-					<b:Column size="MD_4">
-						<b:FormGroup>
-							<b:FormLabel>Film Language</b:FormLabel>
-							<own:MultiSelect ui:field="languageSelect"></own:MultiSelect>
-						</b:FormGroup>
-					</b:Column>
-					
-					<b:Column size="MD_4" >
-						<b:FormGroup ui:field="countryColumn">
-							<b:FormLabel>Production Country</b:FormLabel>
-							<own:MultiSelect ui:field="countrySelect"></own:MultiSelect>
-						</b:FormGroup>
-					</b:Column>
-
+					<own:AppliedFilterBox ui:field="appliedFilter"></own:AppliedFilterBox>
 				</b:Row>
-
-			</b:FieldSet>
-
-			<b:Row>
-			<b:Column size="MD_4">
-					
-				</b:Column>
-				<b:Column size="MD_4">
-					
-				</b:Column>
-
-				<b:Column size="MD_4">
-					<b:Button ui:field="clearBtn">Clear</b:Button>
-					<b:Button ui:field="searchBtn">Search</b:Button>
-				</b:Column>
-
-			</b:Row>
-			<b:Row>
-				<own:AppliedFilterBox ui:field="appliedFilter"></own:AppliedFilterBox>
-			</b:Row>
-		</b:Form>
+			</b:Form>
 		</g:FocusPanel>
 	</b:Container>
 </ui:UiBinder> 

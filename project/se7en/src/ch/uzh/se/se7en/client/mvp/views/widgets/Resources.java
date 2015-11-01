@@ -5,7 +5,13 @@ import com.google.gwt.resources.client.ImageResource;
 
 public interface Resources extends ClientBundle {
 
-	@Source("SevenWhite.png")
+	@Source("Se7enLogo.png")
 	ImageResource sevenWhite();
+	
+	@Source("skyline_3.jpg")
+	ImageResource background();
+	
+	@Source("BackgroundText.png")
+	ImageResource backgroundText();
 
 }

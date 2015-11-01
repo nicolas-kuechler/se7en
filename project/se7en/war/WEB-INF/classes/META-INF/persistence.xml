@@ -13,6 +13,7 @@
 		<class>ch.uzh.se.se7en.shared.model.Country</class>
 		<class>ch.uzh.se.se7en.shared.model.Film</class>
 		<class>ch.uzh.se.se7en.shared.model.Genre</class>
+		<class>ch.uzh.se.se7en.shared.model.Language</class>
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
