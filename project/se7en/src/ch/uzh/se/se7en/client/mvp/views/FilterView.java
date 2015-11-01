@@ -81,7 +81,7 @@ public interface FilterView extends IsWidget {
 	@post	appliedFilter == filter
 	@param	filter valid FilmFilter instance
 	 */
-	public void setAppliedFilter(List<String> appliedFilter);
+	public void setAppliedFilterBox(List<String> appliedFilter);
 	
 	/**
 	Is responsible for enabling/disabling the filter boxes for map/table view

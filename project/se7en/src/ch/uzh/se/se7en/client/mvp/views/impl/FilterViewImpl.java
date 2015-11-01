@@ -19,12 +19,15 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.Boundaries;
+import ch.uzh.se.se7en.client.mvp.Tokens;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.mvp.views.widgets.AppliedFilterBox;
 import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
 
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Column;
+import org.gwtbootstrap3.client.ui.FormGroup;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
@@ -51,6 +54,9 @@ public class FilterViewImpl extends Composite implements FilterView{
 	
 	@UiField AppliedFilterBox appliedFilter;
 	@UiField FocusPanel focusPanel;
+	
+	@UiField FormGroup yearColumn;
+	@UiField FormGroup countryColumn;
 	
 	@Inject
 	public FilterViewImpl() {
@@ -127,12 +133,21 @@ public class FilterViewImpl extends Composite implements FilterView{
 	}
 
 	@Override
-	public void setAppliedFilter(List<String> appliedFilter) {
+	public void setAppliedFilterBox(List<String> appliedFilter) {
 		this.appliedFilter.setValue(appliedFilter);
 	}
 
 	@Override
 	public void setMode(String mode) {
-		// TODO mode logic for change of filter view needs to be implemented
+		if (mode.equals(Tokens.MAP))
+		{
+			countryColumn.setVisible(false);
+			yearColumn.setVisible(false);
+		}
+		else
+		{
+			countryColumn.setVisible(true);
+			yearColumn.setVisible(true);
+		}
 	}
 }

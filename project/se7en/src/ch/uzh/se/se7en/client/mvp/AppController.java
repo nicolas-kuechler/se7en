@@ -123,6 +123,7 @@ public class AppController implements ValueChangeHandler<String> {
 		navBar.setActive(Tokens.MAP);
 		
 		injector.getFilterPresenter().go(subContainer);
+		injector.getFilterPresenter().setMode(Tokens.MAP);
 		injector.getMapPresenter().go(container);
 	}
 
@@ -138,6 +139,7 @@ public class AppController implements ValueChangeHandler<String> {
 		navBar.setActive(Tokens.TABLE);
 		
 		injector.getFilterPresenter().go(subContainer);
+		injector.getFilterPresenter().setMode(Tokens.TABLE);
 		injector.getTablePresenter().go(container);
 	}
 
