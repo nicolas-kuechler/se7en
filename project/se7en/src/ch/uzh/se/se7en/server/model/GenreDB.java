@@ -33,6 +33,18 @@ public class GenreDB implements DTO {
 	@ManyToMany(targetEntity = FilmDB.class)
 	private Set<FilmDB> films;
 	
+	public GenreDB() {
+		
+	}
+	
+	public GenreDB(String name) {
+		this.name = name;
+	}
+	
+	public GenreDB(int id) {
+		this.id = id;
+	}
+	
 	/**
 	 * Converts this entity to a data transfer object
 	 * 

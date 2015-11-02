@@ -33,6 +33,18 @@ public class LanguageDB implements DTO {
 	@ManyToMany(targetEntity = FilmDB.class)
 	private Set<FilmDB> films;
 	
+	public LanguageDB() {
+		
+	}
+	
+	public LanguageDB(String name) {
+		this.name = name;
+	}
+	
+	public LanguageDB(int id) {
+		this.id = id;
+	}
+	
 	/**
 	 * Converts this entity to a data transfer object
 	 * 
