@@ -13,8 +13,8 @@
 				<c:DataGrid ui:field='dataGrid' />
 			</b:PanelBody>
 			<b:PanelFooter>
-				<b:Heading size="H5" text="Download" />
-				<b:Button ui:field='downloadButton'>Download</b:Button>
+				<b:Heading size="H5"/>
+				<b:Button ui:field='downloadButton' type="PRIMARY">Download</b:Button>
 			</b:PanelFooter>
 		</b:Panel>
 	</g:HTMLPanel>

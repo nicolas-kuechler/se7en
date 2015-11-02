@@ -3,81 +3,84 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
 	xmlns:slider="urn:import:org.gwtbootstrap3.extras.slider.client.ui"
 	xmlns:own="urn:import:ch.uzh.se.se7en.client.mvp.views.widgets">
-	<b:Container fluid="true">
-		<g:FocusPanel ui:field="focusPanel">
-			<b:Form>
-				<b:FieldSet>
-					<b:Row>
-						<b:Column size="MD_4" styleName="filterColLeft">
-							<b:FormGroup>
-								<b:FormLabel>Film Name</b:FormLabel>
-								<b:TextBox ui:field="nameBox"></b:TextBox>
-							</b:FormGroup>
-						</b:Column>
+	<b:Panel styleName="dataContainer">
+		<b:PanelHeader>
+			<b:Heading size="H3" text="Filter" />
+		</b:PanelHeader>
+		<b:PanelCollapse b:id="collapseOne">
+		<b:PanelBody>
+			<g:FocusPanel ui:field="focusPanel">
+				<b:Form>
+					<b:FieldSet>
+						<b:Row>
+							<b:Column size="MD_4" styleName="filterColLeft">
+								<b:FormGroup>
+									<b:FormLabel>Film Name</b:FormLabel>
+									<b:TextBox ui:field="nameBox"></b:TextBox>
+								</b:FormGroup>
+							</b:Column>
 
-						<b:Column size="MD_4" styleName="filterColMiddle">
-							<b:FormGroup>
-								<b:FormLabel>Film Length</b:FormLabel>
-								<b:HelpBlock text="" />
-								<slider:RangeSlider ui:field="lengthSlider"></slider:RangeSlider>
-							</b:FormGroup>
-						</b:Column>
+							<b:Column size="MD_4" styleName="filterColMiddle">
+								<b:FormGroup>
+									<b:FormLabel>Film Length</b:FormLabel>
+									<b:HelpBlock text="" />
+									<slider:RangeSlider ui:field="lengthSlider"></slider:RangeSlider>
+								</b:FormGroup>
+							</b:Column>
 
 
-						<b:Column size="MD_4" styleName="filterColRight">
-							<b:FormGroup ui:field="yearColumn">
-								<b:FormLabel>Production Year</b:FormLabel>
-								<b:HelpBlock text="" />
-								<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
-							</b:FormGroup>
-						</b:Column>
+							<b:Column size="MD_4" styleName="filterColRight">
+								<b:FormGroup ui:field="yearColumn">
+									<b:FormLabel>Production Year</b:FormLabel>
+									<b:HelpBlock text="" />
+									<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
+								</b:FormGroup>
+							</b:Column>
 
-					</b:Row>
+						</b:Row>
 
-					<b:Row>
-						<b:Column size="MD_4" styleName="filterColLeft">
-							<b:FormGroup>
-								<b:FormLabel>Film Genre</b:FormLabel>
-								<own:MultiSelect ui:field="genreSelect"></own:MultiSelect>
-							</b:FormGroup>
-						</b:Column>
+						<b:Row>
+							<b:Column size="MD_4" styleName="filterColLeft">
+								<b:FormGroup>
+									<b:FormLabel>Film Genre</b:FormLabel>
+									<own:MultiSelect ui:field="genreSelect"></own:MultiSelect>
+								</b:FormGroup>
+							</b:Column>
 
-						<b:Column size="MD_4" styleName="filterColMiddle">
-							<b:FormGroup>
-								<b:FormLabel>Film Language</b:FormLabel>
-								<own:MultiSelect ui:field="languageSelect"></own:MultiSelect>
-							</b:FormGroup>
-						</b:Column>
+							<b:Column size="MD_4" styleName="filterColMiddle">
+								<b:FormGroup>
+									<b:FormLabel>Film Language</b:FormLabel>
+									<own:MultiSelect ui:field="languageSelect"></own:MultiSelect>
+								</b:FormGroup>
+							</b:Column>
 
-						<b:Column size="MD_4" styleName="filterColRight">
-							<b:FormGroup ui:field="countryColumn">
-								<b:FormLabel>Production Country</b:FormLabel>
-								<own:MultiSelect ui:field="countrySelect"></own:MultiSelect>
-							</b:FormGroup>
-						</b:Column>
+							<b:Column size="MD_4" styleName="filterColRight">
+								<b:FormGroup ui:field="countryColumn">
+									<b:FormLabel>Production Country</b:FormLabel>
+									<own:MultiSelect ui:field="countrySelect"></own:MultiSelect>
+								</b:FormGroup>
+							</b:Column>
+						</b:Row>
+					</b:FieldSet>
+				</b:Form>
+			</g:FocusPanel>
+		</b:PanelBody>
+		</b:PanelCollapse>
+		<b:PanelFooter>
+			<b:Row>
+				<b:Column size="MD_4" styleName="appliedFilter">
+					<own:AppliedFilterBox ui:field="appliedFilter" styleName="appliedFilterBox"></own:AppliedFilterBox>
+				</b:Column>
+				<b:Column size="MD_4" styleName="filterColSearch">
+					<b:Button ui:field="searchBtn" type="PRIMARY">Search</b:Button>
+					<b:Button ui:field="clearBtn" type="PRIMARY">Clear</b:Button>
+				</b:Column>
 
-					</b:Row>
+				<b:Column size="MD_4" styleName="expandFilter">
+					<b:Button icon="FILTER" dataToggle="COLLAPSE" dataTarget="#collapseOne"></b:Button>
+				</b:Column>
+			</b:Row>
+		</b:PanelFooter>
 
-				</b:FieldSet>
-
-				<b:Row>
-					<b:Column size="MD_4" styleName="appliedFilter">
-						<own:AppliedFilterBox ui:field="appliedFilter"></own:AppliedFilterBox>
-					</b:Column>
-					
-
-					<b:Column size="MD_4" styleName="filterColSearch">
-						<b:Button ui:field="searchBtn">Search</b:Button>
-						<b:Button ui:field="clearBtn">Clear</b:Button>
-					</b:Column>
-					
-					<b:Column size="MD_4" styleName="expandFilter">
-						<b:Button>EXPAND</b:Button>
-					</b:Column>
-
-					
-				</b:Row>
-			</b:Form>
-		</g:FocusPanel>
-	</b:Container>
+	</b:Panel>
 </ui:UiBinder> 
