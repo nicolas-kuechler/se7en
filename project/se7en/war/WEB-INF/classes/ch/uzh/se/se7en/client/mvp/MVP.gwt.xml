@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module>
-	<replace-with class="ch.uzh.se.se7en.client.mvp.ClientFactoryImpl">
-		<when-type-is class="ch.uzh.se.se7en.client.mvp.ClientFactory" />
-	</replace-with>
-</module>
