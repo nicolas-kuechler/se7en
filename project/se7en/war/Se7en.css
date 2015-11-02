@@ -27,15 +27,18 @@ th,td{
 }
 
 .panel-footer{
-	margin-bottom:5%;
+	margin-bottom:1%;
 }
 
-.panel-footer, .panel-heading{
+.panel-footer, .panel-heading, #collapseOne{
 	padding-left:1% !important;
+	padding-right:1% !important;
 }
+
 .dataContainer{
 	padding-left:15% !important;
 	padding-right:15% !important;
+
 }
 
 .dataContainer div{
@@ -50,11 +53,36 @@ th,td{
 }
 
 #subContainer form{
-	padding-left:15%;
-	padding-right:15%;
 	padding-top: 1%;
 	padding-bottom:1%;
 }
+
+#subContainer .panel-heading{
+	color: #333;
+	background-color: #F5F5F5;
+	border-color: #DDD;
+}
+
+#subContainer .row{
+	margin-bottom: 1%;
+	margin-left:0 !important;
+	margin-right:0 !important;
+}
+
+#subcontainer .panel-footer{
+	padding-left: 0 !important;
+}
+
+.appliedFilterBox .panel{
+	background-color: #F5F5F5 !important;
+}
+
+.appliedFilterBox .label{
+	font-size: 110% !important;
+	font-weight:normal !important;
+	line-height: 34px !important;
+}
+
 
 .filterColLeft, .filterColMiddle, .filterColRight{
 	width: 33.33%;
@@ -85,30 +113,25 @@ th,td{
 	min-height: 1px;
 	position: relative;
 	float:left;
-	border:1px solid grey;
 }
 .appliedFilter{
 	width:70%;
 	float:left;
 	min-height: 36px;
 	position: relative;
-	border:1px solid grey;
 }
 .expandFilter{
 	width:10%;
 	float:left;
 	position: relative;
 	min-height: 1px;
-	border:1px solid grey;
 }
 
 .expandFilter .btn{
 	float:right;
 }
 
-#subContainer .row{
-	margin-bottom: 1%;
-}
+
 
 .filterColSearch .btn{
 	float:right;
@@ -154,6 +177,10 @@ margin-top:-1%;
 	float:right !important;
 	position:relative;
 
+}
+
+#container .panel-footer{
+	margin-bottom: 5%;	
 }
 
 #footerBar .navbar-collapse{
