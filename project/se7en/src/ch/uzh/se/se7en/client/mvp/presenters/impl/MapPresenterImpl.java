@@ -9,13 +9,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.inject.Inject;
 import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.ColumnType;
 import com.googlecode.gwt.charts.client.DataTable;
 
 import ch.uzh.se.se7en.client.mvp.Boundaries;
-import ch.uzh.se.se7en.client.mvp.ClientFactory;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
@@ -27,23 +27,22 @@ import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class MapPresenterImpl implements MapPresenter {
 	
-	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
 	private MapView mapView;
 	private EventBus eventBus;
 	private FilmListServiceAsync filmListService;
 	private FilmDataModel filmDataModel;
 	
-
-	public MapPresenterImpl(final MapView mapView)
-	{
-		filmDataModel = clientFactory.getFilmDataModel();
-		eventBus = clientFactory.getEventBus();
-		filmListService = clientFactory.getFilmListServiceAsync();
+	@Inject
+	public MapPresenterImpl(MapView mapView, EventBus eventBus, FilmListServiceAsync filmListService,
+			FilmDataModel filmDataModel) {
 		this.mapView = mapView;
+		this.eventBus = eventBus;
+		this.filmListService = filmListService;
+		this.filmDataModel = filmDataModel;
 		bind();
 		setupMapUpdate();
 	}
-	
+
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
@@ -82,19 +81,18 @@ public class MapPresenterImpl implements MapPresenter {
 	 */
 	private void setupMapUpdate(){
 		//initialize with empty map
-		
 		filmDataModel.setCountryList(new ArrayList<Country>());
 		updateGeoChart();
+		
 		//listens to FilterAppliedEvents in the EventBus
 		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
 			@Override
 			public void onFilterAppliedEvent(FilterAppliedEvent event) {
-				
 				//update of the yearSlider in the mapView
 				mapView.getYearSlider().setValue(new Range(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd()));
 				
 				//as soon as new filter is applied, starts async call to server to get the new list of countries matching the adjusted filter
-				filmListService.getCountryList(adjustedFilter(), new AsyncCallback<List<Country>>(){
+				filmListService.getCountryList(filmDataModel.getAppliedMapFilter(), new AsyncCallback<List<Country>>(){
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -170,36 +168,5 @@ public class MapPresenterImpl implements MapPresenter {
 		});
 	}
 	
-	/**
-	Helper method to adjust the currently appliedFilter for the map. Because the filtering of the year 
-	for the map is done on clientside and the country filter doesn't apply in the map
-	@author Nicolas Küchler
-	@pre 	filmDataModel != null && filmDataModel.getAppliedFilter()!=null
-	@post	filmDataModel.getAppliedFilter() == filmDataModel.getAppliedFilter() @pre
-	@return FilmFilter that contains the boundaries for the years (because filtering of year 
-			is done on clientside for the map) and the filter for the countries is removed.
-	 */
-	private FilmFilter adjustedFilter()
-	{
-		//taking applied filter from filmDataModel
-		FilmFilter filter = new FilmFilter();
-		FilmFilter appliedFilter = filmDataModel.getAppliedFilter();
-		
-		//copying the filter fields that are considered for the map as well
-		filter.setName(appliedFilter.getName());
-		filter.setLengthStart(appliedFilter.getLengthStart());
-		filter.setLengthEnd(appliedFilter.getLengthEnd());
-		filter.setGenres(appliedFilter.getGenres());
-		filter.setLanguages(appliedFilter.getLanguages());
-		
-		//adjusting year range because filtering of that is done in the map on client side
-		filter.setYearStart(Boundaries.MIN_YEAR);
-		filter.setYearEnd(Boundaries.MAX_YEAR);
-		
-		//removing the country filter because in the map always all the countries should be considered
-		filter.setCountries(new ArrayList<String>());
-		
-		return filter;
-	}
-
+	
 }

@@ -11,6 +11,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.RootPanel;
 
 import ch.uzh.se.se7en.client.mvp.presenters.impl.MapPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.TablePresenterImpl;
@@ -31,7 +32,7 @@ import ch.uzh.se.se7en.client.rpc.TriggerImportServiceAsync;
  */
 public class AppController implements ValueChangeHandler<String> {
 
-	private ClientFactory clientFactory = GWT.create(ClientFactory.class);
+	private final MyAppGinjector injector = GWT.create(MyAppGinjector.class);
 	private EventBus eventBus;
 	private HasWidgets container;
 	private HasWidgets subContainer;
@@ -40,14 +41,12 @@ public class AppController implements ValueChangeHandler<String> {
 	public AppController(final NavigationBar navBar)
 	{
 		this.navBar = navBar;
-		eventBus = clientFactory.getEventBus();
 		bind();
-		
-		//Makes sure that the global search is possible
-		clientFactory.getFilmDataModel();
-		clientFactory.getFilterPresenter();
-		clientFactory.getMapPresenter();
-		clientFactory.getTablePresenter();
+
+		injector.getFilmDataModel();
+		injector.getFilterPresenter();
+		injector.getMapPresenter();
+		injector.getTablePresenter();
 	}
 	
 	/**
@@ -121,10 +120,12 @@ public class AppController implements ValueChangeHandler<String> {
 	 */
 	private void doMapView()
 	{
-		//combination of mapView and filterView needs to be implemented
 		navBar.setActive(Tokens.MAP);
-		clientFactory.getFilterPresenter().go(subContainer);
-		clientFactory.getMapPresenter().go(container);
+		Window.setTitle("GIR | Map");
+		RootPanel.get("subContainer").setVisible(true);
+		injector.getFilterPresenter().go(subContainer);
+		injector.getFilterPresenter().setMode(Tokens.MAP);		
+		injector.getMapPresenter().go(container);
 	}
 
 	/**
@@ -135,10 +136,12 @@ public class AppController implements ValueChangeHandler<String> {
 	 */
 	private void doTableView()
 	{
-		//combination of tableView and filterView needs to be implemented
 		navBar.setActive(Tokens.TABLE);
-		clientFactory.getFilterPresenter().go(subContainer);
-		clientFactory.getTablePresenter().go(container);
+		Window.setTitle("GIR | Table");
+		RootPanel.get("subContainer").setVisible(true);
+		injector.getFilterPresenter().go(subContainer);
+		injector.getFilterPresenter().setMode(Tokens.TABLE);
+		injector.getTablePresenter().go(container);
 	}
 
 	/**
@@ -149,10 +152,11 @@ public class AppController implements ValueChangeHandler<String> {
 	 */
 	private void doWelcomeView()
 	{
-		//welcome view needs to be implemente
+		Window.setTitle("GIR | Welcome");
 		navBar.setActive(Tokens.HOME);
 		subContainer.clear();
-		clientFactory.getWelcomePresenter().go(container);
+		RootPanel.get("subContainer").setVisible(false);
+		injector.getWelcomePresenter().go(container);
 	}
 	
 	private void doImport(String token)

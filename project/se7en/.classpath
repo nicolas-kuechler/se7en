@@ -60,5 +60,22 @@
 			<attribute name="javadoc_location" value="jar:file:/vagrant/dependencies/jcsv/jcsv-1.4.0-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/testing/gwtmockito-1.1.5.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/testing/mockito-all-1.10.19.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/guice/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/guice/gin-2.1.2.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/guice/guice-3.0.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/guice/guice-persist-3.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/vagrant/dependencies/guice/guice-persist-3.0-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/guice/guice-servlet-3.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/vagrant/dependencies/guice/guice-servlet-3.0-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/vagrant/dependencies/guice/guice-assistedinject-3.0.jar"/>
+	<classpathentry kind="lib" path="/vagrant/dependencies/guice/javax.inject.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
