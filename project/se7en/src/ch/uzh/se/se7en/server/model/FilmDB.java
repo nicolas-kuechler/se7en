@@ -13,6 +13,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import javax.persistence.CascadeType;
+
 import ch.uzh.se.se7en.shared.model.DTO;
 import ch.uzh.se.se7en.shared.model.Film;
 
@@ -38,19 +40,19 @@ public class FilmDB implements DTO {
 	@Column(name = "year", nullable=true)
 	private Integer year;
 	
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "film_countries",
 		joinColumns={@JoinColumn(name = "film_id")},
 		inverseJoinColumns={@JoinColumn(name = "country_id")})
 	private Set<CountryDB> countries;
 	
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "film_languages",
 		joinColumns={@JoinColumn(name = "film_id")},
 		inverseJoinColumns={@JoinColumn(name = "language_id")})
 	private Set<LanguageDB> languages;
 	
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "film_genres",
 		joinColumns={@JoinColumn(name = "film_id")},
 		inverseJoinColumns={@JoinColumn(name = "genre_id")})
