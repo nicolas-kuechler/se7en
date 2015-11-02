@@ -40,6 +40,16 @@ public class CountryDB implements DTO {
 		inverseJoinColumns={@JoinColumn(name = "film_id")})
 	private List<FilmDB> films;
 	
+	public CountryDB(String name) {
+		this.name = name;
+	}
+	
+	public CountryDB(int id, String name) {
+		this(name);
+		
+		this.id = id;
+	}
+	
 	/**
 	 * Converts this entity to a data transfer object
 	 * 

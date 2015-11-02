@@ -56,6 +56,19 @@ public class FilmDB implements DTO {
 		inverseJoinColumns={@JoinColumn(name = "genre_id")})
 	private Set<GenreDB> genres;
 	
+	public FilmDB() {
+		
+	}
+	
+	public FilmDB(String name, Integer length, Integer year, Set<CountryDB> countries, Set<LanguageDB> languages, Set<GenreDB> genres) {
+		this.name = name;
+		this.length = length;
+		this.year = year;
+		this.countries = countries;
+		this.languages = languages;
+		this.genres = genres;
+	}
+	
 	/**
 	 * Converts this entity to a data transfer object
 	 * 
@@ -78,7 +91,7 @@ public class FilmDB implements DTO {
 	 * @return List<String> result The list of names of all items in the set
 	 */
 	private List<String> setToStringList(Set<? extends DTO> input) {
-		List<String> result = new ArrayList();
+		List<String> result = new ArrayList<String>();
 		
 		for(DTO item : input) {
 			result.add(item.getName());
