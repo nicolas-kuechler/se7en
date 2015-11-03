@@ -2,6 +2,7 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
@@ -38,6 +39,19 @@ public class FilterPresenterImpl implements FilterPresenter {
 		this.filmDataModel = filmDataModel;
 		bind();
 		updateFilterFromView();
+		
+		List<String> countryList = new LinkedList<String>();
+		countryList.add("Wololo");
+		countryList.add("Mama Rhodesia");
+		filterView.getCountrySelect().setValue(countryList);
+		
+		List<String> genreList = new LinkedList<String>();
+		genreList.add("Romantic Comedy");
+		genreList.add("Kekekekekekeke");
+		filterView.getGenreSelect().setValue(genreList);
+		
+		List<String> languageList = new LinkedList<String>();
+		filterView.getLanguageSelect().setValue(languageList);
 	}
 
 	@Override
