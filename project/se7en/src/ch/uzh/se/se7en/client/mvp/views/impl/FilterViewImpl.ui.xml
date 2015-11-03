@@ -3,9 +3,20 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
 	xmlns:slider="urn:import:org.gwtbootstrap3.extras.slider.client.ui"
 	xmlns:own="urn:import:ch.uzh.se.se7en.client.mvp.views.widgets">
-	<b:Panel styleName="dataContainer">
+	<b:Panel styleName="filterPanel">
 		<b:PanelHeader>
-			<b:Heading size="H3" text="Filter" />
+			<b:Row>
+				<b:Heading size="H3" text="Filter" />
+				<b:Column size="MD_4" styleName="expandFilter">
+					<b:Button icon="UNSORTED" dataToggle="COLLAPSE" dataTarget="#collapseOne"></b:Button>
+					<b:Button ui:field="clearBtn" type="PRIMARY" icon="TRASH">Clear</b:Button>
+				</b:Column>
+			</b:Row>
+			<b:Row>
+				<b:Column size="MD_4" styleName="appliedFilter">
+					<own:AppliedFilterBox ui:field="appliedFilter" styleName="appliedFilterBox"></own:AppliedFilterBox>
+				</b:Column>
+			</b:Row>
 		</b:PanelHeader>
 		<b:PanelCollapse b:id="collapseOne">
 		<b:PanelBody>
@@ -61,26 +72,15 @@
 								</b:FormGroup>
 							</b:Column>
 						</b:Row>
+						<b:Row>
+							<b:Column size="MD" styleName="filterColSearch">
+							<b:Button ui:field="searchBtn" type="PRIMARY" icon="SEARCH">Search</b:Button>
+							</b:Column>
+						</b:Row>
 					</b:FieldSet>
 				</b:Form>
 			</g:FocusPanel>
 		</b:PanelBody>
 		</b:PanelCollapse>
-		<b:PanelFooter>
-			<b:Row>
-				<b:Column size="MD_4" styleName="appliedFilter">
-					<own:AppliedFilterBox ui:field="appliedFilter" styleName="appliedFilterBox"></own:AppliedFilterBox>
-				</b:Column>
-				<b:Column size="MD_4" styleName="filterColSearch">
-					<b:Button ui:field="searchBtn" type="PRIMARY">Search</b:Button>
-					<b:Button ui:field="clearBtn" type="PRIMARY">Clear</b:Button>
-				</b:Column>
-
-				<b:Column size="MD_4" styleName="expandFilter">
-					<b:Button icon="FILTER" dataToggle="COLLAPSE" dataTarget="#collapseOne"></b:Button>
-				</b:Column>
-			</b:Row>
-		</b:PanelFooter>
-
 	</b:Panel>
 </ui:UiBinder> 

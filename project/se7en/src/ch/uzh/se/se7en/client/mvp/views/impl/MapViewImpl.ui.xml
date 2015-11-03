@@ -7,8 +7,8 @@
 	<ui:style>
 
 	</ui:style>
-	<g:HTMLPanel  styleName="dataContainer">
-		<b:Panel>
+	<b:Panel styleName="dataContainer">
+		<b:Panel styleName="mapPanel">
 			<b:PanelHeader>
 				<b:Heading size="H3" text="Film World Map" />
 			</b:PanelHeader>
@@ -20,5 +20,5 @@
 				<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
 			</b:PanelFooter>
 		</b:Panel>
-	</g:HTMLPanel>
+	</b:Panel>
 </ui:UiBinder> 

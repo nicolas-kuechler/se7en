@@ -24,20 +24,20 @@ public class Se7en implements EntryPoint {
 		Panel container = new Panel();
 		Panel subContainer = new Panel();
 		NavigationBar navBar = new NavigationBar();
-		FooterBar footerBar = new FooterBar();
+		
 		navBar.getElement().setId("navBar");
 		subContainer.getElement().setId("subContainer");
 		container.getElement().setId("container");
-		footerBar.getElement().setId("footerBar");
 		
-		
-		RootPanel.get().add(navBar);
 		RootPanel.get().add(subContainer);
 		RootPanel.get().add(container);
-		RootPanel.get().add(footerBar);
+		RootPanel.get().add(navBar);
+
+
+
 		
 		AppController app = new AppController(navBar);
-		app.go(container, subContainer);
+		app.go(container,subContainer);
 		History.fireCurrentHistoryState();
 		//Demo Content end
 	}

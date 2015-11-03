@@ -6,14 +6,26 @@
 	
 	<b:Navbar position="FIXED_TOP">
 		<b:NavbarHeader width="23%">
-			<b:Image resource='{res.sevenWhite}'></b:Image>
+			<b:Image resource='{res.sevenBlack}'></b:Image>
 		</b:NavbarHeader>
 		<b:NavbarCollapse height="11%" width="77%">
 			<b:NavbarNav>
-			<b:AnchorListItem ui:field="homeNav">Home</b:AnchorListItem>
-			<b:AnchorListItem ui:field="mapNav">Map</b:AnchorListItem>
-			<b:AnchorListItem ui:field="tableNav">Table</b:AnchorListItem>
+			<b:AnchorListItem ui:field="homeNav" icon="HOME">Home</b:AnchorListItem>
+			<b:AnchorListItem ui:field="mapNav" icon="GLOBE">Map</b:AnchorListItem>
+			<b:AnchorListItem ui:field="tableNav" icon="TABLE">Table</b:AnchorListItem>
+			<b:AnchorListItem ui:field="modalOpen" icon="COMMENT">Creative Commons</b:AnchorListItem>
 			</b:NavbarNav>
+			
+			   <b:Modal title="Creative Commons" ui:field="licenseModal">
+        			<b:ModalBody>
+        					<b:Label styleName="modalText">
+        					David Bamman, Brendan O'Connor and Noah Smith, "Learning Latent
+							Personas of Film Characters," in: Proceedings of the Annual Meeting
+							of the Association for Computational Linguistics (ACL 2013), Sofia,
+							Bulgaria, August 2013.
+							</b:Label>
+					</b:ModalBody>
+   			 </b:Modal>
 		</b:NavbarCollapse>
 	</b:Navbar>
 </ui:UiBinder> 
