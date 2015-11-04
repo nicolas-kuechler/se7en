@@ -241,7 +241,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * Returns a list of all available genres as options (names and ids) to the 
 	 * client for use in the filter's multiselect boxes.
 	 * 
-	 * @author Cyrill Halter
+	 * @author Cyrill Halter, Roland Schläfli
 	 * @pre -
 	 * @post -
 	 * @param -
@@ -250,9 +250,17 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public List<SelectOption> getGenreSelectOption() {
+		List<SelectOption> availableGenres = new ArrayList<SelectOption>();
+		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 		
-		//TODO create DB query to create list of SelectOption objects
-		return null;
+		// select * from the genre table
+		dbGenres = em.get().createQuery("from GenreDB", GenreDB.class).getResultList();
+		
+		for(GenreDB genre : dbGenres) {
+			availableGenres.add(new SelectOption(genre.getId(), genre.getName()));
+		}
+		
+		return availableGenres;
 	}
 	
 	
@@ -260,7 +268,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * Returns a list of all available countries as options (names and ids) to the 
 	 * client for use in the filter's multiselect boxes.
 	 * 
-	 * @author Cyrill Halter
+	 * @author Cyrill Halter, Roland Schläfli
 	 * @pre -
 	 * @post -
 	 * @param -
@@ -269,15 +277,24 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public List<SelectOption> getCountrySelectOption() {
-		//TODO create DB query to create list of SelectOption objects
-		return null;
+		List<SelectOption> availableCountries = new ArrayList<SelectOption>();
+		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
+		
+		// select * from the country table
+		dbCountries = em.get().createQuery("from CountryDB", CountryDB.class).getResultList();
+		
+		for(CountryDB country : dbCountries) {
+			availableCountries.add(new SelectOption(country.getId(), country.getName()));
+		}
+		
+		return availableCountries;
 	}
 
 	/***
 	 * Returns a list of all available languages as options (names and ids) to the 
 	 * client for use in the filter's multiselect boxes.
 	 * 
-	 * @author Cyrill Halter
+	 * @author Cyrill Halter, Roland Schläfli
 	 * @pre -
 	 * @post -
 	 * @param -
@@ -286,7 +303,16 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public List<SelectOption> getLanguageSelectOption() {
-		//TODO create DB query to create list of SelectOption objects
-		return null;
+		List<SelectOption> availableLanguages = new ArrayList<SelectOption>();
+		List<LanguageDB> dbLanguages = new ArrayList<LanguageDB>();
+		
+		// select * from the language table
+		dbLanguages = em.get().createQuery("from LanguageDB", LanguageDB.class).getResultList();
+		
+		for(LanguageDB language : dbLanguages) {
+			availableLanguages.add(new SelectOption(language.getId(), language.getName()));
+		}
+		
+		return availableLanguages;
 	}
 }
