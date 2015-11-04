@@ -9,6 +9,7 @@ import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 
@@ -19,8 +20,10 @@ import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
+import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.SelectOption;
 
 
 public class FilterPresenterImpl implements FilterPresenter {
@@ -29,15 +32,69 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private FilterView filterView;
 	private FilmDataModel filmDataModel;
 	private String mode;
+	private FilmListServiceAsync filmListService;
 
 	@Inject
-	public FilterPresenterImpl(EventBus eventBus, FilterView filterView, FilmDataModel filmDataModel) {
+	public FilterPresenterImpl(EventBus eventBus, final FilterView filterView, FilmDataModel filmDataModel, 
+			FilmListServiceAsync filmListService) {
 		super();
+		this.filmListService = filmListService;
 		this.eventBus = eventBus;
 		this.filterView = filterView;
 		this.filmDataModel = filmDataModel;
 		bind();
 		updateFilterFromView();
+		
+		//fill genre multiselect box with options
+		filmListService.getGenreSelectOption(new AsyncCallback<List<SelectOption>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientLog.writeErr("Failed to get genre list...");
+				
+			}
+
+			@Override
+			public void onSuccess(List<SelectOption> result) {
+				filterView.getGenreSelect().setOptions(result);
+				
+			}
+			
+		});
+		
+		//fill country multiselect box with options
+		filmListService.getCountrySelectOption(new AsyncCallback<List<SelectOption>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientLog.writeErr("Failed to get country list...");
+				
+			}
+
+			@Override
+			public void onSuccess(List<SelectOption> result) {
+				filterView.getCountrySelect().setOptions(result);
+				
+			}
+			
+		});
+		
+		//fill language multiselect box with options
+		filmListService.getLanguageSelectOption(new AsyncCallback<List<SelectOption>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientLog.writeErr("Failed to get language list...");
+				
+			}
+
+			@Override
+			public void onSuccess(List<SelectOption> result) {
+				filterView.getLanguageSelect().setOptions(result);
+				
+			}
+			
+		});
 	}
 
 	@Override
@@ -63,9 +120,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filterView.getNameBox().setValue("");
 		filterView.getLengthSlider().setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
 		filterView.getYearSlider().setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
-		filterView.getCountrySelect().setValue(new ArrayList<String>());
-		filterView.getLanguageSelect().setValue(new ArrayList<String>());
-		filterView.getGenreSelect().setValue(new ArrayList<String>());
 	}
 	
 	@Override
