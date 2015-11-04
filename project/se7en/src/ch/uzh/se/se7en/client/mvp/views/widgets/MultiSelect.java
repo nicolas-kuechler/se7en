@@ -3,49 +3,142 @@ package ch.uzh.se.se7en.client.mvp.views.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.gwtbootstrap3.extras.select.client.ui.Option;
+import org.gwtbootstrap3.extras.select.client.ui.Select;
+
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MultiSelect extends Composite implements HasValue<List<String>>{
+import ch.uzh.se.se7en.shared.model.SelectOption;
 
-	private static MultiSelectUiBinder uiBinder = GWT.create(MultiSelectUiBinder.class);
+/**
+ * This class defines a widget that adds functionality to the gwtbootstrap3.extras.select widget.
+ * @author Cyrill Halter
+ *
+ */
+public class MultiSelect extends Composite{
+
+	private static MultiSelectUiBinder uiBinder = GWT
+			.create(MultiSelectUiBinder.class);
 
 	interface MultiSelectUiBinder extends UiBinder<Widget, MultiSelect> {
 	}
 
+	@UiField
+	Select select;
+	
+	private List<SelectOption> currentOptions;
+	
 	public MultiSelect() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
-		//TODO MultiSelect according to NK SevenDemo
-	}
-
-	@Override
-	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<List<String>> handler) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> getValue() {
-		// TODO Auto-generated method stub
-		return new ArrayList<String>();
-	}
-
-	@Override
-	public void setValue(List<String> value) {
-		// TODO Auto-generated method stub
+		select.setEnabled(true);
 		
 	}
+	
+	/**
+	This method delivers a list of SelectOption objects according to what was selected by the user in the
+	multiselect widget
+	@author Cyrill Halter
+	@pre 	-
+	@post	-
+	@param  -
+	@return List<SelectOption> selectedOption A list of selected Options as SelectOption objects
+	 */
+	public List<SelectOption> getSelectedOptions()
+	{
+		List<String> ids = select.getAllSelectedValues();
+		List<SelectOption> selectedOptions = new ArrayList<SelectOption>();
+		for(String id : ids){
+			int i = 0;
+			SelectOption tempOption = currentOptions.get(i);
+			while(Integer.parseInt(id) != tempOption.getId()){
+				tempOption = currentOptions.get(++i);
+			}
+			selectedOptions.add(tempOption);
+		}
+		return selectedOptions;
+	}
 
-	@Override
-	public void setValue(List<String> value, boolean fireEvents) {
-		// TODO Auto-generated method stub
+	/**
+	This method delivers a list of strings according to what was selected by the user in the
+	multiselect widget. This has to be done for integration with the existing code.
+	@author Cyrill Halter
+	@pre 	-
+	@post	-
+	@param  -
+	@return List<Strings> selectedOption A list of selected Options as strings
+	 */
+	public List<String> getValue(){
+		List<String> ids = select.getAllSelectedValues();
+		List<String> selectedOptions = new ArrayList<String>();
+		for(String id : ids){
+			int i = 0;
+			SelectOption tempOption = currentOptions.get(i);
+			while(Integer.parseInt(id) != tempOption.getId()){
+				tempOption = currentOptions.get(++i);
+			}
+			selectedOptions.add(tempOption.getName());
+		}
+		return selectedOptions;
+	}
+	
+	/**
+	This method deselects all options in the multiselect widget
+	@author Cyrill Halter
+	@pre 	-
+	@post	select.getAllSelected() == null;
+	@param  -
+	@return -
+	 */
+	public void deselectAll() 
+	{
+		select.deselectAll();
+	}
+	
+	/**
+	This method sets the width of the multiselect widget
+	@author Cyrill Halter
+	@pre 	-
+	@post	-
+	@param  final String width The width to set to
+	@return -
+	 */
+	 public void setWidth(final String width)
+	 {
+		 select.setWidth(width);
+	 }
+
+	/**
+	This method fills the multiselect widget with options to select from
+	@author Cyrill Halter
+	@pre 	-
+	@post	-
+	@param  List<SelectOption> currentOptions The options that should be available in the multiselect widget
+	@return -
+		 */
+	public void setOptions(List<SelectOption> currentOptions) {
+		Option option;
+		this.currentOptions = currentOptions;
+		
+		for (int i = 0; i < currentOptions.size(); i++)
+		{
+			option = new Option();
+			option.setText(currentOptions.get(i).getName());
+			option.setValue(Integer.toString(currentOptions.get(i).getId()));
+			select.add(option);
+		}
+		
+		select.refresh();
+	
 		
 	}
+
+
+
+	
+	
 
 }

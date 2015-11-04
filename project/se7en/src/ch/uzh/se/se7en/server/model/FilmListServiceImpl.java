@@ -20,11 +20,12 @@ import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
 
 import ch.uzh.se.se7en.client.rpc.FilmListService;
-
+import ch.uzh.se.se7en.server.ServerLog;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.Genre;
+import ch.uzh.se.se7en.shared.model.SelectOption;
 
 /**
  * Handles the server side of RPC requests, coordinates with the database
@@ -233,5 +234,85 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// return the filled list of countries
 		return genres;
+	}
+
+	
+	/***
+	 * Returns a list of all available genres as options (names and ids) to the 
+	 * client for use in the filter's multiselect boxes.
+	 * 
+	 * @author Cyrill Halter, Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param -
+	 * @return List<SelectOption> availableGenres The list of all available genres as
+	 * SelectOption objects
+	 */
+	@Override
+	public List<SelectOption> getGenreSelectOption() {
+		List<SelectOption> availableGenres = new ArrayList<SelectOption>();
+		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
+		
+		// select * from the genre table
+		dbGenres = em.get().createQuery("from GenreDB order by name", GenreDB.class).getResultList();
+		
+		for(GenreDB genre : dbGenres) {
+			availableGenres.add(new SelectOption(genre.getId(), genre.getName()));
+		}
+		
+		return availableGenres;
+	}
+	
+	
+	/***
+	 * Returns a list of all available countries as options (names and ids) to the 
+	 * client for use in the filter's multiselect boxes.
+	 * 
+	 * @author Cyrill Halter, Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param -
+	 * @return List<SelectOption> availableCountries The list of all available countries as
+	 * SelectOption objects
+	 */
+	@Override
+	public List<SelectOption> getCountrySelectOption() {
+		List<SelectOption> availableCountries = new ArrayList<SelectOption>();
+		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
+		
+		// select * from the country table
+		dbCountries = em.get().createQuery("from CountryDB order by name", CountryDB.class).getResultList();
+		
+		for(CountryDB country : dbCountries) {
+			availableCountries.add(new SelectOption(country.getId(), country.getName()));
+		}
+		
+		return availableCountries;
+	}
+
+	/***
+	 * Returns a list of all available languages as options (names and ids) to the 
+	 * client for use in the filter's multiselect boxes.
+	 * 
+	 * @author Cyrill Halter, Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param -
+	 * @return List<SelectOption> availableLanguages The list of all available languages as
+	 * SelectOption objects
+	 */
+	@Override
+	public List<SelectOption> getLanguageSelectOption() {
+		List<SelectOption> availableLanguages = new ArrayList<SelectOption>();
+		List<LanguageDB> dbLanguages = new ArrayList<LanguageDB>();
+		
+		// select * from the language table
+		dbLanguages = em.get().createQuery("from LanguageDB order by name", LanguageDB.class).getResultList();
+		
+		for(LanguageDB language : dbLanguages) {
+			availableLanguages.add(new SelectOption(language.getId(), language.getName()));
+		}
+		
+		return availableLanguages;
 	}
 }
