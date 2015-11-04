@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
+import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public interface FilterView extends IsWidget {
@@ -54,7 +55,7 @@ public interface FilterView extends IsWidget {
 	@post	countrySelect == countrySelect @pre
 	@return	Objects that allows syntax to get access: getCountrySelect().setValue(countryList) or getCountrySelect().getValue()
 	 */
-	public HasValue<List<String>> getCountrySelect();
+	public MultiSelect getCountrySelect();
 	
 	/**
 	Provides access to the UI Component languageSelect for the filterPresenter
@@ -63,7 +64,7 @@ public interface FilterView extends IsWidget {
 	@post	languageSelect == languageSelect @pre
 	@return	Objects that allows syntax to get access: getLanguageSelect().setValue(languageList) or getLanguageSelect().getValue()
 	 */
-	public HasValue<List<String>> getLanguageSelect();
+	public MultiSelect getLanguageSelect();
 	
 	/**
 	Provides access to the UI Component genreSelect for the filterPresenter
@@ -72,7 +73,7 @@ public interface FilterView extends IsWidget {
 	@post	genreSelect == genreSelect @pre
 	@return	Objects that allows syntax to get access: getGenreSelect().setValue(languageList) or getGenreSelect().getValue()
 	 */
-	public HasValue<List<String>> getGenreSelect();
+	public MultiSelect getGenreSelect();
 	
 	/**
 	Provides access to the UI Component AppliedFilter for the filterPresenter

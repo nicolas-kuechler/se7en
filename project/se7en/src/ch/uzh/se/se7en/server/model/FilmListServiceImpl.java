@@ -20,11 +20,12 @@ import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
 
 import ch.uzh.se.se7en.client.rpc.FilmListService;
-
+import ch.uzh.se.se7en.server.ServerLog;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.Genre;
+import ch.uzh.se.se7en.shared.model.SelectOption;
 
 /**
  * Handles the server side of RPC requests, coordinates with the database
@@ -233,5 +234,64 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// return the filled list of countries
 		return genres;
+	}
+
+	
+	/***
+	 * Returns a list of all available genres as options (names and ids) to the 
+	 * client for use in the filter's multiselect boxes.
+	 * 
+	 * @author Cyrill Halter
+	 * @pre -
+	 * @post -
+	 * @param -
+	 * @return List<SelectOption> availableGenres The list of all available genres as
+	 * SelectOption objects
+	 */
+	@Override
+	public List<SelectOption> getGenreSelectOption() {
+		
+		//TODO create DB query to create list of SelectOption objects
+		return null;
+	}
+	
+	
+	/***
+	 * Returns a list of all available countries as options (names and ids) to the 
+	 * client for use in the filter's multiselect boxes.
+	 * 
+	 * @author Cyrill Halter
+	 * @pre -
+	 * @post -
+	 * @param -
+	 * @return List<SelectOption> availableCountries The list of all available countries as
+	 * SelectOption objects
+	 */
+	@Override
+	public List<SelectOption> getCountrySelectOption() {
+		//TODO create DB query to create list of SelectOption objects
+		List<SelectOption> availableCountries = new ArrayList<SelectOption>();
+		availableCountries.add(new SelectOption(1, "Uzbekistan"));
+		availableCountries.add(new SelectOption(2, "Kirgistan"));
+		availableCountries.add(new SelectOption(3, "lsjfladsjd"));
+		ServerLog.writeErr("Country List Generated");
+		return availableCountries;
+	}
+
+	/***
+	 * Returns a list of all available languages as options (names and ids) to the 
+	 * client for use in the filter's multiselect boxes.
+	 * 
+	 * @author Cyrill Halter
+	 * @pre -
+	 * @post -
+	 * @param -
+	 * @return List<SelectOption> availableLanguages The list of all available languages as
+	 * SelectOption objects
+	 */
+	@Override
+	public List<SelectOption> getLanguageSelectOption() {
+		//TODO create DB query to create list of SelectOption objects
+		return null;
 	}
 }
