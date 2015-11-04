@@ -2,9 +2,9 @@ package ch.uzh.se.se7en.server.guice;
 
 import com.google.inject.AbstractModule;
 
-import ch.uzh.se.se7en.server.model.FilmListExportServiceImpl;
-import ch.uzh.se.se7en.server.model.FilmListServiceImpl;
-import ch.uzh.se.se7en.server.model.TriggerImportServiceImpl;
+import ch.uzh.se.se7en.server.FilmListExportServiceImpl;
+import ch.uzh.se.se7en.server.FilmListServiceImpl;
+import ch.uzh.se.se7en.server.TriggerImportServiceImpl;
 
 /**
  * Implements the module for server-side dependency injection via Guice

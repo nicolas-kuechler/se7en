@@ -10,9 +10,9 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 
-import ch.uzh.se.se7en.server.model.FilmListExportServiceImpl;
-import ch.uzh.se.se7en.server.model.FilmListServiceImpl;
-import ch.uzh.se.se7en.server.model.TriggerImportServiceImpl;
+import ch.uzh.se.se7en.server.FilmListExportServiceImpl;
+import ch.uzh.se.se7en.server.FilmListServiceImpl;
+import ch.uzh.se.se7en.server.TriggerImportServiceImpl;
 
 /**
  * Creates the servlet context and maps guice servlets to their corresponding
