@@ -207,18 +207,19 @@ public class TableViewImpl extends Composite implements TableView{
 		};
 		genreColumn.setSortable(true);
 		
-		dataGrid.setColumnWidth(nameColumn, 16.66, Unit.PCT);
-		dataGrid.addColumn(nameColumn, "Name");
-		dataGrid.setColumnWidth(lengthColumn, 16.66, Unit.PCT);
-		dataGrid.addColumn(lengthColumn, "Length");
-		dataGrid.setColumnWidth(countryColumn, 16.66, Unit.PCT);
-		dataGrid.addColumn(countryColumn, "Country");
-		dataGrid.setColumnWidth(languageColumn, 16.66, Unit.PCT);
-		dataGrid.addColumn(languageColumn, "Language");
-		dataGrid.setColumnWidth(yearColumn, 16.66, Unit.PCT);
-		dataGrid.addColumn(yearColumn, "Year");
-		dataGrid.setColumnWidth(genreColumn,16.66 , Unit.PCT);
-		dataGrid.addColumn(genreColumn, "Genre");
+		dataGrid.setColumnWidth(nameColumn, 21.5, Unit.PCT);
+		dataGrid.addColumn(nameColumn, "name");
+		dataGrid.setColumnWidth(yearColumn, 5, Unit.PCT);
+		dataGrid.addColumn(yearColumn, "year");
+		dataGrid.setColumnWidth(lengthColumn, 6, Unit.PCT);
+		dataGrid.addColumn(lengthColumn, "length");
+		dataGrid.setColumnWidth(countryColumn, 22.5, Unit.PCT);
+		dataGrid.addColumn(countryColumn, "country");
+		dataGrid.setColumnWidth(languageColumn, 22.5, Unit.PCT);
+		dataGrid.addColumn(languageColumn, "language");
+		dataGrid.setColumnWidth(genreColumn,22.5, Unit.PCT);
+		dataGrid.addColumn(genreColumn, "genre");
+	
 		
 	}
 	

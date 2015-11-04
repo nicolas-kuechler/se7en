@@ -17,7 +17,13 @@ th,td{
 	padding: 8px 8px 8px 8px !important;
 }
 
-h3{
+th{
+		background-color: #337AB7;
+		color: white;
+		font-size: 115%;
+}
+
+#subContainer h3{
 	width:60%;
 	float:left;
 	margin:0 !important;
@@ -40,13 +46,18 @@ h3{
 }
 .panel-heading{
 	padding: 10px 15px;
-background-color: #F5F5F5;
-border-top: 1px solid #DDD;
-border-bottom-right-radius: 3px;
-border-bottom-left-radius: 3px;
+	background-color: #F5F5F5;
+	border-top: 1px solid #DDD;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
 }
 
-#subContainer,#navBar{
+#navBar,#subContainer{
+	padding-left:15% !important;
+	padding-right:15% !important;
+}
+
+.dataContainer{
 	padding-left:15% !important;
 	padding-right:15% !important;
 }
@@ -75,17 +86,36 @@ border-bottom-left-radius: 3px;
 	margin-right:0 !important;
 }
 
-#subcontainer .panel-footer{
-	padding-left: 0 !important;
+#subContainer .col-md-4:nth-child(2) .form-group{
+	margin-left: 25%;
 }
 
-#container .dataContainer{
-	padding-left: 15% !important;
-	padding-right: 15% !important;
+#subContainer .col-md-4:nth-child(3) .form-group{
+	float:right;
+}
+
+
+
+#subContainer .panel-footer{
+	padding-left: 0 !important;
 }
 
 .appliedFilterBox .panel{
 	background-color: #F5F5F5 !important;
+}
+
+#subContainer .form-group label{
+	float:left;
+	width:100%;
+}
+
+#subContainer .form-group {
+	float:left;
+	width:100%;
+}
+
+#container .panel-body{
+	 padding:0px !important;	
 }
 
 .appliedFilterBox .label{
@@ -94,37 +124,6 @@ border-bottom-left-radius: 3px;
 	line-height: 34px !important;
 }
 
-
-.filterColLeft, .filterColMiddle, .filterColRight{
-	width: 33.33%;
-	float: left;
-	position: relative;
-	min-height: 1px;
-}
-
-.filterColLeft{
-	padding-left:0px !important;
-}
-
-.filterColMiddle{
-	width:17% !important;
-	margin-left: 16.3333%;
-}
-
-.filterColRight{
-	float:right;
-	padding-right: 10px;
-}
-.filterColRight .form-group{
-	float:right;
-}
-
-.filterColSearch{
-	width: 100% !important;
-	min-height: 1px;
-	position: relative;
-	float:left;
-}
 .appliedFilter{
 	width:70%;
 	float:left;
@@ -140,9 +139,8 @@ border-bottom-left-radius: 3px;
 
 .expandFilter .btn{
 	float:right;
+	margin-left: 2%;
 }
-
-
 
 .filterColSearch .btn{
 	float:right;

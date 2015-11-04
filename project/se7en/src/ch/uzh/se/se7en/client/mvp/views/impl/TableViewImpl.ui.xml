@@ -6,7 +6,7 @@
 	<b:Panel styleName="dataContainer">
 		<b:Panel styleName="tablePanel">
 			<b:PanelHeader>
-				<b:Heading size="H3" text="Film Table View" />
+				<b:Heading size="H3" text="Film Table" />
 			</b:PanelHeader>
 			<b:PanelBody ui:field="panel">
 				<c:DataGrid ui:field='dataGrid' />
