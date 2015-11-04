@@ -7,6 +7,5 @@ package ch.uzh.se.se7en.shared.model;
  *
  */
 public interface DTO {
-	int getId();
 	String getName();
 }
