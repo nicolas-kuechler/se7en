@@ -14,7 +14,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 import ch.uzh.se.se7en.shared.model.SelectOption;
 
-
+/**
+ * This class defines a widget that adds functionality to the gwtbootstrap3.extras.select widget.
+ * @author Cyrill Halter
+ *
+ */
 public class MultiSelect extends Composite{
 
 	private static MultiSelectUiBinder uiBinder = GWT
@@ -34,7 +38,16 @@ public class MultiSelect extends Composite{
 		
 	}
 	
-	public List<SelectOption> getOptions()
+	/**
+	This method delivers a list of SelectOption objects according to what was selected by the user in the
+	multiselect widget
+	@author Cyrill Halter
+	@pre 	-
+	@post	-
+	@param  -
+	@return List<SelectOption> selectedOption A list of selected Options as SelectOption objects
+	 */
+	public List<SelectOption> getSelectedOptions()
 	{
 		List<String> ids = select.getAllSelectedValues();
 		List<SelectOption> selectedOptions = new ArrayList<SelectOption>();
@@ -48,7 +61,16 @@ public class MultiSelect extends Composite{
 		}
 		return selectedOptions;
 	}
-	
+
+	/**
+	This method delivers a list of strings according to what was selected by the user in the
+	multiselect widget. This has to be done for integration with the existing code.
+	@author Cyrill Halter
+	@pre 	-
+	@post	-
+	@param  -
+	@return List<Strings> selectedOption A list of selected Options as strings
+	 */
 	public List<String> getValue(){
 		List<String> ids = select.getAllSelectedValues();
 		List<String> selectedOptions = new ArrayList<String>();
@@ -63,22 +85,40 @@ public class MultiSelect extends Composite{
 		return selectedOptions;
 	}
 	
+	/**
+	This method deselects all options in the multiselect widget
+	@author Cyrill Halter
+	@pre 	-
+	@post	select.getAllSelected() == null;
+	@param  -
+	@return -
+	 */
 	public void deselectAll() 
 	{
 		select.deselectAll();
 	}
 	
-	public void setFocus(final boolean isFocused)
-	{
-		select.setFocus(isFocused);
-	}
-	
+	/**
+	This method sets the width of the multiselect widget
+	@author Cyrill Halter
+	@pre 	-
+	@post	-
+	@param  final String width The width to set to
+	@return -
+	 */
 	 public void setWidth(final String width)
 	 {
 		 select.setWidth(width);
 	 }
 
-
+	/**
+	This method fills the multiselect widget with options to select from
+	@author Cyrill Halter
+	@pre 	-
+	@post	-
+	@param  List<SelectOption> currentOptions The options that should be available in the multiselect widget
+	@return -
+		 */
 	public void setOptions(List<SelectOption> currentOptions) {
 		Option option;
 		this.currentOptions = currentOptions;

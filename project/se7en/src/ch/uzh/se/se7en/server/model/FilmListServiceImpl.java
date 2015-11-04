@@ -270,12 +270,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Override
 	public List<SelectOption> getCountrySelectOption() {
 		//TODO create DB query to create list of SelectOption objects
-		List<SelectOption> availableCountries = new ArrayList<SelectOption>();
-		availableCountries.add(new SelectOption(1, "Uzbekistan"));
-		availableCountries.add(new SelectOption(2, "Kirgistan"));
-		availableCountries.add(new SelectOption(3, "lsjfladsjd"));
-		ServerLog.writeErr("Country List Generated");
-		return availableCountries;
+		return null;
 	}
 
 	/***
