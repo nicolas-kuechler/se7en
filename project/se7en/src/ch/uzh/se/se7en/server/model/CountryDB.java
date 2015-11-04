@@ -4,14 +4,14 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import ch.uzh.se.se7en.server.model.FilmDB;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.DTO;
 
@@ -34,11 +34,8 @@ public class CountryDB implements DTO {
 	@Column(name = "code")
 	private String code;
 	
-	@ManyToMany(targetEntity = FilmDB.class)
-	@JoinTable(name = "film_countries",
-		joinColumns={@JoinColumn(name = "country_id")},
-		inverseJoinColumns={@JoinColumn(name = "film_id")})
-	private List<FilmDB> films;
+	@OneToMany(mappedBy = "primaryKey.country")
+	private List<FilmCountryDB> filmCountryEntities;
 	
 	public CountryDB() {
 		
@@ -118,20 +115,20 @@ public class CountryDB implements DTO {
 	}
 
 	/**
-	@pre films!= null
+	@pre filmCountryEntities!= null
 	@post -
-	@return the films
+	@return the filmCountryEntities
 	 */
-	public List<FilmDB> getFilms() {
-		return films;
+	public List<FilmCountryDB> getFilmCountryEntities() {
+		return filmCountryEntities;
 	}
 
 	/**
 	@pre -
-	@post films==films
-	@param films the films to set
+	@post filmCountryEntities==filmCountryEntities
+	@param filmCountryEntities the filmCountryEntities to set
 	*/
-	public void setFilms(List<FilmDB> films) {
-		this.films = films;
+	public void setFilmCountryEntities(List<FilmCountryDB> filmCountryEntities) {
+		this.filmCountryEntities = filmCountryEntities;
 	}
 }
