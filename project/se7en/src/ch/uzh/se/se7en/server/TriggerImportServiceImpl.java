@@ -38,7 +38,9 @@ import ch.uzh.se.se7en.client.rpc.TriggerImportService;
 import ch.uzh.se.se7en.server.model.CountryDB;
 import ch.uzh.se.se7en.server.model.FilmCountryDB;
 import ch.uzh.se.se7en.server.model.FilmDB;
+import ch.uzh.se.se7en.server.model.FilmGenreDB;
 import ch.uzh.se.se7en.server.model.FilmHelper;
+import ch.uzh.se.se7en.server.model.FilmLanguageDB;
 import ch.uzh.se.se7en.server.model.GenreDB;
 import ch.uzh.se.se7en.server.model.LanguageDB;
 import ch.uzh.se.se7en.shared.model.Country;
@@ -133,8 +135,8 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			List<String> genres = film.getGenres();
 			List<String> languages = film.getLanguages();
 			Set<FilmCountryDB> dbCountries = new HashSet<FilmCountryDB>();
-			Set<GenreDB> dbGenres = new HashSet<GenreDB>();
-			Set<LanguageDB> dbLanguages = new HashSet<LanguageDB>();
+			Set<FilmGenreDB> dbGenres = new HashSet<FilmGenreDB>();
+			Set<FilmLanguageDB> dbLanguages = new HashSet<FilmLanguageDB>();
 			
 			// create a new FilmDB object with the basic content
 			FilmDB dbFilm = new FilmDB(film.getName(), film.getLength(), film.getYear());
@@ -158,6 +160,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 				manager.persist(country);
 				
 				filmCountry = new FilmCountryDB();
+				filmCountry.setCountry(country);
 				
 				dbCountries.add(filmCountry);
 			}
@@ -166,6 +169,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			
 			// for each genre, look it up and add it if necessary
 			for(String g : genres) {
+				FilmGenreDB filmGenre;
 				GenreDB genre;
 				
 				// query the db for already existing genre
@@ -179,13 +183,19 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 					genre = new GenreDB(g);
 				}
 				
-				dbGenres.add(genre);
+				manager.persist(genre);
+				
+				filmGenre = new FilmGenreDB();
+				filmGenre.setGenre(genre);
+				
+				dbGenres.add(filmGenre);
 			}
 			
-			dbFilm.setGenres(dbGenres);
+			dbFilm.setFilmGenreEntities(dbGenres);
 			
 			// for each language, look it up and add it if necessary
 			for(String l : languages) {
+				FilmLanguageDB filmLanguage;
 				LanguageDB language;
 				
 				// query the db for already existing language
@@ -199,10 +209,15 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 					language = new LanguageDB(l);
 				}
 				
-				dbLanguages.add(language);
+				manager.persist(language);
+				
+				filmLanguage = new FilmLanguageDB();
+				filmLanguage.setLanguage(language);
+				
+				dbLanguages.add(filmLanguage);
 			}
 			
-			dbFilm.setLanguages(dbLanguages);
+			dbFilm.setFilmLanguageEntities(dbLanguages);
 			
 			// persist the new film
 			manager.persist(dbFilm);
