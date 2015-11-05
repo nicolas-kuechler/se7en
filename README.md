@@ -1,5 +1,6 @@
 Se7en SE Project
 ===
+**Slack:** team-se7en
 **URL:** http://se-team-se7en.appspot.com/#table
 
 Installation
