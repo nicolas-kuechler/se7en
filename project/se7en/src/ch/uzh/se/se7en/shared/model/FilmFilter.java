@@ -2,6 +2,7 @@ package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Container to transport the applied Filter from the client side to the server
@@ -21,8 +22,11 @@ public class FilmFilter implements Serializable {
 	private int yearStart; // start point from the year range
 	private int yearEnd; // end point from the year range
 	private List<String> countries;
+	private Set<Integer> countryIds;
 	private List<String> languages;
+	private Set<Integer> languageIds;
 	private List<String> genres;
+	private Set<Integer> genreIds;
 
 	public FilmFilter() {
 
@@ -194,6 +198,60 @@ public class FilmFilter implements Serializable {
 	 */
 	public void setGenres(List<String> genres) {
 		this.genres = genres;
+	}
+
+	/**
+	@pre countryIds!= null
+	@post -
+	@return the countryIds
+	 */
+	public Set<Integer> getCountryIds() {
+		return countryIds;
+	}
+
+	/**
+	@pre -
+	@post countryIds==countryIds
+	@param countryIds the countryIds to set
+	*/
+	public void setCountryIds(Set<Integer> countryIds) {
+		this.countryIds = countryIds;
+	}
+
+	/**
+	@pre languageIds!= null
+	@post -
+	@return the languageIds
+	 */
+	public Set<Integer> getLanguageIds() {
+		return languageIds;
+	}
+
+	/**
+	@pre -
+	@post languageIds==languageIds
+	@param languageIds the languageIds to set
+	*/
+	public void setLanguageIds(Set<Integer> languageIds) {
+		this.languageIds = languageIds;
+	}
+
+	/**
+	@pre genreIds!= null
+	@post -
+	@return the genreIds
+	 */
+	public Set<Integer> getGenreIds() {
+		return genreIds;
+	}
+
+	/**
+	@pre -
+	@post genreIds==genreIds
+	@param genreIds the genreIds to set
+	*/
+	public void setGenreIds(Set<Integer> genreIds) {
+		this.genreIds = genreIds;
 	}
 
 	/*

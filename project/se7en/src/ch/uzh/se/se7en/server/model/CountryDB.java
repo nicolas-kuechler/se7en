@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -30,7 +31,7 @@ public class CountryDB {
 	@Column(name = "code")
 	private String code;
 
-	@OneToMany(mappedBy = "primaryKey.country")
+	@OneToMany(mappedBy = "primaryKey.country", fetch = FetchType.LAZY)
 	private List<FilmCountryDB> filmCountryEntities;
 
 	public CountryDB() {
