@@ -140,7 +140,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@pre 	mode != null && filterView != null && filmDataModel != null & filmDataModel.getAppliedMapFilter !=null
 	@post	filterView.setAppliedFilterBox according to mode
 	 */
-	private void updateAppliedFilterBox()
+	public void updateAppliedFilterBox()
 	{
 		if (mode.equals(Tokens.MAP))
 		{
@@ -160,7 +160,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@pre	filterView != null && filterView filterFields != null
 	@post	updated appliedFilters in filmDataModel && clear filterFields in filterView 
 	 */
-	private void updateFilterFromView()
+	public void updateFilterFromView()
 	{
 		FilmFilter currentFilter = new FilmFilter();
 
@@ -224,7 +224,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@post -
 	@return List<String> with the applied FilterFields in a List
 	 */
-	private List<String> convertFilmFilterToList(FilmFilter filter)
+	public List<String> convertFilmFilterToList(FilmFilter filter)
 	{
 		List<String> filterList = new ArrayList<String>();
 
@@ -281,7 +281,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@return FilmFilter that contains the boundaries for the years (because filtering of year 
 			is done on clientside for the map) and the filter for the countries is removed.
 	 */
-	private FilmFilter adjustedMapFilter(FilmFilter appliedFilter)
+	public FilmFilter adjustedMapFilter(FilmFilter appliedFilter)
 	{
 		//taking applied filter from filmDataModel
 		FilmFilter filter = new FilmFilter();
