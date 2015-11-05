@@ -70,6 +70,9 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filterView.getNameBox().setValue("");
 		filterView.getLengthSlider().setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
 		filterView.getYearSlider().setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
+		filterView.getCountrySelect().setOptions(new ArrayList<SelectOption>());
+		filterView.getLanguageSelect().setOptions(new ArrayList<SelectOption>());
+		filterView.getGenreSelect().setOptions(new ArrayList<SelectOption>());
 	}
 	
 	@Override
@@ -216,7 +219,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filmDataModel.setAppliedFilter(currentFilter);
 		filmDataModel.setAppliedMapFilter(adjustedMapFilter(currentFilter));
 
-		onClear();
 	}
 
 	//TODO Decide if not better part of class FilmFilter
