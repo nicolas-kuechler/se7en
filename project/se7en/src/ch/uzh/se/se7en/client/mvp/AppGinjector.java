@@ -16,8 +16,8 @@ import ch.uzh.se.se7en.client.mvp.views.WelcomeView;
 import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 
-@GinModules(MyAppGinModule.class)
-public interface MyAppGinjector extends Ginjector {
+@GinModules(AppGinModule.class)
+public interface AppGinjector extends Ginjector {
 	
 	TablePresenter getTablePresenter();
 	MapPresenter getMapPresenter();

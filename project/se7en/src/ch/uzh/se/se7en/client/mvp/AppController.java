@@ -32,7 +32,7 @@ import ch.uzh.se.se7en.client.rpc.TriggerImportServiceAsync;
  */
 public class AppController implements ValueChangeHandler<String> {
 
-	private final MyAppGinjector injector = GWT.create(MyAppGinjector.class);
+	private final AppGinjector injector = GWT.create(AppGinjector.class);
 	private EventBus eventBus;
 	private HasWidgets container;
 	private HasWidgets subContainer;
