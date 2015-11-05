@@ -70,9 +70,9 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filterView.getNameBox().setValue("");
 		filterView.getLengthSlider().setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
 		filterView.getYearSlider().setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
-		filterView.getCountrySelect().setOptions(new ArrayList<SelectOption>());
-		filterView.getLanguageSelect().setOptions(new ArrayList<SelectOption>());
-		filterView.getGenreSelect().setOptions(new ArrayList<SelectOption>());
+		filterView.getCountrySelect().deselectAll();
+		filterView.getLanguageSelect().deselectAll();
+		filterView.getGenreSelect().deselectAll();
 	}
 	
 	@Override

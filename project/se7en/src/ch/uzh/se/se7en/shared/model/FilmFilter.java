@@ -2,9 +2,10 @@ package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
+
 
 /**
  * Container to transport the applied Filter from the client side to the server
@@ -174,7 +175,7 @@ public class FilmFilter implements Serializable {
 	{
 		List<String> countryName = new ArrayList<String>(selectOptions.size());
 		
-		Set<Integer> countryId = new ConcurrentSkipListSet<Integer>();
+		Set<Integer> countryId = new HashSet<Integer>();
 		
 		for(SelectOption option : selectOptions)
 		{
@@ -196,7 +197,7 @@ public class FilmFilter implements Serializable {
 	{
 		List<String> genreName = new ArrayList<String>(selectOptions.size());
 		
-		Set<Integer> genreId = new ConcurrentSkipListSet<Integer>();
+		Set<Integer> genreId = new HashSet<Integer>();
 		
 		for(SelectOption option : selectOptions)
 		{
@@ -218,7 +219,7 @@ public class FilmFilter implements Serializable {
 	{
 		List<String> languageName = new ArrayList<String>(selectOptions.size());
 		
-		Set<Integer> languageId = new ConcurrentSkipListSet<Integer>();
+		Set<Integer> languageId = new HashSet<Integer>();
 		
 		for(SelectOption option : selectOptions)
 		{
@@ -226,8 +227,8 @@ public class FilmFilter implements Serializable {
 			languageName.add(option.getName());
 		}
 		
-		setCountries(languageName);
-		setCountryIds(languageId);
+		setLanguages(languageName);
+		setLanguageIds(languageId);
 	}
 	
 	
