@@ -82,12 +82,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filterView.setMode(mode); 	// countrySelect & yearSlider of filterView are setVisible according to mode
 	}
 	
-	/**
-	TODO Write Comment Cyrill
-	@author Cyrill Halter
-	@pre
-	@post
-	 */
+	@Override
 	public void setupMultiSelects()
 	{
 		//fill genre multiselect box with options
@@ -189,30 +184,33 @@ public class FilterPresenterImpl implements FilterPresenter {
 		if (filterView.getCountrySelect().getValue() == null || filterView.getCountrySelect().getValue().size()==0)
 		{
 			currentFilter.setCountries(null);
+			currentFilter.setCountryIds(null);
 		}
 		else
 		{
-			currentFilter.setCountries(filterView.getCountrySelect().getValue());
+			currentFilter.setCountryOptions(filterView.getCountrySelect().getSelectedOptions());
 		}
 
 		//setting value to null if no genre filter is applied
 		if (filterView.getGenreSelect().getValue() == null || filterView.getGenreSelect().getValue().size()==0)
 		{
 			currentFilter.setGenres(null);
+			currentFilter.setGenreIds(null);
 		}
 		else
 		{
-			currentFilter.setGenres(filterView.getGenreSelect().getValue());
+			currentFilter.setGenreOptions(filterView.getGenreSelect().getSelectedOptions());
 		}
 
 		//setting value to null if no language filter is applied
 		if (filterView.getLanguageSelect().getValue() == null || filterView.getLanguageSelect().getValue().size()==0)
 		{
 			currentFilter.setLanguages(null);
+			currentFilter.setLanguageIds(null);
 		}
 		else
 		{
-			currentFilter.setLanguages(filterView.getLanguageSelect().getValue());
+			currentFilter.setLanguageOptions(filterView.getLanguageSelect().getSelectedOptions());
 		}
 
 
@@ -296,7 +294,9 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filter.setLengthStart(appliedFilter.getLengthStart());
 		filter.setLengthEnd(appliedFilter.getLengthEnd());
 		filter.setGenres(appliedFilter.getGenres());
+		filter.setGenreIds(appliedFilter.getGenreIds());
 		filter.setLanguages(appliedFilter.getLanguages());
+		filter.setLanguageIds(appliedFilter.getLanguageIds());
 
 		//adjusting year range because filtering of that is done in the map on client side
 		filter.setYearStart(Boundaries.MIN_YEAR);
@@ -304,6 +304,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 		//removing the country filter because in the map always all the countries should be considered
 		filter.setCountries(null);
+		filter.setCountryIds(null);
 
 		return filter;
 	}
