@@ -44,7 +44,49 @@ public class FilterPresenterImpl implements FilterPresenter {
 		this.filmDataModel = filmDataModel;
 		bind();
 		updateFilterFromView();
-		
+		setupMultiSelects();
+	}
+
+	@Override
+	public void go(HasWidgets container) {
+		container.clear();
+		container.add(filterView.asWidget());
+	}
+
+	@Override
+	public void bind() {
+		filterView.setPresenter(this);
+	}
+
+	@Override
+	public void onSearch() {
+		updateFilterFromView();
+		eventBus.fireEvent(new FilterAppliedEvent());
+		updateAppliedFilterBox();
+	}
+
+	@Override
+	public void onClear() {
+		filterView.getNameBox().setValue("");
+		filterView.getLengthSlider().setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
+		filterView.getYearSlider().setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
+	}
+	
+	@Override
+	public void setMode(String mode) {
+		this.mode = mode;			// information about current mode is given to filterPresenter
+		updateAppliedFilterBox();	// appliedFilterBox is updated according to mode
+		filterView.setMode(mode); 	// countrySelect & yearSlider of filterView are setVisible according to mode
+	}
+	
+	/**
+	TODO Write Comment Cyrill
+	@author Cyrill Halter
+	@pre
+	@post
+	 */
+	public void setupMultiSelects()
+	{
 		//fill genre multiselect box with options
 		filmListService.getGenreSelectOption(new AsyncCallback<List<SelectOption>>(){
 
@@ -95,38 +137,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 			}
 			
 		});
-	}
-
-	@Override
-	public void go(HasWidgets container) {
-		container.clear();
-		container.add(filterView.asWidget());
-	}
-
-	@Override
-	public void bind() {
-		filterView.setPresenter(this);
-	}
-
-	@Override
-	public void onSearch() {
-		updateFilterFromView();
-		eventBus.fireEvent(new FilterAppliedEvent());
-		updateAppliedFilterBox();
-	}
-
-	@Override
-	public void onClear() {
-		filterView.getNameBox().setValue("");
-		filterView.getLengthSlider().setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
-		filterView.getYearSlider().setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
-	}
-	
-	@Override
-	public void setMode(String mode) {
-		this.mode = mode;			// information about current mode is given to filterPresenter
-		updateAppliedFilterBox();	// appliedFilterBox is updated according to mode
-		filterView.setMode(mode); 	// countrySelect & yearSlider of filterView are setVisible according to mode
 	}
 
 	/**
