@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -37,15 +38,15 @@ public class FilmDB {
 	private Integer year;
 
 	// the corresponding entities in the join table film_countries
-	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private Set<FilmCountryDB> filmCountryEntities;
 
 	// the corresponding entities in the join table film_genres
-	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private Set<FilmGenreDB> filmGenreEntities;
 
 	// the corresponding entities in the join table film_languages
-	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private Set<FilmLanguageDB> filmLanguageEntities;
 
 	public FilmDB() {
