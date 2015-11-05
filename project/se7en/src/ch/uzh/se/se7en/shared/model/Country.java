@@ -8,7 +8,7 @@ import java.io.Serializable;
  * 
  * @author Nicolas Küchler
  */
-public class Country implements Serializable, DTO {
+public class Country implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -37,13 +37,13 @@ public class Country implements Serializable, DTO {
 		this.name = name;
 		this.code = code;
 	}
-	
+
 	public Country(int id, String name, String code) {
 		this(name, code);
-		
+
 		this.id = id;
 	}
-	
+
 	/**
 	 * Returns a string representation of this Country
 	 * 

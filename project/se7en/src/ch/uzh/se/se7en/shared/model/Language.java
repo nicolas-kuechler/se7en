@@ -7,15 +7,14 @@ import java.io.Serializable;
  * 
  * @author Roland Schläfli
  */
-public class Language implements Serializable, DTO {
+public class Language implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
 	private int numberOfFilms;
 
-	public Language()
-	{
+	public Language() {
 
 	}
 
@@ -24,7 +23,7 @@ public class Language implements Serializable, DTO {
 		this.name = name;
 		this.numberOfFilms = numberOfFilms;
 	}
-	
+
 	/**
 	 * Returns a string representation of this Language
 	 * 
@@ -39,36 +38,38 @@ public class Language implements Serializable, DTO {
 	}
 
 	/**
-	@pre id!= null
-	@post -
-	@return the id
+	 * @pre id!= null
+	 * @post -
+	 * @return the id
 	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	@pre -
-	@post id==id
-	@param id the id to set
-	*/
+	 * @pre -
+	 * @post id==id
+	 * @param id
+	 *            the id to set
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	/**
-	@pre name!= null
-	@post -
-	@return the name
+	 * @pre name!= null
+	 * @post -
+	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	@pre -
-	@post name==name
-	@param name the name to set
+	 * @pre -
+	 * @post name==name
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;

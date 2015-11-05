@@ -1,4 +1,4 @@
-package ch.uzh.se.se7en.server.model;
+package ch.uzh.se.se7en.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Singleton;
