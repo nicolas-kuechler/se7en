@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import ch.uzh.se.se7en.client.mvp.Tokens;
@@ -33,6 +34,7 @@ public class NavigationBar extends Composite {
 	public NavigationBar() {
 
 		licenseModal = new Modal();
+		RootPanel.get().add(licenseModal);
 		initWidget(uiBinder.createAndBindUi(this));
 		barSetup();
 	}

@@ -184,6 +184,10 @@ padding-right: 0 !important;
 	
 }
 
+.appliedFilterRow div{
+width:100%;
+}
+
 .appliedFilterRow .col-md-4 .label{
 	float:left;
 }
