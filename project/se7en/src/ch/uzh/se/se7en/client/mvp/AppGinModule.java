@@ -24,7 +24,7 @@ import ch.uzh.se.se7en.client.mvp.views.impl.MapViewImpl;
 import ch.uzh.se.se7en.client.mvp.views.impl.TableViewImpl;
 import ch.uzh.se.se7en.client.mvp.views.impl.WelcomeViewImpl;
 
-public class MyAppGinModule extends AbstractGinModule {
+public class AppGinModule extends AbstractGinModule {
 
 	@Override
 	protected void configure() {
