@@ -26,12 +26,12 @@ import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class MapPresenterImpl implements MapPresenter {
-	
+
 	private MapView mapView;
 	private EventBus eventBus;
 	private FilmListServiceAsync filmListService;
 	private FilmDataModel filmDataModel;
-	
+
 	@Inject
 	public MapPresenterImpl(MapView mapView, EventBus eventBus, FilmListServiceAsync filmListService,
 			FilmDataModel filmDataModel) {
@@ -47,7 +47,7 @@ public class MapPresenterImpl implements MapPresenter {
 	public void go(HasWidgets container) {
 		container.clear();
 		container.add(mapView.asWidget());
-		
+
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class MapPresenterImpl implements MapPresenter {
 		// 5. start rpc call 
 		// 6. setGenretable, setGenrePieChart
 	}
-	
+
 	/**
 	Registers to the eventbus for FilterAppliedEvents and whenever one occurs, then the appliedFilter is adjusted for the map, 
 	an rpc call gets the CountryList from the server, the result is saved in the filmDataModel and the converted datatable 
@@ -79,48 +79,20 @@ public class MapPresenterImpl implements MapPresenter {
 	@pre	eventBus != null && filmListService != null && mapView != null && filmDataModel != null
 	@post	filmDataModel contains updated countryList && mapView geochart displays updated countryList
 	 */
-	private void setupMapUpdate(){
+	public void setupMapUpdate(){
 		//initialize with empty map
 		filmDataModel.setCountryList(new ArrayList<Country>());
 		updateGeoChart();
-		
+
 		//listens to FilterAppliedEvents in the EventBus
 		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
 			@Override
 			public void onFilterAppliedEvent(FilterAppliedEvent event) {
-				//update of the yearSlider in the mapView
-				mapView.getYearSlider().setValue(new Range(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd()));
-				
-				//as soon as new filter is applied, starts async call to server to get the new list of countries matching the adjusted filter
-				filmListService.getCountryList(filmDataModel.getAppliedMapFilter(), new AsyncCallback<List<Country>>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO ERROR HANDLING NEEDS TO BE IMPLEMENTED
-						// Maybe logging to console?
-						// User needs to be informed aswell
-						
-						// displays empty chart for user
-						filmDataModel.setCountryList(new ArrayList<Country>());
-						updateGeoChart();
-					}
-
-					@Override
-					public void onSuccess(List<Country> result) {
-						//updates the list in the client side datamodel
-						filmDataModel.setCountryList(result);
-						
-						//updates the geochart in the view
-						updateGeoChart();
-					}
-				});
-				//TODO finding position in code for displaying empty geochart as loading information
-				filmDataModel.setCountryList(new ArrayList<Country>());
-				updateGeoChart();
+				fetchData();
 			}
 		});
 	}
-	
+
 	/**
 	Helper method to update the geochart whenever new information needs to be displayed. 
 	The method takes the countryList from the filmDataModel and the yearRange information
@@ -130,7 +102,7 @@ public class MapPresenterImpl implements MapPresenter {
 	@pre	filmDataModel != null && filmDataModel.getCountryList() != null && mapView != null
 	@post	filmDataModel saved new dataTable && mapView displays new Geochart
 	 */
-	private void updateGeoChart()
+	public void updateGeoChart()
 	{	
 		//Operations with the google chart need to be done within a ChartLoader
 		ChartLoader chartLoader = new ChartLoader(ChartPackage.GEOCHART);
@@ -139,34 +111,70 @@ public class MapPresenterImpl implements MapPresenter {
 			public void run() {
 				//Getting the current country list from the filmdDataModel
 				List<Country> countries = filmDataModel.getCountryList();
-				
+
 				//Create new data table
 				DataTable dataTable = DataTable.create();
 				dataTable.addColumn(ColumnType.STRING, "Country");
 				dataTable.addColumn(ColumnType.NUMBER, "Productions");
-				
+
 				//add number of necessary rows
 				dataTable.addRows(countries.size());
-				
+
 				//convert the current range information from the range slider in the view
 				int startYear = (int)mapView.getYearSlider().getValue().getMinValue();
 				int endYear = (int)mapView.getYearSlider().getValue().getMaxValue();
-				
+
 				//loop through the country list and fill the datatable with the information
 				for(int i = 0; i < countries.size(); i++)
 				{
 					dataTable.setValue(i, 0, countries.get(i).getName());
 					dataTable.setValue(i, 1, countries.get(i).getNumberOfFilms(startYear, endYear));
 				}
-				
+
 				//save the information in the filmddatamodel
 				filmDataModel.setCountryDataTable(dataTable);
-				
+
 				//give the view the dataTable to draw the geochart
 				mapView.setGeoChart(dataTable);
 			}
 		});
 	}
-	
-	
+
+	/**
+	Method to fetch new filmdata for the map from the server
+	@author Nicolas Küchler
+	@pre 	-
+	@post	mapView map is updated and server response is saved in filmdatamodel
+	 */
+	public void fetchData() {
+		//update of the yearSlider in the mapView
+		mapView.getYearSlider().setValue(new Range(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd()));
+
+		//as soon as new filter is applied, starts async call to server to get the new list of countries matching the adjusted filter
+		filmListService.getCountryList(filmDataModel.getAppliedMapFilter(), new AsyncCallback<List<Country>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO ERROR HANDLING NEEDS TO BE IMPLEMENTED
+				// Maybe logging to console?
+				// User needs to be informed aswell
+
+				// displays empty chart for user
+				filmDataModel.setCountryList(new ArrayList<Country>());
+				updateGeoChart();
+			}
+
+			@Override
+			public void onSuccess(List<Country> result) {
+				//updates the list in the client side datamodel
+				filmDataModel.setCountryList(result);
+
+				//updates the geochart in the view
+				updateGeoChart();
+			}
+		});
+		//TODO finding position in code for displaying empty geochart as loading information
+		filmDataModel.setCountryList(new ArrayList<Country>());
+		updateGeoChart();
+	}
 }

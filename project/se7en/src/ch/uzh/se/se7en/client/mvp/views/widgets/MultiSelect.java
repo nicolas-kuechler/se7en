@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import ch.uzh.se.se7en.shared.model.SelectOption;
 
+//TODO Cyrill: Missing method to set the current selectedOptions. Necessary for the filter parsing from the url.
 /**
  * This class defines a widget that adds functionality to the gwtbootstrap3.extras.select widget.
  * @author Cyrill Halter

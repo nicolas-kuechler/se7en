@@ -26,16 +26,15 @@ import ch.uzh.se.se7en.shared.model.Film;
  *
  */
 public class TablePresenterImpl implements TablePresenter {
-	
-	//private ClientFactory clientFactory = GWT.create(ClientFactory.class);
+
 	private EventBus eventBus;
 	private TableView tableView;
 	private FilmDataModel filmDataModel;
-	
+
 	private FilmListServiceAsync filmListService;
 	private FilmListExportServiceAsync filmListExportService;
 
-	
+
 	@Inject
 	public TablePresenterImpl(EventBus eventBus, TableView tableView, FilmDataModel filmDataModel,
 			FilmListServiceAsync filmListService, FilmListExportServiceAsync filmListExportService) {
@@ -62,12 +61,12 @@ public class TablePresenterImpl implements TablePresenter {
 	@Override
 	public void onDownloadStarted() {
 		// TODO Handle CSV Download 
-		
+
 		filmListExportService.getFilmListDownloadUrl(filmDataModel.getAppliedFilter(), new AsyncCallback<String>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				// TODO Auto-generated method stub
-				
+
 			}
 			@Override
 			public void onSuccess(String result) {
@@ -75,7 +74,7 @@ public class TablePresenterImpl implements TablePresenter {
 			}
 		});
 	}
-	
+
 	/**
 	Sets up the listening to FilterAppliedEvents and whenever a FilterAppliedEvent is fired, the user is informed about the loading,
 	an rpc call to the server gets the filmdata and when they are ready, they are given to the tableView to display them in the table.
@@ -83,42 +82,19 @@ public class TablePresenterImpl implements TablePresenter {
 	@pre 	eventBus != null && filmListService != null &&filmDataModel != null
 	@post	eventhandling is setup
 	 */
-	private void setupTableUpdate()
+	public void setupTableUpdate()
 	{
 		//initialize table with message
 		updateTable(createPseudoFilmList("No Search Results Found"));
-		
+
 		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
 			@Override
 			public void onFilterAppliedEvent(FilterAppliedEvent event) {
-				//create pseudo film that informs the user about the loading
-				updateTable(createPseudoFilmList("Loading..."));
-				
-				filmListService.getFilmList(filmDataModel.getAppliedFilter(), new AsyncCallback<List<Film>>(){
-					@Override
-					public void onFailure(Throwable caught) {
-						//rpc did not get back to client -> display error to the user
-						updateTable(createPseudoFilmList("Error while loading films, please try again"));
-						//TODO Logging to console?
-					}
-					@Override
-					public void onSuccess(List<Film> result) {
-						if(result.size()==0)
-						{
-							//no films match the filter, so the result is empty --> inform user with pseudoFilmList
-							updateTable(createPseudoFilmList("No Search Results Found"));
-						}
-						else
-						{
-							//result is back and contains films --> display films and save them to the FilmDataModel
-							updateTable(result);
-						}
-					}
-				});
+				fetchData();
 			}
 		});
 	}
-	
+
 	/**
 	Helper method that updates the table and saves the new list in the filmDataModel
 	@author Nicolas Küchler
@@ -126,12 +102,12 @@ public class TablePresenterImpl implements TablePresenter {
 	@post	table is updated
 	@param films films.size()>0
 	 */
-	private void updateTable(List<Film> films)
+	public void updateTable(List<Film> films)
 	{
 		filmDataModel.setFilmList(films);
 		tableView.setTable(films);
 	}
-	
+
 	/**
 	Helper Method to create a pseudo film list to display a message to the user (no results found, error, loading)
 	@author Nicolas Küchler
@@ -140,13 +116,43 @@ public class TablePresenterImpl implements TablePresenter {
 	@param 	message String with the information which should be displayed to the user
 	@return List<Film> containing 1 film with the message from the parameter
 	 */
-	private List<Film> createPseudoFilmList(String message)
+	public List<Film> createPseudoFilmList(String message)
 	{
 		List<Film> pseudoFilm = new ArrayList<Film>();
 		pseudoFilm.add(new Film(message));
 		return pseudoFilm;
 	}
-	
-	
 
+	/**
+	 Method to fetch new filmdata for the table from the server
+	@author Nicolas Küchler
+	@pre -
+	@post tableView is updated and server response is saved in filmdatamodel
+	 */
+	public void fetchData() {
+		//create pseudo film that informs the user about the loading
+		updateTable(createPseudoFilmList("Loading..."));
+
+		filmListService.getFilmList(filmDataModel.getAppliedFilter(), new AsyncCallback<List<Film>>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				//rpc did not get back to client -> display error to the user
+				updateTable(createPseudoFilmList("Error while loading films, please try again"));
+				//TODO Logging to console?
+			}
+			@Override
+			public void onSuccess(List<Film> result) {
+				if(result.size()==0)
+				{
+					//no films match the filter, so the result is empty --> inform user with pseudoFilmList
+					updateTable(createPseudoFilmList("No Search Results Found"));
+				}
+				else
+				{
+					//result is back and contains films --> display films and save them to the FilmDataModel
+					updateTable(result);
+				}
+			}
+		});
+	}
 }

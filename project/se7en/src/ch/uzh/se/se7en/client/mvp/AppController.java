@@ -34,7 +34,7 @@ import ch.uzh.se.se7en.client.rpc.TriggerImportServiceAsync;
  */
 public class AppController implements ValueChangeHandler<String> {
 
-	private final MyAppGinjector injector = GWT.create(MyAppGinjector.class);
+	private final AppGinjector injector = GWT.create(AppGinjector.class);
 	private EventBus eventBus;
 	private HasWidgets container;
 	private HasWidgets subContainer;
@@ -91,6 +91,13 @@ public class AppController implements ValueChangeHandler<String> {
 				doImport(token);
 				doWelcomeView();
 			}
+			else if(token.startsWith("msreload"))
+			{
+				//TODO Remove for productive
+				//Enables to reload the multiselects when they are not loaded properly due to a gwt superdev mode / hibernate bug.
+				doReloadMultiSelect();
+				doWelcomeView();
+			}
 		} 
 		else 													//if there is no token --> welcomePage
 		{
@@ -99,6 +106,11 @@ public class AppController implements ValueChangeHandler<String> {
 	}
 	
 	
+	private void doReloadMultiSelect() {
+		injector.getFilterPresenter().setupMultiSelects();
+		
+	}
+
 	/**
 	Sets up the History ValueChangeHandler and 
 	the application wide events which go through the eventBus.
