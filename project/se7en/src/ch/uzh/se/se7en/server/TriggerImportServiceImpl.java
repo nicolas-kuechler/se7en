@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -120,23 +121,24 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		// get an instance of the entity manager
 		EntityManager manager = em.get();
 
-		// iterate over each film
+		// iterate over each new film
 		for (Film film : films) {
 			// extract information from the film object and initialize the new
 			// lists
 			List<String> countries = film.getCountries();
 			List<String> genres = film.getGenres();
 			List<String> languages = film.getLanguages();
-			Set<FilmCountryDB> dbCountries = new HashSet<FilmCountryDB>();
-			Set<FilmGenreDB> dbGenres = new HashSet<FilmGenreDB>();
-			Set<FilmLanguageDB> dbLanguages = new HashSet<FilmLanguageDB>();
+			
+			// initialize empty entity lists for the join table
+			Set<FilmCountryDB> filmCountryEntities = new HashSet<FilmCountryDB>();
+			Set<FilmGenreDB> filmGenreEntities = new HashSet<FilmGenreDB>();
+			Set<FilmLanguageDB> filmLanguageEntities = new HashSet<FilmLanguageDB>();
 
 			// create a new FilmDB object with the basic content
 			FilmDB dbFilm = new FilmDB(film.getName(), film.getLength(), film.getYear());
-
+			
 			// for each country, look it up and add it if necessary
 			for (String c : countries) {
-				FilmCountryDB filmCountry;
 				CountryDB country;
 
 				// query the db for already existing country
@@ -144,53 +146,59 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 						CountryDB.class);
 				query.setParameter("countryName", c);
 
-				// try to find an already existing country, else create a new
-				// one
+				// if the country already exists, get the entity, else persist a
+				// new one
 				try {
 					country = query.getSingleResult();
 				} catch (NoResultException e) {
 					country = new CountryDB(c);
+
+					try {
+						manager.persist(country);
+					} catch (EntityExistsException e2) {
+						return false;
+					}
 				}
 
-				manager.persist(country);
-
-				filmCountry = new FilmCountryDB();
-				filmCountry.setCountry(country);
-
-				dbCountries.add(filmCountry);
+				// create a new join table entity
+				filmCountryEntities.add(new FilmCountryDB(dbFilm, country));
 			}
 
-			dbFilm.setFilmCountryEntities(dbCountries);
+			// save the country join table entities into the film
+			dbFilm.setFilmCountryEntities(filmCountryEntities);
 
 			// for each genre, look it up and add it if necessary
 			for (String g : genres) {
-				FilmGenreDB filmGenre;
 				GenreDB genre;
 
 				// query the db for already existing genre
-				TypedQuery<GenreDB> query = manager.createQuery("from GenreDB where name = :genreName", GenreDB.class);
+				TypedQuery<GenreDB> query = manager.createQuery("from GenreDB where name = :genreName",
+						GenreDB.class);
 				query.setParameter("genreName", g);
 
-				// try to find an already existing genre, else create a new one
+				// if the genre already exists, get the entity, else persist a
+				// new one
 				try {
 					genre = query.getSingleResult();
 				} catch (NoResultException e) {
 					genre = new GenreDB(g);
+
+					try {
+						manager.persist(genre);
+					} catch (EntityExistsException e2) {
+						return false;
+					}
 				}
 
-				manager.persist(genre);
-
-				filmGenre = new FilmGenreDB();
-				filmGenre.setGenre(genre);
-
-				dbGenres.add(filmGenre);
+				// create a new join table entity
+				filmGenreEntities.add(new FilmGenreDB(dbFilm, genre));
 			}
 
-			dbFilm.setFilmGenreEntities(dbGenres);
+			// save the genre join table entities into the film
+			dbFilm.setFilmGenreEntities(filmGenreEntities);
 
 			// for each language, look it up and add it if necessary
 			for (String l : languages) {
-				FilmLanguageDB filmLanguage;
 				LanguageDB language;
 
 				// query the db for already existing language
@@ -198,30 +206,38 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 						LanguageDB.class);
 				query.setParameter("languageName", l);
 
-				// try to find an already existing language, else create a new
-				// one
+				// if the language already exists, get the entity, else persist a
+				// new one
 				try {
 					language = query.getSingleResult();
 				} catch (NoResultException e) {
 					language = new LanguageDB(l);
+
+					try {
+						manager.persist(language);
+					} catch (EntityExistsException e2) {
+						return false;
+					}
 				}
 
-				manager.persist(language);
-
-				filmLanguage = new FilmLanguageDB();
-				filmLanguage.setLanguage(language);
-
-				dbLanguages.add(filmLanguage);
+				// create a new join table entity
+				filmLanguageEntities.add(new FilmLanguageDB(dbFilm, language));
 			}
 
-			dbFilm.setFilmLanguageEntities(dbLanguages);
+			// save the language join table entities into the film
+			dbFilm.setFilmLanguageEntities(filmLanguageEntities);
 
 			// persist the new film
-			manager.persist(dbFilm);
+			try {
+				manager.persist(dbFilm);
+				return true;
+			} catch (EntityExistsException e) {
+				return false;
+			}
+
 		}
-
-		// TODO: return a real success / error bool
-		return true;
+		
+		// we shouldn't get throught here, return false
+		return false;
 	}
-
 }
