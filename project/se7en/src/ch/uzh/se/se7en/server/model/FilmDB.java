@@ -4,20 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import javax.persistence.CascadeType;
-
-import ch.uzh.se.se7en.shared.model.DTO;
 import ch.uzh.se.se7en.shared.model.Film;
 
 /**
@@ -27,7 +21,7 @@ import ch.uzh.se.se7en.shared.model.Film;
  */
 @Entity
 @Table(name = "films")
-public class FilmDB implements DTO {
+public class FilmDB {
 	@Id
 	@GeneratedValue
 	@Column(name = "id")
@@ -82,26 +76,26 @@ public class FilmDB implements DTO {
 	 */
 	public Film toFilm() {
 		// TODO: better way? => generic method, via interface
-		List<String> filmCountryEntityNames= new ArrayList<String>();
+		List<String> filmCountryEntityNames = new ArrayList<String>();
 		List<String> filmGenreEntityNames = new ArrayList<String>();
 		List<String> filmLanguageEntityNames = new ArrayList<String>();
-		
+
 		// parse all the entities into lists of strings
-		for(FilmCountryDB f : filmCountryEntities) {
+		for (FilmCountryDB f : filmCountryEntities) {
 			filmCountryEntityNames.add(f.getCountryName());
 		}
-		for(FilmGenreDB g : filmGenreEntities) {
+		for (FilmGenreDB g : filmGenreEntities) {
 			filmGenreEntityNames.add(g.getGenreName());
 		}
-		for(FilmLanguageDB l : filmLanguageEntities) {
+		for (FilmLanguageDB l : filmLanguageEntities) {
 			filmLanguageEntityNames.add(l.getLanguageName());
 		}
-		
+
 		// sort all the string lists alphabetically
 		java.util.Collections.sort(filmCountryEntityNames);
 		java.util.Collections.sort(filmGenreEntityNames);
 		java.util.Collections.sort(filmLanguageEntityNames);
-		
+
 		return new Film(id, name, length, year, filmCountryEntityNames, filmLanguageEntityNames, filmGenreEntityNames);
 	}
 
@@ -201,37 +195,39 @@ public class FilmDB implements DTO {
 	}
 
 	/**
-	@pre filmGenreEntities!= null
-	@post -
-	@return the filmGenreEntities
+	 * @pre filmGenreEntities!= null
+	 * @post -
+	 * @return the filmGenreEntities
 	 */
 	public Set<FilmGenreDB> getFilmGenreEntities() {
 		return filmGenreEntities;
 	}
 
 	/**
-	@pre -
-	@post filmGenreEntities==filmGenreEntities
-	@param filmGenreEntities the filmGenreEntities to set
-	*/
+	 * @pre -
+	 * @post filmGenreEntities==filmGenreEntities
+	 * @param filmGenreEntities
+	 *            the filmGenreEntities to set
+	 */
 	public void setFilmGenreEntities(Set<FilmGenreDB> filmGenreEntities) {
 		this.filmGenreEntities = filmGenreEntities;
 	}
 
 	/**
-	@pre filmLanguageEntities!= null
-	@post -
-	@return the filmLanguageEntities
+	 * @pre filmLanguageEntities!= null
+	 * @post -
+	 * @return the filmLanguageEntities
 	 */
 	public Set<FilmLanguageDB> getFilmLanguageEntities() {
 		return filmLanguageEntities;
 	}
 
 	/**
-	@pre -
-	@post filmLanguageEntities==filmLanguageEntities
-	@param filmLanguageEntities the filmLanguageEntities to set
-	*/
+	 * @pre -
+	 * @post filmLanguageEntities==filmLanguageEntities
+	 * @param filmLanguageEntities
+	 *            the filmLanguageEntities to set
+	 */
 	public void setFilmLanguageEntities(Set<FilmLanguageDB> filmLanguageEntities) {
 		this.filmLanguageEntities = filmLanguageEntities;
 	}

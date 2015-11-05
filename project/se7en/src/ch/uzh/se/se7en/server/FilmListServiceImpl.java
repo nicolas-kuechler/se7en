@@ -55,7 +55,8 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// instantiate an entity manager
 		EntityManager manager = em.get();
 
-		// initialize the where string with the basic filters (that are always valid)
+		// initialize the where string with the basic filters (that are always
+		// valid)
 		String wheres = " WHERE f.length >= :minLength AND f.length <= :maxLength AND f.year >= :minYear AND f.year <= :maxYear";
 
 		// if the name in the filter is set

@@ -18,24 +18,24 @@ public class FilmGenreDB {
 	// create a composite primary key for this join table entity
 	@EmbeddedId
 	private FilmGenreDBId primaryKey = new FilmGenreDBId();
-	
+
 	// read only copy of the film id
 	@Column(name = "film_id", insertable = false, updatable = false)
 	private int filmId;
-	
+
 	// read only copy of the genre id
 	@Column(name = "genre_id", insertable = false, updatable = false)
 	private int GenreId;
-	
+
 	public FilmGenreDB() {
-		
+
 	}
-	
+
 	public FilmGenreDB(FilmDB film, GenreDB Genre) {
 		this.setFilm(film);
 		this.setGenre(Genre);
 	}
-	
+
 	/**
 	 * Returns the associated film entity
 	 * 
@@ -48,7 +48,7 @@ public class FilmGenreDB {
 	public FilmDB getFilm() {
 		return getPrimaryKey().getFilm();
 	}
-	
+
 	/**
 	 * Returns the name of the associated film entity
 	 * 
@@ -61,19 +61,20 @@ public class FilmGenreDB {
 	public String getFilmName() {
 		return this.getFilm().getName();
 	}
-	
+
 	/**
 	 * Sets the associated film entity
 	 * 
 	 * @author Roland Schläfli
 	 * @pre -
 	 * @post -
-	 * @param FilmDB film The newly associated film entity
+	 * @param FilmDB
+	 *            film The newly associated film entity
 	 */
 	public void setFilm(FilmDB film) {
 		getPrimaryKey().setFilm(film);
 	}
-	
+
 	/**
 	 * Returns the associated Genre entity
 	 * 
@@ -86,7 +87,7 @@ public class FilmGenreDB {
 	public GenreDB getGenre() {
 		return getPrimaryKey().getGenre();
 	}
-	
+
 	/**
 	 * Returns the name of the associated Genre entity
 	 * 
@@ -99,69 +100,73 @@ public class FilmGenreDB {
 	public String getGenreName() {
 		return this.getGenre().getName();
 	}
-	
+
 	/**
 	 * Sets the associated Genre entity
 	 * 
 	 * @author Roland Schläfli
 	 * @pre -
 	 * @post -
-	 * @param GenreDB The newly associated Genre entity
+	 * @param GenreDB
+	 *            The newly associated Genre entity
 	 */
 	public void setGenre(GenreDB Genre) {
 		getPrimaryKey().setGenre(Genre);
 	}
 
 	/**
-	@pre primaryKey!= null
-	@post -
-	@return the primaryKey
+	 * @pre primaryKey!= null
+	 * @post -
+	 * @return the primaryKey
 	 */
 	public FilmGenreDBId getPrimaryKey() {
 		return primaryKey;
 	}
 
 	/**
-	@pre -
-	@post primaryKey==primaryKey
-	@param primaryKey the primaryKey to set
-	*/
+	 * @pre -
+	 * @post primaryKey==primaryKey
+	 * @param primaryKey
+	 *            the primaryKey to set
+	 */
 	public void setPrimaryKey(FilmGenreDBId primaryKey) {
 		this.primaryKey = primaryKey;
 	}
 
 	/**
-	@pre filmId!= null
-	@post -
-	@return the filmId
+	 * @pre filmId!= null
+	 * @post -
+	 * @return the filmId
 	 */
 	public int getFilmId() {
 		return filmId;
 	}
 
 	/**
-	@pre -
-	@post filmId==filmId
-	@param filmId the filmId to set
-	*/
+	 * @pre -
+	 * @post filmId==filmId
+	 * @param filmId
+	 *            the filmId to set
+	 */
 	public void setFilmId(int filmId) {
 		this.filmId = filmId;
 	}
 
 	/**
-	@pre GenreId!= null
-	@post -
-	@return the GenreId
+	 * @pre GenreId!= null
+	 * @post -
+	 * @return the GenreId
 	 */
 	public int getGenreId() {
 		return GenreId;
 	}
 
 	/**
-	@pre -
-	@post GenreId==GenreId
-	@param GenreId the GenreId to set
-	*/
+	 * @pre -
+	 * @post GenreId==GenreId
+	 * @param GenreId
+	 *            the GenreId to set
+	 */
 	public void setGenreId(int GenreId) {
 		this.GenreId = GenreId;
 	}

@@ -15,49 +15,50 @@ import javax.persistence.ManyToOne;
 public class FilmCountryDBId implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private FilmDB film;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private CountryDB country;
-	
+
 	public FilmCountryDBId() {
-		
+
 	}
 
 	/**
-	@pre film!= null
-	@post -
-	@return the film
+	 * @pre film!= null
+	 * @post -
+	 * @return the film
 	 */
 	public FilmDB getFilm() {
 		return film;
 	}
 
 	/**
-	@pre -
-	@post film==film
-	@param film the film to set
-	*/
+	 * @pre -
+	 * @post film==film
+	 * @param film
+	 *            the film to set
+	 */
 	public void setFilm(FilmDB film) {
 		this.film = film;
 	}
 
 	/**
-	@pre country!= null
-	@post -
-	@return the country
+	 * @pre country!= null
+	 * @post -
+	 * @return the country
 	 */
 	public CountryDB getCountry() {
 		return country;
 	}
 
 	/**
-	@pre -
-	@post country==country
-	@param country the country to set
-	*/
+	 * @pre -
+	 * @post country==country
+	 * @param country
+	 *            the country to set
+	 */
 	public void setCountry(CountryDB country) {
 		this.country = country;
 	}
-	
-	
+
 }
