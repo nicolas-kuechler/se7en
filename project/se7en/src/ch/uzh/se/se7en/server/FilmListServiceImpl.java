@@ -1,8 +1,11 @@
 package ch.uzh.se.se7en.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -32,6 +35,7 @@ import ch.uzh.se.se7en.shared.model.SelectOption;
  */
 @Singleton
 public class FilmListServiceImpl extends RemoteServiceServlet implements FilmListService {
+	// guice injection of an entity manager
 	@Inject
 	Provider<EntityManager> em;
 
@@ -46,50 +50,75 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<Film> films The filtered list of film data transfer objects
 	 */
 	@Override
-	@Transactional
 	public List<Film> getFilmList(FilmFilter filter) {
-		// create an empty list of movies
-		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
+		// query the database for filtered entities
+		List<FilmDB> dbFilms = getFilmEntitiesList(filter);
+
+		// create an empty list of films
 		List<Film> films = new ArrayList<Film>();
 
-		// instantiate an entity manager
-		EntityManager manager = em.get();
-
-		// initialize the where string with the basic filters (that are always
-		// valid)
-		String wheres = " WHERE f.length >= :minLength AND f.length <= :maxLength AND f.year >= :minYear AND f.year <= :maxYear";
-
-		// if the name in the filter is set
-		if (filter.getName() != null) {
-			wheres += " AND f.name LIKE :findName";
+		// convert each FilmDB instance to a Film DataTransferObject
+		for (FilmDB film : dbFilms) {
+			Film f = film.toFilm();
+			films.add(f);
 		}
+
+		// return the filled list of movies
+		return films;
+	}
+
+	/**
+	 * Returns a filtered list of film entities
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param FilmFilter
+	 *            filter A filter object
+	 * @return List<FilmDB> dbFilms A filtered list of film entities
+	 */
+	@Transactional
+	private List<FilmDB> getFilmEntitiesList(FilmFilter filter) {
+		// create an empty list of film entities
+		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
+
+		// initialize the selector in the query
+		String selector = "SELECT DISTINCT f from FilmDB f";
+
+		// initialize the where string with the basic filters
+		String wheres = "WHERE (f.length BETWEEN :minLength AND :maxLength) AND (f.year BETWEEN :minYear AND :maxYear)";
 
 		// initialize an empty string for all the joins
 		String joiners = "";
 
+		// if the name in the filter is set
+		if (filter.getName() != null) {
+			wheres += " AND LOWER(f.name) LIKE :findName";
+		}
+
 		// if at least one country is in the list of filter countries
-		if (filter.getCountries() != null) {
+		if (filter.getCountryIds() != null) {
 			joiners += " JOIN f.filmCountryEntities fc";
 			wheres += " AND fc.countryId IN :countryIds";
 		}
 
 		// if at least one genre is in the list of filter genres
-		if (filter.getGenres() != null) {
+		if (filter.getGenreIds() != null) {
 			joiners += " JOIN f.filmGenreEntities fg";
 			wheres += " AND fg.genreId IN :genreIds";
 		}
 
 		// if at least one language is in the list of filter languages
-		if (filter.getLanguages() != null) {
+		if (filter.getLanguageIds() != null) {
 			joiners += " JOIN f.filmLanguageEntities fl";
 			wheres += " AND fl.languageId IN :languageIds";
 		}
 
 		// concat the query string
-		String queryString = "SELECT DISTINCT f from FilmDB f" + joiners + wheres;
+		String queryString = selector + " " + joiners + " " + wheres;
 
-		// create a typed query from our criteria query
-		TypedQuery<FilmDB> query = manager.createQuery(queryString, FilmDB.class);
+		// create a typed query from our query string
+		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
 
 		// set the min & max length params
 		query.setParameter("minLength", filter.getLengthStart());
@@ -101,50 +130,30 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// if the name in the filter is set, set the param
 		if (filter.getName() != null) {
-			query.setParameter("findName", "%" + filter.getName() + "%");
+			// use % to also find incomplete words
+			query.setParameter("findName", "%" + filter.getName().toLowerCase() + "%");
 		}
 
-		if (filter.getCountries() != null) {
-			// TODO: pass real filter list
-			List<Integer> countryIds = new ArrayList<Integer>();
-			countryIds.add(1);
-			countryIds.add(2);
-			countryIds.add(3);
-
-			query.setParameter("countryIds", countryIds);
+		// if there are countries specified as a list of Integers
+		if (filter.getCountryIds() != null) {
+			query.setParameter("countryIds", filter.getCountryIds());
 		}
 
-		if (filter.getGenres() != null) {
-			// TODO: pass real filter list
-			List<Integer> countryIds = new ArrayList<Integer>();
-			countryIds.add(1);
-			countryIds.add(2);
-			countryIds.add(3);
-
-			query.setParameter("genreIds", countryIds);
+		// if there are genres specified as a list of Integers
+		if (filter.getGenreIds() != null) {
+			query.setParameter("genreIds", filter.getGenreIds());
 		}
 
-		if (filter.getLanguages() != null) {
-			// TODO: pass real filter list
-			List<Integer> countryIds = new ArrayList<Integer>();
-			countryIds.add(1);
-			countryIds.add(2);
-			countryIds.add(3);
-
-			query.setParameter("languageIds", countryIds);
+		// if there are languages specified as a list of Integers
+		if (filter.getLanguageIds() != null) {
+			query.setParameter("languageIds", filter.getLanguageIds());
 		}
 
 		// execute the query
 		dbFilms = query.getResultList();
 
-		// convert each FilmDB instance to a Film DataTransferObject
-		for (FilmDB film : dbFilms) {
-			Film f = film.toFilm();
-			films.add(f);
-		}
-
-		// return the filled list of movies
-		return films;
+		// return the list of film entities
+		return dbFilms;
 	}
 
 	/**
@@ -159,14 +168,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 *         transfer objects
 	 */
 	@Override
-	@Transactional
 	public List<Country> getCountryList(FilmFilter filter) {
 		// create an empty list of countries
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 		List<Country> countries = new ArrayList<Country>();
 
-		// select all countries from the database
-		dbCountries = em.get().createQuery("from CountryDB", CountryDB.class).getResultList();
+		// fetch the list of filtered country entities from the database
+		dbCountries = getCountryEntitiesList(filter);
 
 		// get the current year
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -175,26 +183,20 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		for (CountryDB country : dbCountries) {
 			Country c = country.toCountry();
 
+			// set the wanted countries to only this id
+			Set<Integer> wantedCountries = new HashSet<Integer>();
+			wantedCountries.add(c.getId());
+			filter.setCountryIds(wantedCountries);
+
+			// get the filtered films for each country
+			List<FilmDB> filteredFilms = getFilmEntitiesList(filter);
+
 			// initialize a new array for all years
 			int[] filmsPerYear = new int[currentYear - Country.YEAR_OFFSET + 1];
 
-			// iterate through all the films of this country
-			List<FilmCountryDB> filmCountries = country.getFilmCountryEntities();
-			List<FilmDB> films = new ArrayList<FilmDB>();
-
-			for (FilmCountryDB filmCountry : filmCountries) {
-				films.add(filmCountry.getFilm());
-			}
-
-			for (FilmDB film : films) {
-				// TODO: there have to be better ways to do this..
-				if (film.getYear() != null && filter.getLengthStart() < film.getLength()
-						&& filter.getLengthEnd() > film.getLength() && filter.getYearStart() < film.getYear()
-						&& filter.getYearEnd() > film.getYear() && (filter.getName() == null
-								|| film.getName().toLowerCase().contains(filter.getName().toLowerCase()))) {
-					// increment the value at the year of the current film by 1
-					filmsPerYear[film.getYear() - Country.YEAR_OFFSET + 1]++;
-				}
+			// for each film entity, increment it's year in the array
+			for (FilmDB film : filteredFilms) {
+				filmsPerYear[film.getYear() - Country.YEAR_OFFSET]++;
 			}
 
 			// start the number of films array transformation
@@ -206,6 +208,82 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// return the filled list of countries
 		return countries;
+	}
+
+	/**
+	 * Returns a filtered list of country entities
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param FilmFilter
+	 *            filter A filter object
+	 * @return List<CountryDB> dbCountries A filtered list of country entities
+	 */
+	@Transactional
+	private List<CountryDB> getCountryEntitiesList(FilmFilter filter) {
+		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
+		// initialize the selector in the query
+		String selector = "SELECT DISTINCT c FROM CountryDB c";
+
+		// initialize the where string with the basic filters
+		String wheres = "WHERE (fi.length BETWEEN :minLength AND :maxLength) AND (fi.year BETWEEN :minYear AND :maxYear)";
+
+		// initialize an empty string for all the joins
+		String joiners = "JOIN c.filmCountryEntities fc JOIN fc.primaryKey.film fi";
+
+		// if the name in the filter is set
+		if (filter.getName() != null) {
+			wheres += " AND LOWER(fi.name) LIKE :findName";
+		}
+
+		// if at least one genre is in the list of filter genres
+		if (filter.getGenreIds() != null) {
+			joiners += " JOIN fi.filmGenreEntities fg";
+			wheres += " AND fg.genreId IN :genreIds";
+		}
+
+		// if at least one language is in the list of filter languages
+		if (filter.getLanguageIds() != null) {
+			joiners += " JOIN fi.filmLanguageEntities fl";
+			wheres += " AND fl.languageId IN :languageIds";
+		}
+
+		// build the query string
+		String queryString = selector + " " + joiners + " " + wheres;
+
+		// select all countries from the database
+		TypedQuery<CountryDB> query = em.get().createQuery(queryString, CountryDB.class);
+
+		// set the min & max length params
+		query.setParameter("minLength", filter.getLengthStart());
+		query.setParameter("maxLength", filter.getLengthEnd());
+
+		// set the min & max year params
+		query.setParameter("minYear", filter.getYearStart());
+		query.setParameter("maxYear", filter.getYearEnd());
+
+		// if the name in the filter is set, set the param
+		if (filter.getName() != null) {
+			// use % to also find incomplete words
+			query.setParameter("findName", "%" + filter.getName().toLowerCase() + "%");
+		}
+
+		// if there are genres specified as a list of Integers
+		if (filter.getGenreIds() != null) {
+			query.setParameter("genreIds", filter.getGenreIds());
+		}
+
+		// if there are languages specified as a list of Integers
+		if (filter.getLanguageIds() != null) {
+			query.setParameter("languageIds", filter.getLanguageIds());
+		}
+
+		// execute the query
+		dbCountries = query.getResultList();
+
+		// return the filtered list of countries
+		return dbCountries;
 	}
 
 	/**
@@ -222,6 +300,8 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Override
 	@Transactional
 	public List<Genre> getGenreList(FilmFilter filter) {
+		// TODO: real implementation
+		
 		// create an empty list of countries
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 		List<Genre> genres = new ArrayList<Genre>();
