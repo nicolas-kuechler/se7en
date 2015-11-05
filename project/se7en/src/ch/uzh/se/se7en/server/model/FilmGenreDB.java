@@ -25,15 +25,15 @@ public class FilmGenreDB {
 
 	// read only copy of the genre id
 	@Column(name = "genre_id", insertable = false, updatable = false)
-	private int GenreId;
+	private int genreId;
 
 	public FilmGenreDB() {
 
 	}
 
-	public FilmGenreDB(FilmDB film, GenreDB Genre) {
+	public FilmGenreDB(FilmDB film, GenreDB genre) {
 		this.setFilm(film);
-		this.setGenre(Genre);
+		this.setGenre(genre);
 	}
 
 	/**
@@ -110,8 +110,8 @@ public class FilmGenreDB {
 	 * @param GenreDB
 	 *            The newly associated Genre entity
 	 */
-	public void setGenre(GenreDB Genre) {
-		getPrimaryKey().setGenre(Genre);
+	public void setGenre(GenreDB genre) {
+		getPrimaryKey().setGenre(genre);
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class FilmGenreDB {
 	 * @return the GenreId
 	 */
 	public int getGenreId() {
-		return GenreId;
+		return genreId;
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class FilmGenreDB {
 	 * @param GenreId
 	 *            the GenreId to set
 	 */
-	public void setGenreId(int GenreId) {
-		this.GenreId = GenreId;
+	public void setGenreId(int genreId) {
+		this.genreId = genreId;
 	}
 }
