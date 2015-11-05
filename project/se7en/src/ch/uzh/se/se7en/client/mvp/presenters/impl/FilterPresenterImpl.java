@@ -87,19 +87,16 @@ public class FilterPresenterImpl implements FilterPresenter {
 	{
 		//fill genre multiselect box with options
 		filmListService.getGenreSelectOption(new AsyncCallback<List<SelectOption>>(){
-
 			@Override
 			public void onFailure(Throwable caught) {
 				ClientLog.writeErr("Failed to get genre list...");
 				
 			}
-
 			@Override
 			public void onSuccess(List<SelectOption> result) {
 				filterView.getGenreSelect().setOptions(result);
 				
 			}
-			
 		});
 		
 		//fill country multiselect box with options
