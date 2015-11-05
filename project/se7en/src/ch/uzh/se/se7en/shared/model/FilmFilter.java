@@ -1,8 +1,10 @@
 package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Container to transport the applied Filter from the client side to the server
@@ -161,7 +163,74 @@ public class FilmFilter implements Serializable {
 	public void setCountries(List<String> countries) {
 		this.countries = countries;
 	}
-
+	
+	/**
+	Sets the country name and id according to a list of Select Option.
+	@pre
+	@post 	this.countries == List<selectOption>.getName() &&  this.countryIds == List<selectOption>.getId();
+	@param selectOptions which should be set as a filter attribute to the FilmFilter object
+	 */
+	public void setCountryOptions(List<SelectOption> selectOptions)
+	{
+		List<String> countryName = new ArrayList<String>(selectOptions.size());
+		
+		Set<Integer> countryId = new ConcurrentSkipListSet<Integer>();
+		
+		for(SelectOption option : selectOptions)
+		{
+			countryId.add(option.getId());
+			countryName.add(option.getName());
+		}
+		
+		setCountries(countryName);
+		setCountryIds(countryId);
+	}
+	
+	/**
+	Sets the genre name and id according to a list of Select Option.
+	@pre
+	@post 	this.genres == List<selectOption>.getName() &&  this.genreIds == List<selectOption>.getId();
+	@param selectOptions which should be set as a filter attribute to the FilmFilter object
+	 */
+	public void setGenreOptions(List<SelectOption> selectOptions)
+	{
+		List<String> genreName = new ArrayList<String>(selectOptions.size());
+		
+		Set<Integer> genreId = new ConcurrentSkipListSet<Integer>();
+		
+		for(SelectOption option : selectOptions)
+		{
+			genreId.add(option.getId());
+			genreName.add(option.getName());
+		}
+		
+		setGenres(genreName);
+		setGenreIds(genreId);
+	}
+	
+	/**
+	Sets the language name and id according to a list of Select Option.
+	@pre
+	@post 	this.languages == List<selectOption>.getName() &&  this.languageIds == List<selectOption>.getId();
+	@param selectOptions which should be set as a filter attribute to the FilmFilter object
+	 */
+	public void setLanguageOptions(List<SelectOption> selectOptions)
+	{
+		List<String> languageName = new ArrayList<String>(selectOptions.size());
+		
+		Set<Integer> languageId = new ConcurrentSkipListSet<Integer>();
+		
+		for(SelectOption option : selectOptions)
+		{
+			languageId.add(option.getId());
+			languageName.add(option.getName());
+		}
+		
+		setCountries(languageName);
+		setCountryIds(languageId);
+	}
+	
+	
 	/**
 	 * @pre languages!= null
 	 * @post -
