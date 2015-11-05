@@ -11,7 +11,7 @@ public interface Resources extends ClientBundle {
 	@Source("BackgroundSkyline.jpg")
 	ImageResource backgroundSkyline();
 	
-	@Source("BackgroundText.png")
+	@Source("BackgroundTextNEW.png")
 	ImageResource backgroundText();
 
 }

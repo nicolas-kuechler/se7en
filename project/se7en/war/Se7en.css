@@ -13,6 +13,15 @@ body{
 	height:100%;
 }
 
+.tablePanel .table{
+	margin-bottom:0px!important;
+	border:1px solid #F5F5F5;
+}
+
+.mapPanel .table{
+	border:0px !important;
+}
+
 th,td{
 	padding: 8px 8px 8px 8px !important;
 }
@@ -21,6 +30,16 @@ th{
 		background-color: #337AB7;
 		color: white;
 		font-size: 115%;
+}
+
+.table-bordered > tbody > tr > td,
+ .table-bordered > tbody > tr > th,
+ .table-bordered > tfoot > tr > td,
+ .table-bordered > tfoot > tr > th,
+ .table-bordered > thead > tr > td,
+ .table-bordered > thead > tr > th{
+	border:0px !important;
+	border-top: 1px solid #DDD !important;
 }
 
 #subContainer h3{
@@ -35,21 +54,39 @@ th{
     margin-bottom: 1% !important;
 }
 
+.panel-body{
+	 padding:0px !important;	
+	 float:left;
+	width:100%;
+}
+
+
 .panel-footer{
 	margin-bottom:1%;
 }
 
-.panel-footer, .panel-heading, #collapseOne{
+.panel-footer, .panel-heading{
 	padding-left:0.5% !important;
 	padding-right:0.5% !important;
 	border:1px solid #E5E5E5 !important;
 }
-.panel-heading{
+#subContainer .panel-heading{
 	padding: 10px 15px;
 	background-color: #F5F5F5;
 	border-top: 1px solid #DDD;
 	border-bottom-right-radius: 3px;
 	border-bottom-left-radius: 3px;
+	float:left;
+	width:100%;
+}
+
+#container .panel-heading{
+	display:none;
+}
+
+.panel-heading .col-md-4{
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 }
 
 #navBar,#subContainer{
@@ -62,14 +99,27 @@ th{
 	padding-right:15% !important;
 }
 
+#container .panel-footer {
+	float:left;
+	width:100%;
+}
+
 #subContainer{
-	margin-top:6%;
+	margin-top:7%;
 	margin-bottom:2%;
+	float:left;
+	width:100%;
 }
 
 #subContainer form{
 	padding-top: 1%;
-	padding-bottom:1%;
+}
+
+#collapseOne{
+	border:1px solid #E5E5E5;
+	padding-top: 0.5%;
+	float:left;
+	width:100%;
 }
 
 #subContainer .panel-heading{
@@ -86,18 +136,31 @@ th{
 	margin-right:0 !important;
 }
 
-#subContainer .col-md-4:nth-child(2) .form-group{
-	margin-left: 25%;
+#subContainer .row .col-md-4 .form-group{
+padding-left: 8%;
+padding-right: 8%;
 }
 
-#subContainer .col-md-4:nth-child(3) .form-group{
-	float:right;
+#subContainer .row .col-md-4:last-child .form-group{
+padding-left: 24% !important;
+padding-right: 0 !important;
 }
 
+#subContainer .row .col-md-4:first-child .form-group{
+	padding-left: 0 !important;
+	padding-right: 24% !important;
+}
 
+#subContainer .row .col-md-4 .bootstrap-select.btn-group{
+	width:100%;
+}
 
 #subContainer .panel-footer{
 	padding-left: 0 !important;
+}
+
+#subContainer .col-md-4 .panel{
+	background-color: #F5F5F5 !important;
 }
 
 .appliedFilterBox .panel{
@@ -114,22 +177,17 @@ th{
 	width:100%;
 }
 
-#container .panel-body{
-	 padding:0px !important;	
-}
 
-.appliedFilterBox .label{
-	font-size: 110% !important;
-	font-weight:normal !important;
-	line-height: 34px !important;
-}
-
-.appliedFilter{
+.appliedFilterRow {
 	width:70%;
-	float:left;
-	height: 36px;
-	position: relative;
+	position:relative;
+	
 }
+
+.appliedFilterRow .col-md-4 .label{
+	float:left;
+}
+
 .expandFilter{
 	width:40%;
 	float:left;
@@ -139,21 +197,27 @@ th{
 
 .expandFilter .btn{
 	float:right;
-	margin-left: 2%;
+	margin-left: 2.5%;
 }
 
 .filterColSearch .btn{
 	float:right;
 	margin-left:3%;	
 }
+.filterRowSearch{
+	padding: 0.5% 1% 0.5% 1%;
+	float:left;
+	background-color: #F5F5F5 !important;
+	width:100%;
+}
 
 .backgroundText{
-	position:absolute;
+	position:relative;
 	z-index:2;
 	width:60%;
 	height:60%;
 	margin-left:20%;
-	margin-top: 8%;
+	margin-top: 10%;
 }
 
 .backgroundLogo{
@@ -175,6 +239,7 @@ margin-top:-1%;
 	height:10%;
 	padding-left: 15%;
 	padding-right:15%;
+	float:left;
 }
 
 .navbar-collapse{
@@ -187,3 +252,5 @@ margin-top:-1%;
 	position:relative;
 
 }
+
+#footerBar{display:none;}

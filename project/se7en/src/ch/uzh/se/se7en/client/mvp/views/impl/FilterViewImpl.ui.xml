@@ -12,7 +12,7 @@
 					<b:Button ui:field="clearBtn" type="PRIMARY" icon="TRASH">Clear</b:Button>
 				</b:Column>
 			</b:Row>
-			<b:Row>
+			<b:Row styleName="appliedFilterRow">
 				<b:Column size="MD_4" >
 					<own:AppliedFilterBox ui:field="appliedFilter"></own:AppliedFilterBox>
 				</b:Column>
@@ -27,7 +27,7 @@
 							<b:Column size="MD_4">
 								<b:FormGroup>
 									<b:FormLabel>Film Name</b:FormLabel>
-									<b:TextBox ui:field="nameBox"></b:TextBox>
+									<b:TextBox ui:field="nameBox" width="100%"></b:TextBox>
 								</b:FormGroup>
 							</b:Column>
 
@@ -38,8 +38,26 @@
 									<slider:RangeSlider ui:field="lengthSlider"></slider:RangeSlider>
 								</b:FormGroup>
 							</b:Column>
+							
+							<b:Column size="MD_4">
+								<b:FormGroup>
+									<b:FormLabel>Film Language</b:FormLabel>
+									<own:MultiSelect ui:field="languageSelect" width="100%"></own:MultiSelect>
+								</b:FormGroup>
+							</b:Column>
 
+							
 
+						</b:Row>
+
+						<b:Row>
+							<b:Column size="MD_4">
+								<b:FormGroup>
+									<b:FormLabel>Film Genre</b:FormLabel>
+									<own:MultiSelect ui:field="genreSelect" width="100%"></own:MultiSelect>
+								</b:FormGroup>
+							</b:Column>
+							
 							<b:Column size="MD_4">
 								<b:FormGroup ui:field="yearColumn">
 									<b:FormLabel>Production Year</b:FormLabel>
@@ -48,32 +66,15 @@
 								</b:FormGroup>
 							</b:Column>
 
-						</b:Row>
-
-						<b:Row>
-							<b:Column size="MD_4">
-								<b:FormGroup>
-									<b:FormLabel>Film Genre</b:FormLabel>
-									<own:MultiSelect ui:field="genreSelect"></own:MultiSelect>
-								</b:FormGroup>
-							</b:Column>
-
-							<b:Column size="MD_4">
-								<b:FormGroup>
-									<b:FormLabel>Film Language</b:FormLabel>
-									<own:MultiSelect ui:field="languageSelect"></own:MultiSelect>
-								</b:FormGroup>
-							</b:Column>
-
 							<b:Column size="MD_4">
 								<b:FormGroup ui:field="countryColumn">
 									<b:FormLabel>Production Country</b:FormLabel>
-									<own:MultiSelect ui:field="countrySelect"></own:MultiSelect>
+									<own:MultiSelect ui:field="countrySelect" width="100%"></own:MultiSelect>
 								</b:FormGroup>
 							</b:Column>
 						</b:Row>
-						<b:Row>
-							<b:Column size="MD" styleName="filterColSearch">
+						<b:Row styleName="filterRowSearch">
+							<b:Column size="MD_4" offset="MD_4" styleName="filterColSearch">
 							<b:Button ui:field="searchBtn" type="PRIMARY" icon="SEARCH">Search</b:Button>
 							</b:Column>
 						</b:Row>

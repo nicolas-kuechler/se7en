@@ -70,8 +70,10 @@ public class FilterViewImpl extends Composite implements FilterView{
 		lengthSlider = new RangeSlider();
 		lengthSlider.setMin(Boundaries.MIN_LENGTH);
 		lengthSlider.setMax(Boundaries.MAX_LENGTH);
+		lengthSlider.setWidth("70%");
 		lengthSlider.setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
 		yearSlider = new RangeSlider();
+		yearSlider.setWidth("70%");
 		yearSlider.setMin(Boundaries.MIN_YEAR);
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));

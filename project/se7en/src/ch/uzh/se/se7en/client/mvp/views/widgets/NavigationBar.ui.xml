@@ -4,7 +4,7 @@
 	xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
 <ui:with field='res' type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources'/>
 	
-	<b:Navbar position="FIXED_TOP">
+	<b:Navbar position="FIXED_TOP" height="11%" >
 		<b:NavbarHeader width="23%">
 			<b:Image resource='{res.sevenBlack}'></b:Image>
 		</b:NavbarHeader>
