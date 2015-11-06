@@ -209,17 +209,17 @@ public class TableViewImpl extends Composite implements TableView{
 		genreColumn.setSortable(true);
 		
 		dataGrid.setColumnWidth(nameColumn, 21.5, Unit.PCT);
-		dataGrid.addColumn(nameColumn, "NAME");
+		dataGrid.addColumn(nameColumn, "Name");
 		dataGrid.setColumnWidth(yearColumn, 5, Unit.PCT);
-		dataGrid.addColumn(yearColumn, "YEAR");
+		dataGrid.addColumn(yearColumn, "Year");
 		dataGrid.setColumnWidth(lengthColumn, 6, Unit.PCT);
-		dataGrid.addColumn(lengthColumn, "LENGTH");
+		dataGrid.addColumn(lengthColumn, "Length");
 		dataGrid.setColumnWidth(countryColumn, 22.5, Unit.PCT);
-		dataGrid.addColumn(countryColumn, "COUNTRY");
+		dataGrid.addColumn(countryColumn, "Country");
 		dataGrid.setColumnWidth(languageColumn, 22.5, Unit.PCT);
-		dataGrid.addColumn(languageColumn, "LANGUAGE");
+		dataGrid.addColumn(languageColumn, "Language");
 		dataGrid.setColumnWidth(genreColumn,22.5, Unit.PCT);
-		dataGrid.addColumn(genreColumn, "GENRE");
+		dataGrid.addColumn(genreColumn, "Genre");
 	
 		
 	}
