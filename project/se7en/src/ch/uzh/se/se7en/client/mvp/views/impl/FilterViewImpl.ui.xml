@@ -25,14 +25,14 @@
 						<b:Row>
 							<b:Column size="MD_4">
 								<b:FormGroup>
-									<b:FormLabel>NAME</b:FormLabel>
+									<b:FormLabel>Name</b:FormLabel>
 									<b:TextBox ui:field="nameBox" width="100%"></b:TextBox>
 								</b:FormGroup>
 							</b:Column>
 
 							<b:Column size="MD_4">
 								<b:FormGroup>
-									<b:FormLabel>LENGTH</b:FormLabel>
+									<b:FormLabel>Length</b:FormLabel>
 									<b:HelpBlock text="" />
 									<slider:RangeSlider ui:field="lengthSlider"></slider:RangeSlider>
 								</b:FormGroup>
@@ -40,7 +40,7 @@
 							
 							<b:Column size="MD_4">
 								<b:FormGroup>
-									<b:FormLabel>LANGUAGE</b:FormLabel>
+									<b:FormLabel>Language</b:FormLabel>
 									<own:MultiSelect ui:field="languageSelect" width="100%"></own:MultiSelect>
 								</b:FormGroup>
 							</b:Column>
@@ -52,14 +52,14 @@
 						<b:Row>
 							<b:Column size="MD_4">
 								<b:FormGroup>
-									<b:FormLabel>GENRE</b:FormLabel>
+									<b:FormLabel>Genre</b:FormLabel>
 									<own:MultiSelect ui:field="genreSelect" width="100%"></own:MultiSelect>
 								</b:FormGroup>
 							</b:Column>
 							
 							<b:Column size="MD_4">
 								<b:FormGroup ui:field="yearColumn">
-									<b:FormLabel>YEAR</b:FormLabel>
+									<b:FormLabel>Year</b:FormLabel>
 									<b:HelpBlock text="" />
 									<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
 								</b:FormGroup>
@@ -67,7 +67,7 @@
 
 							<b:Column size="MD_4">
 								<b:FormGroup ui:field="countryColumn">
-									<b:FormLabel>COUNTRY</b:FormLabel>
+									<b:FormLabel>Country</b:FormLabel>
 									<own:MultiSelect ui:field="countrySelect" width="100%"></own:MultiSelect>
 								</b:FormGroup>
 							</b:Column>
