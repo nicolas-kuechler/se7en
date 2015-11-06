@@ -13,115 +13,187 @@ body{
 	height:100%;
 }
 
+.tablePanel .table{
+	margin-bottom:0px!important;
+	border:1px solid #F5F5F5;
+}
+
+.mapPanel .table{
+	border:0px !important;
+}
+
 th,td{
 	padding: 8px 8px 8px 8px !important;
+}
+
+th{
+		background-color: #337AB7;
+		color: white;
+		font-size: 115%;
+}
+
+.table-bordered > tbody > tr > td,
+ .table-bordered > tbody > tr > th,
+ .table-bordered > tfoot > tr > td,
+ .table-bordered > tfoot > tr > th,
+ .table-bordered > thead > tr > td,
+ .table-bordered > thead > tr > th{
+	border:0px !important;
+	border-top: 1px solid #DDD !important;
+}
+
+#subContainer h3{
+	width:60%;
+	float:left;
+	margin:0 !important;
 }
 .panel{
 	border:0px !important;
     border-radius: 0px !important;
     box-shadow: 0px 0px 0px !important;
+    margin-bottom: 1% !important;
 }
 
-.panel-default{
-	margin-bottom:0px !important;
+.panel-body{
+	 padding:0px !important;	
+	 float:left;
+	width:100%;
 }
+
 
 .panel-footer{
 	margin-bottom:1%;
 }
 
-.panel-footer, .panel-heading, #collapseOne{
-	padding-left:1% !important;
-	padding-right:1% !important;
+.panel-footer, .panel-heading{
+	padding-left:0.5% !important;
+	padding-right:0.5% !important;
+	border:1px solid #E5E5E5 !important;
+}
+#subContainer .panel-heading{
+	padding: 10px 15px;
+	background-color: #F5F5F5;
+	border-top: 1px solid #DDD;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+	float:left;
+	width:100%;
+}
+
+#container .panel-heading{
+	display:none;
+}
+
+.panel-heading .col-md-4{
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+#navBar,#subContainer{
+	padding-left:15% !important;
+	padding-right:15% !important;
 }
 
 .dataContainer{
 	padding-left:15% !important;
 	padding-right:15% !important;
-
 }
 
-.dataContainer div{
-	padding-left:0%;
-	padding-right:0%;
+#container .panel-footer {
+	float:left;
+	width:100%;
 }
-
 
 #subContainer{
 	margin-top:7%;
-	margin-bottom:2.5%;
+	margin-bottom:2%;
+	float:left;
+	width:100%;
 }
 
 #subContainer form{
 	padding-top: 1%;
-	padding-bottom:1%;
+}
+
+#collapseOne{
+	border:1px solid #E5E5E5;
+	padding-top: 0.5%;
+	float:left;
+	width:100%;
 }
 
 #subContainer .panel-heading{
 	color: #333;
+	padding-top:1%;
+	padding-bottom:1%;
 	background-color: #F5F5F5;
 	border-color: #DDD;
 }
 
 #subContainer .row{
-	margin-bottom: 1%;
+	margin-bottom: 0.25%;
 	margin-left:0 !important;
 	margin-right:0 !important;
 }
 
-#subcontainer .panel-footer{
+#subContainer .row .col-md-4 .form-group{
+padding-left: 8%;
+padding-right: 8%;
+}
+
+#subContainer .row .col-md-4:last-child .form-group{
+padding-left: 24% !important;
+padding-right: 0 !important;
+}
+
+#subContainer .row .col-md-4:first-child .form-group{
 	padding-left: 0 !important;
+	padding-right: 24% !important;
+}
+
+#subContainer .row .col-md-4 .bootstrap-select.btn-group{
+	width:100%;
+}
+
+#subContainer .panel-footer{
+	padding-left: 0 !important;
+}
+
+#subContainer .col-md-4 .panel{
+	background-color: #F5F5F5 !important;
 }
 
 .appliedFilterBox .panel{
 	background-color: #F5F5F5 !important;
 }
 
-.appliedFilterBox .label{
-	font-size: 110% !important;
-	font-weight:normal !important;
-	line-height: 34px !important;
-}
-
-
-.filterColLeft, .filterColMiddle, .filterColRight{
-	width: 33.33%;
-	float: left;
-	position: relative;
-	min-height: 1px;
-}
-
-.filterColLeft{
-	padding-left:0px !important;
-}
-
-.filterColMiddle{
-	width:17% !important;
-	margin-left: 16.3333%;
-}
-
-.filterColRight{
-	float:right;
-	padding-right: 10px;
-}
-.filterColRight .form-group{
-	float:right;
-}
-
-.filterColSearch{
-	width: 20% !important;
-	min-height: 1px;
-	position: relative;
+#subContainer .form-group label{
 	float:left;
+	width:100%;
 }
-.appliedFilter{
+
+#subContainer .form-group {
+	float:left;
+	width:100%;
+}
+
+
+.appliedFilterRow {
 	width:70%;
-	float:left;
-	min-height: 36px;
-	position: relative;
+	position:relative;
+	
 }
+
+.appliedFilterRow div{
+width:100%;
+}
+
+.appliedFilterRow .col-md-4 .label{
+	float:left;
+}
+
 .expandFilter{
-	width:10%;
+	width:40%;
 	float:left;
 	position: relative;
 	min-height: 1px;
@@ -129,22 +201,27 @@ th,td{
 
 .expandFilter .btn{
 	float:right;
+	margin-left: 2.5%;
 }
-
-
 
 .filterColSearch .btn{
 	float:right;
 	margin-left:3%;	
 }
+.filterRowSearch{
+	padding: 0.5% 1% 0.5% 1%;
+	float:left;
+	background-color: #F5F5F5 !important;
+	width:100%;
+}
 
 .backgroundText{
-	position:absolute;
+	position:relative;
 	z-index:2;
 	width:60%;
 	height:60%;
 	margin-left:20%;
-	margin-top: 8%;
+	margin-top: 10%;
 }
 
 .backgroundLogo{
@@ -166,6 +243,7 @@ margin-top:-1%;
 	height:10%;
 	padding-left: 15%;
 	padding-right:15%;
+	float:left;
 }
 
 .navbar-collapse{
@@ -179,31 +257,4 @@ margin-top:-1%;
 
 }
 
-#container .panel-footer{
-	margin-bottom: 5%;	
-}
-
-#footerBar .navbar-collapse{
-	margin-left:0% !important;
-	padding-top:1%;
-	width:100% !important;
-	padding-left:15% !important;
-	padding-right:15% !important;
-}
-
-#footerBar .footerSe7en{
-	width:33%;
-	float:left;
-}
-
-#footerBar .footerAd{
-	width:33%;
-	text-align:center;
-	float:left;
-	display:block !important;
-}
-
-#footerBar .footerLicence{
-	float:right;
-	position:relative;
-}
+#footerBar{display:none;}

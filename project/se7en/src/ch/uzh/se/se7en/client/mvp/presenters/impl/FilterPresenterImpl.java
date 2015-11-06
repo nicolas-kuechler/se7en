@@ -9,6 +9,7 @@ import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 
@@ -19,8 +20,10 @@ import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
+import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.SelectOption;
 
 
 public class FilterPresenterImpl implements FilterPresenter {
@@ -29,15 +32,19 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private FilterView filterView;
 	private FilmDataModel filmDataModel;
 	private String mode;
+	private FilmListServiceAsync filmListService;
 
 	@Inject
-	public FilterPresenterImpl(EventBus eventBus, FilterView filterView, FilmDataModel filmDataModel) {
+	public FilterPresenterImpl(EventBus eventBus, final FilterView filterView, FilmDataModel filmDataModel, 
+			FilmListServiceAsync filmListService) {
 		super();
+		this.filmListService = filmListService;
 		this.eventBus = eventBus;
 		this.filterView = filterView;
 		this.filmDataModel = filmDataModel;
 		bind();
 		updateFilterFromView();
+		setupMultiSelects();
 	}
 
 	@Override
@@ -63,9 +70,9 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filterView.getNameBox().setValue("");
 		filterView.getLengthSlider().setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
 		filterView.getYearSlider().setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
-		filterView.getCountrySelect().setValue(new ArrayList<String>());
-		filterView.getLanguageSelect().setValue(new ArrayList<String>());
-		filterView.getGenreSelect().setValue(new ArrayList<String>());
+		filterView.getCountrySelect().deselectAll();
+		filterView.getLanguageSelect().deselectAll();
+		filterView.getGenreSelect().deselectAll();
 	}
 	
 	@Override
@@ -74,6 +81,58 @@ public class FilterPresenterImpl implements FilterPresenter {
 		updateAppliedFilterBox();	// appliedFilterBox is updated according to mode
 		filterView.setMode(mode); 	// countrySelect & yearSlider of filterView are setVisible according to mode
 	}
+	
+	@Override
+	public void setupMultiSelects()
+	{
+		//fill genre multiselect box with options
+		filmListService.getGenreSelectOption(new AsyncCallback<List<SelectOption>>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientLog.writeErr("Failed to get genre list...");
+				
+			}
+			@Override
+			public void onSuccess(List<SelectOption> result) {
+				filterView.getGenreSelect().setOptions(result);
+				
+			}
+		});
+		
+		//fill country multiselect box with options
+		filmListService.getCountrySelectOption(new AsyncCallback<List<SelectOption>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientLog.writeErr("Failed to get country list...");
+				
+			}
+
+			@Override
+			public void onSuccess(List<SelectOption> result) {
+				filterView.getCountrySelect().setOptions(result);
+				
+			}
+			
+		});
+		
+		//fill language multiselect box with options
+		filmListService.getLanguageSelectOption(new AsyncCallback<List<SelectOption>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientLog.writeErr("Failed to get language list...");
+				
+			}
+
+			@Override
+			public void onSuccess(List<SelectOption> result) {
+				filterView.getLanguageSelect().setOptions(result);
+				
+			}
+			
+		});
+	}
 
 	/**
 	Helper Method to update the applied FilterBox according to the currently set mode of the filterPresenter
@@ -81,7 +140,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@pre 	mode != null && filterView != null && filmDataModel != null & filmDataModel.getAppliedMapFilter !=null
 	@post	filterView.setAppliedFilterBox according to mode
 	 */
-	private void updateAppliedFilterBox()
+	public void updateAppliedFilterBox()
 	{
 		if (mode.equals(Tokens.MAP))
 		{
@@ -101,7 +160,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@pre	filterView != null && filterView filterFields != null
 	@post	updated appliedFilters in filmDataModel && clear filterFields in filterView 
 	 */
-	private void updateFilterFromView()
+	public void updateFilterFromView()
 	{
 		FilmFilter currentFilter = new FilmFilter();
 
@@ -122,37 +181,39 @@ public class FilterPresenterImpl implements FilterPresenter {
 		if (filterView.getCountrySelect().getValue() == null || filterView.getCountrySelect().getValue().size()==0)
 		{
 			currentFilter.setCountries(null);
+			currentFilter.setCountryIds(null);
 		}
 		else
 		{
-			currentFilter.setCountries(filterView.getCountrySelect().getValue());
+			currentFilter.setCountryOptions(filterView.getCountrySelect().getSelectedOptions());
 		}
 
 		//setting value to null if no genre filter is applied
 		if (filterView.getGenreSelect().getValue() == null || filterView.getGenreSelect().getValue().size()==0)
 		{
 			currentFilter.setGenres(null);
+			currentFilter.setGenreIds(null);
 		}
 		else
 		{
-			currentFilter.setGenres(filterView.getGenreSelect().getValue());
+			currentFilter.setGenreOptions(filterView.getGenreSelect().getSelectedOptions());
 		}
 
 		//setting value to null if no language filter is applied
 		if (filterView.getLanguageSelect().getValue() == null || filterView.getLanguageSelect().getValue().size()==0)
 		{
 			currentFilter.setLanguages(null);
+			currentFilter.setLanguageIds(null);
 		}
 		else
 		{
-			currentFilter.setLanguages(filterView.getLanguageSelect().getValue());
+			currentFilter.setLanguageOptions(filterView.getLanguageSelect().getSelectedOptions());
 		}
 
 
 		filmDataModel.setAppliedFilter(currentFilter);
 		filmDataModel.setAppliedMapFilter(adjustedMapFilter(currentFilter));
 
-		onClear();
 	}
 
 	//TODO Decide if not better part of class FilmFilter
@@ -163,7 +224,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@post -
 	@return List<String> with the applied FilterFields in a List
 	 */
-	private List<String> convertFilmFilterToList(FilmFilter filter)
+	public List<String> convertFilmFilterToList(FilmFilter filter)
 	{
 		List<String> filterList = new ArrayList<String>();
 
@@ -220,7 +281,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@return FilmFilter that contains the boundaries for the years (because filtering of year 
 			is done on clientside for the map) and the filter for the countries is removed.
 	 */
-	private FilmFilter adjustedMapFilter(FilmFilter appliedFilter)
+	public FilmFilter adjustedMapFilter(FilmFilter appliedFilter)
 	{
 		//taking applied filter from filmDataModel
 		FilmFilter filter = new FilmFilter();
@@ -230,7 +291,9 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filter.setLengthStart(appliedFilter.getLengthStart());
 		filter.setLengthEnd(appliedFilter.getLengthEnd());
 		filter.setGenres(appliedFilter.getGenres());
+		filter.setGenreIds(appliedFilter.getGenreIds());
 		filter.setLanguages(appliedFilter.getLanguages());
+		filter.setLanguageIds(appliedFilter.getLanguageIds());
 
 		//adjusting year range because filtering of that is done in the map on client side
 		filter.setYearStart(Boundaries.MIN_YEAR);
@@ -238,6 +301,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 		//removing the country filter because in the map always all the countries should be considered
 		filter.setCountries(null);
+		filter.setCountryIds(null);
 
 		return filter;
 	}

@@ -24,6 +24,7 @@ import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.mvp.views.widgets.AppliedFilterBox;
 import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
+import ch.uzh.se.se7en.shared.model.SelectOption;
 
 import org.gwtbootstrap3.client.shared.event.ShowEvent;
 import org.gwtbootstrap3.client.shared.event.ShowHandler;
@@ -69,8 +70,10 @@ public class FilterViewImpl extends Composite implements FilterView{
 		lengthSlider = new RangeSlider();
 		lengthSlider.setMin(Boundaries.MIN_LENGTH);
 		lengthSlider.setMax(Boundaries.MAX_LENGTH);
+		lengthSlider.setWidth("70%");
 		lengthSlider.setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
 		yearSlider = new RangeSlider();
+		yearSlider.setWidth("70%");
 		yearSlider.setMin(Boundaries.MIN_YEAR);
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
@@ -123,17 +126,17 @@ public class FilterViewImpl extends Composite implements FilterView{
 	}
 
 	@Override
-	public HasValue<List<String>> getCountrySelect() {
+	public MultiSelect getCountrySelect() {
 		return countrySelect;
 	}
 
 	@Override
-	public HasValue<List<String>> getLanguageSelect() {
+	public MultiSelect getLanguageSelect() {
 		return languageSelect;
 	}
 
 	@Override
-	public HasValue<List<String>> getGenreSelect() {
+	public MultiSelect getGenreSelect() {
 		return genreSelect;
 	}
 

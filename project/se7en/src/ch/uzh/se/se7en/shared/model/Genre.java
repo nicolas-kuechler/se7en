@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Nicolas Küchler
  * 
  */
-public class Genre implements Serializable, DTO {
+public class Genre implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -25,7 +25,7 @@ public class Genre implements Serializable, DTO {
 		this.name = name;
 		this.numberOfFilms = numberOfFilms;
 	}
-	
+
 	/**
 	 * Returns a string representation of this Genre
 	 * 
