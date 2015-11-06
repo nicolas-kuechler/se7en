@@ -3,6 +3,8 @@
  */
 package ch.uzh.se.se7en.client.mvp;
 
+import org.gwtbootstrap3.client.ui.Panel;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

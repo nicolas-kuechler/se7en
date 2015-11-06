@@ -6,8 +6,8 @@
 		type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources' />
 
 
-	<g:HTMLPanel>
-		<g:Image styleName="backgroundLogo" resource='{res.background}' />
+	<b:Panel styleName="welcomePanel">
+		<g:Image styleName="backgroundLogo" resource='{res.backgroundSkyline}' />
 		<g:Image styleName="backgroundText" resource='{res.backgroundText}' />
-	</g:HTMLPanel>
+	</b:Panel>
 </ui:UiBinder> 
