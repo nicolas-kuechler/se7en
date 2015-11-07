@@ -2,6 +2,7 @@ package ch.uzh.se.se7en.client.mvp.views.widgets;
 
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
 
@@ -31,6 +32,7 @@ public class NavigationBar extends Composite {
 	@UiField Modal licenseModal;
 	@UiField AnchorListItem modalOpen;
 	@UiField AnchorListItem loading;
+	@UiField Image logoLink;
 	
 	public NavigationBar() {
 		licenseModal = new Modal();
@@ -103,6 +105,14 @@ public class NavigationBar extends Composite {
 			public void onClick(ClickEvent event) {
 				updateNavigationBar(false, false, true);
 				History.newItem(Tokens.TABLE);
+			}
+		});
+		
+		logoLink.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				updateNavigationBar(true, false, false);
+				History.newItem(Tokens.HOME);
 			}
 		});
 	}

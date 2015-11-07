@@ -7,6 +7,8 @@ import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
+import org.gwtbootstrap3.extras.growl.client.ui.GrowlPosition;
+import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import com.google.gwt.core.client.GWT;
@@ -43,6 +45,7 @@ public class AppController implements ValueChangeHandler<String> {
 	private HasWidgets container;
 	private HasWidgets subContainer;
 	private NavigationBar navBar;
+	private GrowlOptions go = new GrowlOptions();
 	
 	public AppController(final NavigationBar navBar)
 	{
@@ -184,15 +187,15 @@ public class AppController implements ValueChangeHandler<String> {
 		
 		navBar.setLoading(true, "Importing...");
 		
-		Growl.growl("An unknown error occured while importing file: " + fileName);
 		
-		/*
 		TriggerImportServiceAsync triggerImportService = GWT.create(TriggerImportService.class);
 		triggerImportService.importFile(fileName, new AsyncCallback<Boolean>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				navBar.setLoading(false, "");
-				Growl.growl("An unknown error occured while importing file: " + fileName);
+				go.setType(GrowlType.WARNING);
+				go.setPosition(GrowlPosition.TOP_CENTER);
+				Growl.growl("An unknown error occured while importing file: " + fileName,go);
 			}
 
 			@Override
@@ -200,15 +203,19 @@ public class AppController implements ValueChangeHandler<String> {
 				navBar.setLoading(false, "");
 				if (result)
 				{
-					Growl.growl(fileName + " was successfully imported!");
+					go.setType(GrowlType.SUCCESS);
+					go.setPosition(GrowlPosition.TOP_CENTER);  
+					Growl.growl(fileName + " was successfully imported!",go);
 				}
 				else
 				{
-					Growl.growl("An unknown error occured while importing file: " + fileName);
+					go.setType(GrowlType.WARNING);
+					go.setPosition(GrowlPosition.TOP_CENTER);  
+					Growl.growl("An unknown error occured while importing file: " + fileName,go);
 				}
 			}
 		});
-		*/
+		
 		
 	}
 

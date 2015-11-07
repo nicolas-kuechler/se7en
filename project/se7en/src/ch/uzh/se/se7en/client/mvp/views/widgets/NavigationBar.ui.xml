@@ -6,7 +6,7 @@
 	
 	<b:Navbar position="FIXED_TOP" height="11%" >
 		<b:NavbarHeader width="23%">
-			<b:Image resource='{res.sevenBlack}'></b:Image>
+			<b:Image resource='{res.sevenBlack}' ui:field="logoLink"></b:Image>
 		</b:NavbarHeader>
 		<b:NavbarCollapse height="11%" width="77%">
 			<b:NavbarNav>
@@ -15,7 +15,10 @@
 			<b:AnchorListItem ui:field="mapNav" icon="GLOBE">Map</b:AnchorListItem>
 			<b:AnchorListItem ui:field="tableNav" icon="TABLE">Table</b:AnchorListItem>
 			<b:AnchorListItem ui:field="modalOpen" icon="COMMENT">Creative Commons</b:AnchorListItem>
+			
 			</b:NavbarNav>
+			
+			
 			
 			   <b:Modal title="Creative Commons" ui:field="licenseModal">
         			<b:ModalBody>

@@ -210,15 +210,15 @@ public class TableViewImpl extends Composite implements TableView{
 		
 		dataGrid.setColumnWidth(nameColumn, 21.5, Unit.PCT);
 		dataGrid.addColumn(nameColumn, "Name");
-		dataGrid.setColumnWidth(yearColumn, 5, Unit.PCT);
+		dataGrid.setColumnWidth(yearColumn, 7, Unit.PCT);
 		dataGrid.addColumn(yearColumn, "Year");
-		dataGrid.setColumnWidth(lengthColumn, 6, Unit.PCT);
+		dataGrid.setColumnWidth(lengthColumn, 7, Unit.PCT);
 		dataGrid.addColumn(lengthColumn, "Length");
-		dataGrid.setColumnWidth(countryColumn, 22.5, Unit.PCT);
+		dataGrid.setColumnWidth(countryColumn, 21.5, Unit.PCT);
 		dataGrid.addColumn(countryColumn, "Country");
-		dataGrid.setColumnWidth(languageColumn, 22.5, Unit.PCT);
+		dataGrid.setColumnWidth(languageColumn, 21.5, Unit.PCT);
 		dataGrid.addColumn(languageColumn, "Language");
-		dataGrid.setColumnWidth(genreColumn,22.5, Unit.PCT);
+		dataGrid.setColumnWidth(genreColumn,21.5, Unit.PCT);
 		dataGrid.addColumn(genreColumn, "Genre");
 	
 		
