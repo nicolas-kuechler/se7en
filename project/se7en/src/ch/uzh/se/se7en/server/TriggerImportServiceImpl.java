@@ -15,8 +15,6 @@ import java.util.Set;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsInputChannel;
@@ -52,8 +50,15 @@ import ch.uzh.se.se7en.shared.model.Film;
  */
 @Singleton
 public class TriggerImportServiceImpl extends RemoteServiceServlet implements TriggerImportService {
+	
 	@Inject
 	Provider<EntityManager> em;
+	
+	// create maps of already existing entities keyed by name for more
+	// efficient importing
+	private Map<String, CountryDB> countryMap = new HashMap<String, CountryDB>();
+	private Map<String, GenreDB> genreMap = new HashMap<String, GenreDB>();
+	private Map<String, LanguageDB> languageMap = new HashMap<String, LanguageDB>();
 
 	/**
 	 * This method is called to to import a file from the Google Cloud Storage
@@ -122,37 +127,35 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	public boolean importFilmsToDB(List<Film> films) {
 		// get an instance of the entity manager
 		EntityManager manager = em.get();
-		
+
 		boolean success = false;
-		
-		// create maps of already existing entities keyed by name for more efficient importing
-		Map<String, CountryDB> countryMap = new HashMap<String, CountryDB>();
-		Map<String, GenreDB> genreMap = new HashMap<String, GenreDB>();
-		Map<String, LanguageDB> languageMap = new HashMap<String, LanguageDB>();
-		
+
 		// get all the existing entities from the database
 		List<CountryDB> dbCountries = manager.createQuery("from CountryDB", CountryDB.class).getResultList();
 		List<GenreDB> dbGenres = manager.createQuery("from GenreDB", GenreDB.class).getResultList();
 		List<LanguageDB> dbLanguages = manager.createQuery("from LanguageDB", LanguageDB.class).getResultList();
-		
+
 		// hydrate the maps with the existing entities
-		for(CountryDB country : dbCountries) {
+		for (CountryDB country : dbCountries) {
 			countryMap.put(country.getName(), country);
 		}
-		for(GenreDB genre : dbGenres) {
+		for (GenreDB genre : dbGenres) {
 			genreMap.put(genre.getName(), genre);
 		}
-		for(LanguageDB language : dbLanguages) {
+		for (LanguageDB language : dbLanguages) {
 			languageMap.put(language.getName(), language);
 		}
-		
+
 		// iterate over each new film
 		for (Film film : films) {
 			// extract information from the film object and initialize the sets
-			Set<String> countries = film.getCountries().isEmpty() ? new HashSet<String>() : new HashSet<String>(film.getCountries());
-			Set<String> genres = film.getGenres().isEmpty() ? new HashSet<String>() : new HashSet<String>(film.getGenres());
-			Set<String> languages = film.getLanguages().isEmpty() ? new HashSet<String>() : new HashSet<String>(film.getLanguages());
-			
+			Set<String> countries = film.getCountries().isEmpty() ? new HashSet<String>()
+					: new HashSet<String>(film.getCountries());
+			Set<String> genres = film.getGenres().isEmpty() ? new HashSet<String>()
+					: new HashSet<String>(film.getGenres());
+			Set<String> languages = film.getLanguages().isEmpty() ? new HashSet<String>()
+					: new HashSet<String>(film.getLanguages());
+
 			// initialize empty entity sets for the join table entites
 			Set<FilmCountryDB> filmCountryEntities = new HashSet<FilmCountryDB>();
 			Set<FilmGenreDB> filmGenreEntities = new HashSet<FilmGenreDB>();
@@ -160,18 +163,18 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 
 			// create a new FilmDB object with the basic content
 			FilmDB dbFilm = new FilmDB(film.getName(), film.getLength(), film.getYear());
-			
+
 			// for each country, look it up and add it if necessary
 			for (String c : countries) {
 				CountryDB country;
-				
+
 				// if the country already exists, get the entity, else persist a
 				// new one
-				if(countryMap.containsKey(c)) {
+				if (countryMap.containsKey(c)) {
 					country = countryMap.get(c);
 				} else {
 					country = new CountryDB(c);
-					
+
 					try {
 						// persist the new country and add it to the local map
 						manager.persist(country);
@@ -194,11 +197,11 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 
 				// if the genre already exists, get the entity, else persist a
 				// new one
-				if(genreMap.containsKey(g)) {
+				if (genreMap.containsKey(g)) {
 					genre = genreMap.get(g);
 				} else {
 					genre = new GenreDB(g);
-					
+
 					try {
 						// persist the new genre and add it to the local map
 						manager.persist(genre);
@@ -219,13 +222,14 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			for (String l : languages) {
 				LanguageDB language;
 
-				// if the language already exists, get the entity, else persist a
+				// if the language already exists, get the entity, else persist
+				// a
 				// new one
-				if(languageMap.containsKey(l)) {
+				if (languageMap.containsKey(l)) {
 					language = languageMap.get(l);
 				} else {
 					language = new LanguageDB(l);
-					
+
 					try {
 						// persist the new language and add it to the local map
 						manager.persist(language);
@@ -251,7 +255,43 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			}
 
 		}
-		
+
 		return success;
+	}
+
+	/**
+	@pre -
+	@post em==em
+	@param em the em to set
+	*/
+	public void setEm(Provider<EntityManager> em) {
+		this.em = em;
+	}
+
+	/**
+	@pre countryMap!= null
+	@post -
+	@return the countryMap
+	 */
+	public Map<String, CountryDB> getCountryMap() {
+		return countryMap;
+	}
+
+	/**
+	@pre genreMap!= null
+	@post -
+	@return the genreMap
+	 */
+	public Map<String, GenreDB> getGenreMap() {
+		return genreMap;
+	}
+
+	/**
+	@pre languageMap!= null
+	@post -
+	@return the languageMap
+	 */
+	public Map<String, LanguageDB> getLanguageMap() {
+		return languageMap;
 	}
 }
