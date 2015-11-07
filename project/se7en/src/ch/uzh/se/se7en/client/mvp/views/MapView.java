@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.gwt.charts.client.DataTable;
 
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
+import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Genre;
 
 public interface MapView extends IsWidget{
