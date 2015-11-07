@@ -39,23 +39,26 @@ import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.Genre;
 
-public class MapViewImpl extends Composite implements MapView{
+public class MapViewImpl extends Composite implements MapView {
 
 	private static MapViewImplUiBinder uiBinder = GWT.create(MapViewImplUiBinder.class);
 
 	interface MapViewImplUiBinder extends UiBinder<Widget, MapViewImpl> {
 	}
-	
+
 	private MapPresenter mapPresenter;
 	private ChartLoader chartLoader = new ChartLoader(ChartPackage.GEOCHART);
 	private GeoChart geoChart;
 	private GeoChartOptions geoChartOptions;
 	private DataGrid genreTable;
 	private PieChart genrePieChart;
-	
-	@UiField (provided = true) RangeSlider yearSlider;
-	@UiField PanelBody panel;
-	@UiField DataGrid<Film> dataGrid;
+
+	@UiField(provided = true)
+	RangeSlider yearSlider;
+	@UiField
+	PanelBody panel;
+	@UiField
+	DataGrid<Film> dataGrid;
 
 	@Inject
 	public MapViewImpl() {
@@ -66,14 +69,8 @@ public class MapViewImpl extends Composite implements MapView{
 		yearSlider.setWidth("900px");
 		yearSlider.setTooltip(TooltipType.ALWAYS);
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		panel.setHeight("550px");
-	}
-	
-	@UiHandler("yearSlider")
-	public void onRangeSlideStop(SlideStopEvent<Range> event)
-	{
-		mapPresenter.onRangeSliderChanged();
 	}
 
 	@Override
@@ -81,19 +78,32 @@ public class MapViewImpl extends Composite implements MapView{
 		this.mapPresenter = presenter;
 	}
 
+	/**
+	 * If the values of the rangeslider get changed, we send a message to the
+	 * presenter
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param event
+	 */
+	@UiHandler("yearSlider")
+	public void onRangeSlideStop(SlideStopEvent<Range> event) {
+		mapPresenter.onRangeSliderChanged();
+	}
+
 	@Override
 	public void setGeoChart(final List<DataTableEntity> countries) {
-		chartLoader.loadApi(new Runnable(){
-			@Override
+		chartLoader.loadApi(new Runnable() {
+
 			public void run() {
-				if(geoChart == null)
-				{
+				if (geoChart == null) {
 					geoChart = new GeoChart();
 					geoChartOptions = GeoChartOptions.create();
 					geoChartOptions.setHeight(500);
 					geoChartOptions.setWidth(900);
 					panel.add(geoChart);
-					//TODO Define GeoChart Colors
+					// TODO Define GeoChart Colors
 				}
 				
 				//Create new DataTable
@@ -110,11 +120,12 @@ public class MapViewImpl extends Composite implements MapView{
 					dataTable.setValue(i, 1, countries.get(i).getValue());
 				}
 				
-				//TODO Fade Animation
 				geoChart.draw(dataTable, geoChartOptions);
+
 			}
 		});
 	}
+
 
 	@Override
 	public int getGeoChartSelection() {
@@ -122,30 +133,24 @@ public class MapViewImpl extends Composite implements MapView{
 		return 0;
 	}
 
-
-	
-	
-
 	@Override
 	public void setGenreTable(List<Genre> genres) {
 		// TODO refresh genreTable with new List
-		
 	}
 
 	@Override
 	public void setGenrePieChart(DataTable genres) {
 		// TODO refresh genrePieChart with new DataTable
-		
 	}
 
 	@Override
 	public int getMinYear() {
-		return (int)yearSlider.getMin();
+		return (int)yearSlider.getValue().getMinValue();
 	}
 
 	@Override
 	public int getMaxYear() {
-		return (int)yearSlider.getMax();
+		return (int)yearSlider.getValue().getMaxValue();
 	}
 
 	@Override

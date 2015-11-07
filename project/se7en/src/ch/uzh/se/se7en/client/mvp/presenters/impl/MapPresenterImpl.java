@@ -10,6 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 
+import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
 import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
@@ -108,6 +109,7 @@ public class MapPresenterImpl implements MapPresenter {
 		int startYear = mapView.getMinYear();
 		int endYear = mapView.getMaxYear();
 		
+		ClientLog.writeMsg("StartYear = " + mapView.getMinYear());
 
 		
 		//represents the number of films produced in a country between startYear and endYear

@@ -2,6 +2,7 @@ package ch.uzh.se.se7en.client.mvp.views.widgets;
 
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
 
@@ -30,16 +31,60 @@ public class NavigationBar extends Composite {
 	@UiField AnchorListItem tableNav;
 	@UiField Modal licenseModal;
 	@UiField AnchorListItem modalOpen;
+	@UiField AnchorListItem loading;
+	@UiField Image logoLink;
 	
+	/**
+	 * Initialize the NavigationBar, the Creative Commons Modal and set a default Text for the loadingGrowl (workaround)
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 * @return -
+	 */
 	public NavigationBar() {
-
 		licenseModal = new Modal();
-		RootPanel.get().add(licenseModal);
+		licenseModal.setFade(true);
 		initWidget(uiBinder.createAndBindUi(this));
+		loading.setText("Hello");
+		loading.setVisible(false);
 		barSetup();
 	}
 	
-	 
+	/**
+	 * Used to set the loading Item in the Navigation to visible if the user starts an import
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post -
+	 * @param isVisible, message
+	 * @return -
+	 */
+	public void setLoading(boolean isVisible, String message)
+	{
+		//TODO 
+		if(isVisible)
+		{
+			//TODO Figure out how to set the text
+			loading.setVisible(true);
+			loading.setText(message);
+		}
+		else
+		{
+			loading.setVisible(false);
+		}
+	}
+	
+	/**
+	 * Sets the active navigation element regarding the input of the user
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post active element is set
+	 * @param navToken
+	 * @return -
+	 */ 
 	public void setActive(String navToken)
 	{
 		if (navToken.equals(Tokens.HOME))
@@ -56,6 +101,15 @@ public class NavigationBar extends Composite {
 		}
 	}
 	
+	/**
+	 * Initialize the ClickHandlers for each element in the navBar
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post 
+	 * @param -
+	 * @return -
+	 */
 	private void barSetup()
 	{
 		homeNav.addClickHandler(new ClickHandler(){
@@ -88,8 +142,26 @@ public class NavigationBar extends Composite {
 				History.newItem(Tokens.TABLE);
 			}
 		});
+		
+		logoLink.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				updateNavigationBar(true, false, false);
+				History.newItem(Tokens.HOME);
+			}
+		});
 	}
 
+	/**
+	 * Update the navBar and set focus to the selected element. Also send a message to the assigned presenter
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post -
+	 * @param isHomeActive, isMapActive, isTableActive
+	 * @return -
+	 */
+	
 	private void updateNavigationBar(boolean isHomeActive, boolean isMapActive, boolean isTableActive)
 	{
 		homeNav.setFocus(false);
