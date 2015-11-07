@@ -180,6 +180,14 @@ public class AppController implements ValueChangeHandler<String> {
 		injector.getWelcomePresenter().go(container);
 	}
 	
+	/**
+	Triggers the import
+	@author Nicolas Küchler
+	@pre	container != null
+	@post
+	@param	String token
+	 */
+	
 	private void doImport(String token)
 	{
 		//TODO Import RPC Service
