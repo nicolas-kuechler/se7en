@@ -30,13 +30,30 @@ public class NavigationBar extends Composite {
 	@UiField AnchorListItem tableNav;
 	@UiField Modal licenseModal;
 	@UiField AnchorListItem modalOpen;
+	@UiField AnchorListItem loading;
 	
 	public NavigationBar() {
-
 		licenseModal = new Modal();
-		RootPanel.get().add(licenseModal);
+		licenseModal.setFade(true);
 		initWidget(uiBinder.createAndBindUi(this));
+		loading.setText("Hello");
+		loading.setVisible(false);
 		barSetup();
+	}
+	
+	public void setLoading(boolean isVisible, String message)
+	{
+		//TODO 
+		if(isVisible)
+		{
+			//TODO Figure out how to set the text
+			loading.setVisible(true);
+			loading.setText(message);
+		}
+		else
+		{
+			loading.setVisible(false);
+		}
 	}
 	
 	 

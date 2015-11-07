@@ -3,7 +3,11 @@
  */
 package ch.uzh.se.se7en.client.mvp;
 
-import org.gwtbootstrap3.client.ui.Panel;
+import org.gwtbootstrap3.client.ui.Icon;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.extras.growl.client.ui.Growl;
+import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -176,20 +180,35 @@ public class AppController implements ValueChangeHandler<String> {
 	private void doImport(String token)
 	{
 		//TODO Import RPC Service
-		String fileName = token.substring(Tokens.IMPORT.length()+1); //token has format: import=filename.csv
+		final String fileName = token.substring(Tokens.IMPORT.length()+1); //token has format: import=filename.csv
+		
+		navBar.setLoading(true, "Importing...");
+		
+		Growl.growl("An unknown error occured while importing file: " + fileName);
+		
+		/*
 		TriggerImportServiceAsync triggerImportService = GWT.create(TriggerImportService.class);
 		triggerImportService.importFile(fileName, new AsyncCallback<Boolean>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Error Handling Import Trigger
+				navBar.setLoading(false, "");
+				Growl.growl("An unknown error occured while importing file: " + fileName);
 			}
 
 			@Override
 			public void onSuccess(Boolean result) {
-				//TODO Import Successfull message
-				Window.alert("Successfull Import");
+				navBar.setLoading(false, "");
+				if (result)
+				{
+					Growl.growl(fileName + " was successfully imported!");
+				}
+				else
+				{
+					Growl.growl("An unknown error occured while importing file: " + fileName);
+				}
 			}
 		});
+		*/
 		
 	}
 
