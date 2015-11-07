@@ -127,9 +127,9 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		for (Film film : films) {
 			// extract information from the film object and initialize the new
 			// lists
-			List<String> countries = film.getCountries();
-			List<String> genres = film.getGenres();
-			List<String> languages = film.getLanguages();
+			Set<String> countries = film.getCountries().isEmpty() ? new HashSet<String>() : new HashSet<String>(film.getCountries());
+			Set<String> genres = film.getGenres().isEmpty() ? new HashSet<String>() : new HashSet<String>(film.getGenres());
+			Set<String> languages = film.getLanguages().isEmpty() ? new HashSet<String>() : new HashSet<String>(film.getLanguages());
 			
 			// initialize empty entity lists for the join table
 			Set<FilmCountryDB> filmCountryEntities = new HashSet<FilmCountryDB>();
