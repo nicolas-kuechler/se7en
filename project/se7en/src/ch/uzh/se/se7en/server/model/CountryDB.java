@@ -28,7 +28,7 @@ public class CountryDB {
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "code")
+	@Column(name = "code", nullable = true)
 	private String code;
 
 	@OneToMany(mappedBy = "primaryKey.country", fetch = FetchType.LAZY)
