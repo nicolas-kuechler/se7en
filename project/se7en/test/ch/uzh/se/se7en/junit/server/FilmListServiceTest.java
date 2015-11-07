@@ -6,9 +6,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,7 @@ import ch.uzh.se.se7en.server.model.FilmGenreDB;
 import ch.uzh.se.se7en.server.model.FilmLanguageDB;
 import ch.uzh.se.se7en.server.model.GenreDB;
 import ch.uzh.se.se7en.server.model.LanguageDB;
+import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
@@ -253,14 +255,21 @@ public class FilmListServiceTest {
 	}
 
 	@Test
-	public void testGetCountryListFilterDefault() {
+	public void testGetCountryList() {
 		/* INITIALIZATION BLOCK */
 		// filter with the default filters
 		FilmFilter filter = new FilmFilter();
+		int[] numOfFilms = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 		
 		/* EXECUTION BLOCK */
+		List<Country> countries = rpcService.getCountryList(filter);
+		Country country = countries.get(0);
 
 		/* VERIFICATION BLOCK */
+		assertEquals(country.getName(), "Switzerland");
+		
+		// assert that the number of films array was correctly generated
+		assertTrue(Arrays.equals(country.getNumberOfFilms(), numOfFilms));
 	}
 
 	@Test
