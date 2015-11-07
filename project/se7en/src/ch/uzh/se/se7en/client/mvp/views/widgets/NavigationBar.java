@@ -34,6 +34,15 @@ public class NavigationBar extends Composite {
 	@UiField AnchorListItem loading;
 	@UiField Image logoLink;
 	
+	/**
+	 * Initialize the NavigationBar, the Creative Commons Modal and set a default Text for the loadingGrowl (workaround)
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 * @return -
+	 */
 	public NavigationBar() {
 		licenseModal = new Modal();
 		licenseModal.setFade(true);
@@ -43,6 +52,15 @@ public class NavigationBar extends Composite {
 		barSetup();
 	}
 	
+	/**
+	 * Used to set the loading Item in the Navigation to visible if the user starts an import
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post -
+	 * @param isVisible, message
+	 * @return -
+	 */
 	public void setLoading(boolean isVisible, String message)
 	{
 		//TODO 
@@ -58,7 +76,15 @@ public class NavigationBar extends Composite {
 		}
 	}
 	
-	 
+	/**
+	 * Sets the active navigation element regarding the input of the user
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post active element is set
+	 * @param navToken
+	 * @return -
+	 */ 
 	public void setActive(String navToken)
 	{
 		if (navToken.equals(Tokens.HOME))
@@ -75,6 +101,15 @@ public class NavigationBar extends Composite {
 		}
 	}
 	
+	/**
+	 * Initialize the ClickHandlers for each element in the navBar
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post 
+	 * @param -
+	 * @return -
+	 */
 	private void barSetup()
 	{
 		homeNav.addClickHandler(new ClickHandler(){
@@ -117,6 +152,16 @@ public class NavigationBar extends Composite {
 		});
 	}
 
+	/**
+	 * Update the navBar and set focus to the selected element. Also send a message to the assigned presenter
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post -
+	 * @param isHomeActive, isMapActive, isTableActive
+	 * @return -
+	 */
+	
 	private void updateNavigationBar(boolean isHomeActive, boolean isMapActive, boolean isTableActive)
 	{
 		homeNav.setFocus(false);

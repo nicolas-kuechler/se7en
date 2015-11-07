@@ -37,36 +37,55 @@ import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
 
-public class FilterViewImpl extends Composite implements FilterView{
+public class FilterViewImpl extends Composite implements FilterView {
 
 	private static FilterViewImplUiBinder uiBinder = GWT.create(FilterViewImplUiBinder.class);
 
 	interface FilterViewImplUiBinder extends UiBinder<Widget, FilterViewImpl> {
 	}
-	
-	FilterPresenter filterPresenter;
-	
-	@UiField TextBox nameBox;
-	@UiField (provided = true) RangeSlider lengthSlider;
-	@UiField (provided = true) RangeSlider yearSlider;
-	@UiField MultiSelect countrySelect;
-	@UiField MultiSelect languageSelect;
-	@UiField MultiSelect genreSelect;
-	
-	
-	@UiField Button clearBtn;
-	@UiField Button searchBtn;
 
-	
-	@UiField AppliedFilterBox appliedFilter;
-	@UiField FocusPanel focusPanel;
-	
-	@UiField FormGroup yearColumn;
-	@UiField FormGroup countryColumn;
-	
+	FilterPresenter filterPresenter;
+
+	@UiField
+	TextBox nameBox;
+	@UiField(provided = true)
+	RangeSlider lengthSlider;
+	@UiField(provided = true)
+	RangeSlider yearSlider;
+	@UiField
+	MultiSelect countrySelect;
+	@UiField
+	MultiSelect languageSelect;
+	@UiField
+	MultiSelect genreSelect;
+
+	@UiField
+	Button clearBtn;
+	@UiField
+	Button searchBtn;
+
+	@UiField
+	AppliedFilterBox appliedFilter;
+	@UiField
+	FocusPanel focusPanel;
+
+	@UiField
+	FormGroup yearColumn;
+	@UiField
+	FormGroup countryColumn;
+
+	/**
+	 * Initialize the FilterView and set default settings of the sliders
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 * @return -
+	 */
 	@Inject
 	public FilterViewImpl() {
-		//Setting the Range for the Sliders
+		// Setting the Range for the Sliders
 		lengthSlider = new RangeSlider();
 		lengthSlider.setMin(Boundaries.MIN_LENGTH);
 		lengthSlider.setMax(Boundaries.MAX_LENGTH);
@@ -77,83 +96,174 @@ public class FilterViewImpl extends Composite implements FilterView{
 		yearSlider.setMin(Boundaries.MIN_YEAR);
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
-		initWidget(uiBinder.createAndBindUi(this));	
-		
-		//Setting Up Listening for Enter Pressed Events to start the search
-		focusPanel.addKeyDownHandler(new KeyDownHandler(){
+		initWidget(uiBinder.createAndBindUi(this));
+
+		// Setting Up Listening for Enter Pressed Events to start the search
+		focusPanel.addKeyDownHandler(new KeyDownHandler() {
 			@Override
 			public void onKeyDown(KeyDownEvent event) {
-				 if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
-				 {
-					 filterPresenter.onSearch();
-				 }
+				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+					filterPresenter.onSearch();
+				}
 			}
-		});		
+		});
 	}
 
+	/**
+	 * Set the presenter of the FilterView
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param presenter
+	 * @return -
+	 */
 	@Override
 	public void setPresenter(FilterPresenter presenter) {
 		this.filterPresenter = presenter;
 	}
-	
-	
+
+	/**
+	 * Sends a message to the presenter if the search button is clicked
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param event
+	 * @return -
+	 */
 	@UiHandler("searchBtn")
-	public void onSearchBtnClick(final ClickEvent event)
-	{
+	public void onSearchBtnClick(final ClickEvent event) {
 		filterPresenter.onSearch();
 	}
-	
+
+	/**
+	 * Sends a message to the presenter if the clear button is clicked
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param event
+	 * @return -
+	 */
 	@UiHandler("clearBtn")
-	public void onClearBtnClick(final ClickEvent event)
-	{
+	public void onClearBtnClick(final ClickEvent event) {
 		filterPresenter.onClear();
 	}
-	
-	
+
+	/**
+	 * Returns the value of the nameBox
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 * @return nameBox
+	 */
 	@Override
 	public HasValue<String> getNameBox() {
 		return nameBox;
 	}
 
+	/**
+	 * Returns the value of the lengthSlider
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 * @return lengthSlider
+	 */
 	@Override
 	public HasValue<Range> getLengthSlider() {
 		return lengthSlider;
 	}
 
+	/**
+	 * Returns the value of the yearSlider
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 * @return yearSlider
+	 */
 	@Override
 	public HasValue<Range> getYearSlider() {
 		return yearSlider;
 	}
 
+	/**
+	 * Returns the value of the countrySelect
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 * @return countrySelect
+	 */
 	@Override
 	public MultiSelect getCountrySelect() {
 		return countrySelect;
 	}
 
+	/**
+	 * Returns the value of the languageSelect
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 * @return languageSelect
+	 */
 	@Override
 	public MultiSelect getLanguageSelect() {
 		return languageSelect;
 	}
 
+	/**
+	 * Returns the value of the genreSelect
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 * @return genreSelect
+	 */
 	@Override
 	public MultiSelect getGenreSelect() {
 		return genreSelect;
 	}
 
+	/**
+	 * Sets the filters in the appliedFilterBox
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param appliedFilter
+	 * @return -
+	 */
 	@Override
 	public void setAppliedFilterBox(List<String> appliedFilter) {
 		this.appliedFilter.setValue(appliedFilter);
 	}
 
+	/**
+	 * Disables the year and country input fields if the user is on the MapView
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param mode
+	 * @return -
+	 */
 	@Override
 	public void setMode(String mode) {
-		if (mode.equals(Tokens.MAP))
-		{
+		if (mode.equals(Tokens.MAP)) {
 			countryColumn.setVisible(false);
 			yearColumn.setVisible(false);
-		}
-		else
-		{
+		} else {
 			countryColumn.setVisible(true);
 			yearColumn.setVisible(true);
 		}
