@@ -58,14 +58,7 @@ public class MapViewImpl extends Composite implements MapView {
 	@UiField
 	DataGrid<Film> dataGrid;
 
-	/**
-	 * Initialize the MapView and set default settings to the map
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param
-	 */
+
 	@Inject
 	public MapViewImpl() {
 		yearSlider = new RangeSlider();
@@ -79,41 +72,18 @@ public class MapViewImpl extends Composite implements MapView {
 		panel.setHeight("550px");
 	}
 
-	/**
-	 * Set the presenter for the MapView
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param presenter
-	 */
 	@Override
 	public void setPresenter(MapPresenter presenter) {
 		this.mapPresenter = presenter;
 	}
 
-	/**
-	 * If the values of the rangeslider get changed, we send a message to the
-	 * presenter
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param event
-	 */
+
 	@UiHandler("yearSlider")
 	public void onRangeSlideStop(SlideStopEvent<Range> event) {
 		mapPresenter.onRangeSliderChanged();
 	}
 
-	/**
-	 * Initialize the GeoChart and set some default options
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param countries
-	 */
+
 	@Override
 	public void setGeoChart(final DataTable countries) {
 		chartLoader.loadApi(new Runnable() {
@@ -133,59 +103,26 @@ public class MapViewImpl extends Composite implements MapView {
 		});
 	}
 
-	/**
-	 * Stub to return a GeoChartSelection, implemented in Sprint 2
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param -
-	 * @return 0
-	 */
+
 	@Override
 	public int getGeoChartSelection() {
 		// TODO Return geoChartSelection
 		return 0;
 	}
 
-	/**
-	 * Returns the YearSlider
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param -
-	 * @return yearSlider
-	 */
 	@Override
 	public HasValue<Range> getYearSlider() {
 		return yearSlider;
 	}
 
-	/**
-	 * Stub to set the genre in the genre table, implemented in Sprint 2
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param genres
-	 * @return -
-	 */
+
 	@Override
 	public void setGenreTable(List<Genre> genres) {
 		// TODO refresh genreTable with new List
 
 	}
 
-	/**
-	 * Stub to set the genre in a pie chart, implemented in sprint 2
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param genres
-	 * @return -
-	 */
+
 	@Override
 	public void setGenrePieChart(DataTable genres) {
 		// TODO refresh genrePieChart with new DataTable
