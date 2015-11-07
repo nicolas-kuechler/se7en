@@ -19,7 +19,7 @@ public class WelcomeViewImpl extends Composite implements WelcomeView {
 	private WelcomePresenter welcomePresenter;
 
 	/**
-	 * Iniialize the welcome view
+	 * Initialize the welcome view
 	 * 
 	 * @author Dominik Bünzli
 	 * @pre container != null

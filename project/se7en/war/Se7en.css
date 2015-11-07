@@ -211,6 +211,13 @@ th {
 	width: 100%;
 }
 
+/** clear padding left and right of the appliedfilterbox*/
+.appliedFilterRow .col-md-4{
+	padding-left: 0 !important;
+	padding-right: 0!important;
+}
+
+
 /** set the appliedfilter labels to float left, so we can display the filters on multiple lines if the filters overflow*/
 .appliedFilterRow .col-md-4 .label {
 	float: left;

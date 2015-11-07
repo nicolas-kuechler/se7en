@@ -77,7 +77,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Initialize the FilterView and set default settings of the sliders
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param -
@@ -112,7 +112,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Set the presenter of the FilterView
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param presenter
@@ -126,7 +126,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Sends a message to the presenter if the search button is clicked
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param event
@@ -140,7 +140,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Sends a message to the presenter if the clear button is clicked
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param event
@@ -154,7 +154,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Returns the value of the nameBox
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param -
@@ -168,7 +168,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Returns the value of the lengthSlider
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param -
@@ -182,7 +182,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Returns the value of the yearSlider
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param -
@@ -196,7 +196,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Returns the value of the countrySelect
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param -
@@ -210,7 +210,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Returns the value of the languageSelect
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param -
@@ -224,7 +224,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Returns the value of the genreSelect
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param -
@@ -238,7 +238,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Sets the filters in the appliedFilterBox
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param appliedFilter
@@ -252,7 +252,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Disables the year and country input fields if the user is on the MapView
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param mode
