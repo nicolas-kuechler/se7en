@@ -122,10 +122,9 @@ public class MapViewImpl extends Composite implements MapView{
 		return 0;
 	}
 
-	@Override
-	public HasValue<Range> getYearSlider() {
-		return yearSlider;
-	}
+
+	
+	
 
 	@Override
 	public void setGenreTable(List<Genre> genres) {
@@ -137,6 +136,21 @@ public class MapViewImpl extends Composite implements MapView{
 	public void setGenrePieChart(DataTable genres) {
 		// TODO refresh genrePieChart with new DataTable
 		
+	}
+
+	@Override
+	public int getMinYear() {
+		return (int)yearSlider.getMin();
+	}
+
+	@Override
+	public int getMaxYear() {
+		return (int)yearSlider.getMax();
+	}
+
+	@Override
+	public void setYearRange(int yearStart, int yearEnd) {
+		yearSlider.setValue(new Range(yearStart, yearEnd));
 	}
 
 }

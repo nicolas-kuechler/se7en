@@ -5,17 +5,11 @@ import java.util.List;
 
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
-import com.googlecode.gwt.charts.client.ChartLoader;
-import com.googlecode.gwt.charts.client.ChartPackage;
-import com.googlecode.gwt.charts.client.ColumnType;
-import com.googlecode.gwt.charts.client.DataTable;
 
-import ch.uzh.se.se7en.client.mvp.Boundaries;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
 import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
@@ -24,7 +18,6 @@ import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
-import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class MapPresenterImpl implements MapPresenter {
 
@@ -112,8 +105,10 @@ public class MapPresenterImpl implements MapPresenter {
 		List<DataTableEntity> entities = new ArrayList<DataTableEntity>(countries.size());
 		
 		//get current year range slider information from the mapView
-		int startYear = (int)mapView.getYearSlider().getValue().getMinValue();
-		int endYear = (int)mapView.getYearSlider().getValue().getMaxValue();
+		int startYear = mapView.getMinYear();
+		int endYear = mapView.getMaxYear();
+		
+
 		
 		//represents the number of films produced in a country between startYear and endYear
 		int numberOfProductions;
@@ -142,7 +137,7 @@ public class MapPresenterImpl implements MapPresenter {
 	 */
 	public void fetchData() {
 		//update of the yearSlider in the mapView
-		mapView.getYearSlider().setValue(new Range(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd()));
+		mapView.setYearRange(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd());
 
 		//as soon as new filter is applied, starts async call to server to get the new list of countries matching the adjusted filter
 		filmListService.getCountryList(filmDataModel.getAppliedMapFilter(), new AsyncCallback<List<Country>>(){

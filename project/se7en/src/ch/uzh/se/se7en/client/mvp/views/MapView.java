@@ -41,14 +41,13 @@ public interface MapView extends IsWidget{
 	 */
 	public int getGeoChartSelection();
 	
-	/**
-	Allows the mapPresenter to get and set the value of the yearSlider
-	@author Nicolas Küchler
-	@pre	yearSlider != null && presenter != null
-	@post	yearSlider == yearSlider @pre
-	@return	Objects that allows syntax to get access: getYearSlider().setValue(range) or getYearSlider().getValue()
-	 */
-	public HasValue<Range> getYearSlider();
+
+	//TODO Comments
+	public int getMinYear();
+	
+	public int getMaxYear();
+	
+	public void setYearRange(int yearStart, int yearEnd);
 	
 	/**
 	Provides access to the Ui Component GenreTable for the mapPresenter

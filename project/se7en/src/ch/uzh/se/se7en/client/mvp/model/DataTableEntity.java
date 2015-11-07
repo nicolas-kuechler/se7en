@@ -45,4 +45,38 @@ public class DataTableEntity {
 		this.value = value;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DataTableEntity))
+			return false;
+		DataTableEntity other = (DataTableEntity) obj;
+		if (name == null) {
+			if (other.getName() != null)
+				return false;
+		} else if (!name.equals(other.getName()))
+			return false;
+		if (value != other.getValue())
+			return false;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DataTableEntity [name=" + name + ", value=" + value + "]";
+	}
+	
+	
+
+	
 }
