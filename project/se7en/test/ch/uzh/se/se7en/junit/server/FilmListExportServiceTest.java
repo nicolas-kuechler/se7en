@@ -1,6 +1,6 @@
 package ch.uzh.se.se7en.junit.server;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 

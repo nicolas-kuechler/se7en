@@ -50,10 +50,10 @@ import ch.uzh.se.se7en.shared.model.Film;
  */
 @Singleton
 public class TriggerImportServiceImpl extends RemoteServiceServlet implements TriggerImportService {
-	
+
 	@Inject
 	Provider<EntityManager> em;
-	
+
 	// create maps of already existing entities keyed by name for more
 	// efficient importing
 	private Map<String, CountryDB> countryMap = new HashMap<String, CountryDB>();
@@ -260,36 +260,37 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	}
 
 	/**
-	@pre -
-	@post em==em
-	@param em the em to set
-	*/
+	 * @pre -
+	 * @post em==em
+	 * @param em
+	 *            the em to set
+	 */
 	public void setEm(Provider<EntityManager> em) {
 		this.em = em;
 	}
 
 	/**
-	@pre countryMap!= null
-	@post -
-	@return the countryMap
+	 * @pre countryMap!= null
+	 * @post -
+	 * @return the countryMap
 	 */
 	public Map<String, CountryDB> getCountryMap() {
 		return countryMap;
 	}
 
 	/**
-	@pre genreMap!= null
-	@post -
-	@return the genreMap
+	 * @pre genreMap!= null
+	 * @post -
+	 * @return the genreMap
 	 */
 	public Map<String, GenreDB> getGenreMap() {
 		return genreMap;
 	}
 
 	/**
-	@pre languageMap!= null
-	@post -
-	@return the languageMap
+	 * @pre languageMap!= null
+	 * @post -
+	 * @return the languageMap
 	 */
 	public Map<String, LanguageDB> getLanguageMap() {
 		return languageMap;
