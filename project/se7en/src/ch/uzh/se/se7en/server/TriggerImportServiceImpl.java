@@ -153,7 +153,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			Set<String> genres = film.getGenres().isEmpty() ? new HashSet<String>() : new HashSet<String>(film.getGenres());
 			Set<String> languages = film.getLanguages().isEmpty() ? new HashSet<String>() : new HashSet<String>(film.getLanguages());
 			
-			// initialize empty entity lists for the join table
+			// initialize empty entity sets for the join table entites
 			Set<FilmCountryDB> filmCountryEntities = new HashSet<FilmCountryDB>();
 			Set<FilmGenreDB> filmGenreEntities = new HashSet<FilmGenreDB>();
 			Set<FilmLanguageDB> filmLanguageEntities = new HashSet<FilmLanguageDB>();
@@ -173,6 +173,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 					country = new CountryDB(c);
 					
 					try {
+						// persist the new country and add it to the local map
 						manager.persist(country);
 						countryMap.put(c, country);
 					} catch (EntityExistsException e) {
@@ -199,6 +200,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 					genre = new GenreDB(g);
 					
 					try {
+						// persist the new genre and add it to the local map
 						manager.persist(genre);
 						genreMap.put(g, genre);
 					} catch (EntityExistsException e) {
@@ -225,6 +227,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 					language = new LanguageDB(l);
 					
 					try {
+						// persist the new language and add it to the local map
 						manager.persist(language);
 						languageMap.put(l, language);
 					} catch (EntityExistsException e) {
