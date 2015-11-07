@@ -76,12 +76,12 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<FilmDB> dbFilms A filtered list of film entities
 	 */
 	@Transactional
-	private List<FilmDB> getFilmEntitiesList(FilmFilter filter) {
+	public List<FilmDB> getFilmEntitiesList(FilmFilter filter) {
 		// create an empty list of film entities
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
 
 		// initialize the selector in the query
-		String selector = "SELECT DISTINCT f from FilmDB f";
+		String selector = "SELECT DISTINCT f FROM FilmDB f";
 
 		// initialize the where string with the basic filters
 		String wheres = "WHERE (f.length BETWEEN :minLength AND :maxLength) AND (f.year BETWEEN :minYear AND :maxYear)";
@@ -113,7 +113,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		}
 
 		// concat the query string
-		String queryString = selector + " " + joiners + " " + wheres + " order by f.name";
+		String queryString = selector + joiners + " " + wheres + " ORDER BY f.name";
 
 		// create a typed query from our query string
 		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
@@ -219,7 +219,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<CountryDB> dbCountries A filtered list of country entities
 	 */
 	@Transactional
-	private List<CountryDB> getCountryEntitiesList(FilmFilter filter) {
+	public List<CountryDB> getCountryEntitiesList(FilmFilter filter) {
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 		// initialize the selector in the query
 		String selector = "SELECT DISTINCT c FROM CountryDB c";
@@ -394,5 +394,15 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		}
 
 		return availableLanguages;
+	}
+
+	/**
+	 * @pre -
+	 * @post em==em
+	 * @param em
+	 *            the em to set
+	 */
+	public void setEm(Provider<EntityManager> em) {
+		this.em = em;
 	}
 }
