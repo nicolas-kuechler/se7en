@@ -2,6 +2,8 @@ package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,10 +21,10 @@ public class FilmFilter implements Serializable {
 	// TODO WE MIGHT WANT TO USE DEFAULT VALUES TO INDICATE THAT A CERTAIN FIELD
 	// OF THE FILTER IS NOT SET
 	private String name;
-	private int lengthStart; // start point from the length range
-	private int lengthEnd; // end point from the length range
-	private int yearStart; // start point from the year range
-	private int yearEnd; // end point from the year range
+	private int lengthStart = 0; // start point from the length range
+	private int lengthEnd = 600; // end point from the length range
+	private int yearStart = 1890; // start point from the year range
+	private int yearEnd = Calendar.getInstance().get(Calendar.YEAR); // end point from the year range
 	private List<String> countries;
 	private Set<Integer> countryIds;
 	private List<String> languages;
