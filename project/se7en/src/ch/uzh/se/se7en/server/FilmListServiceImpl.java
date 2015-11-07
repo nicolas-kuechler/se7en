@@ -115,7 +115,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		}
 
 		// concat the query string
-		String queryString = selector + " " + joiners + " " + wheres;
+		String queryString = selector + " " + joiners + " " + wheres + "order by f.name";
 
 		// create a typed query from our query string
 		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
