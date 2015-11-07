@@ -101,7 +101,6 @@ public class FilterViewImpl extends Composite implements FilterView {
 		});
 	}
 
-
 	@Override
 	public void setPresenter(FilterPresenter presenter) {
 		this.filterPresenter = presenter;
@@ -110,7 +109,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Sends a message to the presenter if the search button is clicked
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param event
@@ -123,7 +122,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	/**
 	 * Sends a message to the presenter if the clear button is clicked
 	 * 
-	 * @author Dominik Bünzli
+	 * @author Nicolas Küchler
 	 * @pre container != null
 	 * @post -
 	 * @param event
@@ -174,7 +173,6 @@ public class FilterViewImpl extends Composite implements FilterView {
 	public void setAppliedFilterBox(List<String> appliedFilter) {
 		this.appliedFilter.setValue(appliedFilter);
 	}
-
 
 	@Override
 	public void setMode(String mode) {

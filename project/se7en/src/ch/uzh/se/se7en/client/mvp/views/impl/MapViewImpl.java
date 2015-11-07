@@ -78,15 +78,7 @@ public class MapViewImpl extends Composite implements MapView {
 		this.mapPresenter = presenter;
 	}
 
-	/**
-	 * If the values of the rangeslider get changed, we send a message to the
-	 * presenter
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param event
-	 */
+
 	@UiHandler("yearSlider")
 	public void onRangeSlideStop(SlideStopEvent<Range> event) {
 		mapPresenter.onRangeSliderChanged();
@@ -125,7 +117,6 @@ public class MapViewImpl extends Composite implements MapView {
 			}
 		});
 	}
-
 
 	@Override
 	public int getGeoChartSelection() {
