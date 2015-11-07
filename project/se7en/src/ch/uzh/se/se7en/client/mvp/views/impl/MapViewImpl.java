@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
+import com.googlecode.gwt.charts.client.ColumnType;
 import com.googlecode.gwt.charts.client.DataTable;
 import com.googlecode.gwt.charts.client.corechart.PieChart;
 import com.googlecode.gwt.charts.client.geochart.GeoChart;
@@ -32,6 +33,7 @@ import com.googlecode.gwt.charts.client.geochart.GeoChartOptions;
 
 import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.Boundaries;
+import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -58,7 +60,6 @@ public class MapViewImpl extends Composite implements MapView {
 	@UiField
 	DataGrid<Film> dataGrid;
 
-
 	@Inject
 	public MapViewImpl() {
 		yearSlider = new RangeSlider();
@@ -83,11 +84,10 @@ public class MapViewImpl extends Composite implements MapView {
 		mapPresenter.onRangeSliderChanged();
 	}
 
-
 	@Override
-	public void setGeoChart(final DataTable countries) {
+	public void setGeoChart(final List<DataTableEntity> countries) {
 		chartLoader.loadApi(new Runnable() {
-			@Override
+
 			public void run() {
 				if (geoChart == null) {
 					geoChart = new GeoChart();
@@ -97,12 +97,26 @@ public class MapViewImpl extends Composite implements MapView {
 					panel.add(geoChart);
 					// TODO Define GeoChart Colors
 				}
-				// TODO Fade Animation
-				geoChart.draw(countries, geoChartOptions);
+				
+				//Create new DataTable
+				DataTable dataTable = DataTable.create();
+				dataTable.addColumn(ColumnType.STRING, "Country");
+				dataTable.addColumn(ColumnType.NUMBER, "Productions");
+
+				//add number of necessary rows
+				dataTable.addRows(countries.size());
+				
+				for(int i = 0; i < countries.size(); i++)
+				{
+					dataTable.setValue(i, 0, countries.get(i).getName());
+					dataTable.setValue(i, 1, countries.get(i).getValue());
+				}
+				
+				geoChart.draw(dataTable, geoChartOptions);
+
 			}
 		});
 	}
-
 
 	@Override
 	public int getGeoChartSelection() {
@@ -111,22 +125,28 @@ public class MapViewImpl extends Composite implements MapView {
 	}
 
 	@Override
-	public HasValue<Range> getYearSlider() {
-		return yearSlider;
-	}
-
-
-	@Override
 	public void setGenreTable(List<Genre> genres) {
 		// TODO refresh genreTable with new List
-
 	}
-
 
 	@Override
 	public void setGenrePieChart(DataTable genres) {
 		// TODO refresh genrePieChart with new DataTable
+	}
 
+	@Override
+	public int getMinYear() {
+		return (int)yearSlider.getValue().getMinValue();
+	}
+
+	@Override
+	public int getMaxYear() {
+		return (int)yearSlider.getValue().getMaxValue();
+	}
+
+	@Override
+	public void setYearRange(int yearStart, int yearEnd) {
+		yearSlider.setValue(new Range(yearStart, yearEnd));
 	}
 
 }

@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.gwt.charts.client.DataTable;
 
+import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.shared.model.Genre;
 
@@ -29,7 +30,7 @@ public interface MapView extends IsWidget{
 	@param 	countries DataTable instance with two columns (countryName, numberOfProductions) and a row for each country.
 			countryName must follow the conventions for the gwt geochart: https://developers.google.com/chart/interactive/docs/gallery/geochart
 	 */
-	public void setGeoChart(DataTable countries);
+	public void setGeoChart(List<DataTableEntity> countries);
 	
 	/**
 	Allows the mapPresenter to get access to the current selection from the geoChart
@@ -40,14 +41,13 @@ public interface MapView extends IsWidget{
 	 */
 	public int getGeoChartSelection();
 	
-	/**
-	Allows the mapPresenter to get and set the value of the yearSlider
-	@author Nicolas Küchler
-	@pre	yearSlider != null && presenter != null
-	@post	yearSlider == yearSlider @pre
-	@return	Objects that allows syntax to get access: getYearSlider().setValue(range) or getYearSlider().getValue()
-	 */
-	public HasValue<Range> getYearSlider();
+
+	//TODO Comments
+	public int getMinYear();
+	
+	public int getMaxYear();
+	
+	public void setYearRange(int yearStart, int yearEnd);
 	
 	/**
 	Provides access to the Ui Component GenreTable for the mapPresenter

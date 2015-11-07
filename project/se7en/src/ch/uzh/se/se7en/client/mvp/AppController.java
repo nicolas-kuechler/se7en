@@ -184,7 +184,6 @@ public class AppController implements ValueChangeHandler<String> {
 	 * @param String
 	 *            token
 	 */
-
 	private void doImport(String token) {
 		// TODO Import RPC Service
 		final String fileName = token.substring(Tokens.IMPORT.length() + 1); // token

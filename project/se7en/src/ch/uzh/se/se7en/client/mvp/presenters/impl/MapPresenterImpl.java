@@ -5,25 +5,20 @@ import java.util.List;
 
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
-import com.googlecode.gwt.charts.client.ChartLoader;
-import com.googlecode.gwt.charts.client.ChartPackage;
-import com.googlecode.gwt.charts.client.ColumnType;
-import com.googlecode.gwt.charts.client.DataTable;
 
-import ch.uzh.se.se7en.client.mvp.Boundaries;
+import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
+import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
-import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class MapPresenterImpl implements MapPresenter {
 
@@ -96,48 +91,41 @@ public class MapPresenterImpl implements MapPresenter {
 	/**
 	Helper method to update the geochart whenever new information needs to be displayed. 
 	The method takes the countryList from the filmDataModel and the yearRange information
-	from the yearRangeSlider in the mapView and creates a new datatable which is given to 
+	from the yearRangeSlider in the mapView and creates a new datatableentity list which is given to 
 	the map view to be displayed.
 	@author Nicolas Küchler
 	@pre	filmDataModel != null && filmDataModel.getCountryList() != null && mapView != null
-	@post	filmDataModel saved new dataTable && mapView displays new Geochart
+	@post	filmDataModel saved new dataTableentity list && mapView displays new Geochart
 	 */
 	public void updateGeoChart()
 	{	
-		//Operations with the google chart need to be done within a ChartLoader
-		ChartLoader chartLoader = new ChartLoader(ChartPackage.GEOCHART);
-		chartLoader.loadApi(new Runnable(){
-			@Override
-			public void run() {
-				//Getting the current country list from the filmdDataModel
-				List<Country> countries = filmDataModel.getCountryList();
-
-				//Create new data table
-				DataTable dataTable = DataTable.create();
-				dataTable.addColumn(ColumnType.STRING, "Country");
-				dataTable.addColumn(ColumnType.NUMBER, "Productions");
-
-				//add number of necessary rows
-				dataTable.addRows(countries.size());
-
-				//convert the current range information from the range slider in the view
-				int startYear = (int)mapView.getYearSlider().getValue().getMinValue();
-				int endYear = (int)mapView.getYearSlider().getValue().getMaxValue();
-
-				//loop through the country list and fill the datatable with the information
-				for(int i = 0; i < countries.size(); i++)
-				{
-					dataTable.setValue(i, 0, countries.get(i).getName());
-					dataTable.setValue(i, 1, countries.get(i).getNumberOfFilms(startYear, endYear));
-				}
-
-				//save the information in the filmddatamodel
-				filmDataModel.setCountryDataTable(dataTable);
-
-				//give the view the dataTable to draw the geochart
-				mapView.setGeoChart(dataTable);
+		//get country list according to currently applied filter from client side data model
+		List<Country> countries = filmDataModel.getCountryList();
+		
+		//create new list of entities  which imitates a DataTable in vanilla java
+		List<DataTableEntity> entities = new ArrayList<DataTableEntity>(countries.size());
+		
+		//get current year range slider information from the mapView
+		int startYear = mapView.getMinYear();
+		int endYear = mapView.getMaxYear();
+		
+		//represents the number of films produced in a country between startYear and endYear
+		int numberOfProductions;
+		
+		for(Country c : countries)
+		{
+			//calculate the number of films produced between startYear and endYear
+			numberOfProductions = c.getNumberOfFilms(startYear, endYear);
+			
+			if(numberOfProductions>0)
+			{	//if at least one film was produced, add country to entity list
+				entities.add(new DataTableEntity(c.getName(), numberOfProductions));
 			}
-		});
+			//store new entitylist in filmdatamodel
+			filmDataModel.setCountryDataTable(entities);
+			//set the geochart with the new list
+			mapView.setGeoChart(entities);
+		}
 	}
 
 	/**
@@ -148,7 +136,7 @@ public class MapPresenterImpl implements MapPresenter {
 	 */
 	public void fetchData() {
 		//update of the yearSlider in the mapView
-		mapView.getYearSlider().setValue(new Range(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd()));
+		mapView.setYearRange(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd());
 
 		//as soon as new filter is applied, starts async call to server to get the new list of countries matching the adjusted filter
 		filmListService.getCountryList(filmDataModel.getAppliedMapFilter(), new AsyncCallback<List<Country>>(){
