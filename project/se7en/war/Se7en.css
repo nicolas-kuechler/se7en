@@ -250,7 +250,10 @@ th {
 	float: right;
 	margin-left: 3%;
 }
-
+/** set the paginator to the right border of the footer*/
+.paginator{
+	float: right;
+}
 /*############################################WELCOME VIEW IMAGE SETTINGS####################################################*/
 
 /** set the background text on welcome view to be in the middle of the screen and over the background image*/
