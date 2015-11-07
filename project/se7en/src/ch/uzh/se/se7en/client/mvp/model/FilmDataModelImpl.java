@@ -15,7 +15,7 @@ import ch.uzh.se.se7en.shared.model.FilmFilter;
 public class FilmDataModelImpl implements FilmDataModel{
 	
 	private List<Film> films;
-	private DataTable countryDataTable;		//used for GeoChart
+	private List<DataTableEntity> countryDataTable;		//used for GeoChart
 	private List<Country> countries;		//used to adjust GeoChart with YearRangeSlider
 	private FilmFilter appliedFilter;
 	private FilmFilter appliedMapFilter;
@@ -39,12 +39,12 @@ public class FilmDataModelImpl implements FilmDataModel{
 		return countries;
 	}
 	@Override
-	public void setCountryDataTable(DataTable countries) {
+	public void setCountryDataTable(List<DataTableEntity> countries) {
 		this.countryDataTable = countries;
 		
 	}
 	@Override
-	public DataTable getCountryDataTable() {
+	public List<DataTableEntity> getCountryDataTable() {
 		return countryDataTable;
 	}
 	@Override

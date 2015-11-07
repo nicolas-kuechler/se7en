@@ -41,6 +41,7 @@ public class AppGinModule extends AbstractGinModule {
 		
 		bind(FilmDataModel.class).to(FilmDataModelImpl.class).in(Singleton.class);
 		bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
+		
 	}
 
 }

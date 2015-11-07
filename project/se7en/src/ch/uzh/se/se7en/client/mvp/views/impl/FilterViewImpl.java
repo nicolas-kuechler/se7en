@@ -74,15 +74,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	@UiField
 	FormGroup countryColumn;
 
-	/**
-	 * Initialize the FilterView and set default settings of the sliders
-	 * 
-	 * @author Nicolas Küchler
-	 * @pre container != null
-	 * @post -
-	 * @param -
-	 * @return -
-	 */
+
 	@Inject
 	public FilterViewImpl() {
 		// Setting the Range for the Sliders
@@ -109,15 +101,6 @@ public class FilterViewImpl extends Composite implements FilterView {
 		});
 	}
 
-	/**
-	 * Set the presenter of the FilterView
-	 * 
-	 * @author Nicolas Küchler
-	 * @pre container != null
-	 * @post -
-	 * @param presenter
-	 * @return -
-	 */
 	@Override
 	public void setPresenter(FilterPresenter presenter) {
 		this.filterPresenter = presenter;
@@ -130,7 +113,6 @@ public class FilterViewImpl extends Composite implements FilterView {
 	 * @pre container != null
 	 * @post -
 	 * @param event
-	 * @return -
 	 */
 	@UiHandler("searchBtn")
 	public void onSearchBtnClick(final ClickEvent event) {
@@ -144,120 +126,54 @@ public class FilterViewImpl extends Composite implements FilterView {
 	 * @pre container != null
 	 * @post -
 	 * @param event
-	 * @return -
 	 */
 	@UiHandler("clearBtn")
 	public void onClearBtnClick(final ClickEvent event) {
 		filterPresenter.onClear();
 	}
 
-	/**
-	 * Returns the value of the nameBox
-	 * 
-	 * @author Nicolas Küchler
-	 * @pre container != null
-	 * @post -
-	 * @param -
-	 * @return nameBox
-	 */
+
 	@Override
 	public HasValue<String> getNameBox() {
 		return nameBox;
 	}
 
-	/**
-	 * Returns the value of the lengthSlider
-	 * 
-	 * @author Nicolas Küchler
-	 * @pre container != null
-	 * @post -
-	 * @param -
-	 * @return lengthSlider
-	 */
+
 	@Override
 	public HasValue<Range> getLengthSlider() {
 		return lengthSlider;
 	}
 
-	/**
-	 * Returns the value of the yearSlider
-	 * 
-	 * @author Nicolas Küchler
-	 * @pre container != null
-	 * @post -
-	 * @param -
-	 * @return yearSlider
-	 */
+
 	@Override
 	public HasValue<Range> getYearSlider() {
 		return yearSlider;
 	}
 
-	/**
-	 * Returns the value of the countrySelect
-	 * 
-	 * @author Nicolas Küchler
-	 * @pre container != null
-	 * @post -
-	 * @param -
-	 * @return countrySelect
-	 */
+
 	@Override
 	public MultiSelect getCountrySelect() {
 		return countrySelect;
 	}
 
-	/**
-	 * Returns the value of the languageSelect
-	 * 
-	 * @author Nicolas Küchler
-	 * @pre container != null
-	 * @post -
-	 * @param -
-	 * @return languageSelect
-	 */
+
 	@Override
 	public MultiSelect getLanguageSelect() {
 		return languageSelect;
 	}
 
-	/**
-	 * Returns the value of the genreSelect
-	 * 
-	 * @author Nicolas Küchler
-	 * @pre container != null
-	 * @post -
-	 * @param -
-	 * @return genreSelect
-	 */
+
 	@Override
 	public MultiSelect getGenreSelect() {
 		return genreSelect;
 	}
 
-	/**
-	 * Sets the filters in the appliedFilterBox
-	 * 
-	 * @author Nicolas Küchler
-	 * @pre container != null
-	 * @post -
-	 * @param appliedFilter
-	 * @return -
-	 */
+
 	@Override
 	public void setAppliedFilterBox(List<String> appliedFilter) {
 		this.appliedFilter.setValue(appliedFilter);
 	}
 
-	/**
-	 * Disables the year and country input fields if the user is on the MapView
-	 * 
-	 * @author Nicolas Küchler
-	 * @pre container != null
-	 * @post -
-	 * @param mode
-	 * @return -
-	 */
 	@Override
 	public void setMode(String mode) {
 		if (mode.equals(Tokens.MAP)) {
