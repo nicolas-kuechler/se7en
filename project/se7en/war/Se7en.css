@@ -1,3 +1,5 @@
+
+/*############################################GENERAL SETTINGS####################################################*/
 /** Set the scrollbars visible at any time | Set height and width to 100% */
 body {
 	margin: 0 !important;
@@ -44,6 +46,8 @@ th {
 	border-top: 1px solid #DDD !important;
 }
 
+/*############################################GENERAL PANEL SETTINGS####################################################*/
+
 /** clear the panel default --> no border around panels */
 .panel {
 	border: 0px !important;
@@ -71,10 +75,21 @@ th {
 	border: 1px solid #E5E5E5 !important;
 }
 
+/*############################################CONTAINER SETTINGS FOR HEADER AND FOOTER OF A PANEL####################################################*/
+
 /** don't display the header of the panels (Design descision / if reverted the headers get visible again)*/
 #container .panel-heading {
 	display: none;
 }
+
+/** float the footer of the containerPanel and set the width to 100%*/
+#container .panel-footer {
+	float: left;
+	width: 100%;
+}
+
+
+/*############################################SET PADDING FOR THE CONTENT ON EACH SIDE OF THE WINDOW####################################################*/
 
 /** set the space for the navigationBar and filterContainer(subContainer) between the right and left display edge to 15%*/
 #navBar, #subContainer {
@@ -88,11 +103,8 @@ th {
 	padding-right: 15% !important;
 }
 
-/** float the footer of the containerPanel and set the width to 100%*/
-#container .panel-footer {
-	float: left;
-	width: 100%;
-}
+
+/*############################################FILTERBAR (SUBCONTAINER) SETTINGS####################################################*/
 
 /** default settings and positioning for the filterContainer*/
 #subContainer {
@@ -232,6 +244,8 @@ th {
 	margin-left: 3%;
 }
 
+/*############################################WELCOME VIEW IMAGE SETTINGS####################################################*/
+
 /** set the background text on welcome view to be in the middle of the screen and over the background image*/
 .backgroundText {
 	position: relative;
@@ -247,6 +261,8 @@ th {
 	z-index: 1;
 	position: absolute;
 }
+
+/*############################################NAVBAR SETTINGS####################################################*/
 
 /** little workaround for the navbar image to be a little more vertically centered */
 .navbar-header {
