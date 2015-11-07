@@ -88,30 +88,30 @@ public class FilmDB {
 		List<String> filmLanguageEntityNames = new ArrayList<String>();
 
 		// parse all the entities into lists of strings
-		if(filmCountryEntities != null) {
+		if (filmCountryEntities != null) {
 			for (FilmCountryDB f : filmCountryEntities) {
 				filmCountryEntityNames.add(f.getCountryName());
 			}
-			
+
 			java.util.Collections.sort(filmCountryEntityNames);
 		}
-		
-		if(filmGenreEntities != null) {
+
+		if (filmGenreEntities != null) {
 			for (FilmGenreDB g : filmGenreEntities) {
 				filmGenreEntityNames.add(g.getGenreName());
 			}
-			
+
 			java.util.Collections.sort(filmGenreEntityNames);
 		}
-		
-		if(filmLanguageEntities != null) {
+
+		if (filmLanguageEntities != null) {
 			for (FilmLanguageDB l : filmLanguageEntities) {
 				filmLanguageEntityNames.add(l.getLanguageName());
 			}
-			
+
 			java.util.Collections.sort(filmLanguageEntityNames);
 		}
-		
+
 		return new Film(id, name, length, year, filmCountryEntityNames, filmLanguageEntityNames, filmGenreEntityNames);
 	}
 
