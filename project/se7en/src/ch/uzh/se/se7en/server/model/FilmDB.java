@@ -36,20 +36,23 @@ public class FilmDB {
 
 	@Column(name = "year", nullable = true)
 	private Integer year;
-	
+
 	@Column(name = "wikipedia", nullable = true)
 	private String wikipedia;
 
 	// the corresponding entities in the join table film_countries
-	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private Set<FilmCountryDB> filmCountryEntities;
 
 	// the corresponding entities in the join table film_genres
-	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private Set<FilmGenreDB> filmGenreEntities;
 
 	// the corresponding entities in the join table film_languages
-	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private Set<FilmLanguageDB> filmLanguageEntities;
 
 	public FilmDB() {
@@ -178,21 +181,22 @@ public class FilmDB {
 	public void setYear(Integer year) {
 		this.year = year;
 	}
-	
+
 	/**
-	@pre wikipedia!= null
-	@post -
-	@return the wikipedia
+	 * @pre wikipedia!= null
+	 * @post -
+	 * @return the wikipedia
 	 */
 	public String getWikipedia() {
 		return wikipedia;
 	}
 
 	/**
-	@pre -
-	@post wikipedia==wikipedia
-	@param wikipedia the wikipedia to set
-	*/
+	 * @pre -
+	 * @post wikipedia==wikipedia
+	 * @param wikipedia
+	 *            the wikipedia to set
+	 */
 	public void setWikipedia(String wikipedia) {
 		this.wikipedia = wikipedia;
 	}

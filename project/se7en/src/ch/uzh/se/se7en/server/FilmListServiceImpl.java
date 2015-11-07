@@ -1,7 +1,6 @@
 package ch.uzh.se.se7en.server;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +17,6 @@ import com.google.inject.persist.Transactional;
 
 import ch.uzh.se.se7en.client.rpc.FilmListService;
 import ch.uzh.se.se7en.server.model.CountryDB;
-import ch.uzh.se.se7en.server.model.FilmCountryDB;
 import ch.uzh.se.se7en.server.model.FilmDB;
 import ch.uzh.se.se7en.server.model.GenreDB;
 import ch.uzh.se.se7en.server.model.LanguageDB;
@@ -301,7 +299,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Transactional
 	public List<Genre> getGenreList(FilmFilter filter) {
 		// TODO: real implementation
-		
+
 		// create an empty list of countries
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 		List<Genre> genres = new ArrayList<Genre>();
