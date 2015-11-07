@@ -120,6 +120,8 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	public boolean importFilmsToDB(List<Film> films) {
 		// get an instance of the entity manager
 		EntityManager manager = em.get();
+		
+		boolean success = false;
 
 		// iterate over each new film
 		for (Film film : films) {
@@ -156,7 +158,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 					try {
 						manager.persist(country);
 					} catch (EntityExistsException e2) {
-						return false;
+						success = false;
 					}
 				}
 
@@ -186,7 +188,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 					try {
 						manager.persist(genre);
 					} catch (EntityExistsException e2) {
-						return false;
+						success = false;
 					}
 				}
 
@@ -216,7 +218,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 					try {
 						manager.persist(language);
 					} catch (EntityExistsException e2) {
-						return false;
+						success = false;
 					}
 				}
 
@@ -230,14 +232,13 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			// persist the new film
 			try {
 				manager.persist(dbFilm);
-				return true;
+				success = true;
 			} catch (EntityExistsException e) {
-				return false;
+				success = false;
 			}
 
 		}
 		
-		// we shouldn't get throught here, return false
-		return false;
+		return success;
 	}
 }
