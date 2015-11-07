@@ -107,7 +107,6 @@ public class TablePresenterImpl implements TablePresenter {
 	{
 		filmDataModel.setFilmList(films);
 		tableView.setTable(films);
-		ClientLog.writeMsg("Size of List received from Server: " + films.size());
 	}
 
 	/**

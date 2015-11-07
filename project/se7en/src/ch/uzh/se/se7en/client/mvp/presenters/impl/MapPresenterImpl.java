@@ -109,9 +109,6 @@ public class MapPresenterImpl implements MapPresenter {
 		int startYear = mapView.getMinYear();
 		int endYear = mapView.getMaxYear();
 		
-		ClientLog.writeMsg("StartYear = " + mapView.getMinYear());
-
-		
 		//represents the number of films produced in a country between startYear and endYear
 		int numberOfProductions;
 		

@@ -114,8 +114,6 @@ public class TableViewImpl extends Composite implements TableView {
 	@Override
 	public void setTable(List<Film> films) {
 		filmProvider.setList(films);
-		ClientLog.writeMsg("List Size filmdataprovider: " +filmProvider.getList().size());
-		filmProvider.refresh();
 		createColumnSortHandler();
 		dataGrid.addColumnSortHandler(columnSortHandler);
 	}
