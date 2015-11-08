@@ -190,7 +190,6 @@ public class AppController implements ValueChangeHandler<String> {
 																				// has
 																				// format:
 																				// import=filename.csv
-
 		navBar.setLoading(true, "Importing...");
 
 		TriggerImportServiceAsync triggerImportService = GWT.create(TriggerImportService.class);
