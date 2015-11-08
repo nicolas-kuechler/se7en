@@ -24,7 +24,7 @@ public class FilmFilter implements Serializable {
 	private int lengthStart = 0; // start point from the length range
 	private int lengthEnd = 600; // end point from the length range
 	private int yearStart = 1890; // start point from the year range
-	private int yearEnd = Calendar.getInstance().get(Calendar.YEAR); // end point from the year range
+	private int yearEnd = 2015; // end point from the year range
 	private List<String> countries;
 	private Set<Integer> countryIds;
 	private List<String> languages;
