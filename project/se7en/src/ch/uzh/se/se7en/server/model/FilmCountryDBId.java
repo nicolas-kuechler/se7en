@@ -13,10 +13,10 @@ import javax.persistence.ManyToOne;
  */
 @Embeddable
 public class FilmCountryDBId implements java.io.Serializable {
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private FilmDB film;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private CountryDB country;
 
 	public FilmCountryDBId() {
