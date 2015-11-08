@@ -249,6 +249,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			// persist the new film
 			try {
 				manager.persist(dbFilm);
+				// System.out.println(dbFilm.getName());
 				success = true;
 			} catch (EntityExistsException e) {
 				return false;

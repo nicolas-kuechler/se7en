@@ -114,7 +114,7 @@ public class TriggerImportServiceTest {
 		// create some test films
 		films.add(new Film("Film 1", 30, 2015, countries, languages, genres));
 		films.add(new Film("Film 2", 60, 1993, countries, languages, genres));
-		films.add(new Film("Film 3", 90, 1996, countries, languages, genres));
+		films.add(new Film("Reykjavík", 90, 1996, countries, languages, genres));
 
 		// execute the import method, passing the test films
 		importService.importFilmsToDB(films);
