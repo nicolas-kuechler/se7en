@@ -8,7 +8,6 @@
 		<b:NavbarCollapse height="2%" width="100%">
 		<b:Label styleName="footerSe7en">an unbelievable innovation by se7en</b:Label>
 		<b:Label styleName="footerAd">!place your ad here!</b:Label>
-		<b:Label styleName="footerLicence">http://www.creativecommons.ch/</b:Label>
 		</b:NavbarCollapse>
 	</b:Navbar>
 </ui:UiBinder> 

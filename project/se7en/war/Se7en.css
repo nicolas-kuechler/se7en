@@ -298,7 +298,22 @@ th {
 	position: relative;
 }
 
+/*############################################FooterBar Settings####################################################*/
+
 /** used to display ads, not in use yet*/
 #footerBar {
 	display: none;
+	width:100% !important;
+	padding-left:15%;
+	padding-right:15%;
 }
+#footerBar div{
+	width:100% !important;
+}
+
+.footerAd{
+	float:right;
+	display:block !important;
+	margin-left: 40%;
+}
+
