@@ -25,7 +25,11 @@ import ch.uzh.se.se7en.shared.model.Film;
 public class FilmDBTest {
 
 	FilmDB dbFilm;
-
+	
+	Set<FilmCountryDB> countries = new HashSet<FilmCountryDB>();
+	Set<FilmGenreDB> genres = new HashSet<FilmGenreDB>();
+	Set<FilmLanguageDB> languages = new HashSet<FilmLanguageDB>();
+	
 	@Before
 	public void setup() {
 		dbFilm = new FilmDB("Der Tiger", 120, 1993);
@@ -43,20 +47,49 @@ public class FilmDBTest {
 		language.setId(44);
 
 		FilmCountryDB filmCountryEntity = new FilmCountryDB(dbFilm, country);
-		FilmGenreDB filmGenreEntity = new FilmGenreDB(dbFilm, genre);
-		FilmLanguageDB filmLanguageEntity = new FilmLanguageDB(dbFilm, language);
-
-		Set<FilmCountryDB> countries = new HashSet<FilmCountryDB>();
 		countries.add(filmCountryEntity);
 		dbFilm.setFilmCountryEntities(countries);
 
-		Set<FilmGenreDB> genres = new HashSet<FilmGenreDB>();
+		FilmGenreDB filmGenreEntity = new FilmGenreDB(dbFilm, genre);
 		genres.add(filmGenreEntity);
 		dbFilm.setFilmGenreEntities(genres);
 
-		Set<FilmLanguageDB> languages = new HashSet<FilmLanguageDB>();
+		FilmLanguageDB filmLanguageEntity = new FilmLanguageDB(dbFilm, language);
 		languages.add(filmLanguageEntity);
 		dbFilm.setFilmLanguageEntities(languages);
+	}
+	
+	@Test
+	public void testFilmDB() {
+		FilmDB film2 = new FilmDB();
+		assertEquals(film2.getId(), 0);
+		assertEquals(film2.getName(), null);
+		assertEquals(film2.getLength(), null);
+		assertEquals(film2.getYear(), null);
+		assertEquals(film2.getWikipedia(), null);
+		assertEquals(film2.getFilmCountryEntities(), null);
+		assertEquals(film2.getFilmGenreEntities(), null);
+		assertEquals(film2.getFilmLanguageEntities(), null);
+		
+		FilmDB film3 = new FilmDB("Film 1", 120, 1993);
+		assertEquals(film3.getId(), 0);
+		assertEquals(film3.getName(), "Film 1");
+		assertEquals(film3.getLength(), new Integer(120));
+		assertEquals(film3.getYear(), new Integer(1993));
+		assertEquals(film3.getWikipedia(), null);
+		assertEquals(film3.getFilmCountryEntities(), null);
+		assertEquals(film3.getFilmGenreEntities(), null);
+		assertEquals(film3.getFilmLanguageEntities(), null);
+		
+		FilmDB film4 = new FilmDB("Film 1", 130, 2014, countries, languages, genres);
+		assertEquals(film4.getId(), 0);
+		assertEquals(film4.getName(), "Film 1");
+		assertEquals(film4.getLength(), new Integer(130));
+		assertEquals(film4.getYear(), new Integer(2014));
+		assertEquals(film4.getWikipedia(), null);
+		assertEquals(film4.getFilmCountryEntities(), countries);
+		assertEquals(film4.getFilmGenreEntities(), genres);
+		assertEquals(film4.getFilmLanguageEntities(), languages);
 	}
 
 	@Test
