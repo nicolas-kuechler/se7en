@@ -4,26 +4,35 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import ch.uzh.se.se7en.shared.model.SelectOption;
+
 public class SelectOptionTest {
 
 	@Test
 	public void testSelectOption() {
-		fail("Not yet implemented");
+		SelectOption select = new SelectOption();
+		assertEquals(select.getId(),null);
 	}
 
 	@Test
 	public void testSelectOptionIntString() {
-		fail("Not yet implemented");
+		SelectOption select = new SelectOption(10,"TestName");
+		Integer digit = 10;
+		assertEquals(select.getId(),digit);
+		assertEquals(select.getName(),"TestName");
 	}
 
 	@Test
 	public void testGetId() {
-		fail("Not yet implemented");
+		SelectOption select = new SelectOption(10,"TestName");
+		Integer digit = 10;
+		assertEquals(select.getId(),digit);
 	}
 
 	@Test
 	public void testGetName() {
-		fail("Not yet implemented");
+		SelectOption select = new SelectOption(10,"TestName");
+		assertEquals(select.getName(),"TestName");
 	}
 
 }

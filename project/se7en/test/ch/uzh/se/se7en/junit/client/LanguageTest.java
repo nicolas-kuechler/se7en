@@ -4,41 +4,56 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+
+import ch.uzh.se.se7en.shared.model.Language;
+
 public class LanguageTest {
 
 	@Test
 	public void testLanguage() {
-		fail("Not yet implemented");
+		Language language = new Language();
+		assertEquals(language.getName(),null);
 	}
 
 	@Test
 	public void testLanguageIntStringInt() {
-		fail("Not yet implemented");
+		Language language = new Language(10,"Switzerland",5);
+		assertEquals(10,language.getId());
+		assertEquals("Switzerland",language.getName());
 	}
 
 	@Test
 	public void testToString() {
-		fail("Not yet implemented");
+		Language language = new Language(10,"Switzerland",5);
+		assertEquals("Id: 10 - Name: Switzerland - Anzahl Filme: 5",language.toString());
 	}
 
 	@Test
 	public void testGetId() {
-		fail("Not yet implemented");
+		Language language = new Language();
+		language.setId(10);
+		assertEquals(language.getId(),10);
 	}
 
 	@Test
 	public void testSetId() {
-		fail("Not yet implemented");
+		Language language = new Language();
+		language.setId(10);
+		assertEquals(language.getId(),10);
 	}
 
 	@Test
 	public void testGetName() {
-		fail("Not yet implemented");
+		Language language = new Language();
+		language.setName("Action");
+		assertEquals(language.getName(),"Action");
 	}
 
 	@Test
 	public void testSetName() {
-		fail("Not yet implemented");
+		Language language = new Language();
+		language.setName("Action");
+		assertEquals(language.getName(),"Action");
 	}
 
 }

@@ -43,15 +43,25 @@ public class CountryTest {
 	@Test
 	public void testGetNumberOfFilms() {
 		Country country = new Country(1,"TestCountry","Test1234");
-		int sum = country.getNumberOfFilms(0,0);
-		assertEquals(sum,0);
+		int[] number = new int[5];
+		number[1] = 50;
+		number[2] = 30;
+		number[3] = 40;
+		number[4] = 20;
+		country.setNumberOfFilms(number);
+		assertEquals(140,country.getNumberOfFilms(1890,1894));
 	}
 
 	@Test
 	public void testSetNumberOfFilms() {
 		Country country = new Country(1,"TestCountry","Test1234");
-		//country.setNumberOfFilms();
-		assertEquals(200,country.getNumberOfFilms(1889,1890));
+		int[] number = new int[5];
+		number[1] = 50;
+		number[2] = 30;
+		number[3] = 40;
+		number[4] = 20;
+		country.setNumberOfFilms(number);
+		assertEquals(140,country.getNumberOfFilms(1890,1894));
 	}
 
 	@Test
