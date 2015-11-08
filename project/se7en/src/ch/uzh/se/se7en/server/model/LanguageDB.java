@@ -1,12 +1,15 @@
 package ch.uzh.se.se7en.server.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import ch.uzh.se.se7en.shared.model.Language;
@@ -27,8 +30,8 @@ public class LanguageDB {
 	@Column(name = "name")
 	private String name;
 
-	@ManyToMany(targetEntity = FilmDB.class)
-	private Set<FilmDB> films;
+	@OneToMany(mappedBy = "primaryKey.language", fetch = FetchType.LAZY)
+	private List<FilmLanguageDB> filmLanguageEntities;
 
 	public LanguageDB() {
 
@@ -52,7 +55,7 @@ public class LanguageDB {
 	 *         transfer object
 	 */
 	public Language toLanguage() {
-		int numberOfFilms = films.size();
+		int numberOfFilms = filmLanguageEntities.size();
 
 		return new Language(id, name, numberOfFilms);
 	}
@@ -96,21 +99,20 @@ public class LanguageDB {
 	}
 
 	/**
-	 * @pre films!= null
-	 * @post -
-	 * @return the films
+	@pre filmLanguageEntities!= null
+	@post -
+	@return the filmLanguageEntities
 	 */
-	public Set<FilmDB> getFilms() {
-		return films;
+	public List<FilmLanguageDB> getFilmLanguageEntities() {
+		return filmLanguageEntities;
 	}
 
 	/**
-	 * @pre -
-	 * @post films==films
-	 * @param films
-	 *            the films to set
-	 */
-	public void setFilms(Set<FilmDB> films) {
-		this.films = films;
+	@pre -
+	@post filmLanguageEntities==filmLanguageEntities
+	@param filmLanguageEntities the filmLanguageEntities to set
+	*/
+	public void setFilmLanguageEntities(List<FilmLanguageDB> filmLanguageEntities) {
+		this.filmLanguageEntities = filmLanguageEntities;
 	}
 }
