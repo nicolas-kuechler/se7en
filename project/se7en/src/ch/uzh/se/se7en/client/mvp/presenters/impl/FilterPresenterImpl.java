@@ -205,7 +205,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 		filmDataModel.setAppliedFilter(currentFilter);
 		filmDataModel.setAppliedMapFilter(adjustedMapFilter(currentFilter));
-
 	}
 
 	//TODO Decide if not better part of class FilmFilter
