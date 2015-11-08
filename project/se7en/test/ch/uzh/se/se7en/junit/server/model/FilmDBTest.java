@@ -21,11 +21,6 @@ import ch.uzh.se.se7en.server.model.GenreDB;
 import ch.uzh.se.se7en.server.model.LanguageDB;
 import ch.uzh.se.se7en.shared.model.Film;
 
-/**
- * Test for the answering of rpc calls
- * 
- * @author Roland Schläfli
- */
 @RunWith(JukitoRunner.class)
 public class FilmDBTest {
 
