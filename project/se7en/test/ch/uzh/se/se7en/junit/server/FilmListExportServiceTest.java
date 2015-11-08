@@ -1,10 +1,10 @@
-package ch.uzh.se.se7en.junit.client.presenter;
+package ch.uzh.se.se7en.junit.server;
 
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-public class FilterPresenterTest {
+public class FilmListExportServiceTest {
 
 	@Test
 	public void test() {

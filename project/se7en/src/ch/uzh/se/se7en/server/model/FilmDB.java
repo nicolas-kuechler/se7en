@@ -36,20 +36,23 @@ public class FilmDB {
 
 	@Column(name = "year", nullable = true)
 	private Integer year;
-	
+
 	@Column(name = "wikipedia", nullable = true)
 	private String wikipedia;
 
 	// the corresponding entities in the join table film_countries
-	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private Set<FilmCountryDB> filmCountryEntities;
 
 	// the corresponding entities in the join table film_genres
-	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private Set<FilmGenreDB> filmGenreEntities;
 
 	// the corresponding entities in the join table film_languages
-	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private Set<FilmLanguageDB> filmLanguageEntities;
 
 	public FilmDB() {
@@ -85,20 +88,29 @@ public class FilmDB {
 		List<String> filmLanguageEntityNames = new ArrayList<String>();
 
 		// parse all the entities into lists of strings
-		for (FilmCountryDB f : filmCountryEntities) {
-			filmCountryEntityNames.add(f.getCountryName());
-		}
-		for (FilmGenreDB g : filmGenreEntities) {
-			filmGenreEntityNames.add(g.getGenreName());
-		}
-		for (FilmLanguageDB l : filmLanguageEntities) {
-			filmLanguageEntityNames.add(l.getLanguageName());
+		if (filmCountryEntities != null) {
+			for (FilmCountryDB f : filmCountryEntities) {
+				filmCountryEntityNames.add(f.getCountryName());
+			}
+
+			java.util.Collections.sort(filmCountryEntityNames);
 		}
 
-		// sort all the string lists alphabetically
-		java.util.Collections.sort(filmCountryEntityNames);
-		java.util.Collections.sort(filmGenreEntityNames);
-		java.util.Collections.sort(filmLanguageEntityNames);
+		if (filmGenreEntities != null) {
+			for (FilmGenreDB g : filmGenreEntities) {
+				filmGenreEntityNames.add(g.getGenreName());
+			}
+
+			java.util.Collections.sort(filmGenreEntityNames);
+		}
+
+		if (filmLanguageEntities != null) {
+			for (FilmLanguageDB l : filmLanguageEntities) {
+				filmLanguageEntityNames.add(l.getLanguageName());
+			}
+
+			java.util.Collections.sort(filmLanguageEntityNames);
+		}
 
 		return new Film(id, name, length, year, filmCountryEntityNames, filmLanguageEntityNames, filmGenreEntityNames);
 	}
@@ -178,21 +190,22 @@ public class FilmDB {
 	public void setYear(Integer year) {
 		this.year = year;
 	}
-	
+
 	/**
-	@pre wikipedia!= null
-	@post -
-	@return the wikipedia
+	 * @pre wikipedia!= null
+	 * @post -
+	 * @return the wikipedia
 	 */
 	public String getWikipedia() {
 		return wikipedia;
 	}
 
 	/**
-	@pre -
-	@post wikipedia==wikipedia
-	@param wikipedia the wikipedia to set
-	*/
+	 * @pre -
+	 * @post wikipedia==wikipedia
+	 * @param wikipedia
+	 *            the wikipedia to set
+	 */
 	public void setWikipedia(String wikipedia) {
 		this.wikipedia = wikipedia;
 	}

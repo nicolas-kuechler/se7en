@@ -1,7 +1,6 @@
 package ch.uzh.se.se7en.server;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +17,6 @@ import com.google.inject.persist.Transactional;
 
 import ch.uzh.se.se7en.client.rpc.FilmListService;
 import ch.uzh.se.se7en.server.model.CountryDB;
-import ch.uzh.se.se7en.server.model.FilmCountryDB;
 import ch.uzh.se.se7en.server.model.FilmDB;
 import ch.uzh.se.se7en.server.model.GenreDB;
 import ch.uzh.se.se7en.server.model.LanguageDB;
@@ -78,12 +76,12 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<FilmDB> dbFilms A filtered list of film entities
 	 */
 	@Transactional
-	private List<FilmDB> getFilmEntitiesList(FilmFilter filter) {
+	public List<FilmDB> getFilmEntitiesList(FilmFilter filter) {
 		// create an empty list of film entities
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
 
 		// initialize the selector in the query
-		String selector = "SELECT DISTINCT f from FilmDB f";
+		String selector = "SELECT DISTINCT f FROM FilmDB f";
 
 		// initialize the where string with the basic filters
 		String wheres = "WHERE (f.length BETWEEN :minLength AND :maxLength) AND (f.year BETWEEN :minYear AND :maxYear)";
@@ -115,7 +113,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		}
 
 		// concat the query string
-		String queryString = selector + " " + joiners + " " + wheres + " order by f.name";
+		String queryString = selector + joiners + " " + wheres + " ORDER BY f.name";
 
 		// create a typed query from our query string
 		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
@@ -221,7 +219,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<CountryDB> dbCountries A filtered list of country entities
 	 */
 	@Transactional
-	private List<CountryDB> getCountryEntitiesList(FilmFilter filter) {
+	public List<CountryDB> getCountryEntitiesList(FilmFilter filter) {
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 		// initialize the selector in the query
 		String selector = "SELECT DISTINCT c FROM CountryDB c";
@@ -250,7 +248,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		}
 
 		// build the query string
-		String queryString = selector + " " + joiners + " " + wheres;
+		String queryString = selector + " " + joiners + " " + wheres + " ORDER BY c.name";
 
 		// select all countries from the database
 		TypedQuery<CountryDB> query = em.get().createQuery(queryString, CountryDB.class);
@@ -300,23 +298,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Override
 	@Transactional
 	public List<Genre> getGenreList(FilmFilter filter) {
-		// TODO: real implementation
-		
-		// create an empty list of countries
+		// create an empty list of genres
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 		List<Genre> genres = new ArrayList<Genre>();
 
-		// select all genres from the database
-		dbGenres = em.get().createQuery("from GenreDB", GenreDB.class).getResultList();
+		// TODO: Sprint 2
 
-		// convert each GenreDB instance to a Genre DataTransferObject
-		for (GenreDB genre : dbGenres) {
-			Genre g = genre.toGenre();
-			System.out.println(g);
-			genres.add(g);
-		}
-
-		// return the filled list of countries
+		// return the filled list of genres
 		return genres;
 	}
 
@@ -337,7 +325,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 
 		// select * from the genre table
-		dbGenres = em.get().createQuery("from GenreDB order by name", GenreDB.class).getResultList();
+		dbGenres = em.get().createQuery("FROM GenreDB ORDER BY name", GenreDB.class).getResultList();
 
 		for (GenreDB genre : dbGenres) {
 			availableGenres.add(new SelectOption(genre.getId(), genre.getName()));
@@ -363,7 +351,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 
 		// select * from the country table
-		dbCountries = em.get().createQuery("from CountryDB order by name", CountryDB.class).getResultList();
+		dbCountries = em.get().createQuery("FROM CountryDB ORDER BY name", CountryDB.class).getResultList();
 
 		for (CountryDB country : dbCountries) {
 			availableCountries.add(new SelectOption(country.getId(), country.getName()));
@@ -389,12 +377,22 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<LanguageDB> dbLanguages = new ArrayList<LanguageDB>();
 
 		// select * from the language table
-		dbLanguages = em.get().createQuery("from LanguageDB order by name", LanguageDB.class).getResultList();
+		dbLanguages = em.get().createQuery("FROM LanguageDB ORDER BY name", LanguageDB.class).getResultList();
 
 		for (LanguageDB language : dbLanguages) {
 			availableLanguages.add(new SelectOption(language.getId(), language.getName()));
 		}
 
 		return availableLanguages;
+	}
+
+	/**
+	 * @pre -
+	 * @post em==em
+	 * @param em
+	 *            the em to set
+	 */
+	public void setEm(Provider<EntityManager> em) {
+		this.em = em;
 	}
 }

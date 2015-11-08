@@ -191,7 +191,9 @@ public class Film implements Serializable {
 		this.genres = genres;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -208,7 +210,9 @@ public class Film implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -254,6 +258,5 @@ public class Film implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
+
 }
