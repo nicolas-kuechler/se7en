@@ -101,31 +101,31 @@ public class MapPresenterImpl implements MapPresenter {
 	{	
 		//get country list according to currently applied filter from client side data model
 		List<Country> countries = filmDataModel.getCountryList();
-		
+
 		//create new list of entities  which imitates a DataTable in vanilla java
 		List<DataTableEntity> entities = new ArrayList<DataTableEntity>(countries.size());
-		
+
 		//get current year range slider information from the mapView
 		int startYear = mapView.getMinYear();
 		int endYear = mapView.getMaxYear();
-		
+
 		//represents the number of films produced in a country between startYear and endYear
 		int numberOfProductions;
-		
+
 		for(Country c : countries)
 		{
 			//calculate the number of films produced between startYear and endYear
 			numberOfProductions = c.getNumberOfFilms(startYear, endYear);
-			
+
 			if(numberOfProductions>0)
 			{	//if at least one film was produced, add country to entity list
 				entities.add(new DataTableEntity(c.getName(), numberOfProductions));
 			}
-			//store new entitylist in filmdatamodel
-			filmDataModel.setCountryDataTable(entities);
-			//set the geochart with the new list
-			mapView.setGeoChart(entities);
 		}
+		//store new entitylist in filmdatamodel
+		filmDataModel.setCountryDataTable(entities);
+		//set the geochart with the new list
+		mapView.setGeoChart(entities);
 	}
 
 	/**
@@ -137,6 +137,10 @@ public class MapPresenterImpl implements MapPresenter {
 	public void fetchData() {
 		//update of the yearSlider in the mapView
 		mapView.setYearRange(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd());
+		//TODO finding position in code for displaying empty geochart as loading information
+		filmDataModel.setCountryList(new ArrayList<Country>());
+		updateGeoChart();
+
 
 		//as soon as new filter is applied, starts async call to server to get the new list of countries matching the adjusted filter
 		filmListService.getCountryList(filmDataModel.getAppliedMapFilter(), new AsyncCallback<List<Country>>(){
@@ -161,8 +165,6 @@ public class MapPresenterImpl implements MapPresenter {
 				updateGeoChart();
 			}
 		});
-		//TODO finding position in code for displaying empty geochart as loading information
-		filmDataModel.setCountryList(new ArrayList<Country>());
-		updateGeoChart();
+
 	}
 }
