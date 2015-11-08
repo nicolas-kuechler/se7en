@@ -40,5 +40,7 @@ public class FilterPresenterTest {
 		verify(container).clear();
 		verify(container).add(filterView.asWidget());
 	}
+	
+	
 
 }

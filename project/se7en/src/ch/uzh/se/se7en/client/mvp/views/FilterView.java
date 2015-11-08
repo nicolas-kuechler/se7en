@@ -43,7 +43,7 @@ public interface FilterView extends IsWidget {
 	 */
 	//public HasValue<Range> getLengthSlider();
 	
-	public void setLengthSlider(int startLength, int endlength);
+	public void setLengthSlider(int startLength, int endLength);
 	public int getLengthStart();
 	public int getLengthEnd();
 	
