@@ -11,10 +11,13 @@ import org.junit.Test;
 import ch.uzh.se.se7en.server.model.CountryDB;
 import ch.uzh.se.se7en.server.model.FilmCountryDB;
 import ch.uzh.se.se7en.server.model.FilmDB;
+import ch.uzh.se.se7en.shared.model.Country;
 
 public class CountryDBTest {
 
 	CountryDB country;
+	
+	List<FilmCountryDB> filmCountryEntities = new ArrayList<FilmCountryDB>();
 	
 	@Before
 	public void setup() {
@@ -22,12 +25,40 @@ public class CountryDBTest {
 		country.setId(99);
 		country.setCode("AB");
 		
-		List<FilmCountryDB> filmCountryEntities = new ArrayList<FilmCountryDB>();
-		
 		FilmDB film = new FilmDB("Hallo Welt", 10, 1993);
 		filmCountryEntities.add(new FilmCountryDB(film, country));
 		
 		country.setFilmCountryEntities(filmCountryEntities);
+	}
+	
+	@Test
+	public void testCountryDB() {
+		CountryDB country2 = new CountryDB();
+		assertEquals(country2.getId(), 0);
+		assertEquals(country2.getName(), null);
+		assertEquals(country2.getCode(), null);
+		assertEquals(country2.getFilmCountryEntities(), null);
+		
+		CountryDB country3 = new CountryDB(99);
+		assertEquals(country3.getId(), 99);
+		assertEquals(country3.getName(), null);
+		assertEquals(country3.getCode(), null);
+		assertEquals(country3.getFilmCountryEntities(), null);
+		
+		CountryDB country4 = new CountryDB("Absurdistan");
+		assertEquals(country4.getId(), 0);
+		assertEquals(country4.getName(), "Absurdistan");
+		assertEquals(country4.getCode(), null);
+		assertEquals(country4.getFilmCountryEntities(), null);
+	}
+	
+	@Test
+	public void testToCountry() {
+		Country c = country.toCountry();
+		assertEquals(c.getId(), 99);
+		assertEquals(c.getCode(), "AB");
+		assertEquals(c.getName(), "Absurdistan");
+		assertEquals(c.getNumberOfFilms(), null);
 	}
 	
 	@Test
