@@ -32,7 +32,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@Inject
 	public FilterPresenterImpl(EventBus eventBus, final FilterView filterView, FilmDataModel filmDataModel, 
 			FilmListServiceAsync filmListService) {
-		super();
 		this.filmListService = filmListService;
 		this.eventBus = eventBus;
 		this.filterView = filterView;

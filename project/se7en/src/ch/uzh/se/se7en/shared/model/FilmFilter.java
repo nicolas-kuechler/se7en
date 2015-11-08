@@ -177,17 +177,25 @@ public class FilmFilter implements Serializable {
 	 *            object
 	 */
 	public void setCountryOptions(List<SelectOption> selectOptions) {
-		List<String> countryName = new ArrayList<String>(selectOptions.size());
-
-		Set<Integer> countryId = new HashSet<Integer>();
-
-		for (SelectOption option : selectOptions) {
-			countryId.add(option.getId());
-			countryName.add(option.getName());
+		if (selectOptions == null  || selectOptions.size()==0){
+			setCountries(null);
+			setCountryIds(null);
 		}
+		else
+		{
+			List<String> countryName = new ArrayList<String>(selectOptions.size());
 
-		setCountries(countryName);
-		setCountryIds(countryId);
+			Set<Integer> countryId = new HashSet<Integer>();
+
+			for (SelectOption option : selectOptions) {
+				countryId.add(option.getId());
+				countryName.add(option.getName());
+			}
+
+			setCountries(countryName);
+			setCountryIds(countryId);
+		}
+		
 	}
 
 	/**
@@ -201,17 +209,25 @@ public class FilmFilter implements Serializable {
 	 *            object
 	 */
 	public void setGenreOptions(List<SelectOption> selectOptions) {
-		List<String> genreName = new ArrayList<String>(selectOptions.size());
-
-		Set<Integer> genreId = new HashSet<Integer>();
-
-		for (SelectOption option : selectOptions) {
-			genreId.add(option.getId());
-			genreName.add(option.getName());
+		if (selectOptions == null || selectOptions.size()==0){
+			setGenres(null);
+			setGenreIds(null);
 		}
+		else
+		{
+			List<String> genreName = new ArrayList<String>(selectOptions.size());
 
-		setGenres(genreName);
-		setGenreIds(genreId);
+			Set<Integer> genreId = new HashSet<Integer>();
+
+			for (SelectOption option : selectOptions) {
+				genreId.add(option.getId());
+				genreName.add(option.getName());
+			}
+
+			setGenres(genreName);
+			setGenreIds(genreId);
+		}
+		
 	}
 
 	/**
@@ -225,17 +241,25 @@ public class FilmFilter implements Serializable {
 	 *            object
 	 */
 	public void setLanguageOptions(List<SelectOption> selectOptions) {
-		List<String> languageName = new ArrayList<String>(selectOptions.size());
-
-		Set<Integer> languageId = new HashSet<Integer>();
-
-		for (SelectOption option : selectOptions) {
-			languageId.add(option.getId());
-			languageName.add(option.getName());
+		if (selectOptions == null  || selectOptions.size()==0){
+			setLanguages(null);
+			setLanguageIds(null);
 		}
+		else
+		{
+			List<String> languageName = new ArrayList<String>(selectOptions.size());
 
-		setLanguages(languageName);
-		setLanguageIds(languageId);
+			Set<Integer> languageId = new HashSet<Integer>();
+
+			for (SelectOption option : selectOptions) {
+				languageId.add(option.getId());
+				languageName.add(option.getName());
+			}
+
+			setLanguages(languageName);
+			setLanguageIds(languageId);
+		}
+		
 	}
 
 	/**
@@ -304,6 +328,10 @@ public class FilmFilter implements Serializable {
 		return languageIds;
 	}
 
+	
+
+	
+
 	/**
 	 * @pre -
 	 * @post languageIds==languageIds
@@ -343,6 +371,64 @@ public class FilmFilter implements Serializable {
 		return "FilmFilter [name=" + name + ", lengthStart=" + lengthStart + ", lengthEnd=" + lengthEnd + ", yearStart="
 				+ yearStart + ", yearEnd=" + yearEnd + ", countries=" + countries + ", languages=" + languages
 				+ ", genres=" + genres + "]";
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof FilmFilter))
+			return false;
+		FilmFilter other = (FilmFilter) obj;
+		if (countries == null) {
+			if (other.countries != null)
+				return false;
+		} else if (!countries.equals(other.countries))
+			return false;
+		if (countryIds == null) {
+			if (other.countryIds != null)
+				return false;
+		} else if (!countryIds.equals(other.countryIds))
+			return false;
+		if (genreIds == null) {
+			if (other.genreIds != null)
+				return false;
+		} else if (!genreIds.equals(other.genreIds))
+			return false;
+		if (genres == null) {
+			if (other.genres != null)
+				return false;
+		} else if (!genres.equals(other.genres))
+			return false;
+		if (languageIds == null) {
+			if (other.languageIds != null)
+				return false;
+		} else if (!languageIds.equals(other.languageIds))
+			return false;
+		if (languages == null) {
+			if (other.languages != null)
+				return false;
+		} else if (!languages.equals(other.languages))
+			return false;
+		if (lengthEnd != other.lengthEnd)
+			return false;
+		if (lengthStart != other.lengthStart)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (yearEnd != other.yearEnd)
+			return false;
+		if (yearStart != other.yearStart)
+			return false;
+		return true;
 	}
 
 }
