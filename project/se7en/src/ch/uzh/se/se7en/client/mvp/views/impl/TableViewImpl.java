@@ -19,6 +19,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.ColumnSortList;
+import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
@@ -44,6 +46,8 @@ public class TableViewImpl extends Composite implements TableView {
 	 */
 	@UiField(provided = true)
 	DataGrid<Film> dataGrid;
+	@UiField(provided = true) SimplePager pager;
+	
 	ListDataProvider<Film> filmProvider = new ListDataProvider<Film>();
 	ListHandler<Film> columnSortHandler;
 
@@ -84,33 +88,21 @@ public class TableViewImpl extends Composite implements TableView {
 		dataGrid.setBordered(false);
 		dataGrid.setAutoHeaderRefreshDisabled(true);
 
+	    SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+	    pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
+	    pager.setDisplay(dataGrid);
+
 		buildTable();
 		filmProvider.addDataDisplay(dataGrid);
 
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	/**
-	 * Set the presnter for the table view
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param presenter
-	 */
 	@Override
 	public void setPresenter(TablePresenter presenter) {
 		this.tablePresenter = presenter;
 	}
 
-	/**
-	 * Writes the films who were sent from the presenter into the dataGrid
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param films
-	 */
 	@Override
 	public void setTable(List<Film> films) {
 		filmProvider.setList(films);
@@ -118,14 +110,7 @@ public class TableViewImpl extends Composite implements TableView {
 		dataGrid.addColumnSortHandler(columnSortHandler);
 	}
 
-	/**
-	 * Give the download url to the user
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param downloadUrl
-	 */
+
 	@Override
 	public void startDownload(String downloadUrl) {
 		// TODO Start the download Window.open(download url.....)
@@ -142,7 +127,7 @@ public class TableViewImpl extends Composite implements TableView {
 	 * @param -
 	 */
 	private void buildTable() {
-
+	    
 		nameColumn = new TextColumn<Film>() {
 			@Override
 			public String getValue(Film filmObject) {
