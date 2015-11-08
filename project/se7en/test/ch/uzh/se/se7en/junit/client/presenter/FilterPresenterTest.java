@@ -59,6 +59,7 @@ public class FilterPresenterTest {
 	@Before
 	public void setup()
 	{
+		//demo values used to test
 		String testName = "TestFilm";
 		int testLengthStart = 10;
 		int testLengthEnd = 300;
@@ -79,6 +80,7 @@ public class FilterPresenterTest {
 		// no entry from multiselect is selected
 		List<SelectOption> selectedGenre = new ArrayList<SelectOption>();
 		
+		//mocking answers of the filterView Mock
 		when(filterView.getName()).thenReturn(testName);
 		when(filterView.getLengthStart()).thenReturn(testLengthStart);
 		when(filterView.getLengthEnd()).thenReturn(testLengthEnd);
@@ -88,6 +90,7 @@ public class FilterPresenterTest {
 		when(filterView.getSelectedLanguageOptions()).thenReturn(selectedLanguage);
 		when(filterView.getSelectedGenreOptions()).thenReturn(selectedGenre);
 		
+		//creating a demo Filter object which is expected to be produced given the filterView fields configuration from above
 		normalFilter = new FilmFilter();
 		normalFilter.setName(testName);
 		normalFilter.setLengthStart(testLengthStart);
@@ -98,6 +101,7 @@ public class FilterPresenterTest {
 		normalFilter.setLanguageOptions(selectedLanguage);
 		normalFilter.setGenreOptions(selectedGenre);
 		
+		//creating a filter object which should be produced when adjusting the normalFilter from above with setting the default values for country and year
 		mapFilter = new FilmFilter();
 		mapFilter.setName(testName);
 		mapFilter.setLengthStart(testLengthStart);
@@ -108,6 +112,7 @@ public class FilterPresenterTest {
 		mapFilter.setLanguageOptions(selectedLanguage);
 		mapFilter.setGenreOptions(selectedGenre);
 		
+		//creating an expected List<String> which should be produced when the normalFilter from above is converted
 		normalFilterList = new ArrayList<String>();
 		normalFilterList.add("Film Name = "+testName);
 		normalFilterList.add("Film Length = "+testLengthStart +"-"+testLengthEnd);
@@ -116,20 +121,21 @@ public class FilterPresenterTest {
 		normalFilterList.add("Production Country = Germany");
 		normalFilterList.add("Film Language = German");
 		
+		//creating an expected List<String> which should be produced when the mapFilter from above is converted
 		mapFilterList = new ArrayList<String>();
 		mapFilterList.add("Film Name = "+testName);
 		mapFilterList.add("Film Length = "+testLengthStart +"-"+testLengthEnd);
 		mapFilterList.add("Production Year = "+testMinYear +"-"+testMaxYear);
 		mapFilterList.add("Film Language = German");
 	
-		
+		//mocking answer from filmDataModel mock
 		when(filmDataModel.getAppliedFilter()).thenReturn(normalFilter);
 		when(filmDataModel.getAppliedMapFilter()).thenReturn(mapFilter);
-				
+		
+		//imitate the onSuccess method of the rpc call getCountrySelectOptions
 		doAnswer(new Answer<List<SelectOption>>(){
 			@Override
 			public List<SelectOption> answer(InvocationOnMock invocation) throws Throwable {
-				// TODO Auto-generated method stub
 				AsyncCallback<List<SelectOption>> callback = (AsyncCallback) invocation.getArguments()[0];
 				
 				List<SelectOption> options = new ArrayList<SelectOption>();
@@ -141,10 +147,10 @@ public class FilterPresenterTest {
 			}
 		}).when(filmService).getCountrySelectOption((AsyncCallback<List<SelectOption>>) Mockito.any());
 		
+		//imitate the onSuccess method of the rpc call getLanguageSelectOptions
 		doAnswer(new Answer<List<SelectOption>>(){
 			@Override
 			public List<SelectOption> answer(InvocationOnMock invocation) throws Throwable {
-				// TODO Auto-generated method stub
 				AsyncCallback<List<SelectOption>> callback = (AsyncCallback) invocation.getArguments()[0];
 				
 				List<SelectOption> options = new ArrayList<SelectOption>();
@@ -155,10 +161,10 @@ public class FilterPresenterTest {
 			}
 		}).when(filmService).getLanguageSelectOption((AsyncCallback<List<SelectOption>>) Mockito.any());
 		
+		//imitate the onSuccess method of the rpc call getGenreSelectOptions
 		doAnswer(new Answer<List<SelectOption>>(){
 			@Override
 			public List<SelectOption> answer(InvocationOnMock invocation) throws Throwable {
-				// TODO Auto-generated method stub
 				AsyncCallback<List<SelectOption>> callback = (AsyncCallback) invocation.getArguments()[0];
 				
 				List<SelectOption> options = new ArrayList<SelectOption>();
@@ -170,8 +176,10 @@ public class FilterPresenterTest {
 			}
 		}).when(filmService).getGenreSelectOption((AsyncCallback<List<SelectOption>>) Mockito.any());
 		
-		
+		//After all mocks are setup, create the instance of the filterPresenter
 		filterPresenter = new FilterPresenterImpl(eventBus, filterView, filmDataModel, filmService);
+		
+		//set a mode
 		filterPresenter.setMode(Tokens.TABLE);
 	}
 	
