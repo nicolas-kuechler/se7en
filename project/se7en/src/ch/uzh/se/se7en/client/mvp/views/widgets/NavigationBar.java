@@ -45,7 +45,6 @@ public class NavigationBar extends Composite {
 	 */
 	public NavigationBar() {
 		licenseModal = new Modal();
-		licenseModal.setFade(true);
 		initWidget(uiBinder.createAndBindUi(this));
 		loading.setText("Hello");
 		loading.setVisible(false);
