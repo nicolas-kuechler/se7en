@@ -192,7 +192,14 @@ public class FilterViewImpl extends Composite implements FilterView {
 
 	@Override
 	public void setSelectedCountryOptions(List<String> selectedOptions) {
-		// TODO Provide access to the MultiSelects to set selectedOptions
+		if(selectedOptions==null)
+		{
+			countrySelect.deselectAll();
+		}
+		else
+		{
+			// TODO Provide access to the MultiSelects to set selectedOptions
+		}
 	}
 
 	@Override
@@ -207,7 +214,14 @@ public class FilterViewImpl extends Composite implements FilterView {
 
 	@Override
 	public void setSelectedLanguageOptions(List<String> selectedOptions) {
-		// TODO Provide access to the MultiSelects to set selectedOptions
+		if(selectedOptions==null)
+		{
+			languageSelect.deselectAll();
+		}
+		else
+		{
+			// TODO Provide access to the MultiSelects to set selectedOptions
+		}
 		
 	}
 
@@ -223,7 +237,14 @@ public class FilterViewImpl extends Composite implements FilterView {
 
 	@Override
 	public void setSelectedGenreOptions(List<String> selectedOptions) {
-		// TODO Provide access to the MultiSelects to set selectedOptions
+		if(selectedOptions==null)
+		{
+			genreSelect.deselectAll();
+		}
+		else
+		{
+			// TODO Provide access to the MultiSelects to set selectedOptions
+		}
 		
 	}
 }
