@@ -1,6 +1,6 @@
 package ch.uzh.se.se7en.junit.server.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,11 +25,11 @@ import ch.uzh.se.se7en.shared.model.Film;
 public class FilmDBTest {
 
 	FilmDB dbFilm;
-	
+
 	Set<FilmCountryDB> countries = new HashSet<FilmCountryDB>();
 	Set<FilmGenreDB> genres = new HashSet<FilmGenreDB>();
 	Set<FilmLanguageDB> languages = new HashSet<FilmLanguageDB>();
-	
+
 	@Before
 	public void setup() {
 		dbFilm = new FilmDB("Der Tiger", 120, 1993);
@@ -58,7 +58,7 @@ public class FilmDBTest {
 		languages.add(filmLanguageEntity);
 		dbFilm.setFilmLanguageEntities(languages);
 	}
-	
+
 	@Test
 	public void testFilmDB() {
 		FilmDB film2 = new FilmDB();
@@ -70,7 +70,7 @@ public class FilmDBTest {
 		assertEquals(film2.getFilmCountryEntities(), null);
 		assertEquals(film2.getFilmGenreEntities(), null);
 		assertEquals(film2.getFilmLanguageEntities(), null);
-		
+
 		FilmDB film3 = new FilmDB("Film 1", 120, 1993);
 		assertEquals(film3.getId(), 0);
 		assertEquals(film3.getName(), "Film 1");
@@ -80,7 +80,7 @@ public class FilmDBTest {
 		assertEquals(film3.getFilmCountryEntities(), null);
 		assertEquals(film3.getFilmGenreEntities(), null);
 		assertEquals(film3.getFilmLanguageEntities(), null);
-		
+
 		FilmDB film4 = new FilmDB("Film 1", 130, 2014, countries, languages, genres);
 		assertEquals(film4.getId(), 0);
 		assertEquals(film4.getName(), "Film 1");
@@ -210,7 +210,7 @@ public class FilmDBTest {
 	@Test
 	public void testToFilm() {
 		Film film = dbFilm.toFilm();
-		
+
 		assertEquals(film.getId(), 11);
 		assertEquals(film.getName(), "Der Tiger");
 		assertEquals(film.getLength(), new Integer(120));
