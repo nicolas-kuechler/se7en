@@ -109,9 +109,8 @@ public class Country implements Serializable {
 			numberOfFilms[i] = numberOfFilms[i - 1] + filmsInEachYear[i - 1];
 		}
 	}
-	
-	public int[] getNumberOfFilms()
-	{
+
+	public int[] getNumberOfFilms() {
 		return numberOfFilms;
 	}
 
@@ -172,8 +171,9 @@ public class Country implements Serializable {
 		this.code = code;
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -202,7 +202,4 @@ public class Country implements Serializable {
 		return true;
 	}
 
-
-	
-	
 }

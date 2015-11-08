@@ -20,7 +20,7 @@
 			
 			
 			
-			   <b:Modal title="Creative Commons" ui:field="licenseModal">
+			   <b:Modal title="Creative Commons" ui:field="licenseModal" closable="true" fade="true" dataBackdrop="STATIC" dataKeyboard="true">
         			<b:ModalBody>
         					<b:Label styleName="modalText">
         					David Bamman, Brendan O'Connor and Noah Smith, "Learning Latent
@@ -29,6 +29,9 @@
 							Bulgaria, August 2013.
 							</b:Label>
 					</b:ModalBody>
+					<b:ModalFooter>
+				   	 	<b:Button type="PRIMARY" dataDismiss="MODAL" icon="REMOVE">Close</b:Button>
+				 	</b:ModalFooter>
    			 </b:Modal>
 		</b:NavbarCollapse>
 	</b:Navbar>

@@ -3,6 +3,7 @@ package ch.uzh.se.se7en.junit.client.presenter;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 
+
 import org.jukito.JukitoRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
