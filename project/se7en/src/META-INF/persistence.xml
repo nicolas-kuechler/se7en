@@ -10,10 +10,16 @@
             Persistence unit for GIR access to CloudSQL
         </description>
 
-		<class>ch.uzh.se.se7en.shared.model.Country</class>
-		<class>ch.uzh.se.se7en.shared.model.Film</class>
-		<class>ch.uzh.se.se7en.shared.model.Genre</class>
-		<class>ch.uzh.se.se7en.shared.model.Language</class>
+		<class>ch.uzh.se.se7en.server.model.CountryDB</class>
+		<class>ch.uzh.se.se7en.server.model.FilmDB</class>
+		<class>ch.uzh.se.se7en.server.model.GenreDB</class>
+		<class>ch.uzh.se.se7en.server.model.LanguageDB</class>
+		<class>ch.uzh.se.se7en.server.model.FilmCountryDB</class>
+		<class>ch.uzh.se.se7en.server.model.FilmCountryDBId</class>
+		<class>ch.uzh.se.se7en.server.model.FilmGenreDB</class>
+		<class>ch.uzh.se.se7en.server.model.FilmGenreDBId</class>
+		<class>ch.uzh.se.se7en.server.model.FilmLanguageDB</class>
+		<class>ch.uzh.se.se7en.server.model.FilmLanguageDBId</class>
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
@@ -21,19 +27,7 @@
 			<property name="hibernate.connection.characterEncoding" value="utf8" />
 			<property name="hibernate.connection.useUnicode" value="true" />
 			<property name="hibernate.show_sql" value="true" />
-
-			<!-- Setup access to the db whilst on app engine -->
-			<!-- <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.GoogleDriver" 
-				/> <property name="javax.persistence.jdbc.url" value="jdbc:google:mysql://se-team-se7en:db/se7en" 
-				/> <property name="javax.persistence.jdbc.user" value="root" /> <property 
-				name="javax.persistence.jdbc.password" value="" /> -->
-
-			<!-- Setup access to the db from local development environment -->
-			<!-- <property name="javax.persistence.jdbc.driver"
-				value="com.google.appengine.api.rdbms.AppEngineDriver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:google:rdbms://173.194.250.0/se7en" />
-			<property name="javax.persistence.jdbc.user" value="se7en" />
-			<property name="javax.persistence.jdbc.password" value="k1vttuIYXqOPe5!" />-->
+			<property name="hibernate.connection.pool_size" value="0" />
 		</properties>
 
 	</persistence-unit>
