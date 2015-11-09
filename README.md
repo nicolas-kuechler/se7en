@@ -19,8 +19,11 @@ Exporting new version of the VM
 
 Connecting to the database
 ---
-=> Don't forget to allow access from your IP in the Cloud Console!
+Don't forget to allow access from your IP in the Cloud Console!
 - **IP:** 173.194.250.0
 - **User:** se7en
 - **Password:** k1vttuIYXqOPe5!
-- **Database:** se7en
+- **Database:**
+  - Sprint 1: se7en
+  - Sprint 2: se7en_v2
+  - Sprint 3: se7en_v3
