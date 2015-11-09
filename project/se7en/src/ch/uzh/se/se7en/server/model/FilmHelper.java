@@ -28,6 +28,8 @@ public class FilmHelper {
 
 	@MapToColumn(column = 5)
 	private String genres;
+	
+	public FilmHelper(){}
 
 	public FilmHelper(String name, Integer length, String countries, String languages, Integer year, String genres) {
 		
