@@ -19,7 +19,7 @@ Exporting new version of the VM
 
 Connecting to the database
 ---
-IP: 173.194.250.0
-User: se7en
-Password: k1vttuIYXqOPe5!
-Database: se7en
+- **IP:** 173.194.250.0
+- **User:** se7en
+- **Password:** k1vttuIYXqOPe5!
+- **Database:** se7en
