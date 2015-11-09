@@ -73,11 +73,11 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	 */
 	@Override
 	public boolean importFile(String nameOfFile) {
-		GcsService gcsService = GcsServiceFactory.createGcsService();
-		GcsFilename gcsFilename = new GcsFilename("se-team-se7en", nameOfFile);
-		List<Film> importedFilms = new LinkedList<Film>();
+		List<Film> importedFilms = new LinkedList<Film>();	
+		try{
 
-		try {
+			GcsService gcsService = GcsServiceFactory.createGcsService();
+			GcsFilename gcsFilename = new GcsFilename("se-team-se7en", nameOfFile);
 
 			// open GCS channel for specified file name and create reader
 			GcsInputChannel csvReadChannel = gcsService.openReadChannel(gcsFilename, 0);
@@ -111,6 +111,26 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		return false;
 	}
 
+	public CSVReader<FilmHelper> initCsvFileReader(String nameOfFile){
+		GcsService gcsService = GcsServiceFactory.createGcsService();
+		GcsFilename gcsFilename = new GcsFilename("se-team-se7en", nameOfFile);
+
+		CSVReader<FilmHelper> filmReader = null;
+		try {
+
+			// open GCS channel for specified file name and create reader
+			GcsInputChannel csvReadChannel = gcsService.openReadChannel(gcsFilename, 0);
+			Reader csvFileReader = new InputStreamReader(Channels.newInputStream(csvReadChannel));
+
+			// create csv reader on inputstream reader
+			ValueProcessorProvider vpp = new ValueProcessorProvider();
+			filmReader = new CSVReaderBuilder<FilmHelper>(csvFileReader)
+					.entryParser(new AnnotationEntryParser<FilmHelper>(FilmHelper.class, vpp)).build();
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		return filmReader;
+	}
 	/**
 	 * Imports the parsed films into the database
 	 * 
