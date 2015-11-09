@@ -16,3 +16,10 @@ Exporting new version of the VM
 - vagrant halt
 - vagrant package --output se7en-v7.box
 - Upload the new .box to the Google Drive folder
+
+Connecting to the database
+---
+IP: 173.194.250.0
+User: se7en
+Password: k1vttuIYXqOPe5!
+Database: se7en
