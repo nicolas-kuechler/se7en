@@ -11,12 +11,18 @@ import ch.uzh.se.se7en.server.model.FilmCountryDB;
 import ch.uzh.se.se7en.server.model.FilmCountryDBId;
 import ch.uzh.se.se7en.server.model.FilmDB;
 
+/**
+ * Tests for the FilmCountryDB join table entity
+ * 
+ * @author Roland Schläfli
+ */
 public class FilmCountryDBTest {
 
 	FilmCountryDB entity;
 	FilmDB film;
 	CountryDB country;
 
+	// setup the fake data for testing
 	@Before
 	public void setup() {
 		film = new FilmDB("Hallo Welt", 60, 1993);
@@ -26,6 +32,7 @@ public class FilmCountryDBTest {
 		entity.setCountryId(88);
 	}
 
+	// test the constructors
 	@Test
 	public void testFilmCountryDB() {
 		FilmCountryDB entity2 = new FilmCountryDB();
@@ -47,6 +54,7 @@ public class FilmCountryDBTest {
 		assertEquals(entity3.getCountryId(), 0);
 	}
 
+	// test getters and setters
 	@Test
 	public void testGetFilm() {
 		assertEquals(entity.getFilm(), film);

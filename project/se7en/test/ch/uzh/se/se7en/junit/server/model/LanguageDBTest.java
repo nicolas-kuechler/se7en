@@ -15,11 +15,16 @@ import ch.uzh.se.se7en.server.model.FilmLanguageDB;
 import ch.uzh.se.se7en.server.model.LanguageDB;
 import ch.uzh.se.se7en.shared.model.Language;
 
+/**
+ * 
+ * @author Roland Schläfli
+ */
 @RunWith(JukitoRunner.class)
 public class LanguageDBTest {
 
 	LanguageDB language;
 
+	// setup the fake data for testing
 	@Before
 	public void setup() {
 		language = new LanguageDB("German");
@@ -33,6 +38,7 @@ public class LanguageDBTest {
 		language.setFilmLanguageEntities(filmLanguageEntities);
 	}
 
+	// test the constructors
 	@Test
 	public void testLanguageDB() {
 		LanguageDB language2 = new LanguageDB();
@@ -51,6 +57,7 @@ public class LanguageDBTest {
 		assertEquals(language4.getFilmLanguageEntities(), null);
 	}
 
+	// test the LanguageDB to Language conversion
 	@Test
 	public void testToLanguage() {
 		Language l = language.toLanguage();
@@ -58,6 +65,7 @@ public class LanguageDBTest {
 		assertEquals(l.getId(), 99);
 	}
 
+	// test getters and setters
 	@Test
 	public void testGetId() {
 		assertEquals(language.getId(), 99);

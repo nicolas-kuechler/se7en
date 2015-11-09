@@ -4,6 +4,11 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+/**
+ * Tests for the import FilmHelper class
+ * 
+ * @author Cyrill Halter
+ */
 public class FilmHelperTest {
 
 	@Test

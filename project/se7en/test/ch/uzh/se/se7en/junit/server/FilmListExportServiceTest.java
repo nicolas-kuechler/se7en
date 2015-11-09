@@ -4,6 +4,11 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+/**
+ * Tests for the film data export
+ * 
+ * @author Roland Schläfli, Cyrill Halter
+ */
 public class FilmListExportServiceTest {
 
 	@Test

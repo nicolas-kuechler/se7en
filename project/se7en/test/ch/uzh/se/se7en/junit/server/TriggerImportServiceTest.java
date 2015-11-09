@@ -32,7 +32,7 @@ import ch.uzh.se.se7en.server.model.LanguageDB;
 import ch.uzh.se.se7en.shared.model.Film;
 
 /**
- * Test for the importing of data into the database
+ * Tests for the importing of data into the database
  * 
  * @author Roland Schläfli
  */
@@ -47,6 +47,7 @@ public class TriggerImportServiceTest {
 
 	Provider<EntityManager> em;
 
+	// setup the fake data for testing
 	@Before
 	public void setup() {
 		// need to do this manually for mocking a generic
@@ -116,7 +117,8 @@ public class TriggerImportServiceTest {
 		films.add(new Film("Film 2", 60, 1993, countries, languages, genres));
 		films.add(new Film("Reykjavík", 90, 1996, countries, languages, genres));
 
-		// execute the import method, passing the test films
+		/* EXECUTION BLOCK */
+		// execute the import
 		importService.importFilmsToDB(films);
 
 		/* VERIFICATION BLOCK */

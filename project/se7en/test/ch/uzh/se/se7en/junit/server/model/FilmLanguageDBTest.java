@@ -11,12 +11,18 @@ import ch.uzh.se.se7en.server.model.FilmLanguageDB;
 import ch.uzh.se.se7en.server.model.FilmLanguageDBId;
 import ch.uzh.se.se7en.server.model.LanguageDB;
 
+/**
+ * Tests for the FilmLanguageDB join table entity
+ * 
+ * @author Roland Schläfli
+ */
 public class FilmLanguageDBTest {
 
 	FilmLanguageDB entity;
 	FilmDB film;
 	LanguageDB language;
 
+	// setup the fake data for testing
 	@Before
 	public void setup() {
 		film = new FilmDB("Hallo Welt", 60, 1993);
@@ -26,6 +32,7 @@ public class FilmLanguageDBTest {
 		entity.setLanguageId(88);
 	}
 
+	// test the constructors
 	@Test
 	public void testFilmLanguageDB() {
 		FilmLanguageDB entity2 = new FilmLanguageDB();
@@ -47,6 +54,7 @@ public class FilmLanguageDBTest {
 		assertEquals(entity3.getLanguageId(), 0);
 	}
 
+	// test getters and setters
 	@Test
 	public void testGetFilm() {
 		assertEquals(entity.getFilm(), film);

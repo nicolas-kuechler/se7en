@@ -41,7 +41,7 @@ import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.SelectOption;
 
 /**
- * Test for the answering of rpc calls
+ * Tests for the answering of rpc calls
  * 
  * @author Roland Schläfli
  */
@@ -71,6 +71,7 @@ public class FilmListServiceTest {
 	TypedQuery<GenreDB> genreQuery = mockQuery(dbGenres);
 	TypedQuery<LanguageDB> languageQuery = mockQuery(dbLanguages);
 
+	// setup the fake data for testing
 	@Before
 	public void setup() {
 		// need to do this manually for mocking a generic
