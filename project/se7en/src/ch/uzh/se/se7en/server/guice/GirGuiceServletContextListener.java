@@ -75,7 +75,7 @@ public class GirGuiceServletContextListener extends GuiceServletContextListener 
 		} else {
 			// local development environment
 			properties.put("javax.persistence.jdbc.driver", "com.google.appengine.api.rdbms.AppEngineDriver");
-			properties.put("javax.persistence.jdbc.url", "jdbc:google:rdbms://173.194.250.0/se7en");
+			properties.put("javax.persistence.jdbc.url", "jdbc:google:rdbms://173.194.250.0/se7en_v2");
 			properties.put("javax.persistence.jdbc.user", "se7en");
 			properties.put("javax.persistence.jdbc.password", "k1vttuIYXqOPe5!");
 		}
