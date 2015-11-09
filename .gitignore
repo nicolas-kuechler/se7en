@@ -1,1 +1,7 @@
 .vagrant
+project/se7en/test-classes/
+project/se7en/gwt-unitCache
+project/se7en/war/se7en
+project/se7en/war/WEB-INF/deploy/se7en
+project/se7en/*.log
+.Trash-1001

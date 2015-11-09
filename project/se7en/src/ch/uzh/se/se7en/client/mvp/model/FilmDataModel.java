@@ -13,12 +13,15 @@ public interface FilmDataModel {
 	public void setCountryList(List<Country> countries);
 	public List<Country> getCountryList();
 	
-	public void setCountryDataTable(DataTable countries);
-	public DataTable getCountryDataTable();
+	public void setCountryDataTable(List<DataTableEntity> countries);
+	public List<DataTableEntity> getCountryDataTable();
 	
 	public void setFilmList(List<Film> films);
 	public List<Film> getFilmList();
 	
 	public void setAppliedFilter(FilmFilter filter);
 	public FilmFilter getAppliedFilter();
+	
+	public void setAppliedMapFilter(FilmFilter filter);
+	public FilmFilter getAppliedMapFilter();
 }

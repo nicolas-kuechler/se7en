@@ -37,4 +37,12 @@ public interface FilterPresenter extends RootPresenter {
 	 */
 	public void setMode(String mode);
 	
+	/**
+	Calling this method reloads the selectOptions from the server.
+	@author Cyrill Halter
+	@pre -
+	@post Multiselects are reloaded
+	 */
+	public void setupMultiSelects();
+	
 }

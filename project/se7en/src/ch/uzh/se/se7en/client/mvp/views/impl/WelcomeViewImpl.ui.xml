@@ -1,11 +1,13 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
-	<ui:style>
-	
-	</ui:style>
-	<g:HTMLPanel>
-	<g:Label>Hi I'm the Welcome View</g:Label>
-	</g:HTMLPanel>
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
+
+	<ui:with field='res'
+		type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources' />
+
+
+	<b:Panel styleName="welcomePanel">
+		<g:Image styleName="backgroundImage" resource='{res.backgroundSkyline}' />
+		<g:Image styleName="backgroundText" resource='{res.backgroundText}' />
+	</b:Panel>
 </ui:UiBinder> 

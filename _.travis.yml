@@ -1,0 +1,16 @@
+language: java
+notifications:
+  slack: team-se7en:1ngqFcl4EfdFRA0y3grHQFu0
+before_script:
+  - cd project/se7en
+install:
+  - echo "No installation to do."
+script:
+  - echo "No script to run."
+deploy:
+  provider: gae
+  keyfile: ../../misc/se-team-se7en-35f976fe4c75.json
+  default: true
+  project: se-team-se7en
+  config: war/WEB-INF/appengine-web.xml
+  on: dev

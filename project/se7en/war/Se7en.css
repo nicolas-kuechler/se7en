@@ -1,4 +1,319 @@
-/** Add css rules here for your application. */
+
+/*############################################GENERAL SETTINGS####################################################*/
+/** Set the scrollbars visible at any time | Set height and width to 100% */
+body {
+	margin: 0 !important;
+	overflow-x: scroll !important;
+	overflow-y: scroll !important;
+	width: 100%; .
+	height: 100%;
+}
+
+/** default image settings*/
+img {
+	width: 100%;
+	height: 100%;
+}
+
+/** set the border around the TableView and clear the margin between the footer and the table */
+.tablePanel .table {
+	margin-bottom: 0px !important;
+	border: 1px solid #F5F5F5;
+}
+
+/** clear the horizontal border above the mapTable (little bug fix) */
+.mapPanel .table {
+	border: 0px !important;
+}
+
+/** set the padding of the cell elements */
+th, td {
+	padding: 8px 8px 8px 8px !important;
+}
+
+/** change the table header of table view */
+th {
+	background-color: #F5F5F5;
+	color: black;
+	font-size: 115%;
+}
+
+/** change the dataGrid to only display horizontal borders and no vertical ones */
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th,
+	.table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th,
+	.table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+	border: 0px !important;
+	border-top: 1px solid #DDD !important;
+}
+
+/*############################################GENERAL PANEL SETTINGS####################################################*/
+
+/** clear the panel default --> no border around panels */
+.panel {
+	border: 0px !important;
+	border-radius: 0px !important;
+	box-shadow: 0px 0px 0px !important;
+	margin-bottom: 1% !important;
+}
+
+/** clear the default padding of the panel body*/
+.panel-body {
+	padding: 0px !important;
+	float: left;
+	width: 100%;
+}
+
+/** added a margin to the panel footer so there is a little space between the end of the document and the footer */
+.panel-footer {
+	margin-bottom: 1%;
+}
+
+/** set the padding of the panel header and footer to 0.5% so the content has a little space to the panel border*/
+.panel-footer, .panel-heading {
+	padding-left: 0.5% !important;
+	padding-right: 0.5% !important;
+	border: 1px solid #E5E5E5 !important;
+}
+
+/*############################################CONTAINER SETTINGS FOR HEADER AND FOOTER OF A PANEL####################################################*/
+
+/** don't display the header of the panels (Design descision / if reverted the headers get visible again)*/
+#container .panel-heading {
+	display: none;
+}
+
+/** float the footer of the containerPanel and set the width to 100%*/
+#container .panel-footer {
+	float: left;
+	width: 100%;
+}
 
 
+/*############################################SET PADDING FOR THE CONTENT ON EACH SIDE OF THE WINDOW####################################################*/
+
+/** set the space for the navigationBar and filterContainer(subContainer) between the right and left display edge to 15%*/
+#navBar, #subContainer {
+	padding-left: 15% !important;
+	padding-right: 15% !important;
+}
+
+/** little workaround so we can display the image on welcome view with 100%, but the rest in the containerPanel with 15% padding. dataContainer is a subElement of containerPanel*/
+.dataContainer {
+	padding-left: 15% !important;
+	padding-right: 15% !important;
+}
+
+
+/*############################################FILTERBAR (SUBCONTAINER) SETTINGS####################################################*/
+
+/** default settings and positioning for the filterContainer*/
+#subContainer {
+	margin-top: 7%;
+	margin-bottom: 2%;
+	float: left;
+	width: 100%;
+}
+
+/** make it possible to display the header text on the left side of the header and the collapse icon on the right side */
+#subContainer h3 {
+	width: 60%;
+	float: left;
+	margin: 0 !important;
+}
+
+/** default settings for the filter header*/
+#subContainer .panel-heading {
+	background-color: #F5F5F5;
+	border-top: 1px solid #DDD;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+	float: left;
+	width: 100%;
+	color: #333;
+	padding-top: 1%;
+	padding-bottom: 1%;
+	border-color: #DDD;
+}
+
+/** set the padding of the filter form to 1% so the elements have a little space to the header*/
+#subContainer form {
+	padding-top: 1%;
+}
+
+/** default settigs for the collapsebox */
+#collapseOne {
+	border: 1px solid #E5E5E5;
+	padding-top: 0.5%;
+	float: left;
+	width: 100%;
+}
+
+/** little workaround for the rows of the filterContainer, override  bootstrap margin settings for row*/
+#subContainer .row {
+	margin-bottom: 0.25%;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+/** set the middle element of the filter to be more centered*/
+#subContainer .row .col-md-4 .form-group {
+	padding-left: 8%;
+	padding-right: 8%;
+	width: 100%;
+}
+
+/** set the last element of a row to be on the right side of the filterView*/
+#subContainer .row .col-md-4:last-child .form-group {
+	padding-left: 24% !important;
+	padding-right: 0 !important;
+}
+
+/** set the first element of a row to be on the left side of the filterView*/
+#subContainer .row .col-md-4:first-child .form-group {
+	padding-left: 0 !important;
+	padding-right: 24% !important;
+}
+
+/** fix the width of the search and clear button group to be 100% (so we can align them to be on the right side)*/
+#subContainer .row .col-md-4 .bootstrap-select.btn-group {
+	width: 100%;
+}
+
+/** set the default background of the filterPanel to #F5F5F5*/
+#subContainer .col-md-4 .panel {
+	background-color: #F5F5F5 !important;
+}
+
+/** changed the background color of the applied filterbox to be #F5F5F5*/
+.appliedFilterBox .panel {
+	background-color: #F5F5F5 !important;
+}
+
+/** float the form groups*/
+#subContainer .form-group {
+	float: left;
+}
+
+/** set the labels of a form group to be 100% and float left, so we display the input forms and labels on 2 "rows"*/
+#subContainer .form-group label {
+	float: left;
+	width: 100%;
+}
+
+/** set the width of the applied filters to be 80%, so they have a little space to the right side of the view and don't get in touch with the collapse symbol*/
+.appliedFilterRow {
+	width: 80%;
+	position: relative;
+}
+
+/** fix that every sub div od the applied filterbox has 100% width (else it would be 20% less with every sub div)*/
+.appliedFilterRow div {
+	width: 100%;
+}
+
+/** clear padding left and right of the appliedfilterbox*/
+.appliedFilterRow .col-md-4{
+	padding-left: 0 !important;
+	padding-right: 0!important;
+}
+
+
+/** set the appliedfilter labels to float left, so we can display the filters on multiple lines if the filters overflow*/
+.appliedFilterRow .col-md-4 .label {
+	float: left;
+}
+
+/** ste the width of the collapse symbol container to be 40%, so we can display it on the right side of the filter title*/
+.expandFilter {
+	width: 40%;
+	float: left;
+	position: relative;
+	min-height: 1px;
+}
+
+/** set the collapse button on the right side of the filter and insert a little more free space */
+.expandFilter .btn {
+	float: right;
+	margin-left: 2.5%;
+}
+
+/** set a little padding to the row that contains the search and clear buttons and set the width of the row to 100%*/
+.filterRowSearch {
+	padding: 0.5% 1% 0.5% 1%;
+	float: left;
+	background-color: #F5F5F5 !important;
+	width: 100%;
+}
+
+/** align the search and clear buttons to be displayed on the right side */
+.filterColSearch .btn {
+	float: right;
+	margin-left: 3%;
+}
+/** set the paginator to the right border of the footer*/
+.paginator{
+	float: right;
+}
+/*############################################WELCOME VIEW IMAGE SETTINGS####################################################*/
+
+/** set the background text on welcome view to be in the middle of the screen and over the background image*/
+.backgroundText {
+	position: relative;
+	z-index: 2;
+	width: 60%;
+	height: 60%;
+	margin-left: 20%;
+	margin-top: 10%;
+}
+
+/** set the background image to be in the center and under the text */
+.backgroundImage {
+	z-index: 1;
+	position: absolute;
+}
+
+/*############################################NAVBAR SETTINGS####################################################*/
+
+/** little workaround for the navbar image to be a little more vertically centered */
+.navbar-header {
+	margin-top: -1%;
+}
+
+/** default settings for the navbar */
+#navBar {
+	padding-top: 1%;
+	float: left;
+}
+
+/** set the width of the navigation (list elements) to be 77% and set them right of the header logo  */
+.navbar-collapse {
+	width: 77% !important;
+	float: left;
+	height: 100% !important
+}
+
+/** set the elements of the navigation to be on the right side of the navbar*/
+.navbar-nav {
+	float: right !important;
+	position: relative;
+}
+
+/*############################################FooterBar Settings####################################################*/
+
+/** used to display ads, not in use yet*/
+#footerBar {
+	display: none;
+	width:100% !important;
+	padding-left:15%;
+	padding-right:15%;
+}
+#footerBar div{
+	width:100% !important;
+}
+
+.footerAd{
+	float:right;
+	display:block !important;
+	margin-left: 40%;
+}
 
