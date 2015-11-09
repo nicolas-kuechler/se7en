@@ -13,7 +13,7 @@ public class FilmListExportServiceTest {
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+		//topic of Sprint 2
 	}
 
 }
