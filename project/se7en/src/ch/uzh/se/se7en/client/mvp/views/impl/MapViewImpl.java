@@ -27,10 +27,12 @@ import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.ColumnType;
 import com.googlecode.gwt.charts.client.DataTable;
+import com.googlecode.gwt.charts.client.DataView;
 import com.googlecode.gwt.charts.client.corechart.PieChart;
 import com.googlecode.gwt.charts.client.geochart.GeoChart;
 import com.googlecode.gwt.charts.client.geochart.GeoChartColorAxis;
 import com.googlecode.gwt.charts.client.geochart.GeoChartOptions;
+import com.googlecode.gwt.charts.client.util.ArrayHelper;
 
 import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.Boundaries;
@@ -117,7 +119,10 @@ public class MapViewImpl extends Composite implements MapView {
 					dataTable.setValue(i, 2, countries.get(i).getId());
 				}
 				
-				geoChart.draw(dataTable, geoChartOptions);
+				DataView dataView = DataView.create(dataTable);
+				dataView.hideColumns(ArrayHelper.createArray(new int[]{1}));
+				
+				geoChart.draw(dataView, geoChartOptions);
 
 			}
 		});
