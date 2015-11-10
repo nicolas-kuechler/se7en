@@ -157,6 +157,33 @@ public class MapViewImpl extends Composite implements MapView {
 		//get the country id information at the selected row
 		return (int) dataTableGeoChart.getValueNumber(row, 2);	
 	}
+	
+	@Override
+	public void setGenreVisible(boolean visible) {
+		if(visible)
+		{
+			if(genreTable!=null)
+			{
+				genreTable.setVisible(true);
+			}
+			if(pieChart!=null)
+			{
+				pieChart.setVisible(true);
+			}
+		}
+		else
+		{
+			if(genreTable!=null)
+			{
+				genreTable.setVisible(false);
+			}
+			if(pieChart!=null)
+			{
+				pieChart.setVisible(false);
+			}
+		}
+		
+	}
 
 	@Override
 	public void setGenreTable(List<Genre> genres) {
@@ -196,7 +223,8 @@ public class MapViewImpl extends Composite implements MapView {
 					dataTablePieChart.setValue(i, 1, genres.get(i).getValue());
 				}
 				//Draw the piechart using the dataTable and the specified options
-				pieChart.draw(dataTablePieChart, pieChartOptions);		
+				pieChart.draw(dataTablePieChart, pieChartOptions);	
+			
 			}
 		});
 	}
@@ -215,5 +243,7 @@ public class MapViewImpl extends Composite implements MapView {
 	public void setYearRange(int yearStart, int yearEnd) {
 		yearSlider.setValue(new Range(yearStart, yearEnd));
 	}
+
+	
 
 }

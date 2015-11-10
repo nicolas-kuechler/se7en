@@ -46,6 +46,7 @@ public class MapPresenterImpl implements MapPresenter {
 	public void go(HasWidgets container) {
 		container.clear();
 		container.add(mapView.asWidget());
+		mapView.setGenreVisible(false);
 
 	}
 
@@ -61,6 +62,9 @@ public class MapPresenterImpl implements MapPresenter {
 
 	@Override
 	public void onCountrySelected() {
+		//makes sure genre info is not visible
+		mapView.setGenreVisible(false);
+		
 		//Creating Filter (base comes from filmDataModel)
 		FilmFilter filter = filmDataModel.getAppliedMapFilter();
 		
@@ -94,6 +98,9 @@ public class MapPresenterImpl implements MapPresenter {
 		{
 			entities.add(new DataTableEntity(g.getName(), g.getNumberOfFilms()));
 		}
+		//makes sure genre info is visible
+		mapView.setGenreVisible(true);
+		
 		//giving the piechart in the view a new entity list to display
 		mapView.setGenrePieChart(entities);
 		//giving the genreTable a new genre list to display
@@ -133,6 +140,9 @@ public class MapPresenterImpl implements MapPresenter {
 	 */
 	public void updateGeoChart()
 	{	
+		//whenever the geochart is updated, the genre info needs to be hidden.
+		mapView.setGenreVisible(false);
+		
 		//get country list according to currently applied filter from client side data model
 		List<Country> countries = filmDataModel.getCountryList();
 

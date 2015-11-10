@@ -67,4 +67,14 @@ public interface MapView extends IsWidget{
 	 */
 	public void setGenrePieChart(List<DataTableEntity> genres);
 	
+	/**
+	Shows/Hides the GenreTable and the GenrePieChart
+	@author Nicolas Küchler
+	@pre	-
+	@post	-
+
+	@param visible determines if the components are visible or not.
+	 */
+	public void setGenreVisible(boolean visible);
+	
 }
