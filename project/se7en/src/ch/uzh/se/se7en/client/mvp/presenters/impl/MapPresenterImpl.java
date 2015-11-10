@@ -89,12 +89,13 @@ public class MapPresenterImpl implements MapPresenter {
 	
 	public void updateGenre(List<Genre> genres) {
 		List<DataTableEntity> entities = new ArrayList<DataTableEntity>(genres.size());
-		
-		
-		
+		for(Genre g : genres)
+		{
+			entities.add(new DataTableEntity(g.getName(), g.getNumberOfFilms()));
+		}
 		mapView.setGenrePieChart(entities);
 		
-		
+		mapView.setGenreTable(genres);
 	}
 
 	/**
