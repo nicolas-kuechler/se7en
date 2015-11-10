@@ -21,6 +21,11 @@ import ch.uzh.se.se7en.server.model.GenreDB;
 import ch.uzh.se.se7en.server.model.LanguageDB;
 import ch.uzh.se.se7en.shared.model.Film;
 
+/**
+ * Tests for the FilmDB entity
+ * 
+ * @author Roland Schläfli
+ */
 @RunWith(JukitoRunner.class)
 public class FilmDBTest {
 
@@ -30,6 +35,7 @@ public class FilmDBTest {
 	Set<FilmGenreDB> genres = new HashSet<FilmGenreDB>();
 	Set<FilmLanguageDB> languages = new HashSet<FilmLanguageDB>();
 
+	// setup the fake data for testing
 	@Before
 	public void setup() {
 		dbFilm = new FilmDB("Der Tiger", 120, 1993);
@@ -59,6 +65,7 @@ public class FilmDBTest {
 		dbFilm.setFilmLanguageEntities(languages);
 	}
 
+	// test the constructors
 	@Test
 	public void testFilmDB() {
 		FilmDB film2 = new FilmDB();
@@ -92,6 +99,24 @@ public class FilmDBTest {
 		assertEquals(film4.getFilmLanguageEntities(), languages);
 	}
 
+	// test the FilmDB to Film conversion
+	@Test
+	public void testToFilm() {
+		Film film = dbFilm.toFilm();
+
+		assertEquals(film.getId(), 11);
+		assertEquals(film.getName(), "Der Tiger");
+		assertEquals(film.getLength(), new Integer(120));
+		assertEquals(film.getYear(), new Integer(1993));
+		assertEquals(film.getCountries().size(), 1);
+		assertEquals(film.getCountries().get(0), "Absurdistan");
+		assertEquals(film.getGenres().size(), 1);
+		assertEquals(film.getGenres().get(0), "Horror");
+		assertEquals(film.getLanguages().size(), 1);
+		assertEquals(film.getLanguages().get(0), "Deutsch");
+	}
+	
+	// test getters and setters
 	@Test
 	public void testGetId() {
 		assertEquals(dbFilm.getId(), 11);
@@ -206,21 +231,4 @@ public class FilmDBTest {
 		dbFilm.setFilmLanguageEntities(new HashSet<FilmLanguageDB>(languages));
 		assertEquals(dbFilm.getFilmLanguageEntities().size(), 2);
 	}
-
-	@Test
-	public void testToFilm() {
-		Film film = dbFilm.toFilm();
-
-		assertEquals(film.getId(), 11);
-		assertEquals(film.getName(), "Der Tiger");
-		assertEquals(film.getLength(), new Integer(120));
-		assertEquals(film.getYear(), new Integer(1993));
-		assertEquals(film.getCountries().size(), 1);
-		assertEquals(film.getCountries().get(0), "Absurdistan");
-		assertEquals(film.getGenres().size(), 1);
-		assertEquals(film.getGenres().get(0), "Horror");
-		assertEquals(film.getLanguages().size(), 1);
-		assertEquals(film.getLanguages().get(0), "Deutsch");
-	}
-
 }

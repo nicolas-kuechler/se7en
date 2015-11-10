@@ -13,12 +13,18 @@ import ch.uzh.se.se7en.server.model.FilmCountryDB;
 import ch.uzh.se.se7en.server.model.FilmDB;
 import ch.uzh.se.se7en.shared.model.Country;
 
+/**
+ * Tests for the CountryDB entity
+ * 
+ * @author Roland Schläfli
+ */
 public class CountryDBTest {
 
 	CountryDB country;
 
 	List<FilmCountryDB> filmCountryEntities = new ArrayList<FilmCountryDB>();
 
+	// setup the fake data for testing
 	@Before
 	public void setup() {
 		country = new CountryDB("Absurdistan");
@@ -31,6 +37,7 @@ public class CountryDBTest {
 		country.setFilmCountryEntities(filmCountryEntities);
 	}
 
+	// test the constructors
 	@Test
 	public void testCountryDB() {
 		CountryDB country2 = new CountryDB();
@@ -52,6 +59,7 @@ public class CountryDBTest {
 		assertEquals(country4.getFilmCountryEntities(), null);
 	}
 
+	// test the conversion from CountryDB to Country
 	@Test
 	public void testToCountry() {
 		Country c = country.toCountry();
@@ -61,6 +69,7 @@ public class CountryDBTest {
 		assertEquals(c.getNumberOfFilms(), null);
 	}
 
+	// test getters and setters
 	@Test
 	public void testGetId() {
 		assertEquals(country.getId(), 99);

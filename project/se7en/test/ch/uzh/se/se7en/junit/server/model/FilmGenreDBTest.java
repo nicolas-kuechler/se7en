@@ -11,12 +11,18 @@ import ch.uzh.se.se7en.server.model.FilmGenreDB;
 import ch.uzh.se.se7en.server.model.FilmGenreDBId;
 import ch.uzh.se.se7en.server.model.GenreDB;
 
+/**
+ * Tests for the FilmGenreDB join table entity
+ * 
+ * @author Roland Schläfli
+ */
 public class FilmGenreDBTest {
 
 	FilmGenreDB entity;
 	FilmDB film;
 	GenreDB genre;
 
+	// setup the fake data for testing
 	@Before
 	public void setup() {
 		film = new FilmDB("Hallo Welt", 60, 1993);
@@ -26,6 +32,7 @@ public class FilmGenreDBTest {
 		entity.setGenreId(88);
 	}
 
+	// test the constructors
 	@Test
 	public void testFilmGenreDB() {
 		FilmGenreDB entity2 = new FilmGenreDB();
@@ -47,6 +54,7 @@ public class FilmGenreDBTest {
 		assertEquals(entity3.getGenreId(), 0);
 	}
 
+	// test getters and setters
 	@Test
 	public void testGetFilm() {
 		assertEquals(entity.getFilm(), film);

@@ -9,17 +9,24 @@ import ch.uzh.se.se7en.server.model.FilmGenreDBId;
 import ch.uzh.se.se7en.server.model.FilmLanguageDBId;
 import ch.uzh.se.se7en.server.model.LanguageDB;
 
+/**
+ * Tests for the FilmLanguageDBId primary key entity
+ * 
+ * @author Dominik Bünzli
+ */
 public class FilmLanguageDBIdTest {
 
 	LanguageDB language = new LanguageDB("German");
 	FilmDB film = new FilmDB("Hallo Welt", 10, 1993);
 
+	// test the constructors
 	@Test
 	public void testFilmLanguageDBId() {
 		FilmGenreDBId filmGenreDBId = new FilmGenreDBId();
 		assertEquals(filmGenreDBId.getGenre(), null);
 	}
 
+	// test getters and setters
 	@Test
 	public void testGetFilm() {
 		FilmLanguageDBId filmLanguageDBId = new FilmLanguageDBId();

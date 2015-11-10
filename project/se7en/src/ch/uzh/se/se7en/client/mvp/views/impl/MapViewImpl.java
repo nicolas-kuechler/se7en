@@ -29,6 +29,7 @@ import com.googlecode.gwt.charts.client.ColumnType;
 import com.googlecode.gwt.charts.client.DataTable;
 import com.googlecode.gwt.charts.client.corechart.PieChart;
 import com.googlecode.gwt.charts.client.geochart.GeoChart;
+import com.googlecode.gwt.charts.client.geochart.GeoChartColorAxis;
 import com.googlecode.gwt.charts.client.geochart.GeoChartOptions;
 
 import ch.uzh.se.se7en.client.ClientLog;
@@ -95,6 +96,9 @@ public class MapViewImpl extends Composite implements MapView {
 					geoChartOptions.setHeight(500);
 					geoChartOptions.setWidth(900);
 					panel.add(geoChart);
+					GeoChartColorAxis colorAxis = GeoChartColorAxis.create();
+					colorAxis.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
+					geoChartOptions.setColorAxis(colorAxis);
 					// TODO Define GeoChart Colors
 				}
 				

@@ -1,5 +1,6 @@
 package ch.uzh.se.se7en.junit.client.presenter;
 
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,21 +13,30 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 
+import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
+import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
 import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.MapPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
+import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
+import ch.uzh.se.se7en.shared.model.Film;
+import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 @RunWith(JukitoRunner.class)
 public class MapPresenterTest {
 
-	@Inject
+	
 	MapPresenterImpl mapPresenter;
 	@Inject
 	FilmDataModel filmDataModel;
@@ -36,6 +46,8 @@ public class MapPresenterTest {
 	MapView mapView;
 	@Inject
 	HasWidgets container;
+
+	@Inject FilmListServiceAsync filmService;
 
 	List<DataTableEntity> entities;
 	List<Country> countries;
@@ -76,12 +88,28 @@ public class MapPresenterTest {
 		// when the method getCountryList of the mock is called, then the
 		// predefined list countries is returned
 		when(filmDataModel.getCountryList()).thenReturn(countries);
-
+		when(filmDataModel.getAppliedFilter()).thenReturn(new FilmFilter());
+		when(filmDataModel.getAppliedMapFilter()).thenReturn(new FilmFilter());
+		
 		// because mapView is a mock
 		// when the method getMinYear or getMaxYear of the mock is called return
 		// the sepcified years.
 		when(mapView.getMinYear()).thenReturn(1890);
 		when(mapView.getMaxYear()).thenReturn(2015);
+
+
+		//imitate the onSuccess method of the rpc call getCountryList()
+		doAnswer(new Answer<List<Country>>(){
+			@Override
+			public List<Country> answer(InvocationOnMock invocation) throws Throwable {
+				AsyncCallback<List<Country>> callback = (AsyncCallback) invocation.getArguments()[1];
+				FilmFilter filter = (FilmFilter) invocation.getArguments()[0];
+				callback.onSuccess(countries);
+				return null;
+			}
+		}).when(filmService).getCountryList(Matchers.any(FilmFilter.class),(AsyncCallback<List<Country>>) Mockito.any());
+
+		mapPresenter = new MapPresenterImpl(mapView, eventBus, filmService, filmDataModel);
 	}
 
 	@Test
@@ -101,21 +129,40 @@ public class MapPresenterTest {
 		// Test that when the range slider is changed, the geochart & the
 		// filmdata model is updated
 		mapPresenter.onRangeSliderChanged();
-		// Three times because updateGeoChart is called 2 times in the
+		// TTwo times because updateGeoChart is called 1 time in the
 		// constructor
+		verify(filmDataModel, times(2)).setCountryDataTable(Matchers.eq(entities));
+		verify(mapView, times(2)).setGeoChart(Matchers.eq(entities));
+	}
+	
+	@Test
+	public void testSetupMapUpdate()
+	{
+		//verify that eventHandler is added
+		verify(eventBus).addHandler(Matchers.eq(FilterAppliedEvent.getType()), Matchers.any(FilterAppliedHandler.class));
+	}
+	
+	@Test
+	public void testFetchData()
+	{
+		mapPresenter.fetchData();
+		verify(filmDataModel).setCountryList(Matchers.eq(countries));
+		
+		//3 Times because: 1st from Constructor (empty), 2nd from start loading (empty), 3rd from updating the map with the result
 		verify(filmDataModel, times(3)).setCountryDataTable(Matchers.eq(entities));
 		verify(mapView, times(3)).setGeoChart(Matchers.eq(entities));
 	}
+
 
 	@Test
 	public void testUpdateGeoChart() {
 		// Test that when the method updateGeoChart is called, the geochart &
 		// the filmdata model is updated
 		mapPresenter.updateGeoChart();
-		// Three times because updateGeoChart is called 2 times in the
+		// Two times because updateGeoChart is called 1 time in the
 		// constructor
-		verify(filmDataModel, times(3)).setCountryDataTable(Matchers.eq(entities));
-		verify(mapView, times(3)).setGeoChart(Matchers.eq(entities));
+		verify(filmDataModel, times(2)).setCountryDataTable(Matchers.eq(entities));
+		verify(mapView, times(2)).setGeoChart(Matchers.eq(entities));
 	}
 
 }

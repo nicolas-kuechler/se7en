@@ -15,11 +15,17 @@ import ch.uzh.se.se7en.server.model.FilmGenreDB;
 import ch.uzh.se.se7en.server.model.GenreDB;
 import ch.uzh.se.se7en.shared.model.Genre;
 
+/**
+ * Tests for the GenreDB entity
+ * 
+ * @author Roland Schläfli
+ */
 @RunWith(JukitoRunner.class)
 public class GenreDBTest {
 
 	GenreDB genre;
 
+	// setup the fake data for testing
 	@Before
 	public void setup() {
 		genre = new GenreDB("Horror");
@@ -33,6 +39,7 @@ public class GenreDBTest {
 		genre.setFilmGenreEntities(filmGenreEntities);
 	}
 
+	// test the constructors
 	@Test
 	public void testGenreDB() {
 		GenreDB genre2 = new GenreDB();
@@ -51,6 +58,7 @@ public class GenreDBTest {
 		assertEquals(genre4.getFilmGenreEntities(), null);
 	}
 
+	// test the GenreDB to Genre conversion
 	@Test
 	public void testToGenre() {
 		Genre g = genre.toGenre();
@@ -59,6 +67,7 @@ public class GenreDBTest {
 		assertEquals(g.getNumberOfFilms(), 1);
 	}
 
+	// test getters and setters
 	@Test
 	public void testGetId() {
 		assertEquals(genre.getId(), 99);
