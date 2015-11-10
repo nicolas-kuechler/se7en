@@ -37,21 +37,42 @@ public interface MapView extends IsWidget{
 	@author Nicolas Küchler
 	@pre 	geoChart != null && presenter != null
 	@post 	geoChart == geoChart @pre
-	@return	row index of selected country from datatable  	
+	@return	the id of the country which is selected in the geochart	
 	 */
-	public int getGeoChartSelection();
+	public int getGeoChartSelectionCountryId();
 	
 
-	//TODO Comments
+	/**
+	Provides access to the year Slider start year in the mapView
+	@author Nicolas Küchler
+	@pre yearSlider != null
+	@post yearSlider == yearSlider@Pre
+	@return the start year of the range slider
+	 */
 	public int getMinYear();
 	
+	/**
+	Provides access to the year Slider end year in the mapView
+	@author Nicolas Küchler
+	@pre yearSlider != null
+	@post yearSlider == yearSlider@Pre
+	@return the end year of the range slider
+	 */
 	public int getMaxYear();
 	
+	/**
+	provides access to the year Slider in the mapView to set a Range
+	@author Nicolas Küchler
+	@pre yearSlider != null
+	@post yearSlider has range from yearStart to yearEnd selected
+	@param yearStart the startYear which should be selected
+	@param yearEnd the endYear which should be selected
+	 */
 	public void setYearRange(int yearStart, int yearEnd);
 	
 	/**
 	Provides access to the Ui Component GenreTable for the mapPresenter
-	@author Nicolas Küchler
+	@author Dominik Bünzli
 	@pre 	presenter != null && genreTable != null
 	@post	genreTable with genres is displayed
 	@param	genres list of genre objects
@@ -65,6 +86,15 @@ public interface MapView extends IsWidget{
 	@post	genrePieChart with genres is displayed
 	@param	genres datatable with two columns(genreName, percentage) and a row for each genre.
 	 */
-	public void setGenrePieChart(DataTable genres);
+	public void setGenrePieChart(List<DataTableEntity> genres);
+	
+	/**
+	Shows/Hides the GenreTable and the GenrePieChart
+	@author Nicolas Küchler
+	@pre	-
+	@post	-
+	@param visible determines if the components are visible or not.
+	 */
+	public void setGenreVisible(boolean visible);
 	
 }

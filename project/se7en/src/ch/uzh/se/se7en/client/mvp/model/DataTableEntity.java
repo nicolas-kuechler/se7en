@@ -3,10 +3,17 @@ package ch.uzh.se.se7en.client.mvp.model;
 public class DataTableEntity {
 	private String name;
 	private int value;
+	private int id;
 	
 	public DataTableEntity(String name, int value) {
 		this.name = name;
 		this.value = value;
+	}
+	
+	public DataTableEntity(String name, int value, int id) {
+		this.name = name;
+		this.value = value;
+		this.id = id;
 	}
 
 	/**
@@ -45,6 +52,24 @@ public class DataTableEntity {
 		this.value = value;
 	}
 
+	/**
+	@pre id!= null
+	@post -
+	@return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	@pre -
+	@post id==id
+	@param id the id to set
+	*/
+	public void setId(int id) {
+		this.id = id;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -58,12 +83,14 @@ public class DataTableEntity {
 		if (!(obj instanceof DataTableEntity))
 			return false;
 		DataTableEntity other = (DataTableEntity) obj;
-		if (name == null) {
-			if (other.getName() != null)
-				return false;
-		} else if (!name.equals(other.getName()))
+		if (id != other.id)
 			return false;
-		if (value != other.getValue())
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (value != other.value)
 			return false;
 		return true;
 	}
@@ -73,8 +100,10 @@ public class DataTableEntity {
 	 */
 	@Override
 	public String toString() {
-		return "DataTableEntity [name=" + name + ", value=" + value + "]";
+		return "DataTableEntity [name=" + name + ", value=" + value + ", id=" + id + "]";
 	}
+
+
 	
 	
 
