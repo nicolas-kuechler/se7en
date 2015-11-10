@@ -30,6 +30,7 @@ import com.googlecode.gwt.charts.client.DataTable;
 import com.googlecode.gwt.charts.client.DataView;
 import com.googlecode.gwt.charts.client.Selection;
 import com.googlecode.gwt.charts.client.corechart.PieChart;
+import com.googlecode.gwt.charts.client.corechart.PieChartOptions;
 import com.googlecode.gwt.charts.client.event.SelectEvent;
 import com.googlecode.gwt.charts.client.event.SelectHandler;
 import com.googlecode.gwt.charts.client.geochart.GeoChart;
@@ -53,13 +54,18 @@ public class MapViewImpl extends Composite implements MapView {
 	}
 
 	private MapPresenter mapPresenter;
-	private ChartLoader chartLoader = new ChartLoader(ChartPackage.GEOCHART);
+	
+	private ChartLoader chartLoaderGeoChart = new ChartLoader(ChartPackage.GEOCHART);
 	private GeoChart geoChart;
 	private GeoChartOptions geoChartOptions;
-	private DataView dataView;
-	private DataTable dataTable;
+	private DataView dataViewGeoChart;
+	private DataTable dataTableGeoChart;
+	
+	private ChartLoader chartLoaderPieChart = new ChartLoader(ChartPackage.CORECHART);
+	private PieChart pieChart;
+	private PieChartOptions pieChartOptions;
+	
 	private DataGrid genreTable;
-	private PieChart genrePieChart;
 
 	@UiField(provided = true)
 	RangeSlider yearSlider;
@@ -94,7 +100,7 @@ public class MapViewImpl extends Composite implements MapView {
 
 	@Override
 	public void setGeoChart(final List<DataTableEntity> countries) {
-		chartLoader.loadApi(new Runnable() {
+		chartLoaderGeoChart.loadApi(new Runnable() {
 
 			public void run() {
 				if (geoChart == null) {
@@ -110,26 +116,26 @@ public class MapViewImpl extends Composite implements MapView {
 				}
 				
 				//Create new DataTable
-				dataTable = DataTable.create();
-				dataTable.addColumn(ColumnType.STRING, "Country");
-				dataTable.addColumn(ColumnType.NUMBER, "Productions");
-				dataTable.addColumn(ColumnType.NUMBER, "Id");
+				dataTableGeoChart = DataTable.create();
+				dataTableGeoChart.addColumn(ColumnType.STRING, "Country");
+				dataTableGeoChart.addColumn(ColumnType.NUMBER, "Productions");
+				dataTableGeoChart.addColumn(ColumnType.NUMBER, "Id");
 				//add number of necessary rows
-				dataTable.addRows(countries.size());
+				dataTableGeoChart.addRows(countries.size());
 				
 				for(int i = 0; i < countries.size(); i++)
 				{
-					dataTable.setValue(i, 0, countries.get(i).getName());
-					dataTable.setValue(i, 1, countries.get(i).getValue());
-					dataTable.setValue(i, 2, countries.get(i).getId());
+					dataTableGeoChart.setValue(i, 0, countries.get(i).getName());
+					dataTableGeoChart.setValue(i, 1, countries.get(i).getValue());
+					dataTableGeoChart.setValue(i, 2, countries.get(i).getId());
 				}
 				//create dataView from dataTable
-				dataView = DataView.create(dataTable);
+				dataViewGeoChart = DataView.create(dataTableGeoChart);
 				
 				//hide id information in dataView
-				dataView.hideColumns(ArrayHelper.createArray(new int[]{2}));
+				dataViewGeoChart.hideColumns(ArrayHelper.createArray(new int[]{2}));
 				
-				geoChart.draw(dataView, geoChartOptions);
+				geoChart.draw(dataViewGeoChart, geoChartOptions);
 				
 				//add a selectHandler to the map to detect users selecting a country on the map
 				geoChart.addSelectHandler(new SelectHandler(){
@@ -147,7 +153,7 @@ public class MapViewImpl extends Composite implements MapView {
 		//get information from selection which row in datatable was selected
 		int row = geoChart.getSelection().get(0).getRow();
 		//get the country id information at the selected row
-		return (int) dataTable.getValueNumber(row, 2);	
+		return (int) dataTableGeoChart.getValueNumber(row, 2);	
 	}
 
 	@Override
@@ -156,8 +162,37 @@ public class MapViewImpl extends Composite implements MapView {
 	}
 
 	@Override
-	public void setGenrePieChart(List<DataTableEntity> genres) {
-		// TODO refresh genrePieChart with new DataTable
+	public void setGenrePieChart(final List<DataTableEntity> genres) {
+		chartLoaderPieChart.loadApi(new Runnable(){
+			@Override
+			public void run() {
+				if (pieChart == null) {
+					pieChart = new PieChart();
+					pieChartOptions = PieChartOptions.create();
+					pieChartOptions.setHeight(300);
+					pieChartOptions.setWidth(300);
+					//all slices under 10% are grouped together under "others"
+					pieChartOptions.setSliceVisibilityThreshold(0.1);
+					panel.add(pieChart);
+					// TODO Define PieChart Colors
+				}
+				
+				//build DataTable
+				DataTable dataTablePieChart = DataTable.create();
+				dataTablePieChart.addColumn(ColumnType.STRING, "Genre");
+				dataTablePieChart.addColumn(ColumnType.NUMBER, "Productions");
+				dataTablePieChart.addRows(genres.size());
+				
+				//Copy all elements in DataTable
+				for(int i = 0; i < genres.size(); i++)
+				{
+					dataTablePieChart.setValue(i, 0, genres.get(i).getName());
+					dataTablePieChart.setValue(i, 1, genres.get(i).getValue());
+				}
+				//Draw the piechart using the dataTable and the specified options
+				pieChart.draw(dataTablePieChart, pieChartOptions);		
+			}
+		});
 	}
 
 	@Override
