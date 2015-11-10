@@ -106,7 +106,7 @@ public class MapViewImpl extends Composite implements MapView {
 				DataTable dataTable = DataTable.create();
 				dataTable.addColumn(ColumnType.STRING, "Country");
 				dataTable.addColumn(ColumnType.NUMBER, "Productions");
-
+				dataTable.addColumn(ColumnType.NUMBER, "Id");
 				//add number of necessary rows
 				dataTable.addRows(countries.size());
 				
@@ -114,6 +114,7 @@ public class MapViewImpl extends Composite implements MapView {
 				{
 					dataTable.setValue(i, 0, countries.get(i).getName());
 					dataTable.setValue(i, 1, countries.get(i).getValue());
+					dataTable.setValue(i, 2, countries.get(i).getId());
 				}
 				
 				geoChart.draw(dataTable, geoChartOptions);

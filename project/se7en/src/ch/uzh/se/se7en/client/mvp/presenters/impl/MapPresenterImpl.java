@@ -119,7 +119,7 @@ public class MapPresenterImpl implements MapPresenter {
 
 			if(numberOfProductions>0)
 			{	//if at least one film was produced, add country to entity list
-				entities.add(new DataTableEntity(c.getName(), numberOfProductions));
+				entities.add(new DataTableEntity(c.getName(), numberOfProductions, c.getId()));
 			}
 		}
 		//store new entitylist in filmdatamodel
