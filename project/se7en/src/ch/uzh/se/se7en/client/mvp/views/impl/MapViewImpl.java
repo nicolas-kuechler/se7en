@@ -151,7 +151,7 @@ public class MapViewImpl extends Composite implements MapView {
 	}
 
 	@Override
-	public int getGeoChartSelection() {
+	public int getGeoChartSelectionCountryId() {
 		//get information from selection which row in datatable was selected
 		int row = geoChart.getSelection().get(0).getRow();
 		//get the country id information at the selected row

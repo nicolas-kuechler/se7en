@@ -74,7 +74,7 @@ public class MapPresenterImpl implements MapPresenter {
 		
 		//add the id of the country which was selected to the filter
 		Set<Integer> countryId = new HashSet<Integer>();
-		countryId.add(mapView.getGeoChartSelection());
+		countryId.add(mapView.getGeoChartSelectionCountryId());
 		filter.setCountryIds(countryId);
 		
 		//start rpc to get Genre List
