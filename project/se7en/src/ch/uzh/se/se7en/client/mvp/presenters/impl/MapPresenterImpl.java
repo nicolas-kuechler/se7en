@@ -60,7 +60,7 @@ public class MapPresenterImpl implements MapPresenter {
 		updateGeoChart();
 	}
 
-	@Override
+	@Override //TODO NK Method Test
 	public void onCountrySelected() {
 		//makes sure genre info is not visible
 		mapView.setGenreVisible(false);
@@ -90,7 +90,15 @@ public class MapPresenterImpl implements MapPresenter {
 			}
 		});
 	}
-	//TODO reset the genreTable & piechart when: new filter is applied || other country selected || user leaves page || new selection
+	
+	//TODO NK Method Test
+	/**
+	Updates the Genre Information (piechart & genreTable) in the view with a new list of genres
+	@author Nicolas Küchler
+	@pre	mapView != null
+	@post	mapView.genreTable && mapView.pieChart display genres
+	@param 	genres List of Genre that should be displayed
+	 */
 	public void updateGenre(List<Genre> genres) {
 		//Creating and filling a DataTableEntity List which represents a DataTable in vanilla Java code
 		List<DataTableEntity> entities = new ArrayList<DataTableEntity>(genres.size());
