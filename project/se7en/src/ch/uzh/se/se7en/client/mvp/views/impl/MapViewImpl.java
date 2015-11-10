@@ -28,7 +28,10 @@ import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.ColumnType;
 import com.googlecode.gwt.charts.client.DataTable;
 import com.googlecode.gwt.charts.client.DataView;
+import com.googlecode.gwt.charts.client.Selection;
 import com.googlecode.gwt.charts.client.corechart.PieChart;
+import com.googlecode.gwt.charts.client.event.SelectEvent;
+import com.googlecode.gwt.charts.client.event.SelectHandler;
 import com.googlecode.gwt.charts.client.geochart.GeoChart;
 import com.googlecode.gwt.charts.client.geochart.GeoChartColorAxis;
 import com.googlecode.gwt.charts.client.geochart.GeoChartOptions;
@@ -53,6 +56,8 @@ public class MapViewImpl extends Composite implements MapView {
 	private ChartLoader chartLoader = new ChartLoader(ChartPackage.GEOCHART);
 	private GeoChart geoChart;
 	private GeoChartOptions geoChartOptions;
+	private DataView dataView;
+	private DataTable dataTable;
 	private DataGrid genreTable;
 	private PieChart genrePieChart;
 
@@ -105,7 +110,7 @@ public class MapViewImpl extends Composite implements MapView {
 				}
 				
 				//Create new DataTable
-				DataTable dataTable = DataTable.create();
+				dataTable = DataTable.create();
 				dataTable.addColumn(ColumnType.STRING, "Country");
 				dataTable.addColumn(ColumnType.NUMBER, "Productions");
 				dataTable.addColumn(ColumnType.NUMBER, "Id");
@@ -118,11 +123,24 @@ public class MapViewImpl extends Composite implements MapView {
 					dataTable.setValue(i, 1, countries.get(i).getValue());
 					dataTable.setValue(i, 2, countries.get(i).getId());
 				}
+				//create dataView from dataTable
+				dataView = DataView.create(dataTable);
 				
-				DataView dataView = DataView.create(dataTable);
-				dataView.hideColumns(ArrayHelper.createArray(new int[]{1}));
+				//hide id information in dataView
+				dataView.hideColumns(ArrayHelper.createArray(new int[]{2}));
 				
 				geoChart.draw(dataView, geoChartOptions);
+				
+				//dataView.setColumns(ArrayHelper.createArray(new int[]{2}));
+				geoChart.addSelectHandler(new SelectHandler(){
+
+					@Override
+					public void onSelect(SelectEvent event) {
+							Selection selection =  geoChart.getSelection().get(0);
+							ClientLog.writeMsg(dataTable.getValueString(selection.getRow(), 0)+" Id: "+dataTable.getValueString(selection.getRow(), 2));								
+	
+					}
+				});
 
 			}
 		});
@@ -130,8 +148,10 @@ public class MapViewImpl extends Composite implements MapView {
 
 	@Override
 	public int getGeoChartSelection() {
-		// TODO Return geoChartSelection
-		return 0;
+		
+		//TODO
+		
+		return 1;
 	}
 
 	@Override
