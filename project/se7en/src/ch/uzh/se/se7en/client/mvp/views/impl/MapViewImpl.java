@@ -36,6 +36,8 @@ import com.googlecode.gwt.charts.client.event.SelectHandler;
 import com.googlecode.gwt.charts.client.geochart.GeoChart;
 import com.googlecode.gwt.charts.client.geochart.GeoChartColorAxis;
 import com.googlecode.gwt.charts.client.geochart.GeoChartOptions;
+import com.googlecode.gwt.charts.client.options.Legend;
+import com.googlecode.gwt.charts.client.options.LegendPosition;
 import com.googlecode.gwt.charts.client.util.ArrayHelper;
 
 import ch.uzh.se.se7en.client.ClientLog;
@@ -171,10 +173,14 @@ public class MapViewImpl extends Composite implements MapView {
 					pieChartOptions = PieChartOptions.create();
 					pieChartOptions.setHeight(300);
 					pieChartOptions.setWidth(300);
+					//hide legend
+					pieChartOptions.setLegend(Legend.create(LegendPosition.NONE));
 					//all slices under 10% are grouped together under "others"
 					pieChartOptions.setSliceVisibilityThreshold(0.1);
+					//TODO Need to define way more piechart colors (at least max depending on threshold in line above)
+					pieChartOptions.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
 					panel.add(pieChart);
-					// TODO Define PieChart Colors
+					
 				}
 				
 				//build DataTable

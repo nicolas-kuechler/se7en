@@ -305,6 +305,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// TODO: Sprint 2
 
 		// return the filled list of genres
+		
+		
+		
+		//DEMO Code Start
+		genres.add(new Genre(1, "Action", 10));
+		genres.add(new Genre(2, "Adventure", 5));
+		genres.add(new Genre(3, "Comedy", 20));
+		//DEMO Code Start
 		return genres;
 	}
 
