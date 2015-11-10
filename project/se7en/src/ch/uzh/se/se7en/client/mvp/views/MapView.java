@@ -42,7 +42,7 @@ public interface MapView extends IsWidget{
 	public int getGeoChartSelection();
 	
 
-	//TODO Comments
+	
 	public int getMinYear();
 	
 	public int getMaxYear();
@@ -51,7 +51,7 @@ public interface MapView extends IsWidget{
 	
 	/**
 	Provides access to the Ui Component GenreTable for the mapPresenter
-	@author Nicolas Küchler
+	@author Dominik Bünzli
 	@pre 	presenter != null && genreTable != null
 	@post	genreTable with genres is displayed
 	@param	genres list of genre objects

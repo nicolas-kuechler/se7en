@@ -160,12 +160,13 @@ public class MapViewImpl extends Composite implements MapView {
 	
 	@Override
 	public void setGenreVisible(boolean visible) {
+		//TODO Maybe doing it with fade animation
 		if(visible)
 		{
 			if(genreTable!=null)
 			{
 				genreTable.setVisible(true);
-			}
+			}	
 			if(pieChart!=null)
 			{
 				pieChart.setVisible(true);
@@ -182,12 +183,18 @@ public class MapViewImpl extends Composite implements MapView {
 				pieChart.setVisible(false);
 			}
 		}
-		
 	}
 
 	@Override
 	public void setGenreTable(List<Genre> genres) {
 		// TODO refresh genreTable with new List
+		
+		// TODO a Table where: (Rank Information needs to be computed somehow) 
+		// checkout: http://stackoverflow.com/questions/4347224/adding-a-row-number-column-to-gwt-celltable
+		//	Rank|GenreName|Productions
+		//    1   Action     30
+		//    2   Drama      24
+		//  ...
 	}
 
 	@Override
@@ -224,7 +231,6 @@ public class MapViewImpl extends Composite implements MapView {
 				}
 				//Draw the piechart using the dataTable and the specified options
 				pieChart.draw(dataTablePieChart, pieChartOptions);	
-			
 			}
 		});
 	}
@@ -243,7 +249,4 @@ public class MapViewImpl extends Composite implements MapView {
 	public void setYearRange(int yearStart, int yearEnd) {
 		yearSlider.setValue(new Range(yearStart, yearEnd));
 	}
-
-	
-
 }
