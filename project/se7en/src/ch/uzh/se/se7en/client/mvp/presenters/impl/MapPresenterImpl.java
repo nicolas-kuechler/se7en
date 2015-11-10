@@ -86,15 +86,17 @@ public class MapPresenterImpl implements MapPresenter {
 			}
 		});
 	}
-	
+	//TODO reset the genreTable & piechart when: new filter is applied || other country selected || user leaves page || new selection
 	public void updateGenre(List<Genre> genres) {
+		//Creating and filling a DataTableEntity List which represents a DataTable in vanilla Java code
 		List<DataTableEntity> entities = new ArrayList<DataTableEntity>(genres.size());
 		for(Genre g : genres)
 		{
 			entities.add(new DataTableEntity(g.getName(), g.getNumberOfFilms()));
 		}
+		//giving the piechart in the view a new entity list to display
 		mapView.setGenrePieChart(entities);
-		
+		//giving the genreTable a new genre list to display
 		mapView.setGenreTable(genres);
 	}
 
