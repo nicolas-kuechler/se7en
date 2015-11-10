@@ -131,27 +131,23 @@ public class MapViewImpl extends Composite implements MapView {
 				
 				geoChart.draw(dataView, geoChartOptions);
 				
-				//dataView.setColumns(ArrayHelper.createArray(new int[]{2}));
+				//add a selectHandler to the map to detect users selecting a country on the map
 				geoChart.addSelectHandler(new SelectHandler(){
-
 					@Override
 					public void onSelect(SelectEvent event) {
-							Selection selection =  geoChart.getSelection().get(0);
-							ClientLog.writeMsg(dataTable.getValueString(selection.getRow(), 0)+" Id: "+dataTable.getValueString(selection.getRow(), 2));								
-	
+							mapPresenter.onCountrySelected();	 //inform the mapPresenter that a country was selected
 					}
 				});
-
 			}
 		});
 	}
 
 	@Override
 	public int getGeoChartSelection() {
-		
-		//TODO
-		
-		return 1;
+		//get information from selection which row in datatable was selected
+		int row = geoChart.getSelection().get(0).getRow();
+		//get the country id information at the selected row
+		return (int) dataTable.getValueNumber(row, 2);	
 	}
 
 	@Override
@@ -160,7 +156,7 @@ public class MapViewImpl extends Composite implements MapView {
 	}
 
 	@Override
-	public void setGenrePieChart(DataTable genres) {
+	public void setGenrePieChart(List<DataTableEntity> genres) {
 		// TODO refresh genrePieChart with new DataTable
 	}
 

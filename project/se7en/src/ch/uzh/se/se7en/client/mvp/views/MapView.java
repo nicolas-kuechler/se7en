@@ -65,6 +65,6 @@ public interface MapView extends IsWidget{
 	@post	genrePieChart with genres is displayed
 	@param	genres datatable with two columns(genreName, percentage) and a row for each genre.
 	 */
-	public void setGenrePieChart(DataTable genres);
+	public void setGenrePieChart(List<DataTableEntity> genres);
 	
 }

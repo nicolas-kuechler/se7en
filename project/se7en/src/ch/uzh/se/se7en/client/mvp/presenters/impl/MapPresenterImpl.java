@@ -1,7 +1,9 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 
@@ -19,6 +21,8 @@ import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
+import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.Genre;
 
 public class MapPresenterImpl implements MapPresenter {
 
@@ -57,13 +61,40 @@ public class MapPresenterImpl implements MapPresenter {
 
 	@Override
 	public void onCountrySelected() {
-		// TODO Auto-generated method stub
-		// 1. clear genreTable & genrePieChart
-		// 2. get year range from view
-		// 3. get Information which Country was selected (getGeoChartSelection() tbd if row index or what)
-		// 4. getAppliedFilter Info from filmDataModel
-		// 5. start rpc call 
-		// 6. setGenretable, setGenrePieChart
+		//Creating Filter (base comes from filmDataModel)
+		FilmFilter filter = filmDataModel.getAppliedMapFilter();
+		
+		//add current year information from mapView yearRangeSlider
+		filter.setYearStart(mapView.getMinYear());
+		filter.setYearEnd(mapView.getMaxYear());
+		
+		//add the id of the country which was selected to the filter
+		Set<Integer> countryId = new HashSet<Integer>();
+		countryId.add(mapView.getGeoChartSelection());
+		filter.setCountryIds(countryId);
+		
+		//start rpc to get Genre List
+		filmListService.getGenreList(filter, new AsyncCallback<List<Genre>>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Handle Error for User
+				ClientLog.writeErr("getGenreList failed");
+			}
+			@Override
+			public void onSuccess(List<Genre> result) {
+				updateGenre(result);
+			}
+		});
+	}
+	
+	public void updateGenre(List<Genre> genres) {
+		List<DataTableEntity> entities = new ArrayList<DataTableEntity>(genres.size());
+		
+		
+		
+		mapView.setGenrePieChart(entities);
+		
+		
 	}
 
 	/**
