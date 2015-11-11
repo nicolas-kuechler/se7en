@@ -95,11 +95,11 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		}
 
 		// import the films into the db
-		if (importFilmsToDB(importedFilms)) {
+		//if (importFilmsToDB(importedFilms)) {
 			return true;
-		}
+		//}
 
-		return false;
+		//return false;
 	}
 
 

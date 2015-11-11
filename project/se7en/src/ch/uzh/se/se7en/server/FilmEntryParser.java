@@ -55,7 +55,8 @@ public class FilmEntryParser implements CSVEntryParser<Film>{
 			genres = Arrays.asList(data[4].split("--"));
 		}
 		
-		return new Film(name, length, year, countries, languages, genres);
+		Film importedFilm = new Film(name, length, year, countries, languages, genres);
+		return importedFilm;
 		
 	}
 
