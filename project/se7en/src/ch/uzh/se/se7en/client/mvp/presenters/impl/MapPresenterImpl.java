@@ -60,7 +60,7 @@ public class MapPresenterImpl implements MapPresenter {
 		updateGeoChart();
 	}
 
-	@Override //TODO NK Method Test
+	@Override
 	public void onCountrySelected() {
 		//makes sure genre info is not visible
 		mapView.setGenreVisible(false);
@@ -91,7 +91,6 @@ public class MapPresenterImpl implements MapPresenter {
 		});
 	}
 	
-	//TODO NK Method Test
 	/**
 	Updates the Genre Information (piechart & genreTable) in the view with a new list of genres
 	@author Nicolas Küchler

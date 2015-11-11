@@ -184,7 +184,6 @@ public class FilterPresenterTest {
 	}
 	
 		
-	
 	@Test
 	public void testBind() {
 		verify(filterView).setPresenter(filterPresenter);
