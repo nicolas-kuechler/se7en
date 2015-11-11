@@ -7,9 +7,26 @@ import com.googlecode.jcsv.reader.CSVEntryParser;
 
 import ch.uzh.se.se7en.shared.model.Film;
 
+/**
+ * This class defines an entry parser for use with the jcsv library.
+ * @author Cyrill Halter
+ *
+ */
 public class FilmEntryParser implements CSVEntryParser<Film>{
 
 	@Override
+	/**
+	 * This method is called to to parse a line from the csv file into a
+	 * Film object. Fields that have no value in the csv file are set to
+	 * null in the Film object.
+	 * 
+	 * @author Cyrill Halter
+	 * @pre -
+	 * @post -
+	 * @param String... data String array read from the csv file line
+	 * @returns new Film A Film object created from a line out of  the csv file
+	 *            
+	 */
 	public Film parseEntry(String... data) {
 		
 		String name = null;
