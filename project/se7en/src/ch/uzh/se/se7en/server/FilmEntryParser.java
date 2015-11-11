@@ -38,6 +38,7 @@ public class FilmEntryParser implements CSVEntryParser<Film>{
 		
 		if (!data[0].trim().equals("")){
 			name = data[0];
+			ServerLog.writeErr(name);
 		}
 		if(!data[1].trim().equals("")){
 			length = Integer.parseInt(data[1]);
@@ -49,10 +50,10 @@ public class FilmEntryParser implements CSVEntryParser<Film>{
 			languages = Arrays.asList(data[3].split("--"));
 		}
 		if(!data[4].trim().equals("")){
-			length = Integer.parseInt(data[4]);
+			year = Integer.parseInt(data[4]);
 		}
 		if(!data[5].trim().equals("")){
-			genres = Arrays.asList(data[4].split("--"));
+			genres = Arrays.asList(data[5].split("--"));
 		}
 		
 		Film importedFilm = new Film(name, length, year, countries, languages, genres);

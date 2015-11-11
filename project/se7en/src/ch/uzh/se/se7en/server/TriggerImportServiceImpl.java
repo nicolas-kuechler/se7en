@@ -80,7 +80,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 
 			// open GCS channel for specified file name and create reader
 			GcsInputChannel csvReadChannel = gcsService.openReadChannel(gcsFilename, 0);
-			Reader csvFileReader = new InputStreamReader(Channels.newInputStream(csvReadChannel));
+			Reader csvFileReader = new InputStreamReader(Channels.newInputStream(csvReadChannel), "UTF-8");
 
 			// create csv reader on inputstream reader
 			CSVReader<Film> filmReader = new CSVReaderBuilder<Film>(csvFileReader)
@@ -95,11 +95,11 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		}
 
 		// import the films into the db
-		//if (importFilmsToDB(importedFilms)) {
+		if (importFilmsToDB(importedFilms)) {
 			return true;
-		//}
+		}
 
-		//return false;
+		return false;
 	}
 
 
