@@ -208,6 +208,9 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 		filmDataModel.setAppliedFilter(currentFilter);
 		filmDataModel.setAppliedMapFilter(adjustedMapFilter(currentFilter));
+		
+		String token = UrlToken.createUrlToken(currentFilter, true);
+		
 	}
 
 	//TODO Decide if not better part of class FilmFilter
