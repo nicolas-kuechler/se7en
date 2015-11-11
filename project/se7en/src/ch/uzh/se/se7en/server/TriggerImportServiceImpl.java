@@ -35,7 +35,6 @@ import ch.uzh.se.se7en.server.model.CountryDB;
 import ch.uzh.se.se7en.server.model.FilmCountryDB;
 import ch.uzh.se.se7en.server.model.FilmDB;
 import ch.uzh.se.se7en.server.model.FilmGenreDB;
-import ch.uzh.se.se7en.server.model.FilmHelper;
 import ch.uzh.se.se7en.server.model.FilmLanguageDB;
 import ch.uzh.se.se7en.server.model.GenreDB;
 import ch.uzh.se.se7en.server.model.LanguageDB;
@@ -88,7 +87,6 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 					.entryParser(new FilmEntryParser()).build();
 
 			// read csv to Film objects
-			FilmHelper tempFilm;
 			importedFilms = filmReader.readAll();
 
 		} catch (IOException e) {
@@ -104,26 +102,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		return false;
 	}
 
-	public CSVReader<FilmHelper> initCsvFileReader(String nameOfFile){
-		GcsService gcsService = GcsServiceFactory.createGcsService();
-		GcsFilename gcsFilename = new GcsFilename("se-team-se7en", nameOfFile);
 
-		CSVReader<FilmHelper> filmReader = null;
-		try {
-
-			// open GCS channel for specified file name and create reader
-			GcsInputChannel csvReadChannel = gcsService.openReadChannel(gcsFilename, 0);
-			Reader csvFileReader = new InputStreamReader(Channels.newInputStream(csvReadChannel));
-
-			// create csv reader on inputstream reader
-			ValueProcessorProvider vpp = new ValueProcessorProvider();
-			filmReader = new CSVReaderBuilder<FilmHelper>(csvFileReader)
-					.entryParser(new AnnotationEntryParser<FilmHelper>(FilmHelper.class, vpp)).build();
-		}catch (IOException e){
-			e.printStackTrace();
-		}
-		return filmReader;
-	}
 	/**
 	 * Imports the parsed films into the database
 	 * 
