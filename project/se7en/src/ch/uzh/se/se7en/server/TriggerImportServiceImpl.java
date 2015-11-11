@@ -73,7 +73,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	 */
 	@Override
 	public boolean importFile(String nameOfFile) {
-		List<Film> importedFilms = new LinkedList<Film>();	
+		List<Film> importedFilms = null;	
 		try{
 
 			GcsService gcsService = GcsServiceFactory.createGcsService();
@@ -84,19 +84,12 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			Reader csvFileReader = new InputStreamReader(Channels.newInputStream(csvReadChannel));
 
 			// create csv reader on inputstream reader
-			ValueProcessorProvider vpp = new ValueProcessorProvider();
-			CSVReader<FilmHelper> filmReader = new CSVReaderBuilder<FilmHelper>(csvFileReader)
-					.entryParser(new AnnotationEntryParser<FilmHelper>(FilmHelper.class, vpp)).build();
+			CSVReader<Film> filmReader = new CSVReaderBuilder<Film>(csvFileReader)
+					.entryParser(new FilmEntryParser()).build();
 
-			// read csv to FilmHelper objects, convert them to Film objects and
-			// add them to the importedFilms List
+			// read csv to Film objects
 			FilmHelper tempFilm;
-			while ((tempFilm = filmReader.readNext()) != null) {
-				importedFilms.add(new Film(tempFilm.getName(), tempFilm.getLength(), tempFilm.getYear(),
-						new ArrayList<String>(Arrays.asList(tempFilm.getCountries().split("--"))),
-						new ArrayList<String>(Arrays.asList(tempFilm.getLanguages().split("--"))),
-						new ArrayList<String>(Arrays.asList(tempFilm.getGenres().split("--")))));
-			}
+			importedFilms = filmReader.readAll();
 
 		} catch (IOException e) {
 			e.printStackTrace();
