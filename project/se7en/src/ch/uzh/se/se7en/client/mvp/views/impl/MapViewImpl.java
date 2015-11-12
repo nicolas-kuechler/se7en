@@ -13,15 +13,19 @@ import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideStopEvent;
 import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideStopHandler;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
 import com.google.inject.Inject;
 import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
@@ -68,14 +72,20 @@ public class MapViewImpl extends Composite implements MapView {
 	private PieChart pieChart;
 	private PieChartOptions pieChartOptions;
 	
-	private DataGrid genreTable;
 
 	@UiField(provided = true)
 	RangeSlider yearSlider;
 	@UiField
 	PanelBody panel;
-	@UiField
-	DataGrid<Film> dataGrid;
+	@UiField (provided = true)
+	DataGrid<Genre> genreTable;
+	
+	ListDataProvider<Genre> genreProvider = new ListDataProvider<Genre>();
+
+	TextColumn<Genre> rankColumn;
+	TextColumn<Genre> nameColumn;
+	TextColumn<Genre> productionColumn;
+
 
 	@Inject
 	public MapViewImpl() {
@@ -85,9 +95,19 @@ public class MapViewImpl extends Composite implements MapView {
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
 		yearSlider.setWidth("900px");
 		yearSlider.setTooltip(TooltipType.ALWAYS);
+		genreTable = new DataGrid<Genre>();
+		genreTable.setWidth("20%");
+		genreTable.setHeight("200px");
+		genreTable.setAutoHeaderRefreshDisabled(true);
+		buildTable();
+		genreProvider.addDataDisplay(genreTable);
+		
 		initWidget(uiBinder.createAndBindUi(this));
+		
 
-		panel.setHeight("550px");
+
+		panel.setHeight("50%");
+		panel.setWidth("100%");
 	}
 
 	@Override
@@ -108,6 +128,7 @@ public class MapViewImpl extends Composite implements MapView {
 			public void run() {
 				if (geoChart == null) {
 					geoChart = new GeoChart();
+					geoChart.setStyleName("geoChart");
 					geoChartOptions = GeoChartOptions.create();
 					geoChartOptions.setHeight(500);
 					geoChartOptions.setWidth(900);
@@ -185,17 +206,68 @@ public class MapViewImpl extends Composite implements MapView {
 			}
 		}
 	}
+	
+	public void buildTable(){
+		
+		rankColumn = new TextColumn<Genre>() {
+			@Override
+			public String getValue(Genre genreObject) {
+
+				return Integer.toString(genreProvider.getList().indexOf(genreObject) + 1);
+			}
+		};
+		
+
+		nameColumn = new TextColumn<Genre>() {
+			@Override
+			public String getValue(Genre genreObject) {
+
+				String value;
+				if (genreObject.getName() != null) {
+					value = genreObject.getName();
+				} else {
+					value = "";
+				}
+				return value;
+			}
+		};
+
+		productionColumn = new TextColumn<Genre>() {
+			@Override
+			public String getValue(Genre genreObject) {
+
+				String value;
+				if (genreObject.getNumberOfFilms() != 0) {
+					value = Integer.toString(genreObject.getNumberOfFilms());
+				} else {
+					value = "";
+				}
+				return value;
+			}
+		};
+
+		genreTable.setColumnWidth(rankColumn, 33, Unit.PCT);
+		genreTable.addColumn(rankColumn, "Rank");
+		genreTable.setColumnWidth(nameColumn, 33, Unit.PCT);
+		genreTable.addColumn(nameColumn, "Name");
+		genreTable.setColumnWidth(productionColumn, 33, Unit.PCT);
+		genreTable.addColumn(productionColumn, "Productions");
+	}
 
 	@Override
 	public void setGenreTable(List<Genre> genres) {
+			
+		genreProvider.setList(genres);
+
+
 		// TODO refresh genreTable with new List
-		
-		// TODO a Table where: (Rank Information needs to be computed somehow) 
-		// checkout: http://stackoverflow.com/questions/4347224/adding-a-row-number-column-to-gwt-celltable
-		//	Rank|GenreName|Productions
-		//    1   Action     30
-		//    2   Drama      24
-		//  ...
+			
+			// TODO a Table where: (Rank Information needs to be computed somehow) 
+			// checkout: http://stackoverflow.com/questions/4347224/adding-a-row-number-column-to-gwt-celltable
+			//	Rank|GenreName|Productions
+			//    1   Action     30
+			//    2   Drama      24
+			//  ...
 	}
 
 	@Override
@@ -205,6 +277,7 @@ public class MapViewImpl extends Composite implements MapView {
 			public void run() {
 				if (pieChart == null) {
 					pieChart = new PieChart();
+					pieChart.setStyleName("pieChart");
 					pieChartOptions = PieChartOptions.create();
 					pieChartOptions.setHeight(300);
 					pieChartOptions.setWidth(300);
