@@ -64,7 +64,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 		updateAppliedFilterBox();
 		
 		//TODO NK adjust test
-		String filterToken = History.getToken();
+		String filterToken = "";
 		if(mode.equals(Tokens.MAP))
 		{
 			filterToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
