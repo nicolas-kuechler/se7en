@@ -9,7 +9,7 @@ import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class UrlToken {
-	
+	//TODO Test encode decode method (looking if & are replaced aswell)
 	/**
 
 	@author Nicolas Küchler
@@ -36,7 +36,7 @@ public class UrlToken {
 		if(filter.getName()!=null)
 		{
 			//token+= "&na="+ filter.getName(); TODO NK Problem to solve calling static native method (used for junit test)
-			token+= "&na="+ URL.encode(filter.getName());
+			token+= "&na="+ URL.encodePathSegment(filter.getName());
 		}
 
 		//Length
@@ -112,7 +112,7 @@ public class UrlToken {
 				//TODO NK Define what to do with autosearch
 				break;
 			case "na":
-				filter.setName(URL.decode(value));
+				filter.setName(URL.decodePathSegment(value));
 				//filter.setName(value); TODO NK Problem to solve calling static native method (used for junit test)
 				break;
 

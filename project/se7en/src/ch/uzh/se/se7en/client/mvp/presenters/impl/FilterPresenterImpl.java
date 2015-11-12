@@ -62,6 +62,18 @@ public class FilterPresenterImpl implements FilterPresenter {
 		updateFilterFromView();
 		eventBus.fireEvent(new FilterAppliedEvent());
 		updateAppliedFilterBox();
+		
+		//TODO NK adjust test
+		String filterToken = History.getToken();
+		if(mode.equals(Tokens.MAP))
+		{
+			filterToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
+		}
+		else if(mode.equals(Tokens.TABLE))
+		{
+			filterToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
+		}
+		History.newItem(filterToken, false);
 	}
 
 	@Override
@@ -209,11 +221,8 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 		filmDataModel.setAppliedFilter(currentFilter);
 		filmDataModel.setAppliedMapFilter(adjustedMapFilter(currentFilter));
-		
-		
 	}
 
-	//TODO Decide if not better part of class FilmFilter
 	/**
 	Helper method to convert a FilmFilter Object to a List<String> Object.
 	@author Nicolas Küchler
@@ -261,7 +270,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 		return filterList;
 	}
 
-	@Override
+	@Override //TODO NK Test and Comments
 	public void setFilter(String filterToken) {
 		if(filterToken.equals("")) //Url doesn't contain filter information (option1 Tab Change, optio2 No filter set)
 		{
@@ -350,6 +359,4 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 		return filter;
 	}
-
-
 }
