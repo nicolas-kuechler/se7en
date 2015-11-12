@@ -35,8 +35,8 @@ public class UrlToken {
 		//Name --> need to encode 
 		if(filter.getName()!=null)
 		{
-			token+= "&na="+ filter.getName();
-			//token+= "&na="+ URL.encode(filter.getName());
+			//token+= "&na="+ filter.getName(); TODO NK Problem to solve calling static native method (used for junit test)
+			token+= "&na="+ URL.encode(filter.getName());
 		}
 
 		//Length
@@ -112,8 +112,8 @@ public class UrlToken {
 				//TODO NK Define what to do with autosearch
 				break;
 			case "na":
-				//filter.setName(URL.decode(value));
-				filter.setName(value);
+				filter.setName(URL.decode(value));
+				//filter.setName(value); TODO NK Problem to solve calling static native method (used for junit test)
 				break;
 
 			case "le":

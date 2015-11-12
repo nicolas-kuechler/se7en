@@ -1,6 +1,7 @@
 package ch.uzh.se.se7en.client.mvp.views;
 
 import java.util.List;
+import java.util.Set;
 
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 
@@ -121,7 +122,7 @@ public interface FilterView extends IsWidget {
 	@post	countrySelect selected options == selectedOptions
 	@param	selectedOptions Options that are available in the MultiSelect and should be selected
 	 */
-	public void setSelectedCountryOptions(List<String> selectedOptions);
+	public void setSelectedCountryOptions(Set<Integer> selectedOptions);
 	
 	/**
 	Sets the available options to choose in the MultiSelect Language
@@ -148,7 +149,7 @@ public interface FilterView extends IsWidget {
 	@post	languageSelect selected options == selectedOptions
 	@param	selectedOptions Options that are available in the MultiSelect and should be selected
 	 */
-	public void setSelectedLanguageOptions(List<String> selectedOptions);
+	public void setSelectedLanguageOptions(Set<Integer> selectedOptions);
 	
 	/**
 	Sets the available options to choose in the MultiSelect Genre
@@ -175,7 +176,7 @@ public interface FilterView extends IsWidget {
 	@post	genreSelect selected options == selectedOptions
 	@param	selectedOptions Options that are available in the MultiSelect and should be selected
 	 */
-	public void setSelectedGenreOptions(List<String> selectedOptions);
+	public void setSelectedGenreOptions(Set<Integer> selectedOptions);
 	
 	/**
 	Provides access to the UI Component AppliedFilter for the filterPresenter
