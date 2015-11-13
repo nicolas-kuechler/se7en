@@ -254,6 +254,20 @@ th {
 .paginator{
 	float: right;
 }
+/*############################################MAP VIEW SETTINGS####################################################*/
+
+.genreTable{
+	float:right;
+}
+
+.pieChart{
+	float:right;
+}
+.geoChart{
+	float:left;
+}
+
+
 /*############################################WELCOME VIEW IMAGE SETTINGS####################################################*/
 
 /** set the background text on welcome view to be in the middle of the screen and over the background image*/
