@@ -187,8 +187,8 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public List<SelectOption> getSelectedCountryOptions() {
-		return countrySelect.getSelectedOptions();
+	public Set<Integer> getSelectedCountryIds() {
+		return countrySelect.getAllSelectedIds();
 	}
 
 	@Override
@@ -209,8 +209,8 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public List<SelectOption> getSelectedLanguageOptions() {
-		return languageSelect.getSelectedOptions();
+	public Set<Integer> getSelectedLanguageIds() {
+		return languageSelect.getAllSelectedIds();
 	}
 
 	@Override
@@ -232,8 +232,8 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public List<SelectOption> getSelectedGenreOptions() {
-		return genreSelect.getSelectedOptions();
+	public Set<Integer> getSelectedGenreIds() {
+		return genreSelect.getAllSelectedIds();
 	}
 
 	@Override

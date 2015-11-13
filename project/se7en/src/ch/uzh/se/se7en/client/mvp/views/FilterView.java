@@ -113,7 +113,7 @@ public interface FilterView extends IsWidget {
 	@post	countrySelect selected options == countrySelect selected options @pre
 	@return	A List of SelectOption which include the currently selected options. 
 	 */
-	public List<SelectOption> getSelectedCountryOptions();
+	public Set<Integer> getSelectedCountryIds();
 	
 	/**
 	Sets currently chosen (selected) options in the MultiSelect Country
@@ -140,7 +140,7 @@ public interface FilterView extends IsWidget {
 	@post	languageSelect selected options == languageSelect selected options @pre
 	@return	A List of SelectOption which include the currently selected options. 
 	 */
-	public List<SelectOption> getSelectedLanguageOptions();
+	public Set<Integer> getSelectedLanguageIds();
 	
 	/**
 	Sets currently chosen (selected) options in the MultiSelect Language
@@ -167,7 +167,7 @@ public interface FilterView extends IsWidget {
 	@post	genreSelect selected options == genreSelect selected options @pre
 	@return	A List of SelectOption which include the currently selected options. 
 	 */
-	public List<SelectOption> getSelectedGenreOptions();
+	public Set<Integer> getSelectedGenreIds();
 	
 	/**
 	Sets currently chosen (selected) options in the MultiSelect Genre

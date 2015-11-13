@@ -1,7 +1,9 @@
 package ch.uzh.se.se7en.client.mvp.views.widgets;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.gwtbootstrap3.extras.select.client.ui.Option;
 import org.gwtbootstrap3.extras.select.client.ui.Select;
@@ -39,57 +41,70 @@ public class MultiSelect extends Composite {
 		select.setEnabled(true);
 
 	}
-
-	/**
-	 * This method delivers a list of SelectOption objects according to what was
-	 * selected by the user in the multiselect widget
-	 * 
-	 * @author Cyrill Halter
-	 * @pre -
-	 * @post -
-	 * @param -
-	 * @return List<SelectOption> selectedOption A list of selected Options as
-	 *         SelectOption objects
-	 */
-	public List<SelectOption> getSelectedOptions() {
-		List<String> ids = select.getAllSelectedValues();
-		List<SelectOption> selectedOptions = new ArrayList<SelectOption>();
-		for (String id : ids) {
-			int i = 0;
-			SelectOption tempOption = currentOptions.get(i);
-			while (Integer.parseInt(id) != tempOption.getId()) {
-				tempOption = currentOptions.get(++i);
-			}
-			selectedOptions.add(tempOption);
+	
+	// TODO CH Verify and add comment
+	public Set<Integer> getAllSelectedIds()
+	{
+		List<String> selected =  select.getAllSelectedValues();
+		Set<Integer> ids = new HashSet<Integer>();
+		for(String s : selected)
+		{
+			ids.add(Integer.parseInt(s));
 		}
-		return selectedOptions;
+		return ids;
 	}
+	
+// TODO CH Remove because not used anymore
+//	/**
+//	 * This method delivers a list of SelectOption objects according to what was
+//	 * selected by the user in the multiselect widget
+//	 * 
+//	 * @author Cyrill Halter
+//	 * @pre -
+//	 * @post -
+//	 * @param -
+//	 * @return List<SelectOption> selectedOption A list of selected Options as
+//	 *         SelectOption objects
+//	 */
+//	public List<SelectOption> getSelectedOptions() {
+//		List<String> ids = select.getAllSelectedValues();
+//		List<SelectOption> selectedOptions = new ArrayList<SelectOption>();
+//		for (String id : ids) {
+//			int i = 0;
+//			SelectOption tempOption = currentOptions.get(i);
+//			while (Integer.parseInt(id) != tempOption.getId()) {
+//				tempOption = currentOptions.get(++i);
+//			}
+//			selectedOptions.add(tempOption);
+//		}
+//		return selectedOptions;
+//	}
 
-	/**
-	 * This method delivers a list of strings according to what was selected by
-	 * the user in the multiselect widget. This has to be done for integration
-	 * with the existing code.
-	 * 
-	 * @author Cyrill Halter
-	 * @pre -
-	 * @post -
-	 * @param -
-	 * @return List<Strings> selectedOption A list of selected Options as
-	 *         strings
-	 */
-	public List<String> getValue() {
-		List<String> ids = select.getAllSelectedValues();
-		List<String> selectedOptions = new ArrayList<String>();
-		for (String id : ids) {
-			int i = 0;
-			SelectOption tempOption = currentOptions.get(i);
-			while (Integer.parseInt(id) != tempOption.getId()) {
-				tempOption = currentOptions.get(++i);
-			}
-			selectedOptions.add(tempOption.getName());
-		}
-		return selectedOptions;
-	}
+//	/**
+//	 * This method delivers a list of strings according to what was selected by
+//	 * the user in the multiselect widget. This has to be done for integration
+//	 * with the existing code.
+//	 * 
+//	 * @author Cyrill Halter
+//	 * @pre -
+//	 * @post -
+//	 * @param -
+//	 * @return List<Strings> selectedOption A list of selected Options as
+//	 *         strings
+//	 */ //TODO CH Decide if Necessary?
+//	public List<String> getValue() {
+//		List<String> ids = select.getAllSelectedValues();
+//		List<String> selectedOptions = new ArrayList<String>();
+//		for (String id : ids) {
+//			int i = 0;
+//			SelectOption tempOption = currentOptions.get(i);
+//			while (Integer.parseInt(id) != tempOption.getId()) {
+//				tempOption = currentOptions.get(++i);
+//			}
+//			selectedOptions.add(tempOption.getName());
+//		}
+//		return selectedOptions;
+//	}
 
 	/**
 	 * This method deselects all options in the multiselect widget

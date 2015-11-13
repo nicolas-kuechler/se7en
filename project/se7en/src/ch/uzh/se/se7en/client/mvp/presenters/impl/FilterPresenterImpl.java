@@ -189,36 +189,33 @@ public class FilterPresenterImpl implements FilterPresenter {
 		currentFilter.setYearEnd(filterView.getYearEnd());
 
 		//setting value to null if no country filter is applied
-		if (filterView.getSelectedCountryOptions() == null || filterView.getSelectedCountryOptions().size()==0)
+		if (filterView.getSelectedCountryIds() == null || filterView.getSelectedCountryIds().size()==0)
 		{
-			currentFilter.setCountries(null);
 			currentFilter.setCountryIds(null);
 		}
 		else
 		{
-			currentFilter.setCountryOptions(filterView.getSelectedCountryOptions());
+			currentFilter.setCountryIds(filterView.getSelectedCountryIds());
 		}
 
 		//setting value to null if no genre filter is applied
-		if (filterView.getSelectedGenreOptions() == null || filterView.getSelectedGenreOptions().size()==0)
+		if (filterView.getSelectedGenreIds() == null || filterView.getSelectedGenreIds().size()==0)
 		{
-			currentFilter.setGenres(null);
 			currentFilter.setGenreIds(null);
 		}
 		else
 		{
-			currentFilter.setGenreOptions(filterView.getSelectedGenreOptions());
+			currentFilter.setGenreIds(filterView.getSelectedGenreIds());
 		}
 
 		//setting value to null if no language filter is applied
-		if (filterView.getSelectedLanguageOptions() == null || filterView.getSelectedLanguageOptions().size()==0)
+		if (filterView.getSelectedLanguageIds() == null || filterView.getSelectedLanguageIds().size()==0)
 		{
-			currentFilter.setLanguages(null);
 			currentFilter.setLanguageIds(null);
 		}
 		else
 		{
-			currentFilter.setLanguageOptions(filterView.getSelectedLanguageOptions());
+			currentFilter.setLanguageIds(filterView.getSelectedLanguageIds());
 		}
 
 
@@ -357,9 +354,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filter.setName(appliedFilter.getName());
 		filter.setLengthStart(appliedFilter.getLengthStart());
 		filter.setLengthEnd(appliedFilter.getLengthEnd());
-		filter.setGenres(appliedFilter.getGenres());
 		filter.setGenreIds(appliedFilter.getGenreIds());
-		filter.setLanguages(appliedFilter.getLanguages());
 		filter.setLanguageIds(appliedFilter.getLanguageIds());
 
 		//adjusting year range because filtering of that is done in the map on client side
@@ -367,7 +362,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filter.setYearEnd(Boundaries.MAX_YEAR);
 
 		//removing the country filter because in the map always all the countries should be considered
-		filter.setCountries(null);
 		filter.setCountryIds(null);
 
 		return filter;
