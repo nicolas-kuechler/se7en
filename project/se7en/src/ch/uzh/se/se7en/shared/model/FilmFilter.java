@@ -361,18 +361,18 @@ public class FilmFilter implements Serializable {
 		this.genreIds = genreIds;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "FilmFilter [name=" + name + ", lengthStart=" + lengthStart + ", lengthEnd=" + lengthEnd + ", yearStart="
-				+ yearStart + ", yearEnd=" + yearEnd + ", countries=" + countries + ", languages=" + languages
-				+ ", genres=" + genres + "]";
+				+ yearStart + ", yearEnd=" + yearEnd + ", countries=" + countries + ", countryIds=" + countryIds
+				+ ", languages=" + languages + ", languageIds=" + languageIds + ", genres=" + genres + ", genreIds="
+				+ genreIds + "]";
 	}
-	
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -430,5 +430,7 @@ public class FilmFilter implements Serializable {
 			return false;
 		return true;
 	}
+
+	
 
 }

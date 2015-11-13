@@ -2,9 +2,13 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
@@ -15,6 +19,7 @@ import ch.uzh.se.se7en.client.mvp.Tokens;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
@@ -26,7 +31,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private EventBus eventBus;
 	private FilterView filterView;
 	private FilmDataModel filmDataModel;
-	private String mode;
+	private String mode ="";
 	private FilmListServiceAsync filmListService;
 
 	@Inject
@@ -57,6 +62,18 @@ public class FilterPresenterImpl implements FilterPresenter {
 		updateFilterFromView();
 		eventBus.fireEvent(new FilterAppliedEvent());
 		updateAppliedFilterBox();
+		
+		//TODO NK adjust test
+		String filterToken = "";
+		if(mode.equals(Tokens.MAP))
+		{
+			filterToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
+		}
+		else if(mode.equals(Tokens.TABLE))
+		{
+			filterToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
+		}
+		History.newItem(filterToken, false);
 	}
 
 	@Override
@@ -206,7 +223,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filmDataModel.setAppliedMapFilter(adjustedMapFilter(currentFilter));
 	}
 
-	//TODO Decide if not better part of class FilmFilter
 	/**
 	Helper method to convert a FilmFilter Object to a List<String> Object.
 	@author Nicolas Küchler
@@ -254,13 +270,61 @@ public class FilterPresenterImpl implements FilterPresenter {
 		return filterList;
 	}
 
-	@Override
+	@Override //TODO NK Test and Comments
 	public void setFilter(String filterToken) {
-		// TODO FilterParsing from Token
-		// Tbd if the method just fills out the filterviewform or if it starts the search for data automatically.
-		// --> could have a combination decided by "autoSearch" in filterToken
-
+		if(filterToken.equals("")) //Url doesn't contain filter information (option1 Tab Change, optio2 No filter set)
+		{
+			String historyToken;
+			//Tab Change or Without Filter
+			if(mode.equals(Tokens.MAP))
+			{
+				historyToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
+			}
+			else if(mode.equals(Tokens.TABLE))
+			{
+				historyToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
+			}
+			else
+			{
+				ClientLog.writeErr("Filter setMode() was not called before setFilter() or unknown mode.");
+				historyToken = History.getToken();
+			}
+			History.replaceItem(historyToken, false);
+		}
+		else //Url contains Filter information
+		{		
+			//Parse a filter object from the token
+			FilmFilter filter = UrlToken.parseFilter(filterToken); //TODO NK Define ExceptionHandling
+			
+			//fill filterFields in view
+			updateFilterFieldsInView(filter);
+			
+			//If AutoSearch flag is set, start search
+			if(filterToken.startsWith("?sb=1"))
+			{
+				onSearch();
+			}
+		}
 	}
+	
+	//TODO NK Comment & Test
+	public void updateFilterFieldsInView(FilmFilter filter)
+	{
+		onClear(); //make sure all fields are set to default first
+		if(filter.getName()!=null)
+		{
+			filterView.setName(filter.getName());
+		}
+		
+		filterView.setLengthSlider(filter.getLengthStart(), filter.getLengthEnd());
+		filterView.setYearSlider(filter.getYearStart(), filter.getYearEnd());
+		
+		//if filter.getXYZIds() == null then all options are deselected
+		filterView.setSelectedCountryOptions(filter.getCountryIds()); 
+		filterView.setSelectedLanguageOptions(filter.getLanguageIds());
+		filterView.setSelectedGenreOptions(filter.getGenreIds());
+	}
+	
 
 	/**
 	Helper method to adjust the currently appliedFilter for the map. Because the filtering of the year 
@@ -295,6 +359,4 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 		return filter;
 	}
-
-
 }
