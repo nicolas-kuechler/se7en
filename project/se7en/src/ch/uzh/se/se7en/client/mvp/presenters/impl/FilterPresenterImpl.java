@@ -243,31 +243,41 @@ public class FilterPresenterImpl implements FilterPresenter {
 			filterList.add("Film Name = " + filter.getName());
 		}
 
-		//length
-		filterList.add("Film Length = " +filter.getLengthStart() + "-" + filter.getLengthEnd());
-		
-
-		//year
-		filterList.add("Production Year = " +filter.getYearStart() + "-" + filter.getYearEnd());
-		
-
-		//country
-		for(int i = 0; filter.getCountries() != null && i < filter.getCountries().size(); i++)
+		//length (if length is at boundary values, then it is not converted)
+		if(filter.getLengthStart()==Boundaries.MIN_LENGTH && filter.getLengthEnd()==Boundaries.MAX_LENGTH)
 		{
-			filterList.add("Production Country = " + filter.getCountries().get(i));
+			filterList.add("Film Length = " +filter.getLengthStart() + "-" + filter.getLengthEnd());
 		}
 		
 
-		//language
-		for(int i = 0; filter.getLanguages() != null &&  i < filter.getLanguages().size(); i++)
+		//year (if year is at boundary values, then it is not converted)
+		if(filter.getYearStart()==Boundaries.MIN_YEAR && filter.getYearEnd()==Boundaries.MAX_YEAR)
 		{
-			filterList.add("Film Language = " + filter.getLanguages().get(i));
+			filterList.add("Production Year = " +filter.getYearStart() + "-" + filter.getYearEnd());
+		}
+
+		//country
+		//TODO NK Check if problem when filter.getCountryIds() == null
+		Set<Integer> countries = filter.getCountryIds();
+		for(Integer id : countries)
+		{
+			filterList.add("Production Country = " + filmDataModel.getCountryName(id));
+		}
+		
+		//language
+		//TODO NK Check if problem when filter.getLanguageIds() == null	
+		Set<Integer> languages = filter.getLanguageIds();
+		for(Integer id : languages)
+		{
+			filterList.add("Film Language = " + filmDataModel.getLanguageName(id));
 		}
 
 		//genre
-		for(int i = 0; filter.getGenres() != null && i < filter.getGenres().size(); i++)
+		//TODO NK Check if problem when filter.getGenreIds() == null	
+		Set<Integer> genres = filter.getGenreIds();
+		for(Integer id : genres)
 		{
-			filterList.add("Film Genre = " + filter.getGenres().get(i));
+			filterList.add("Film Genre = " + filmDataModel.getGenreName(id));
 		}
 
 		return filterList;
