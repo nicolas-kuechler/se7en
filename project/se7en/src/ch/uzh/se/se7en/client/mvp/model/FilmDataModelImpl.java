@@ -3,9 +3,7 @@ package ch.uzh.se.se7en.client.mvp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
-import com.googlecode.gwt.charts.client.DataTable;
 
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -14,7 +12,8 @@ import ch.uzh.se.se7en.shared.model.SelectOption;
 
 
 public class FilmDataModelImpl implements FilmDataModel{
-
+	
+	//TODO NK Decide if films, dataTable and countries necessary
 	private List<Film> films;
 	private List<DataTableEntity> countryDataTable;		//used for GeoChart
 	private List<Country> countries;		//used to adjust GeoChart with YearRangeSlider

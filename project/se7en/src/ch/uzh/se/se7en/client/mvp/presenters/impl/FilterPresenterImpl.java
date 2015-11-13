@@ -2,12 +2,10 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -241,40 +239,46 @@ public class FilterPresenterImpl implements FilterPresenter {
 		}
 
 		//length (if length is at boundary values, then it is not converted)
-		if(filter.getLengthStart()==Boundaries.MIN_LENGTH && filter.getLengthEnd()==Boundaries.MAX_LENGTH)
+		if(filter.getLengthStart()!=Boundaries.MIN_LENGTH && filter.getLengthEnd()!=Boundaries.MAX_LENGTH)
 		{
 			filterList.add("Film Length = " +filter.getLengthStart() + "-" + filter.getLengthEnd());
 		}
 		
 
 		//year (if year is at boundary values, then it is not converted)
-		if(filter.getYearStart()==Boundaries.MIN_YEAR && filter.getYearEnd()==Boundaries.MAX_YEAR)
+		if(filter.getYearStart()!=Boundaries.MIN_YEAR && filter.getYearEnd()!=Boundaries.MAX_YEAR)
 		{
 			filterList.add("Production Year = " +filter.getYearStart() + "-" + filter.getYearEnd());
 		}
 
 		//country
-		//TODO NK Check if problem when filter.getCountryIds() == null
 		Set<Integer> countries = filter.getCountryIds();
-		for(Integer id : countries)
+		if(countries!=null)
 		{
-			filterList.add("Production Country = " + filmDataModel.getCountryName(id));
+			for(Integer id : countries)
+			{
+				filterList.add("Production Country = " + filmDataModel.getCountryName(id));
+			}
 		}
 		
 		//language
-		//TODO NK Check if problem when filter.getLanguageIds() == null	
 		Set<Integer> languages = filter.getLanguageIds();
-		for(Integer id : languages)
+		if(languages!=null)
 		{
-			filterList.add("Film Language = " + filmDataModel.getLanguageName(id));
+			for(Integer id : languages)
+			{
+				filterList.add("Film Language = " + filmDataModel.getLanguageName(id));
+			}
 		}
 
-		//genre
-		//TODO NK Check if problem when filter.getGenreIds() == null	
+		//genre	
 		Set<Integer> genres = filter.getGenreIds();
-		for(Integer id : genres)
+		if(genres != null)
 		{
-			filterList.add("Film Genre = " + filmDataModel.getGenreName(id));
+			for(Integer id : genres)
+			{
+				filterList.add("Film Genre = " + filmDataModel.getGenreName(id));
+			}
 		}
 
 		return filterList;

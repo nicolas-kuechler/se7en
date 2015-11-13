@@ -2,7 +2,6 @@ package ch.uzh.se.se7en.client.mvp.model;
 
 import java.util.List;
 
-import com.googlecode.gwt.charts.client.DataTable;
 
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
