@@ -106,6 +106,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 			@Override
 			public void onSuccess(List<SelectOption> result) {
 				filterView.setGenreOptions(result);
+				filmDataModel.setGenreOptions(result);
 			}
 		});
 		
@@ -121,6 +122,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 			@Override
 			public void onSuccess(List<SelectOption> result) {
 				filterView.setCountryOptions(result);
+				filmDataModel.setCountryOptions(result);
 			}
 			
 		});
@@ -137,6 +139,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 			@Override
 			public void onSuccess(List<SelectOption> result) {
 				filterView.setLanguageOptions(result);
+				filmDataModel.setLanguageOptions(result);
 			}
 			
 		});
