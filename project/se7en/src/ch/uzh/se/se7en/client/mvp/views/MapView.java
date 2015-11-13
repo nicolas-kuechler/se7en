@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.gwt.charts.client.DataTable;
 
+import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.shared.model.Genre;
 
@@ -29,29 +30,49 @@ public interface MapView extends IsWidget{
 	@param 	countries DataTable instance with two columns (countryName, numberOfProductions) and a row for each country.
 			countryName must follow the conventions for the gwt geochart: https://developers.google.com/chart/interactive/docs/gallery/geochart
 	 */
-	public void setGeoChart(DataTable countries);
+	public void setGeoChart(List<DataTableEntity> countries);
 	
 	/**
 	Allows the mapPresenter to get access to the current selection from the geoChart
 	@author Nicolas Küchler
 	@pre 	geoChart != null && presenter != null
 	@post 	geoChart == geoChart @pre
-	@return	row index of selected country from datatable  	
+	@return	the id of the country which is selected in the geochart	
 	 */
-	public int getGeoChartSelection();
+	public int getGeoChartSelectionCountryId();
+	
+
+	/**
+	Provides access to the year Slider start year in the mapView
+	@author Nicolas Küchler
+	@pre yearSlider != null
+	@post yearSlider == yearSlider@Pre
+	@return the start year of the range slider
+	 */
+	public int getMinYear();
 	
 	/**
-	Allows the mapPresenter to get and set the value of the yearSlider
+	Provides access to the year Slider end year in the mapView
 	@author Nicolas Küchler
-	@pre	yearSlider != null && presenter != null
-	@post	yearSlider == yearSlider @pre
-	@return	Objects that allows syntax to get access: getYearSlider().setValue(range) or getYearSlider().getValue()
+	@pre yearSlider != null
+	@post yearSlider == yearSlider@Pre
+	@return the end year of the range slider
 	 */
-	public HasValue<Range> getYearSlider();
+	public int getMaxYear();
+	
+	/**
+	provides access to the year Slider in the mapView to set a Range
+	@author Nicolas Küchler
+	@pre yearSlider != null
+	@post yearSlider has range from yearStart to yearEnd selected
+	@param yearStart the startYear which should be selected
+	@param yearEnd the endYear which should be selected
+	 */
+	public void setYearRange(int yearStart, int yearEnd);
 	
 	/**
 	Provides access to the Ui Component GenreTable for the mapPresenter
-	@author Nicolas Küchler
+	@author Dominik Bünzli
 	@pre 	presenter != null && genreTable != null
 	@post	genreTable with genres is displayed
 	@param	genres list of genre objects
@@ -65,6 +86,15 @@ public interface MapView extends IsWidget{
 	@post	genrePieChart with genres is displayed
 	@param	genres datatable with two columns(genreName, percentage) and a row for each genre.
 	 */
-	public void setGenrePieChart(DataTable genres);
+	public void setGenrePieChart(List<DataTableEntity> genres);
+	
+	/**
+	Shows/Hides the GenreTable and the GenrePieChart
+	@author Nicolas Küchler
+	@pre	-
+	@post	-
+	@param visible determines if the components are visible or not.
+	 */
+	public void setGenreVisible(boolean visible);
 	
 }

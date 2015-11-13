@@ -69,13 +69,13 @@ public class GirGuiceServletContextListener extends GuiceServletContextListener 
 		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
 			// app engine production environment
 			properties.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.GoogleDriver");
-			properties.put("javax.persistence.jdbc.url", "jdbc:google:mysql://se-team-se7en:db/se7en");
+			properties.put("javax.persistence.jdbc.url", "jdbc:google:mysql://se-team-se7en:db/se7en_v2");
 			properties.put("javax.persistence.jdbc.user", "root");
 			properties.put("javax.persistence.jdbc.password", "");
 		} else {
 			// local development environment
 			properties.put("javax.persistence.jdbc.driver", "com.google.appengine.api.rdbms.AppEngineDriver");
-			properties.put("javax.persistence.jdbc.url", "jdbc:google:rdbms://173.194.250.0/se7en");
+			properties.put("javax.persistence.jdbc.url", "jdbc:google:rdbms://173.194.250.0/se7en_v2");
 			properties.put("javax.persistence.jdbc.user", "se7en");
 			properties.put("javax.persistence.jdbc.password", "k1vttuIYXqOPe5!");
 		}

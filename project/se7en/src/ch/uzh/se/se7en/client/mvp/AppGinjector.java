@@ -3,6 +3,7 @@ package ch.uzh.se.se7en.client.mvp;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
+import com.googlecode.gwt.charts.client.ChartLoader;
 
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
@@ -36,4 +37,6 @@ public interface AppGinjector extends Ginjector {
 	FilmListServiceAsync getFilmListServiceAsync();
 	
 	FilmListExportServiceAsync getFilmListExportServiceAsync();
+	
+
 }

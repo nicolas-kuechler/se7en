@@ -7,7 +7,7 @@
 
 
 	<b:Panel styleName="welcomePanel">
-		<g:Image styleName="backgroundLogo" resource='{res.backgroundSkyline}' />
+		<g:Image styleName="backgroundImage" resource='{res.backgroundSkyline}' />
 		<g:Image styleName="backgroundText" resource='{res.backgroundText}' />
 	</b:Panel>
 </ui:UiBinder> 

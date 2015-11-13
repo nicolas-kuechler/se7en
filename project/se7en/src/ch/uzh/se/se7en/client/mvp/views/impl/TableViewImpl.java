@@ -19,6 +19,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.ColumnSortList;
+import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
@@ -31,49 +33,70 @@ import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
 import ch.uzh.se.se7en.shared.model.Film;
 
-public class TableViewImpl extends Composite implements TableView{
+public class TableViewImpl extends Composite implements TableView {
 
 	private static TableViewImplUiBinder uiBinder = GWT.create(TableViewImplUiBinder.class);
 
 	interface TableViewImplUiBinder extends UiBinder<Widget, TableViewImpl> {
 	}
-	
+
 	private TablePresenter tablePresenter;
 	/**
 	 * The main DataGrid.
 	 */
 	@UiField(provided = true)
 	DataGrid<Film> dataGrid;
+	@UiField(provided = true) SimplePager pager;
+	
 	ListDataProvider<Film> filmProvider = new ListDataProvider<Film>();
 	ListHandler<Film> columnSortHandler;
-	
+
 	TextColumn<Film> nameColumn;
 	TextColumn<Film> lengthColumn;
 	TextColumn<Film> countryColumn;
 	TextColumn<Film> languageColumn;
 	TextColumn<Film> yearColumn;
 	TextColumn<Film> genreColumn;
-	
 
+	/**
+	 * triggers the download when user clicks on download link
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post
+	 * @param event
+	 */
 	@UiHandler("downloadButton")
 	public void onDownloadBtnClicked(final ClickEvent event) {
 		tablePresenter.onDownloadStarted();
 	}
 
+	/**
+	 * Initialize table view and set default height, width, headerRefresh=true
+	 * and border=false
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 */
+
 	public TableViewImpl() {
 		dataGrid = new DataGrid<Film>();
 		dataGrid.setWidth("100%");
 		dataGrid.setHeight("500px");
-		dataGrid.setBordered(true);
+		dataGrid.setBordered(false);
 		dataGrid.setAutoHeaderRefreshDisabled(true);
-	
+
+	    SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+	    pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
+	    pager.setDisplay(dataGrid);
+
 		buildTable();
 		filmProvider.addDataDisplay(dataGrid);
 
-
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-	
 
 	@Override
 	public void setPresenter(TablePresenter presenter) {
@@ -83,10 +106,9 @@ public class TableViewImpl extends Composite implements TableView{
 	@Override
 	public void setTable(List<Film> films) {
 		filmProvider.setList(films);
-		createColumnSortHandler();	
+		createColumnSortHandler();
 		dataGrid.addColumnSortHandler(columnSortHandler);
 	}
-	
 
 
 	@Override
@@ -94,20 +116,25 @@ public class TableViewImpl extends Composite implements TableView{
 		// TODO Start the download Window.open(download url.....)
 		Window.alert("Demo Download Started; Url: " + downloadUrl);
 	}
-	
-	
+
+	/**
+	 * Build the dataGrid and set all column, also set the columns as sortable
+	 * if needed
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 */
 	private void buildTable() {
-		
+	    
 		nameColumn = new TextColumn<Film>() {
 			@Override
 			public String getValue(Film filmObject) {
 				String value;
-				if(filmObject.getName()!= null)
-				{
+				if (filmObject.getName() != null) {
 					value = filmObject.getName();
-				}
-				else
-				{
+				} else {
 					value = "";
 				}
 				return value;
@@ -115,18 +142,14 @@ public class TableViewImpl extends Composite implements TableView{
 		};
 		nameColumn.setSortable(true);
 
-
 		lengthColumn = new TextColumn<Film>() {
 			@Override
 			public String getValue(Film filmObject) {
-								
+
 				String value;
-				if(filmObject.getLength()!= null)
-				{
+				if (filmObject.getLength() != null) {
 					value = Integer.toString(filmObject.getLength());
-				}
-				else
-				{
+				} else {
 					value = "";
 				}
 				return value;
@@ -134,17 +157,13 @@ public class TableViewImpl extends Composite implements TableView{
 		};
 		lengthColumn.setSortable(true);
 
-
 		countryColumn = new TextColumn<Film>() {
 			@Override
 			public String getValue(Film filmObject) {
 				String value;
-				if(filmObject.getCountries()!= null)
-				{
+				if (filmObject.getCountries() != null) {
 					value = listToString(filmObject.getCountries());
-				}
-				else
-				{
+				} else {
 					value = "";
 				}
 				return value;
@@ -152,18 +171,14 @@ public class TableViewImpl extends Composite implements TableView{
 		};
 		countryColumn.setSortable(true);
 
-
 		languageColumn = new TextColumn<Film>() {
 			@Override
 			public String getValue(Film filmObject) {
-				
+
 				String value;
-				if(filmObject.getLanguages()!= null)
-				{
+				if (filmObject.getLanguages() != null) {
 					value = listToString(filmObject.getLanguages());
-				}
-				else
-				{
+				} else {
 					value = "";
 				}
 				return value;
@@ -171,17 +186,13 @@ public class TableViewImpl extends Composite implements TableView{
 		};
 		languageColumn.setSortable(true);
 
-
 		yearColumn = new TextColumn<Film>() {
 			@Override
-			public String getValue(Film filmObject) {				
+			public String getValue(Film filmObject) {
 				String value;
-				if(filmObject.getYear()!= null)
-				{
+				if (filmObject.getYear() != null) {
 					value = Integer.toString(filmObject.getYear());
-				}
-				else
-				{
+				} else {
 					value = "";
 				}
 				return value;
@@ -189,199 +200,187 @@ public class TableViewImpl extends Composite implements TableView{
 		};
 		yearColumn.setSortable(true);
 
-
 		genreColumn = new TextColumn<Film>() {
 			@Override
 			public String getValue(Film filmObject) {
 
 				String value;
-				if(filmObject.getGenres()!= null)
-				{
+				if (filmObject.getGenres() != null) {
 					value = listToString(filmObject.getGenres());
-				}
-				else
-				{
+				} else {
 					value = "";
 				}
 				return value;
 			}
 		};
 		genreColumn.setSortable(true);
-		
+
 		dataGrid.setColumnWidth(nameColumn, 21.5, Unit.PCT);
 		dataGrid.addColumn(nameColumn, "Name");
-		dataGrid.setColumnWidth(yearColumn, 5, Unit.PCT);
+		dataGrid.setColumnWidth(yearColumn, 7, Unit.PCT);
 		dataGrid.addColumn(yearColumn, "Year");
-		dataGrid.setColumnWidth(lengthColumn, 6, Unit.PCT);
+		dataGrid.setColumnWidth(lengthColumn, 7, Unit.PCT);
 		dataGrid.addColumn(lengthColumn, "Length");
-		dataGrid.setColumnWidth(countryColumn, 22.5, Unit.PCT);
+		dataGrid.setColumnWidth(countryColumn, 21.5, Unit.PCT);
 		dataGrid.addColumn(countryColumn, "Country");
-		dataGrid.setColumnWidth(languageColumn, 22.5, Unit.PCT);
+		dataGrid.setColumnWidth(languageColumn, 21.5, Unit.PCT);
 		dataGrid.addColumn(languageColumn, "Language");
-		dataGrid.setColumnWidth(genreColumn,22.5, Unit.PCT);
+		dataGrid.setColumnWidth(genreColumn, 21.5, Unit.PCT);
 		dataGrid.addColumn(genreColumn, "Genre");
-	
-		
+
 	}
-	
-	private void createColumnSortHandler()
-	{
+
+	/**
+	 * Initialize the columnsorthandler and assign them to the according column
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 */
+	private void createColumnSortHandler() {
 		columnSortHandler = new ListHandler<Film>(filmProvider.getList());
-		
-		columnSortHandler.setComparator(nameColumn, new Comparator<Film>(){
+
+		columnSortHandler.setComparator(nameColumn, new Comparator<Film>() {
 			@Override
 			public int compare(Film o1, Film o2) {
-				if (o1.getName()==o2.getName())
-				{
+				if (o1.getName() == o2.getName()) {
 					return 0;
 				}
-				
-				if (o1.getName()==null)
-				{
+
+				if (o1.getName() == null) {
 					return 1;
 				}
-				if (o2.getName()==null)
-				{
+				if (o2.getName() == null) {
 					return -1;
 				}
-				
+
 				return o1.getName().compareTo(o2.getName());
 			}
-			
+
 		});
-		
-		columnSortHandler.setComparator(lengthColumn, new Comparator<Film>(){
+
+		columnSortHandler.setComparator(lengthColumn, new Comparator<Film>() {
 			@Override
 			public int compare(Film o1, Film o2) {
-				
-				if (o1.getLength()==o2.getLength())
-				{
+
+				if (o1.getLength() == o2.getLength()) {
 					return 0;
 				}
-				if (o1.getLength()==null)
-				{
+				if (o1.getLength() == null) {
 					return 1;
 				}
-				if (o2.getLength()==null)
-				{
+				if (o2.getLength() == null) {
 					return -1;
 				}
-				
-				
-				if (o1.getLength()<o2.getLength())
-				{
+
+				if (o1.getLength() < o2.getLength()) {
 					return -1;
-				}
-				else
-				{
+				} else {
 					return 1;
 				}
 			}
 		});
-		
-		columnSortHandler.setComparator(countryColumn, new Comparator<Film>(){
+
+		columnSortHandler.setComparator(countryColumn, new Comparator<Film>() {
 			@Override
 			public int compare(Film o1, Film o2) {
-				if (o1.getCountries()==o2.getCountries())
-				{
+				if (o1.getCountries() == o2.getCountries()) {
 					return 0;
 				}
-				if (o1.getCountries()==null)
-				{
+				if (o1.getCountries() == null) {
 					return 1;
 				}
-				if (o2.getCountries()==null)
-				{
+				if (o2.getCountries() == null) {
 					return -1;
 				}
-				
+
 				return listToString(o1.getCountries()).compareTo(listToString(o2.getCountries()));
 			}
 		});
-		
-		columnSortHandler.setComparator(languageColumn, new Comparator<Film>(){
+
+		columnSortHandler.setComparator(languageColumn, new Comparator<Film>() {
 			@Override
 			public int compare(Film o1, Film o2) {
-				if (o1.getLanguages()==o2.getLanguages())
-				{
+				if (o1.getLanguages() == o2.getLanguages()) {
 					return 0;
 				}
-				if (o1.getLanguages()==null)
-				{
+				if (o1.getLanguages() == null) {
 					return 1;
 				}
-				if (o2.getLanguages()==null)
-				{
+				if (o2.getLanguages() == null) {
 					return -1;
 				}
 				return listToString(o1.getLanguages()).compareTo(listToString(o2.getLanguages()));
 			}
 		});
-		
-		columnSortHandler.setComparator(yearColumn, new Comparator<Film>(){
+
+		columnSortHandler.setComparator(yearColumn, new Comparator<Film>() {
 			@Override
 			public int compare(Film o1, Film o2) {
-				if (o1.getYear()==o2.getYear())
-				{
+				if (o1.getYear() == o2.getYear()) {
 					return 0;
 				}
-				if (o1.getYear()==null)
-				{
+				if (o1.getYear() == null) {
 					return 1;
 				}
-				if (o2.getYear()==null)
-				{
+				if (o2.getYear() == null) {
 					return -1;
 				}
-				
-				if (o1.getYear()<o2.getYear())
-				{
+
+				if (o1.getYear() < o2.getYear()) {
 					return -1;
-				}
-				else
-				{
+				} else {
 					return 1;
 				}
 			}
 		});
-		
-		columnSortHandler.setComparator(genreColumn, new Comparator<Film>(){
+
+		columnSortHandler.setComparator(genreColumn, new Comparator<Film>() {
 			@Override
 			public int compare(Film o1, Film o2) {
-				if (o1.getGenres()==o2.getGenres())
-				{
+				if (o1.getGenres() == o2.getGenres()) {
 					return 0;
 				}
-				if (o1.getGenres()==null)
-				{
+				if (o1.getGenres() == null) {
 					return 1;
 				}
-				if (o2.getGenres()==null)
-				{
+				if (o2.getGenres() == null) {
 					return -1;
 				}
-				
+
 				return listToString(o1.getGenres()).compareTo(listToString(o2.getGenres()));
 			}
 		});
-		
+
 	}
-	
-	private String listToString(List<String> list){
-		
+
+	/**
+	 * method that converts a list of genres, countries or languages into a
+	 * string so they can be displayed in a cell
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param list
+	 * @return concatString
+	 */
+
+	private String listToString(List<String> list) {
+
 		String concatString = "";
-		int iterator=0;
-		for(String str: list){
-			if(iterator == 0){
+		int iterator = 0;
+		for (String str : list) {
+			if (iterator == 0) {
 				concatString = str;
 				iterator++;
-			}else{
-				concatString = concatString + " / " + str  ;
+			} else {
+				concatString = concatString + " / " + str;
 				iterator++;
 			}
-			
+
 		}
 		return concatString;
 	}
-	
+
 }

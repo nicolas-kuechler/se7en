@@ -2,19 +2,22 @@ package ch.uzh.se.se7en.client.mvp.views.impl;
 
 import java.util.List;
 
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.FormGroup;
+import org.gwtbootstrap3.client.ui.TextBox;
+import org.gwtbootstrap3.extras.slider.client.ui.Range;
+import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -26,47 +29,47 @@ import ch.uzh.se.se7en.client.mvp.views.widgets.AppliedFilterBox;
 import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
 import ch.uzh.se.se7en.shared.model.SelectOption;
 
-import org.gwtbootstrap3.client.shared.event.ShowEvent;
-import org.gwtbootstrap3.client.shared.event.ShowHandler;
-import org.gwtbootstrap3.client.ui.Button;
-import org.gwtbootstrap3.client.ui.Collapse;
-import org.gwtbootstrap3.client.ui.Column;
-import org.gwtbootstrap3.client.ui.FormGroup;
-import org.gwtbootstrap3.client.ui.PanelCollapse;
-import org.gwtbootstrap3.client.ui.TextBox;
-import org.gwtbootstrap3.extras.slider.client.ui.Range;
-import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
-
-public class FilterViewImpl extends Composite implements FilterView{
+public class FilterViewImpl extends Composite implements FilterView {
 
 	private static FilterViewImplUiBinder uiBinder = GWT.create(FilterViewImplUiBinder.class);
 
 	interface FilterViewImplUiBinder extends UiBinder<Widget, FilterViewImpl> {
 	}
-	
-	FilterPresenter filterPresenter;
-	
-	@UiField TextBox nameBox;
-	@UiField (provided = true) RangeSlider lengthSlider;
-	@UiField (provided = true) RangeSlider yearSlider;
-	@UiField MultiSelect countrySelect;
-	@UiField MultiSelect languageSelect;
-	@UiField MultiSelect genreSelect;
-	
-	
-	@UiField Button clearBtn;
-	@UiField Button searchBtn;
 
-	
-	@UiField AppliedFilterBox appliedFilter;
-	@UiField FocusPanel focusPanel;
-	
-	@UiField FormGroup yearColumn;
-	@UiField FormGroup countryColumn;
-	
+	FilterPresenter filterPresenter;
+
+	@UiField
+	TextBox nameBox;
+	@UiField(provided = true)
+	RangeSlider lengthSlider;
+	@UiField(provided = true)
+	RangeSlider yearSlider;
+	@UiField
+	MultiSelect countrySelect;
+	@UiField
+	MultiSelect languageSelect;
+	@UiField
+	MultiSelect genreSelect;
+
+	@UiField
+	Button clearBtn;
+	@UiField
+	Button searchBtn;
+
+	@UiField
+	AppliedFilterBox appliedFilter;
+	@UiField
+	FocusPanel focusPanel;
+
+	@UiField
+	FormGroup yearColumn;
+	@UiField
+	FormGroup countryColumn;
+
+
 	@Inject
 	public FilterViewImpl() {
-		//Setting the Range for the Sliders
+		// Setting the Range for the Sliders
 		lengthSlider = new RangeSlider();
 		lengthSlider.setMin(Boundaries.MIN_LENGTH);
 		lengthSlider.setMax(Boundaries.MAX_LENGTH);
@@ -77,67 +80,48 @@ public class FilterViewImpl extends Composite implements FilterView{
 		yearSlider.setMin(Boundaries.MIN_YEAR);
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
-		initWidget(uiBinder.createAndBindUi(this));	
-		
-		//Setting Up Listening for Enter Pressed Events to start the search
-		focusPanel.addKeyDownHandler(new KeyDownHandler(){
+		initWidget(uiBinder.createAndBindUi(this));
+
+		// Setting Up Listening for Enter Pressed Events to start the search
+		focusPanel.addKeyDownHandler(new KeyDownHandler() {
 			@Override
 			public void onKeyDown(KeyDownEvent event) {
-				 if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
-				 {
-					 filterPresenter.onSearch();
-				 }
+				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+					filterPresenter.onSearch();
+				}
 			}
-		});		
+		});
 	}
 
 	@Override
 	public void setPresenter(FilterPresenter presenter) {
 		this.filterPresenter = presenter;
 	}
-	
-	
+
+	/**
+	 * Sends a message to the presenter if the search button is clicked
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post -
+	 * @param event
+	 */
 	@UiHandler("searchBtn")
-	public void onSearchBtnClick(final ClickEvent event)
-	{
+	public void onSearchBtnClick(final ClickEvent event) {
 		filterPresenter.onSearch();
 	}
-	
+
+	/**
+	 * Sends a message to the presenter if the clear button is clicked
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre container != null
+	 * @post -
+	 * @param event
+	 */
 	@UiHandler("clearBtn")
-	public void onClearBtnClick(final ClickEvent event)
-	{
+	public void onClearBtnClick(final ClickEvent event) {
 		filterPresenter.onClear();
-	}
-	
-	
-	@Override
-	public HasValue<String> getNameBox() {
-		return nameBox;
-	}
-
-	@Override
-	public HasValue<Range> getLengthSlider() {
-		return lengthSlider;
-	}
-
-	@Override
-	public HasValue<Range> getYearSlider() {
-		return yearSlider;
-	}
-
-	@Override
-	public MultiSelect getCountrySelect() {
-		return countrySelect;
-	}
-
-	@Override
-	public MultiSelect getLanguageSelect() {
-		return languageSelect;
-	}
-
-	@Override
-	public MultiSelect getGenreSelect() {
-		return genreSelect;
 	}
 
 	@Override
@@ -147,15 +131,120 @@ public class FilterViewImpl extends Composite implements FilterView{
 
 	@Override
 	public void setMode(String mode) {
-		if (mode.equals(Tokens.MAP))
-		{
+		if (mode.equals(Tokens.MAP)) {
 			countryColumn.setVisible(false);
 			yearColumn.setVisible(false);
-		}
-		else
-		{
+		} else {
 			countryColumn.setVisible(true);
 			yearColumn.setVisible(true);
 		}
+	}
+
+	@Override
+	public String getName() {
+		return nameBox.getValue();
+	}
+
+	@Override
+	public void setName(String name) {
+		nameBox.setValue(name);
+	}
+
+	@Override
+	public void setLengthSlider(int startLength, int endLength) {
+		lengthSlider.setValue(new Range(startLength, endLength));
+	}
+
+	@Override
+	public int getLengthStart() {
+		return (int)lengthSlider.getValue().getMinValue();
+	}
+
+	@Override
+	public int getLengthEnd() {
+		return (int)lengthSlider.getValue().getMaxValue();
+	}
+
+	@Override
+	public void setYearSlider(int startYear, int endYear) {
+		yearSlider.setValue(new Range(startYear, endYear));
+	}
+
+	@Override
+	public int getYearStart() {
+		return (int)yearSlider.getValue().getMinValue();
+	}
+
+	@Override
+	public int getYearEnd() {
+		return (int)yearSlider.getValue().getMaxValue();
+	}
+
+	@Override
+	public void setCountryOptions(List<SelectOption> selectOptions) {
+		countrySelect.setOptions(selectOptions);
+	}
+
+	@Override
+	public List<SelectOption> getSelectedCountryOptions() {
+		return countrySelect.getSelectedOptions();
+	}
+
+	@Override
+	public void setSelectedCountryOptions(List<String> selectedOptions) {
+		if(selectedOptions==null)
+		{
+			countrySelect.deselectAll();
+		}
+		else
+		{
+			// TODO Provide access to the MultiSelects to set selectedOptions
+		}
+	}
+
+	@Override
+	public void setLanguageOptions(List<SelectOption> selectOptions) {
+		languageSelect.setOptions(selectOptions);		
+	}
+
+	@Override
+	public List<SelectOption> getSelectedLanguageOptions() {
+		return languageSelect.getSelectedOptions();
+	}
+
+	@Override
+	public void setSelectedLanguageOptions(List<String> selectedOptions) {
+		if(selectedOptions==null)
+		{
+			languageSelect.deselectAll();
+		}
+		else
+		{
+			// TODO Provide access to the MultiSelects to set selectedOptions
+		}
+		
+	}
+
+	@Override
+	public void setGenreOptions(List<SelectOption> selectOptions) {
+		genreSelect.setOptions(selectOptions);
+	}
+
+	@Override
+	public List<SelectOption> getSelectedGenreOptions() {
+		return genreSelect.getSelectedOptions();
+	}
+
+	@Override
+	public void setSelectedGenreOptions(List<String> selectedOptions) {
+		if(selectedOptions==null)
+		{
+			genreSelect.deselectAll();
+		}
+		else
+		{
+			// TODO Provide access to the MultiSelects to set selectedOptions
+		}
+		
 	}
 }

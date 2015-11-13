@@ -27,7 +27,7 @@ public class Film implements Serializable {
 		this.name = name;
 	}
 
-	public Film(String name, int length, int year, List<String> countries, List<String> languages,
+	public Film(String name, Integer length, Integer year, List<String> countries, List<String> languages,
 			List<String> genres) {
 		this.name = name;
 		this.length = length;
@@ -42,6 +42,67 @@ public class Film implements Serializable {
 		this(name, length, year, countries, languages, genres);
 
 		this.id = id;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((countries == null) ? 0 : countries.hashCode());
+		result = prime * result + ((genres == null) ? 0 : genres.hashCode());
+		result = prime * result + ((languages == null) ? 0 : languages.hashCode());
+		result = prime * result + ((length == null) ? 0 : length.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((year == null) ? 0 : year.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Film other = (Film) obj;
+		if (countries == null) {
+			if (other.countries != null)
+				return false;
+		} else if (!countries.equals(other.countries))
+			return false;
+		if (genres == null) {
+			if (other.genres != null)
+				return false;
+		} else if (!genres.equals(other.genres))
+			return false;
+		if (languages == null) {
+			if (other.languages != null)
+				return false;
+		} else if (!languages.equals(other.languages))
+			return false;
+		if (length == null) {
+			if (other.length != null)
+				return false;
+		} else if (!length.equals(other.length))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (year == null) {
+			if (other.year != null)
+				return false;
+		} else if (!year.equals(other.year))
+			return false;
+		return true;
 	}
 
 	/**

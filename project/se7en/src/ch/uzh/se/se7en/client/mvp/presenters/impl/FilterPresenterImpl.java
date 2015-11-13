@@ -4,11 +4,7 @@ package ch.uzh.se.se7en.client.mvp.presenters.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.gwtbootstrap3.extras.slider.client.ui.Range;
-
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
@@ -21,7 +17,6 @@ import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
-import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.SelectOption;
 
@@ -37,7 +32,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 	@Inject
 	public FilterPresenterImpl(EventBus eventBus, final FilterView filterView, FilmDataModel filmDataModel, 
 			FilmListServiceAsync filmListService) {
-		super();
 		this.filmListService = filmListService;
 		this.eventBus = eventBus;
 		this.filterView = filterView;
@@ -67,12 +61,12 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 	@Override
 	public void onClear() {
-		filterView.getNameBox().setValue("");
-		filterView.getLengthSlider().setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
-		filterView.getYearSlider().setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
-		filterView.getCountrySelect().deselectAll();
-		filterView.getLanguageSelect().deselectAll();
-		filterView.getGenreSelect().deselectAll();
+		filterView.setName("");
+		filterView.setLengthSlider(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH);
+		filterView.setYearSlider(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR);
+		filterView.setSelectedCountryOptions(null); //deselect all with parameter == null
+		filterView.setSelectedLanguageOptions(null);
+		filterView.setSelectedGenreOptions(null);
 	}
 	
 	@Override
@@ -94,8 +88,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 			}
 			@Override
 			public void onSuccess(List<SelectOption> result) {
-				filterView.getGenreSelect().setOptions(result);
-				
+				filterView.setGenreOptions(result);
 			}
 		});
 		
@@ -110,8 +103,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 			@Override
 			public void onSuccess(List<SelectOption> result) {
-				filterView.getCountrySelect().setOptions(result);
-				
+				filterView.setCountryOptions(result);
 			}
 			
 		});
@@ -127,8 +119,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 			@Override
 			public void onSuccess(List<SelectOption> result) {
-				filterView.getLanguageSelect().setOptions(result);
-				
+				filterView.setLanguageOptions(result);
 			}
 			
 		});
@@ -165,55 +156,54 @@ public class FilterPresenterImpl implements FilterPresenter {
 		FilmFilter currentFilter = new FilmFilter();
 
 		//setting value to null if no name filter is applied 
-		String name = filterView.getNameBox().getValue();
+		String name = filterView.getName();
 		if (name.equals("") || name == null)
 		{
 			name = null;
 		}
 		currentFilter.setName(name);
 
-		currentFilter.setLengthStart((int)filterView.getLengthSlider().getValue().getMinValue());
-		currentFilter.setLengthEnd((int)filterView.getLengthSlider().getValue().getMaxValue());
-		currentFilter.setYearStart((int)filterView.getYearSlider().getValue().getMinValue());
-		currentFilter.setYearEnd((int)filterView.getYearSlider().getValue().getMaxValue());
+		currentFilter.setLengthStart(filterView.getLengthStart());
+		currentFilter.setLengthEnd(filterView.getLengthEnd());
+		currentFilter.setYearStart(filterView.getYearStart());
+		currentFilter.setYearEnd(filterView.getYearEnd());
 
 		//setting value to null if no country filter is applied
-		if (filterView.getCountrySelect().getValue() == null || filterView.getCountrySelect().getValue().size()==0)
+		if (filterView.getSelectedCountryOptions() == null || filterView.getSelectedCountryOptions().size()==0)
 		{
 			currentFilter.setCountries(null);
 			currentFilter.setCountryIds(null);
 		}
 		else
 		{
-			currentFilter.setCountryOptions(filterView.getCountrySelect().getSelectedOptions());
+			currentFilter.setCountryOptions(filterView.getSelectedCountryOptions());
 		}
 
 		//setting value to null if no genre filter is applied
-		if (filterView.getGenreSelect().getValue() == null || filterView.getGenreSelect().getValue().size()==0)
+		if (filterView.getSelectedGenreOptions() == null || filterView.getSelectedGenreOptions().size()==0)
 		{
 			currentFilter.setGenres(null);
 			currentFilter.setGenreIds(null);
 		}
 		else
 		{
-			currentFilter.setGenreOptions(filterView.getGenreSelect().getSelectedOptions());
+			currentFilter.setGenreOptions(filterView.getSelectedGenreOptions());
 		}
 
 		//setting value to null if no language filter is applied
-		if (filterView.getLanguageSelect().getValue() == null || filterView.getLanguageSelect().getValue().size()==0)
+		if (filterView.getSelectedLanguageOptions() == null || filterView.getSelectedLanguageOptions().size()==0)
 		{
 			currentFilter.setLanguages(null);
 			currentFilter.setLanguageIds(null);
 		}
 		else
 		{
-			currentFilter.setLanguageOptions(filterView.getLanguageSelect().getSelectedOptions());
+			currentFilter.setLanguageOptions(filterView.getSelectedLanguageOptions());
 		}
 
 
 		filmDataModel.setAppliedFilter(currentFilter);
 		filmDataModel.setAppliedMapFilter(adjustedMapFilter(currentFilter));
-
 	}
 
 	//TODO Decide if not better part of class FilmFilter

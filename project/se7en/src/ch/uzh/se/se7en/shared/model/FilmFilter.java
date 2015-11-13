@@ -2,10 +2,11 @@ package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 
 /**
  * Container to transport the applied Filter from the client side to the server
@@ -20,10 +21,10 @@ public class FilmFilter implements Serializable {
 	// TODO WE MIGHT WANT TO USE DEFAULT VALUES TO INDICATE THAT A CERTAIN FIELD
 	// OF THE FILTER IS NOT SET
 	private String name;
-	private int lengthStart; // start point from the length range
-	private int lengthEnd; // end point from the length range
-	private int yearStart; // start point from the year range
-	private int yearEnd; // end point from the year range
+	private int lengthStart = 0; // start point from the length range
+	private int lengthEnd = 600; // end point from the length range
+	private int yearStart = 1890; // start point from the year range
+	private int yearEnd = 2015; // end point from the year range
 	private List<String> countries;
 	private Set<Integer> countryIds;
 	private List<String> languages;
@@ -164,74 +165,103 @@ public class FilmFilter implements Serializable {
 	public void setCountries(List<String> countries) {
 		this.countries = countries;
 	}
-	
+
 	/**
-	Sets the country name and id according to a list of Select Option.
-	@pre
-	@post 	this.countries == List<selectOption>.getName() &&  this.countryIds == List<selectOption>.getId();
-	@param selectOptions which should be set as a filter attribute to the FilmFilter object
+	 * Sets the country name and id according to a list of Select Option.
+	 * 
+	 * @pre
+	 * @post this.countries == List<selectOption>.getName() && this.countryIds
+	 *       == List<selectOption>.getId();
+	 * @param selectOptions
+	 *            which should be set as a filter attribute to the FilmFilter
+	 *            object
 	 */
-	public void setCountryOptions(List<SelectOption> selectOptions)
-	{
-		List<String> countryName = new ArrayList<String>(selectOptions.size());
-		
-		Set<Integer> countryId = new HashSet<Integer>();
-		
-		for(SelectOption option : selectOptions)
+	public void setCountryOptions(List<SelectOption> selectOptions) {
+		if (selectOptions == null  || selectOptions.size()==0){
+			setCountries(null);
+			setCountryIds(null);
+		}
+		else
 		{
-			countryId.add(option.getId());
-			countryName.add(option.getName());
+			List<String> countryName = new ArrayList<String>(selectOptions.size());
+
+			Set<Integer> countryId = new HashSet<Integer>();
+
+			for (SelectOption option : selectOptions) {
+				countryId.add(option.getId());
+				countryName.add(option.getName());
+			}
+
+			setCountries(countryName);
+			setCountryIds(countryId);
 		}
 		
-		setCountries(countryName);
-		setCountryIds(countryId);
 	}
-	
+
 	/**
-	Sets the genre name and id according to a list of Select Option.
-	@pre
-	@post 	this.genres == List<selectOption>.getName() &&  this.genreIds == List<selectOption>.getId();
-	@param selectOptions which should be set as a filter attribute to the FilmFilter object
+	 * Sets the genre name and id according to a list of Select Option.
+	 * 
+	 * @pre
+	 * @post this.genres == List<selectOption>.getName() && this.genreIds ==
+	 *       List<selectOption>.getId();
+	 * @param selectOptions
+	 *            which should be set as a filter attribute to the FilmFilter
+	 *            object
 	 */
-	public void setGenreOptions(List<SelectOption> selectOptions)
-	{
-		List<String> genreName = new ArrayList<String>(selectOptions.size());
-		
-		Set<Integer> genreId = new HashSet<Integer>();
-		
-		for(SelectOption option : selectOptions)
+	public void setGenreOptions(List<SelectOption> selectOptions) {
+		if (selectOptions == null || selectOptions.size()==0){
+			setGenres(null);
+			setGenreIds(null);
+		}
+		else
 		{
-			genreId.add(option.getId());
-			genreName.add(option.getName());
+			List<String> genreName = new ArrayList<String>(selectOptions.size());
+
+			Set<Integer> genreId = new HashSet<Integer>();
+
+			for (SelectOption option : selectOptions) {
+				genreId.add(option.getId());
+				genreName.add(option.getName());
+			}
+
+			setGenres(genreName);
+			setGenreIds(genreId);
 		}
 		
-		setGenres(genreName);
-		setGenreIds(genreId);
 	}
-	
+
 	/**
-	Sets the language name and id according to a list of Select Option.
-	@pre
-	@post 	this.languages == List<selectOption>.getName() &&  this.languageIds == List<selectOption>.getId();
-	@param selectOptions which should be set as a filter attribute to the FilmFilter object
+	 * Sets the language name and id according to a list of Select Option.
+	 * 
+	 * @pre
+	 * @post this.languages == List<selectOption>.getName() && this.languageIds
+	 *       == List<selectOption>.getId();
+	 * @param selectOptions
+	 *            which should be set as a filter attribute to the FilmFilter
+	 *            object
 	 */
-	public void setLanguageOptions(List<SelectOption> selectOptions)
-	{
-		List<String> languageName = new ArrayList<String>(selectOptions.size());
-		
-		Set<Integer> languageId = new HashSet<Integer>();
-		
-		for(SelectOption option : selectOptions)
+	public void setLanguageOptions(List<SelectOption> selectOptions) {
+		if (selectOptions == null  || selectOptions.size()==0){
+			setLanguages(null);
+			setLanguageIds(null);
+		}
+		else
 		{
-			languageId.add(option.getId());
-			languageName.add(option.getName());
+			List<String> languageName = new ArrayList<String>(selectOptions.size());
+
+			Set<Integer> languageId = new HashSet<Integer>();
+
+			for (SelectOption option : selectOptions) {
+				languageId.add(option.getId());
+				languageName.add(option.getName());
+			}
+
+			setLanguages(languageName);
+			setLanguageIds(languageId);
 		}
 		
-		setLanguages(languageName);
-		setLanguageIds(languageId);
 	}
-	
-	
+
 	/**
 	 * @pre languages!= null
 	 * @post -
@@ -271,55 +301,62 @@ public class FilmFilter implements Serializable {
 	}
 
 	/**
-	@pre countryIds!= null
-	@post -
-	@return the countryIds
+	 * @pre countryIds!= null
+	 * @post -
+	 * @return the countryIds
 	 */
 	public Set<Integer> getCountryIds() {
 		return countryIds;
 	}
 
 	/**
-	@pre -
-	@post countryIds==countryIds
-	@param countryIds the countryIds to set
-	*/
+	 * @pre -
+	 * @post countryIds==countryIds
+	 * @param countryIds
+	 *            the countryIds to set
+	 */
 	public void setCountryIds(Set<Integer> countryIds) {
 		this.countryIds = countryIds;
 	}
 
 	/**
-	@pre languageIds!= null
-	@post -
-	@return the languageIds
+	 * @pre languageIds!= null
+	 * @post -
+	 * @return the languageIds
 	 */
 	public Set<Integer> getLanguageIds() {
 		return languageIds;
 	}
 
+	
+
+	
+
 	/**
-	@pre -
-	@post languageIds==languageIds
-	@param languageIds the languageIds to set
-	*/
+	 * @pre -
+	 * @post languageIds==languageIds
+	 * @param languageIds
+	 *            the languageIds to set
+	 */
 	public void setLanguageIds(Set<Integer> languageIds) {
 		this.languageIds = languageIds;
 	}
 
 	/**
-	@pre genreIds!= null
-	@post -
-	@return the genreIds
+	 * @pre genreIds!= null
+	 * @post -
+	 * @return the genreIds
 	 */
 	public Set<Integer> getGenreIds() {
 		return genreIds;
 	}
 
 	/**
-	@pre -
-	@post genreIds==genreIds
-	@param genreIds the genreIds to set
-	*/
+	 * @pre -
+	 * @post genreIds==genreIds
+	 * @param genreIds
+	 *            the genreIds to set
+	 */
 	public void setGenreIds(Set<Integer> genreIds) {
 		this.genreIds = genreIds;
 	}
@@ -334,6 +371,64 @@ public class FilmFilter implements Serializable {
 		return "FilmFilter [name=" + name + ", lengthStart=" + lengthStart + ", lengthEnd=" + lengthEnd + ", yearStart="
 				+ yearStart + ", yearEnd=" + yearEnd + ", countries=" + countries + ", languages=" + languages
 				+ ", genres=" + genres + "]";
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof FilmFilter))
+			return false;
+		FilmFilter other = (FilmFilter) obj;
+		if (countries == null) {
+			if (other.countries != null)
+				return false;
+		} else if (!countries.equals(other.countries))
+			return false;
+		if (countryIds == null) {
+			if (other.countryIds != null)
+				return false;
+		} else if (!countryIds.equals(other.countryIds))
+			return false;
+		if (genreIds == null) {
+			if (other.genreIds != null)
+				return false;
+		} else if (!genreIds.equals(other.genreIds))
+			return false;
+		if (genres == null) {
+			if (other.genres != null)
+				return false;
+		} else if (!genres.equals(other.genres))
+			return false;
+		if (languageIds == null) {
+			if (other.languageIds != null)
+				return false;
+		} else if (!languageIds.equals(other.languageIds))
+			return false;
+		if (languages == null) {
+			if (other.languages != null)
+				return false;
+		} else if (!languages.equals(other.languages))
+			return false;
+		if (lengthEnd != other.lengthEnd)
+			return false;
+		if (lengthStart != other.lengthStart)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (yearEnd != other.yearEnd)
+			return false;
+		if (yearStart != other.yearStart)
+			return false;
+		return true;
 	}
 
 }

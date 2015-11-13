@@ -1,6 +1,7 @@
 package ch.uzh.se.se7en.shared.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Container to hold the numberOfFilms which were produced in each Country. Is
@@ -109,6 +110,10 @@ public class Country implements Serializable {
 		}
 	}
 
+	public int[] getNumberOfFilms() {
+		return numberOfFilms;
+	}
+
 	/**
 	 * @pre id!= null
 	 * @post -
@@ -165,4 +170,36 @@ public class Country implements Serializable {
 	public void setCode(String code) {
 		this.code = code;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Country))
+			return false;
+		Country other = (Country) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (!Arrays.equals(numberOfFilms, other.numberOfFilms))
+			return false;
+		return true;
+	}
+
 }

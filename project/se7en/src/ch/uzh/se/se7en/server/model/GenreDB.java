@@ -1,12 +1,15 @@
 package ch.uzh.se.se7en.server.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import ch.uzh.se.se7en.shared.model.Genre;
@@ -28,8 +31,8 @@ public class GenreDB {
 	@Column(name = "name")
 	private String name;
 
-	@ManyToMany(targetEntity = FilmDB.class)
-	private Set<FilmDB> films;
+	@OneToMany(mappedBy = "primaryKey.genre", fetch = FetchType.LAZY)
+	private List<FilmGenreDB> filmGenreEntities;
 
 	public GenreDB() {
 
@@ -53,7 +56,7 @@ public class GenreDB {
 	 *         object
 	 */
 	public Genre toGenre() {
-		int numberOfFilms = films.size();
+		int numberOfFilms = filmGenreEntities.size();
 
 		return new Genre(id, name, numberOfFilms);
 	}
@@ -97,21 +100,20 @@ public class GenreDB {
 	}
 
 	/**
-	 * @pre films!= null
-	 * @post -
-	 * @return the films
+	@pre filmGenreEntities!= null
+	@post -
+	@return the filmGenreEntities
 	 */
-	public Set<FilmDB> getFilms() {
-		return films;
+	public List<FilmGenreDB> getFilmGenreEntities() {
+		return filmGenreEntities;
 	}
 
 	/**
-	 * @pre -
-	 * @post films==films
-	 * @param films
-	 *            the films to set
-	 */
-	public void setFilms(Set<FilmDB> films) {
-		this.films = films;
+	@pre -
+	@post filmGenreEntities==filmGenreEntities
+	@param filmGenreEntities the filmGenreEntities to set
+	*/
+	public void setFilmGenreEntities(List<FilmGenreDB> filmGenreEntities) {
+		this.filmGenreEntities = filmGenreEntities;
 	}
 }

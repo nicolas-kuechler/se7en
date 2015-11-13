@@ -25,35 +25,57 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
+import com.googlecode.gwt.charts.client.ColumnType;
 import com.googlecode.gwt.charts.client.DataTable;
+import com.googlecode.gwt.charts.client.DataView;
+import com.googlecode.gwt.charts.client.Selection;
 import com.googlecode.gwt.charts.client.corechart.PieChart;
+import com.googlecode.gwt.charts.client.corechart.PieChartOptions;
+import com.googlecode.gwt.charts.client.event.SelectEvent;
+import com.googlecode.gwt.charts.client.event.SelectHandler;
 import com.googlecode.gwt.charts.client.geochart.GeoChart;
+import com.googlecode.gwt.charts.client.geochart.GeoChartColorAxis;
 import com.googlecode.gwt.charts.client.geochart.GeoChartOptions;
+import com.googlecode.gwt.charts.client.options.Legend;
+import com.googlecode.gwt.charts.client.options.LegendPosition;
+import com.googlecode.gwt.charts.client.util.ArrayHelper;
 
 import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.Boundaries;
+import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.Genre;
 
-public class MapViewImpl extends Composite implements MapView{
+//TODO Dominik Bünzli positioning of the pieChart in the UI
+public class MapViewImpl extends Composite implements MapView {
 
 	private static MapViewImplUiBinder uiBinder = GWT.create(MapViewImplUiBinder.class);
 
 	interface MapViewImplUiBinder extends UiBinder<Widget, MapViewImpl> {
 	}
-	
+
 	private MapPresenter mapPresenter;
-	private ChartLoader chartLoader = new ChartLoader(ChartPackage.GEOCHART);
+	
+	private ChartLoader chartLoaderGeoChart = new ChartLoader(ChartPackage.GEOCHART);
 	private GeoChart geoChart;
 	private GeoChartOptions geoChartOptions;
-	private DataGrid genreTable;
-	private PieChart genrePieChart;
+	private DataView dataViewGeoChart;
+	private DataTable dataTableGeoChart;
 	
-	@UiField (provided = true) RangeSlider yearSlider;
-	@UiField PanelBody panel;
-	@UiField DataGrid<Film> dataGrid;
+	private ChartLoader chartLoaderPieChart = new ChartLoader(ChartPackage.CORECHART);
+	private PieChart pieChart;
+	private PieChartOptions pieChartOptions;
+	
+	private DataGrid genreTable;
+
+	@UiField(provided = true)
+	RangeSlider yearSlider;
+	@UiField
+	PanelBody panel;
+	@UiField
+	DataGrid<Film> dataGrid;
 
 	@Inject
 	public MapViewImpl() {
@@ -64,14 +86,8 @@ public class MapViewImpl extends Composite implements MapView{
 		yearSlider.setWidth("900px");
 		yearSlider.setTooltip(TooltipType.ALWAYS);
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		panel.setHeight("550px");
-	}
-	
-	@UiHandler("yearSlider")
-	public void onRangeSlideStop(SlideStopEvent<Range> event)
-	{
-		mapPresenter.onRangeSliderChanged();
 	}
 
 	@Override
@@ -79,47 +95,159 @@ public class MapViewImpl extends Composite implements MapView{
 		this.mapPresenter = presenter;
 	}
 
+
+	@UiHandler("yearSlider")
+	public void onRangeSlideStop(SlideStopEvent<Range> event) {
+		mapPresenter.onRangeSliderChanged();
+	}
+
 	@Override
-	public void setGeoChart(final DataTable countries) {
-		chartLoader.loadApi(new Runnable(){
-			@Override
+	public void setGeoChart(final List<DataTableEntity> countries) {
+		chartLoaderGeoChart.loadApi(new Runnable() {
+
 			public void run() {
-				if(geoChart == null)
-				{
+				if (geoChart == null) {
 					geoChart = new GeoChart();
 					geoChartOptions = GeoChartOptions.create();
 					geoChartOptions.setHeight(500);
 					geoChartOptions.setWidth(900);
 					panel.add(geoChart);
-					//TODO Define GeoChart Colors
+					GeoChartColorAxis colorAxis = GeoChartColorAxis.create();
+					colorAxis.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
+					geoChartOptions.setColorAxis(colorAxis);
+					// TODO Define GeoChart Colors
 				}
-				//TODO Fade Animation
-				geoChart.draw(countries, geoChartOptions);
+				
+				//Create new DataTable
+				dataTableGeoChart = DataTable.create();
+				dataTableGeoChart.addColumn(ColumnType.STRING, "Country");
+				dataTableGeoChart.addColumn(ColumnType.NUMBER, "Productions");
+				dataTableGeoChart.addColumn(ColumnType.NUMBER, "Id");
+				//add number of necessary rows
+				dataTableGeoChart.addRows(countries.size());
+				
+				for(int i = 0; i < countries.size(); i++)
+				{
+					dataTableGeoChart.setValue(i, 0, countries.get(i).getName());
+					dataTableGeoChart.setValue(i, 1, countries.get(i).getValue());
+					dataTableGeoChart.setValue(i, 2, countries.get(i).getId());
+				}
+				//create dataView from dataTable
+				dataViewGeoChart = DataView.create(dataTableGeoChart);
+				
+				//hide id information in dataView
+				dataViewGeoChart.hideColumns(ArrayHelper.createArray(new int[]{2}));
+				
+				geoChart.draw(dataViewGeoChart, geoChartOptions);
+				
+				//add a selectHandler to the map to detect users selecting a country on the map
+				geoChart.addSelectHandler(new SelectHandler(){
+					@Override
+					public void onSelect(SelectEvent event) {
+							mapPresenter.onCountrySelected();	 //inform the mapPresenter that a country was selected
+					}
+				});
 			}
 		});
 	}
 
 	@Override
-	public int getGeoChartSelection() {
-		// TODO Return geoChartSelection
-		return 0;
+	public int getGeoChartSelectionCountryId() {
+		//get information from selection which row in datatable was selected
+		int row = geoChart.getSelection().get(0).getRow();
+		//get the country id information at the selected row
+		return (int) dataTableGeoChart.getValueNumber(row, 2);	
 	}
-
+	
 	@Override
-	public HasValue<Range> getYearSlider() {
-		return yearSlider;
+	public void setGenreVisible(boolean visible) {
+		//TODO Maybe doing it with fade animation
+		if(visible)
+		{
+			if(genreTable!=null)
+			{
+				genreTable.setVisible(true);
+			}	
+			if(pieChart!=null)
+			{
+				pieChart.setVisible(true);
+			}
+		}
+		else
+		{
+			if(genreTable!=null)
+			{
+				genreTable.setVisible(false);
+			}
+			if(pieChart!=null)
+			{
+				pieChart.setVisible(false);
+			}
+		}
 	}
 
 	@Override
 	public void setGenreTable(List<Genre> genres) {
 		// TODO refresh genreTable with new List
 		
+		// TODO a Table where: (Rank Information needs to be computed somehow) 
+		// checkout: http://stackoverflow.com/questions/4347224/adding-a-row-number-column-to-gwt-celltable
+		//	Rank|GenreName|Productions
+		//    1   Action     30
+		//    2   Drama      24
+		//  ...
 	}
 
 	@Override
-	public void setGenrePieChart(DataTable genres) {
-		// TODO refresh genrePieChart with new DataTable
-		
+	public void setGenrePieChart(final List<DataTableEntity> genres) {
+		chartLoaderPieChart.loadApi(new Runnable(){
+			@Override
+			public void run() {
+				if (pieChart == null) {
+					pieChart = new PieChart();
+					pieChartOptions = PieChartOptions.create();
+					pieChartOptions.setHeight(300);
+					pieChartOptions.setWidth(300);
+					//hide legend
+					pieChartOptions.setLegend(Legend.create(LegendPosition.NONE));
+					//all slices under 10% are grouped together under "others"
+					pieChartOptions.setSliceVisibilityThreshold(0.1);
+					//TODO Need to define way more piechart colors (at least max depending on threshold in line above)
+					pieChartOptions.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
+					panel.add(pieChart);
+					
+				}
+				
+				//build DataTable
+				DataTable dataTablePieChart = DataTable.create();
+				dataTablePieChart.addColumn(ColumnType.STRING, "Genre");
+				dataTablePieChart.addColumn(ColumnType.NUMBER, "Productions");
+				dataTablePieChart.addRows(genres.size());
+				
+				//Copy all elements in DataTable
+				for(int i = 0; i < genres.size(); i++)
+				{
+					dataTablePieChart.setValue(i, 0, genres.get(i).getName());
+					dataTablePieChart.setValue(i, 1, genres.get(i).getValue());
+				}
+				//Draw the piechart using the dataTable and the specified options
+				pieChart.draw(dataTablePieChart, pieChartOptions);	
+			}
+		});
 	}
 
+	@Override
+	public int getMinYear() {
+		return (int)yearSlider.getValue().getMinValue();
+	}
+
+	@Override
+	public int getMaxYear() {
+		return (int)yearSlider.getValue().getMaxValue();
+	}
+
+	@Override
+	public void setYearRange(int yearStart, int yearEnd) {
+		yearSlider.setValue(new Range(yearStart, yearEnd));
+	}
 }

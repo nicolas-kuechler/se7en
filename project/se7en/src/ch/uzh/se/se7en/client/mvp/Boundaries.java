@@ -11,7 +11,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
  */
 public class Boundaries {
 	public static final int MIN_YEAR = 1890;
-	public static final int MAX_YEAR = Integer.parseInt(DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[2]); //get current year
+	public static final int MAX_YEAR = 2015;//Integer.parseInt(DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[2]); //get current year
 	
 	public static final int MIN_LENGTH = 0;
 	public static final int MAX_LENGTH = 600;
