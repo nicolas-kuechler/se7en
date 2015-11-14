@@ -1,6 +1,6 @@
 package ch.uzh.se.se7en.client.mvp.model;
 
-public class DataTableEntity {
+public class DataTableEntity{
 	private String name;
 	private int value;
 	private int id;
@@ -102,10 +102,5 @@ public class DataTableEntity {
 	public String toString() {
 		return "DataTableEntity [name=" + name + ", value=" + value + ", id=" + id + "]";
 	}
-
-
-	
-	
-
 	
 }
