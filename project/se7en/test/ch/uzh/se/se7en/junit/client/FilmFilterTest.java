@@ -308,8 +308,11 @@ public class FilmFilterTest {
 		languages.add("German");
 		genres.add("Action");
 		FilmFilter filter = new FilmFilter("Test",1,100,2000,2004,countries,languages,genres);
-		assertEquals(filter.toString(),"FilmFilter [name=Test, lengthStart=1, lengthEnd=100, yearStart=2000, yearEnd=2004, "
-				+ "countries=[Switzerland], languages=[German], genres=[Action]]");
+		assertEquals(filter.toString(),"FilmFilter [name=Test, lengthStart=1, lengthEnd=100, yearStart=2000, yearEnd=2004, countries=[Switzerland], countryIds=null,"
+				+ " languages=[German], languageIds=null, genres=[Action], genreIds=null]");
+		
+		
+;
 	}
 
 }

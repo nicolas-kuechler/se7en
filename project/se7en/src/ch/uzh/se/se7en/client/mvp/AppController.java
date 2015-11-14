@@ -79,6 +79,14 @@ public class AppController implements ValueChangeHandler<String> {
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
 		String token = event.getValue();
+		String filterToken = "";
+		
+		if(token.indexOf('?')>0) //if there is a query part in the url
+		{
+			filterToken =token.substring(token.indexOf('?'));
+			token = token.substring(0, token.indexOf('?'));
+		}
+		
 		if ((token != null) && (!token.equals(Tokens.HOME))) // if there is a
 																// specific
 																// token set
@@ -86,11 +94,11 @@ public class AppController implements ValueChangeHandler<String> {
 			if (token.startsWith(Tokens.MAP)) // it's the map token
 			{
 				// Filter Parsing needs to be implemented
-				doMapView();
+				doMapView(filterToken);
 			} else if (token.startsWith(Tokens.TABLE)) // it's the table token
 			{
 				// Filter Parsing needs to be implemented
-				doTableView();
+				doTableView(filterToken);
 			} else if (token.startsWith(Tokens.IMPORT)) {
 				doImport(token);
 				doWelcomeView();
@@ -134,12 +142,13 @@ public class AppController implements ValueChangeHandler<String> {
 	 * @pre container != null
 	 * @post
 	 */
-	private void doMapView() {
+	private void doMapView(String filterToken) {
 		navBar.setActive(Tokens.MAP);
 		Window.setTitle("GIR | Map");
 		RootPanel.get("subContainer").setVisible(true);
 		injector.getFilterPresenter().go(subContainer);
 		injector.getFilterPresenter().setMode(Tokens.MAP);
+		injector.getFilterPresenter().setFilter(filterToken);
 		injector.getMapPresenter().go(container);
 	}
 
@@ -151,12 +160,13 @@ public class AppController implements ValueChangeHandler<String> {
 	 * @pre container != null
 	 * @post
 	 */
-	private void doTableView() {
+	private void doTableView(String filterToken) {
 		navBar.setActive(Tokens.TABLE);
 		Window.setTitle("GIR | Table");
 		RootPanel.get("subContainer").setVisible(true);
 		injector.getFilterPresenter().go(subContainer);
 		injector.getFilterPresenter().setMode(Tokens.TABLE);
+		injector.getFilterPresenter().setFilter(filterToken);
 		injector.getTablePresenter().go(container);
 	}
 

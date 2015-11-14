@@ -1,6 +1,7 @@
 package ch.uzh.se.se7en.client.mvp.views.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.FormGroup;
@@ -191,7 +192,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public void setSelectedCountryOptions(List<String> selectedOptions) {
+	public void setSelectedCountryOptions(Set<Integer> selectedOptions) {
 		if(selectedOptions==null)
 		{
 			countrySelect.deselectAll();
@@ -213,7 +214,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public void setSelectedLanguageOptions(List<String> selectedOptions) {
+	public void setSelectedLanguageOptions(Set<Integer> selectedOptions) {
 		if(selectedOptions==null)
 		{
 			languageSelect.deselectAll();
@@ -236,7 +237,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public void setSelectedGenreOptions(List<String> selectedOptions) {
+	public void setSelectedGenreOptions(Set<Integer> selectedOptions) {
 		if(selectedOptions==null)
 		{
 			genreSelect.deselectAll();
