@@ -154,9 +154,7 @@ public class MultiSelect extends Composite {
 			option.setValue(Integer.toString(currentOptions.get(i).getId()));
 			select.add(option);
 		}
-
 		select.refresh();
-
 	}
 
 }
