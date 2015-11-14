@@ -1,17 +1,16 @@
 package ch.uzh.se.se7en.junit.client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
-import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModelImpl;
 import ch.uzh.se.se7en.shared.model.Country;
-import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public class FilmDataModelImplTest {
 //TODO NK Write test for id name matching components (country, genre, language)
@@ -19,8 +18,8 @@ public class FilmDataModelImplTest {
 	@Test
 	public void testFilmDataModelImpl() {
 		FilmDataModelImpl model = new FilmDataModelImpl();
-		List<Film>films = new ArrayList<Film>();	
-		assertEquals(model.getFilmList(),films);
+		List<Country>films = new ArrayList<Country>();	
+		assertEquals(model.getCountryList(),films);
 	}
 
 	@Test
@@ -41,46 +40,6 @@ public class FilmDataModelImplTest {
 		countries.add(country);
 		model.setCountryList(countries);
 		assertEquals(model.getCountryList(),countries);
-	}
-
-	@Test
-	public void testSetCountryDataTable() {
-		FilmDataModelImpl model = new FilmDataModelImpl();
-		List<DataTableEntity> tableEntityList = new ArrayList<DataTableEntity>();
-		DataTableEntity tableEntity = new DataTableEntity("Switzerland",30);
-		tableEntityList.add(tableEntity);
-		model.setCountryDataTable(tableEntityList);
-		assertEquals(model.getCountryDataTable(),tableEntityList);
-	}
-
-	@Test
-	public void testGetCountryDataTable() {
-		FilmDataModelImpl model = new FilmDataModelImpl();
-		List<DataTableEntity> tableEntityList = new ArrayList<DataTableEntity>();
-		DataTableEntity tableEntity = new DataTableEntity("Switzerland",30);
-		tableEntityList.add(tableEntity);
-		model.setCountryDataTable(tableEntityList);
-		assertEquals(model.getCountryDataTable(),tableEntityList);
-	}
-
-	@Test
-	public void testSetFilmList() {
-		FilmDataModelImpl model = new FilmDataModelImpl();
-		List<Film> films = new ArrayList<Film>();
-		Film film = new Film("Test");
-		films.add(film);
-		model.setFilmList(films);
-		assertEquals(model.getFilmList(),films);
-	}
-
-	@Test
-	public void testGetFilmList() {
-		FilmDataModelImpl model = new FilmDataModelImpl();
-		List<Film> films = new ArrayList<Film>();
-		Film film = new Film("Test");
-		films.add(film);
-		model.setFilmList(films);
-		assertEquals(model.getFilmList(),films);
 	}
 
 	@Test
@@ -113,6 +72,94 @@ public class FilmDataModelImplTest {
 		FilmFilter filter = new FilmFilter("Switzerland");
 		model.setAppliedFilter(filter);
 		assertEquals(model.getAppliedFilter(),filter);
+	}
+	
+	
+	@Test
+	public void testSetGetCountryOptions()
+	{
+		List<SelectOption> options= new ArrayList<SelectOption>();
+		options.add(new SelectOption(1, "Switzerland"));
+		options.add(new SelectOption(2, "Germany"));
+		FilmDataModelImpl model = new FilmDataModelImpl();
+		
+		model.setCountryOptions(options);
+		
+		assertEquals(model.getCountryName(1), "Switzerland");
+		assertEquals(model.getCountryName(2), "Germany");
+		assertEquals(model.getCountryName(3), null);
+		
+		//Simulate that ids have a gap (some options were deleted in db)
+		options.add(new SelectOption(5, "France"));
+		model.setCountryOptions(options);
+		assertEquals(model.getCountryName(1), "Switzerland");
+		assertEquals(model.getCountryName(2), "Germany");
+		assertEquals(model.getCountryName(3), null);
+		assertEquals(model.getCountryName(4), null);
+		assertEquals(model.getCountryName(5), "France");
+		assertEquals(model.getCountryName(6), null);
+	}
+	
+	@Test
+	public void testSetGetGenreOptions()
+	{
+		List<SelectOption> options= new ArrayList<SelectOption>();
+		options.add(new SelectOption(1, "Action"));
+		options.add(new SelectOption(2, "Adventure"));
+		FilmDataModelImpl model = new FilmDataModelImpl();
+		
+		model.setGenreOptions(options);
+		
+		assertEquals(model.getGenreName(1), "Action");
+		assertEquals(model.getGenreName(2), "Adventure");
+		assertEquals(model.getGenreName(3), null);
+		
+		//Simulate that ids have a gap (some options were deleted in db)
+		options.add(new SelectOption(6, "Comedy"));
+		model.setGenreOptions(options);
+		assertEquals(model.getGenreName(1), "Action");
+		assertEquals(model.getGenreName(2), "Adventure");
+		assertEquals(model.getGenreName(3), null);
+		assertEquals(model.getGenreName(4), null);
+		assertEquals(model.getGenreName(5), null);
+		assertEquals(model.getGenreName(6), "Comedy");
+	}
+	
+	@Test
+	public void testSetGetLanguageOptions()
+	{
+		List<SelectOption> options= new ArrayList<SelectOption>();
+		options.add(new SelectOption(1, "German"));
+		options.add(new SelectOption(2, "English"));
+		FilmDataModelImpl model = new FilmDataModelImpl();
+		
+		model.setLanguageOptions(options);
+		
+		assertEquals(model.getLanguageName(1), "German");
+		assertEquals(model.getLanguageName(2), "English");
+		assertEquals(model.getLanguageName(3), null);
+		
+		//Simulate that ids have a gap (some options were deleted in db)
+		options.add(new SelectOption(5, "French"));
+		model.setLanguageOptions(options);
+		assertEquals(model.getLanguageName(1), "German");
+		assertEquals(model.getLanguageName(2), "English");
+		assertEquals(model.getLanguageName(3), null);
+		assertEquals(model.getLanguageName(4), null);
+		assertEquals(model.getLanguageName(5), "French");
+		assertEquals(model.getLanguageName(6), null);
+	}
+	
+	@Test
+	public void testGetMaxId()
+	{
+		List<SelectOption> options= new ArrayList<SelectOption>();
+		options.add(new SelectOption(1, "Opt1"));
+		options.add(new SelectOption(2, "Opt2"));
+		options.add(new SelectOption(7, "Opt3"));
+		options.add(new SelectOption(4, "Opt4"));
+		FilmDataModelImpl model = new FilmDataModelImpl();
+		assertEquals(model.getMaxId(options), 7);
 	}
 
 }
