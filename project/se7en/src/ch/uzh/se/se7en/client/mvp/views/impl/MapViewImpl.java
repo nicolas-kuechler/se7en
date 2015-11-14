@@ -2,6 +2,8 @@ package ch.uzh.se.se7en.client.mvp.views.impl;
 
 import java.util.List;
 
+import org.gwtbootstrap3.client.ui.Label;
+import org.gwtbootstrap3.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.PanelBody;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import org.gwtbootstrap3.extras.animate.client.ui.Animate;
@@ -71,7 +73,9 @@ public class MapViewImpl extends Composite implements MapView {
 	private ChartLoader chartLoaderPieChart = new ChartLoader(ChartPackage.CORECHART);
 	private PieChart pieChart;
 	private PieChartOptions pieChartOptions;
-	
+	private int panelWidth;
+	private int panelHeight;
+
 
 	@UiField(provided = true)
 	RangeSlider yearSlider;
@@ -79,6 +83,7 @@ public class MapViewImpl extends Composite implements MapView {
 	PanelBody panel;
 	@UiField (provided = true)
 	DataGrid<Genre> genreTable;
+
 	
 	ListDataProvider<Genre> genreProvider = new ListDataProvider<Genre>();
 
@@ -89,25 +94,21 @@ public class MapViewImpl extends Composite implements MapView {
 
 	@Inject
 	public MapViewImpl() {
+
+		
 		yearSlider = new RangeSlider();
+		genreTable = new DataGrid<Genre>();
 		yearSlider.setMin(Boundaries.MIN_YEAR);
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
-		yearSlider.setWidth("900px");
+		yearSlider.setWidth("80%");
 		yearSlider.setTooltip(TooltipType.ALWAYS);
-		genreTable = new DataGrid<Genre>();
-		genreTable.setWidth("20%");
-		genreTable.setHeight("200px");
-		genreTable.setAutoHeaderRefreshDisabled(true);
 		buildTable();
-		genreProvider.addDataDisplay(genreTable);
-		
 		initWidget(uiBinder.createAndBindUi(this));
 		
 
 
-		panel.setHeight("50%");
-		panel.setWidth("100%");
+
 	}
 
 	@Override
@@ -123,6 +124,7 @@ public class MapViewImpl extends Composite implements MapView {
 
 	@Override
 	public void setGeoChart(final List<DataTableEntity> countries) {
+	
 		chartLoaderGeoChart.loadApi(new Runnable() {
 
 			public void run() {
@@ -130,8 +132,12 @@ public class MapViewImpl extends Composite implements MapView {
 					geoChart = new GeoChart();
 					geoChart.setStyleName("geoChart");
 					geoChartOptions = GeoChartOptions.create();
-					geoChartOptions.setHeight(500);
-					geoChartOptions.setWidth(900);
+					panelWidth = panel.getOffsetWidth();
+					panelHeight = panel.getOffsetHeight();
+					
+					geoChartOptions.setWidth((panelWidth*6)/10);
+					geoChartOptions.setHeight((panelHeight*3)/10);
+
 					panel.add(geoChart);
 					GeoChartColorAxis colorAxis = GeoChartColorAxis.create();
 					colorAxis.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
@@ -207,7 +213,12 @@ public class MapViewImpl extends Composite implements MapView {
 		}
 	}
 	
-	public void buildTable(){
+	public void buildTable(){		
+		
+		genreProvider.addDataDisplay(genreTable);
+		genreTable.setWidth("30%");
+		genreTable.setHeight("200px");
+		genreTable.setAutoHeaderRefreshDisabled(true);
 		
 		rankColumn = new TextColumn<Genre>() {
 			@Override
@@ -246,28 +257,17 @@ public class MapViewImpl extends Composite implements MapView {
 			}
 		};
 
-		genreTable.setColumnWidth(rankColumn, 33, Unit.PCT);
+		genreTable.setColumnWidth(rankColumn, 9, Unit.PCT);
 		genreTable.addColumn(rankColumn, "Rank");
-		genreTable.setColumnWidth(nameColumn, 33, Unit.PCT);
+		genreTable.setColumnWidth(nameColumn, 45, Unit.PCT);
 		genreTable.addColumn(nameColumn, "Name");
-		genreTable.setColumnWidth(productionColumn, 33, Unit.PCT);
+		genreTable.setColumnWidth(productionColumn, 45, Unit.PCT);
 		genreTable.addColumn(productionColumn, "Productions");
 	}
 
 	@Override
 	public void setGenreTable(List<Genre> genres) {
-			
 		genreProvider.setList(genres);
-
-
-		// TODO refresh genreTable with new List
-			
-			// TODO a Table where: (Rank Information needs to be computed somehow) 
-			// checkout: http://stackoverflow.com/questions/4347224/adding-a-row-number-column-to-gwt-celltable
-			//	Rank|GenreName|Productions
-			//    1   Action     30
-			//    2   Drama      24
-			//  ...
 	}
 
 	@Override
@@ -279,14 +279,15 @@ public class MapViewImpl extends Composite implements MapView {
 					pieChart = new PieChart();
 					pieChart.setStyleName("pieChart");
 					pieChartOptions = PieChartOptions.create();
-					pieChartOptions.setHeight(300);
-					pieChartOptions.setWidth(300);
+					pieChartOptions.setHeight((panelHeight*5)/10);
+					pieChartOptions.setWidth((panelWidth*3)/10);
 					//hide legend
-					pieChartOptions.setLegend(Legend.create(LegendPosition.NONE));
+					pieChartOptions.setLegend(Legend.create(LegendPosition.RIGHT));
 					//all slices under 10% are grouped together under "others"
 					pieChartOptions.setSliceVisibilityThreshold(0.1);
 					//TODO Need to define way more piechart colors (at least max depending on threshold in line above)
 					pieChartOptions.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
+					pieChartOptions.setTitle("Genre Chart");
 					panel.add(pieChart);
 					
 				}

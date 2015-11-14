@@ -14,6 +14,7 @@
 			</b:PanelHeader>
 			<b:PanelBody ui:field="panel">
 				<c:DataGrid ui:field='genreTable' styleName="genreTable"/>
+
 			</b:PanelBody>
 			<b:PanelFooter>
 				<b:Heading size="H5" text="Production Year" />
