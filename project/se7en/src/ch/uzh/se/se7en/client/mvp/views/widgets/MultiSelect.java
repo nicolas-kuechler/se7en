@@ -1,6 +1,5 @@
 package ch.uzh.se.se7en.client.mvp.views.widgets;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +15,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import ch.uzh.se.se7en.shared.model.SelectOption;
 
-//TODO Cyrill: Missing method to set the current selectedOptions. Necessary for the filter parsing from the url.
 /**
  * This class defines a widget that adds functionality to the
  * gwtbootstrap3.extras.select widget.
@@ -33,8 +31,6 @@ public class MultiSelect extends Composite {
 
 	@UiField
 	Select select;
-
-	private List<SelectOption> currentOptions;
 
 	public MultiSelect() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -54,57 +50,12 @@ public class MultiSelect extends Composite {
 		return ids;
 	}
 	
-// TODO CH Remove because not used anymore
-//	/**
-//	 * This method delivers a list of SelectOption objects according to what was
-//	 * selected by the user in the multiselect widget
-//	 * 
-//	 * @author Cyrill Halter
-//	 * @pre -
-//	 * @post -
-//	 * @param -
-//	 * @return List<SelectOption> selectedOption A list of selected Options as
-//	 *         SelectOption objects
-//	 */
-//	public List<SelectOption> getSelectedOptions() {
-//		List<String> ids = select.getAllSelectedValues();
-//		List<SelectOption> selectedOptions = new ArrayList<SelectOption>();
-//		for (String id : ids) {
-//			int i = 0;
-//			SelectOption tempOption = currentOptions.get(i);
-//			while (Integer.parseInt(id) != tempOption.getId()) {
-//				tempOption = currentOptions.get(++i);
-//			}
-//			selectedOptions.add(tempOption);
-//		}
-//		return selectedOptions;
-//	}
+	//TODO CH Write Comment
+	public void select(Set<Integer> ids)
+	{
+		//TODO CH Write metho to select values in the multiselects
+	}
 
-//	/**
-//	 * This method delivers a list of strings according to what was selected by
-//	 * the user in the multiselect widget. This has to be done for integration
-//	 * with the existing code.
-//	 * 
-//	 * @author Cyrill Halter
-//	 * @pre -
-//	 * @post -
-//	 * @param -
-//	 * @return List<Strings> selectedOption A list of selected Options as
-//	 *         strings
-//	 */ //TODO CH Decide if Necessary?
-//	public List<String> getValue() {
-//		List<String> ids = select.getAllSelectedValues();
-//		List<String> selectedOptions = new ArrayList<String>();
-//		for (String id : ids) {
-//			int i = 0;
-//			SelectOption tempOption = currentOptions.get(i);
-//			while (Integer.parseInt(id) != tempOption.getId()) {
-//				tempOption = currentOptions.get(++i);
-//			}
-//			selectedOptions.add(tempOption.getName());
-//		}
-//		return selectedOptions;
-//	}
 
 	/**
 	 * This method deselects all options in the multiselect widget
@@ -146,7 +97,6 @@ public class MultiSelect extends Composite {
 	 */
 	public void setOptions(List<SelectOption> currentOptions) {
 		Option option;
-		this.currentOptions = currentOptions;
 
 		for (int i = 0; i < currentOptions.size(); i++) {
 			option = new Option();

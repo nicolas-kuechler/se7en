@@ -3,14 +3,9 @@ package ch.uzh.se.se7en.client.mvp.views;
 import java.util.List;
 import java.util.Set;
 
-import org.gwtbootstrap3.extras.slider.client.ui.Range;
-
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
-import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
-import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public interface FilterView extends IsWidget {

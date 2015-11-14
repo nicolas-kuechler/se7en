@@ -14,7 +14,8 @@ import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class FilmDataModelImplTest {
-
+//TODO Write test for id name matching components (country, genre, language)
+	
 	@Test
 	public void testFilmDataModelImpl() {
 		FilmDataModelImpl model = new FilmDataModelImpl();

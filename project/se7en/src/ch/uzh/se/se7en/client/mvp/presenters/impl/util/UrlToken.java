@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.google.gwt.http.client.URL;
 
-import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class UrlToken {

@@ -6,21 +6,16 @@ import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.Panel;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import ch.uzh.se.se7en.client.ClientLog;
 
-public class AppliedFilterBox extends Composite implements HasValue<List<String>>{
+public class AppliedFilterBox extends Composite{
 
 	private static AppliedFilterBoxUiBinder uiBinder = GWT.create(AppliedFilterBoxUiBinder.class);
-	private List<String> values = null;
 
 	interface AppliedFilterBoxUiBinder extends UiBinder<Widget, AppliedFilterBox> {}
 	
@@ -32,20 +27,7 @@ public class AppliedFilterBox extends Composite implements HasValue<List<String>
 		
 		
 	}
-
-	@Override
-	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<List<String>> handler) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> getValue() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
+//TODO CH Comment
 	public void setValue(List<String> values) {
 		rootPanel.clear();
 		for(String value : values){
@@ -58,12 +40,6 @@ public class AppliedFilterBox extends Composite implements HasValue<List<String>
 			rootPanel.add(filterLabel);
 		}
 		ClientLog.writeErr(values.toString());
-	}
-
-	@Override
-	public void setValue(List<String> value, boolean fireEvents) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
