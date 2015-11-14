@@ -143,18 +143,20 @@ public class MapPresenterTest {
 		int testLengthEnd = 300;
 		int testMinYear = 1890;
 		int testMaxYear = 2015;
-		List<SelectOption> selectedLanguage = new ArrayList<SelectOption>();
-		selectedLanguage.add(new SelectOption(1, "German"));
-		List<SelectOption> selectedGenre = new ArrayList<SelectOption>();
+		
+		Set<Integer> selectedLanguage = new HashSet<Integer>();
+		selectedLanguage.add(1);
+		Set<Integer> selectedGenre = new HashSet<Integer>();
+		
 		FilmFilter mapFilter = new FilmFilter();
 		mapFilter.setName(testName);
 		mapFilter.setLengthStart(testLengthStart);
 		mapFilter.setLengthEnd(testLengthEnd);
 		mapFilter.setYearStart(testMinYear);
 		mapFilter.setYearEnd(testMaxYear);
-		mapFilter.setCountryOptions(null);
-		mapFilter.setLanguageOptions(selectedLanguage);
-		mapFilter.setGenreOptions(selectedGenre);
+		mapFilter.setCountryIds(null);
+		mapFilter.setLanguageIds(selectedLanguage);
+		mapFilter.setGenreIds(selectedGenre);
 		
 		//Create a FilmFilter object that is expected to be sent to the server
 		FilmFilter expectedFilter = new FilmFilter();
@@ -166,8 +168,8 @@ public class MapPresenterTest {
 		Set<Integer> countryId = new HashSet<Integer>();
 		countryId.add(5);
 		expectedFilter.setCountryIds(countryId);
-		expectedFilter.setLanguageOptions(selectedLanguage);
-		expectedFilter.setGenreOptions(selectedGenre);
+		expectedFilter.setLanguageIds(selectedLanguage);
+		expectedFilter.setGenreIds(selectedGenre);
 		
 		//Setup the mock return values
 		when(filmDataModel.getAppliedMapFilter()).thenReturn(mapFilter);
@@ -231,7 +233,6 @@ public class MapPresenterTest {
 		mapPresenter.onRangeSliderChanged();
 		// TTwo times because updateGeoChart is called 1 time in the
 		// constructor
-		verify(filmDataModel, times(2)).setCountryDataTable(Matchers.eq(entities));
 		verify(mapView, times(2)).setGeoChart(Matchers.eq(entities));
 	}
 	
@@ -249,7 +250,6 @@ public class MapPresenterTest {
 		verify(filmDataModel).setCountryList(Matchers.eq(countries));
 		
 		//3 Times because: 1st from Constructor (empty), 2nd from start loading (empty), 3rd from updating the map with the result
-		verify(filmDataModel, times(3)).setCountryDataTable(Matchers.eq(entities));
 		verify(mapView, times(3)).setGeoChart(Matchers.eq(entities));
 	}
 
@@ -261,7 +261,6 @@ public class MapPresenterTest {
 		mapPresenter.updateGeoChart();
 		// Two times because updateGeoChart is called 1 time in the
 		// constructor
-		verify(filmDataModel, times(2)).setCountryDataTable(Matchers.eq(entities));
 		verify(mapView, times(2)).setGeoChart(Matchers.eq(entities));
 	}
 

@@ -1,13 +1,16 @@
 package ch.uzh.se.se7en.junit.client.presenter;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jukito.JukitoRunner;
 import org.junit.Before;
@@ -21,11 +24,9 @@ import org.mockito.stubbing.Answer;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwtmockito.AsyncAnswers;
 import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.Tokens;
-import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.FilterPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
@@ -69,16 +70,16 @@ public class FilterPresenterTest {
 		int testMaxYear = 2015;
 		
 		// multiple entries from multiselect are selected
-		List<SelectOption> selectedCountry = new ArrayList<SelectOption>();
-		selectedCountry.add(new SelectOption(1, "Switzerland"));
-		selectedCountry.add(new SelectOption(2, "Germany"));
+		Set<Integer> selectedCountry = new HashSet<Integer>();
+		selectedCountry.add(1);
+		selectedCountry.add(2);
 		
 		// only one entry from multiselect is selected
-		List<SelectOption> selectedLanguage = new ArrayList<SelectOption>();
-		selectedLanguage.add(new SelectOption(1, "German"));
+		Set<Integer> selectedLanguage = new HashSet<Integer>();
+		selectedLanguage.add(5);
 		
 		// no entry from multiselect is selected
-		List<SelectOption> selectedGenre = new ArrayList<SelectOption>();
+		Set<Integer> selectedGenre = new HashSet<Integer>();
 		
 		//mocking answers of the filterView Mock
 		when(filterView.getName()).thenReturn(testName);
@@ -86,9 +87,9 @@ public class FilterPresenterTest {
 		when(filterView.getLengthEnd()).thenReturn(testLengthEnd);
 		when(filterView.getYearStart()).thenReturn(testYearStart);
 		when(filterView.getYearEnd()).thenReturn(testYearEnd);
-		when(filterView.getSelectedCountryOptions()).thenReturn(selectedCountry);
-		when(filterView.getSelectedLanguageOptions()).thenReturn(selectedLanguage);
-		when(filterView.getSelectedGenreOptions()).thenReturn(selectedGenre);
+		when(filterView.getSelectedCountryIds()).thenReturn(selectedCountry);
+		when(filterView.getSelectedLanguageIds()).thenReturn(selectedLanguage);
+		when(filterView.getSelectedGenreIds()).thenReturn(selectedGenre);
 		
 		//creating a demo Filter object which is expected to be produced given the filterView fields configuration from above
 		normalFilter = new FilmFilter();
@@ -97,9 +98,9 @@ public class FilterPresenterTest {
 		normalFilter.setLengthEnd(testLengthEnd);
 		normalFilter.setYearStart(testYearStart);
 		normalFilter.setYearEnd(testYearEnd);
-		normalFilter.setCountryOptions(selectedCountry);
-		normalFilter.setLanguageOptions(selectedLanguage);
-		normalFilter.setGenreOptions(selectedGenre);
+		normalFilter.setCountryIds(selectedCountry);
+		normalFilter.setLanguageIds(selectedLanguage);
+		normalFilter.setGenreIds(null);
 		
 		//creating a filter object which should be produced when adjusting the normalFilter from above with setting the default values for country and year
 		mapFilter = new FilmFilter();
@@ -108,9 +109,9 @@ public class FilterPresenterTest {
 		mapFilter.setLengthEnd(testLengthEnd);
 		mapFilter.setYearStart(testMinYear);
 		mapFilter.setYearEnd(testMaxYear);
-		mapFilter.setCountryOptions(null);
-		mapFilter.setLanguageOptions(selectedLanguage);
-		mapFilter.setGenreOptions(selectedGenre);
+		mapFilter.setCountryIds(null);
+		mapFilter.setLanguageIds(selectedLanguage);
+		mapFilter.setGenreIds(null);
 		
 		//creating an expected List<String> which should be produced when the normalFilter from above is converted
 		normalFilterList = new ArrayList<String>();
@@ -125,12 +126,16 @@ public class FilterPresenterTest {
 		mapFilterList = new ArrayList<String>();
 		mapFilterList.add("Film Name = "+testName);
 		mapFilterList.add("Film Length = "+testLengthStart +"-"+testLengthEnd);
-		mapFilterList.add("Production Year = "+testMinYear +"-"+testMaxYear);
 		mapFilterList.add("Film Language = German");
 	
 		//mocking answer from filmDataModel mock
 		when(filmDataModel.getAppliedFilter()).thenReturn(normalFilter);
 		when(filmDataModel.getAppliedMapFilter()).thenReturn(mapFilter);
+		
+		
+		when(filmDataModel.getCountryName(1)).thenReturn("Switzerland");
+		when(filmDataModel.getCountryName(2)).thenReturn("Germany");
+		when(filmDataModel.getLanguageName(5)).thenReturn("German");
 		
 		//imitate the onSuccess method of the rpc call getCountrySelectOptions
 		doAnswer(new Answer<List<SelectOption>>(){

@@ -3,14 +3,9 @@ package ch.uzh.se.se7en.client.mvp.views;
 import java.util.List;
 import java.util.Set;
 
-import org.gwtbootstrap3.extras.slider.client.ui.Range;
-
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
-import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
-import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public interface FilterView extends IsWidget {
@@ -113,7 +108,7 @@ public interface FilterView extends IsWidget {
 	@post	countrySelect selected options == countrySelect selected options @pre
 	@return	A List of SelectOption which include the currently selected options. 
 	 */
-	public List<SelectOption> getSelectedCountryOptions();
+	public Set<Integer> getSelectedCountryIds();
 	
 	/**
 	Sets currently chosen (selected) options in the MultiSelect Country
@@ -140,7 +135,7 @@ public interface FilterView extends IsWidget {
 	@post	languageSelect selected options == languageSelect selected options @pre
 	@return	A List of SelectOption which include the currently selected options. 
 	 */
-	public List<SelectOption> getSelectedLanguageOptions();
+	public Set<Integer> getSelectedLanguageIds();
 	
 	/**
 	Sets currently chosen (selected) options in the MultiSelect Language
@@ -167,7 +162,7 @@ public interface FilterView extends IsWidget {
 	@post	genreSelect selected options == genreSelect selected options @pre
 	@return	A List of SelectOption which include the currently selected options. 
 	 */
-	public List<SelectOption> getSelectedGenreOptions();
+	public Set<Integer> getSelectedGenreIds();
 	
 	/**
 	Sets currently chosen (selected) options in the MultiSelect Genre
