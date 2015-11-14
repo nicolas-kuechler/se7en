@@ -79,7 +79,7 @@ public class MapPresenterImpl implements MapPresenter {
 		filmListService.getGenreList(filter, new AsyncCallback<List<Genre>>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Handle Error for User
+				// TODO NK Handle Error for User when Genre Rpc failed
 				ClientLog.writeErr("getGenreList failed");
 			}
 			@Override
@@ -186,7 +186,6 @@ public class MapPresenterImpl implements MapPresenter {
 	public void fetchData() {
 		//update of the yearSlider in the mapView
 		mapView.setYearRange(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd());
-		//TODO finding position in code for displaying empty geochart as loading information
 		filmDataModel.setCountryList(new ArrayList<Country>());
 		updateGeoChart();
 
@@ -196,7 +195,7 @@ public class MapPresenterImpl implements MapPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO ERROR HANDLING NEEDS TO BE IMPLEMENTED
+				// TODO NK Error Handling when Rpc for Map failed
 				// Maybe logging to console?
 				// User needs to be informed aswell
 

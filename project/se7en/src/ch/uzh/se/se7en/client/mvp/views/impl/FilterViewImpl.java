@@ -199,7 +199,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 		}
 		else
 		{
-			// TODO Provide access to the MultiSelects to set selectedOptions
+			countrySelect.select(selectedOptions);
 		}
 	}
 
@@ -221,7 +221,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 		}
 		else
 		{
-			// TODO Provide access to the MultiSelects to set selectedOptions
+			languageSelect.select(selectedOptions);
 		}
 		
 	}
@@ -244,8 +244,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 		}
 		else
 		{
-			// TODO Provide access to the MultiSelects to set selectedOptions
+			genreSelect.select(selectedOptions);
 		}
-		
 	}
 }

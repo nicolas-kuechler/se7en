@@ -39,7 +39,7 @@ import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.Genre;
 
-//TODO Dominik Bünzli positioning of the pieChart in the UI
+//TODO DB positioning of the pieChart in the UI
 public class MapViewImpl extends Composite implements MapView {
 
 	private static MapViewImplUiBinder uiBinder = GWT.create(MapViewImplUiBinder.class);
@@ -106,7 +106,6 @@ public class MapViewImpl extends Composite implements MapView {
 					GeoChartColorAxis colorAxis = GeoChartColorAxis.create();
 					colorAxis.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
 					geoChartOptions.setColorAxis(colorAxis);
-					// TODO Define GeoChart Colors
 				}
 				
 				//Create new DataTable
@@ -152,7 +151,7 @@ public class MapViewImpl extends Composite implements MapView {
 	
 	@Override
 	public void setGenreVisible(boolean visible) {
-		//TODO Maybe doing it with fade animation
+		//TODO DB/NK Fading Genre Information?
 		if(visible)
 		{
 			if(genreTable!=null)
@@ -179,9 +178,9 @@ public class MapViewImpl extends Composite implements MapView {
 
 	@Override
 	public void setGenreTable(List<Genre> genres) {
-		// TODO refresh genreTable with new List
+		// TODO DB refresh genreTable with new List
 		
-		// TODO a Table where: (Rank Information needs to be computed somehow) 
+		// TODO DB Table where: (Rank Information needs to be computed somehow) 
 		// checkout: http://stackoverflow.com/questions/4347224/adding-a-row-number-column-to-gwt-celltable
 		//	Rank|GenreName|Productions
 		//    1   Action     30
@@ -203,7 +202,7 @@ public class MapViewImpl extends Composite implements MapView {
 					pieChartOptions.setLegend(Legend.create(LegendPosition.NONE));
 					//all slices under 10% are grouped together under "others"
 					pieChartOptions.setSliceVisibilityThreshold(0.1);
-					//TODO Need to define way more piechart colors (at least max depending on threshold in line above)
+					//TODO NK Need to define way more piechart colors (at least max depending on threshold in line above)
 					pieChartOptions.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
 					panel.add(pieChart);
 					

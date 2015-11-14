@@ -8,7 +8,7 @@ import com.google.gwt.http.client.URL;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class UrlToken {
-	//TODO Test encode decode method (looking if & are replaced aswell)
+	//TODO NK Test encode decode method (looking if & are replaced aswell)
 	/**
 
 	@author Nicolas Küchler
@@ -96,7 +96,7 @@ public class UrlToken {
 	 */
 	public static FilmFilter parseFilter(String urlToken)
 	{
-		//TODO Define Exception Handling
+		//TODO NK Define Exception Handling
 		FilmFilter filter = new FilmFilter();
 		
 		String[] parts = urlToken.substring(1).split("&");

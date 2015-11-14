@@ -104,7 +104,7 @@ public class TableViewImpl extends Composite implements TableView {
 
 	@Override
 	public void startDownload(String downloadUrl) {
-		// TODO Start the download Window.open(download url.....)
+		// TODO CH Start the download Window.open(download url.....)
 		Window.alert("Demo Download Started; Url: " + downloadUrl);
 	}
 

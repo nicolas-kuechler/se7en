@@ -82,7 +82,7 @@ public class FilmDB {
 	 * @return Film The FilmDB entity converted to a film data transfer object
 	 */
 	public Film toFilm() {
-		// TODO: better way? => generic method, via interface
+		// TODO RS: better way? => generic method, via interface
 		List<String> filmCountryEntityNames = new ArrayList<String>();
 		List<String> filmGenreEntityNames = new ArrayList<String>();
 		List<String> filmLanguageEntityNames = new ArrayList<String>();

@@ -58,12 +58,12 @@ public class TablePresenterImpl implements TablePresenter {
 
 	@Override
 	public void onDownloadStarted() {
-		// TODO Handle CSV Download 
+		// TODO CH Handle CSV Download 
 
 		filmListExportService.getFilmListDownloadUrl(filmDataModel.getAppliedFilter(), new AsyncCallback<String>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+				// TODO CH Define Error Handling when Download Rpc failed
 
 			}
 			@Override
@@ -136,7 +136,7 @@ public class TablePresenterImpl implements TablePresenter {
 			public void onFailure(Throwable caught) {
 				//rpc did not get back to client -> display error to the user
 				updateTable(createPseudoFilmList("Error while loading films, please try again"));
-				//TODO Logging to console?
+				//TODO NK FilmList Rpc Error Handling
 			}
 			@Override
 			public void onSuccess(List<Film> result) {
