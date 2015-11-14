@@ -93,4 +93,6 @@ public interface MapView extends IsWidget{
 	 */
 	public void setGenreVisible(boolean visible);
 	
+	//TODO NK comment
+	public void setGeoChartColorBoundaries(double minValue, double maxValue);
 }

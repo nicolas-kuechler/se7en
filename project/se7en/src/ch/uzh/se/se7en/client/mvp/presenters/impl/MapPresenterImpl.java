@@ -16,6 +16,7 @@ import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
 import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.OutlierCalculation;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
@@ -172,6 +173,13 @@ public class MapPresenterImpl implements MapPresenter {
 			}
 		}
 		//set the geochart with the new list
+		double[] colorBoundaries = OutlierCalculation.calcOutlierBoundaries(entities);
+		double minValue = colorBoundaries[0];
+		if(minValue<0)
+		{
+			minValue = 0.0;
+		}
+		mapView.setGeoChartColorBoundaries(minValue, colorBoundaries[1]);
 		mapView.setGeoChart(entities);
 	}
 

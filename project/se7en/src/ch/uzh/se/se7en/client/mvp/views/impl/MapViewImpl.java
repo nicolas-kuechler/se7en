@@ -54,6 +54,9 @@ public class MapViewImpl extends Composite implements MapView {
 	private GeoChartOptions geoChartOptions;
 	private DataView dataViewGeoChart;
 	private DataTable dataTableGeoChart;
+	private GeoChartColorAxis colorAxis;
+	private double geoChartColorMinValue;
+	private double geoChartColorMaxValue;
 	
 	private ChartLoader chartLoaderPieChart = new ChartLoader(ChartPackage.CORECHART);
 	private PieChart pieChart;
@@ -103,10 +106,14 @@ public class MapViewImpl extends Composite implements MapView {
 					geoChartOptions.setHeight(500);
 					geoChartOptions.setWidth(900);
 					panel.add(geoChart);
-					GeoChartColorAxis colorAxis = GeoChartColorAxis.create();
+					colorAxis = GeoChartColorAxis.create();
 					colorAxis.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
-					geoChartOptions.setColorAxis(colorAxis);
+					
 				}
+			
+				colorAxis.setMinValue((int)geoChartColorMinValue);
+				colorAxis.setMaxValue((int)geoChartColorMaxValue);
+				geoChartOptions.setColorAxis(colorAxis);
 				
 				//Create new DataTable
 				dataTableGeoChart = DataTable.create();
@@ -239,5 +246,11 @@ public class MapViewImpl extends Composite implements MapView {
 	@Override
 	public void setYearRange(int yearStart, int yearEnd) {
 		yearSlider.setValue(new Range(yearStart, yearEnd));
+	}
+
+	@Override
+	public void setGeoChartColorBoundaries(double minValue, double maxValue) {
+		geoChartColorMinValue = minValue;
+		geoChartColorMaxValue = maxValue;
 	}
 }
