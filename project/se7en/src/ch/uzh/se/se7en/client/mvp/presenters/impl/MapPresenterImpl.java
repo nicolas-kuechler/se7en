@@ -171,8 +171,6 @@ public class MapPresenterImpl implements MapPresenter {
 				entities.add(new DataTableEntity(c.getName(), numberOfProductions, c.getId()));
 			}
 		}
-		//store new entitylist in filmdatamodel
-		filmDataModel.setCountryDataTable(entities);
 		//set the geochart with the new list
 		mapView.setGeoChart(entities);
 	}

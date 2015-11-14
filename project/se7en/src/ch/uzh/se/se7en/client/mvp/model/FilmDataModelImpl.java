@@ -6,16 +6,12 @@ import java.util.List;
 import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.shared.model.Country;
-import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.SelectOption;
 
 
 public class FilmDataModelImpl implements FilmDataModel{
 	
-	//TODO NK Decide if films, dataTable and countries necessary
-	private List<Film> films;
-	private List<DataTableEntity> countryDataTable;		//used for GeoChart
 	private List<Country> countries;		//used to adjust GeoChart with YearRangeSlider
 	private FilmFilter appliedFilter;
 	private FilmFilter appliedMapFilter;
@@ -27,8 +23,7 @@ public class FilmDataModelImpl implements FilmDataModel{
 
 	@Inject
 	public FilmDataModelImpl()
-	{
-		films = new ArrayList<Film>();		
+	{	
 		countries = new ArrayList<Country>();
 		appliedFilter = new FilmFilter();
 		appliedMapFilter = new FilmFilter();
@@ -42,26 +37,6 @@ public class FilmDataModelImpl implements FilmDataModel{
 	@Override
 	public List<Country> getCountryList() {
 		return countries;
-	}
-
-	@Override
-	public void setCountryDataTable(List<DataTableEntity> countries) {
-		this.countryDataTable = countries;
-	}
-
-	@Override
-	public List<DataTableEntity> getCountryDataTable() {
-		return countryDataTable;
-	}
-
-	@Override
-	public void setFilmList(List<Film> films) {
-		this.films = films;
-	}
-
-	@Override
-	public List<Film> getFilmList() {
-		return films;
 	}
 
 	@Override
@@ -102,7 +77,7 @@ public class FilmDataModelImpl implements FilmDataModel{
 
 	@Override
 	public String getCountryName(int id) {
-		if (countryNames == null) //countryNames not set yet
+		if (countryNames == null || id>countryNames.length || id < 1) //countryNames not set yet || not valid id
 		{
 			return null;
 		}
@@ -130,7 +105,7 @@ public class FilmDataModelImpl implements FilmDataModel{
 
 	@Override
 	public String getGenreName(int id) {
-		if (genreNames == null) //genreNames not set yet
+		if (genreNames == null || id>genreNames.length || id < 1) //genreNames not set yet || not valid id)
 		{
 			return null;
 		}
@@ -156,7 +131,7 @@ public class FilmDataModelImpl implements FilmDataModel{
 
 	@Override
 	public String getLanguageName(int id) {
-		if (languageNames == null) //languageNames not set yet
+		if (languageNames == null || id>languageNames.length || id < 1) //languageNames not set yet || not valid id) 
 		{
 			return null;
 		}

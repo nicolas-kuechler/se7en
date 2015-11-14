@@ -102,7 +102,6 @@ public class TablePresenterImpl implements TablePresenter {
 	 */
 	public void updateTable(List<Film> films)
 	{
-		filmDataModel.setFilmList(films);
 		tableView.setTable(films);
 	}
 

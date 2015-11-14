@@ -117,7 +117,6 @@ public class TablePresenterTest {
 	public void testUpdateTable() {
 		List<Film> films = Arrays.asList(new Film("Test"));
 		tablePresenter.updateTable(films);
-		verify(filmDataModel).setFilmList(films);
 		verify(tableView).setTable(films);
 	}
 
