@@ -63,7 +63,6 @@ public class TablePresenterTest {
 		doAnswer(new Answer<List<Film>>(){
 			@Override
 			public List<Film> answer(InvocationOnMock invocation) throws Throwable {
-				// TODO Auto-generated method stub
 				AsyncCallback<List<Film>> callback = (AsyncCallback) invocation.getArguments()[1];
 				FilmFilter filter = (FilmFilter) invocation.getArguments()[0];
 				List<Film> filmsMatchingFilter = new ArrayList<Film>();
@@ -118,7 +117,6 @@ public class TablePresenterTest {
 	public void testUpdateTable() {
 		List<Film> films = Arrays.asList(new Film("Test"));
 		tablePresenter.updateTable(films);
-		verify(filmDataModel).setFilmList(films);
 		verify(tableView).setTable(films);
 	}
 

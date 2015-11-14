@@ -6,26 +6,23 @@ import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.PanelBody;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
-import org.gwtbootstrap3.extras.animate.client.ui.Animate;
-import org.gwtbootstrap3.extras.animate.client.ui.constants.Animation;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
 import org.gwtbootstrap3.extras.slider.client.ui.base.constants.TooltipType;
 import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideStopEvent;
-import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideStopHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
+
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.inject.Inject;
@@ -34,7 +31,6 @@ import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.ColumnType;
 import com.googlecode.gwt.charts.client.DataTable;
 import com.googlecode.gwt.charts.client.DataView;
-import com.googlecode.gwt.charts.client.Selection;
 import com.googlecode.gwt.charts.client.corechart.PieChart;
 import com.googlecode.gwt.charts.client.corechart.PieChartOptions;
 import com.googlecode.gwt.charts.client.event.SelectEvent;
@@ -46,7 +42,6 @@ import com.googlecode.gwt.charts.client.options.Legend;
 import com.googlecode.gwt.charts.client.options.LegendPosition;
 import com.googlecode.gwt.charts.client.util.ArrayHelper;
 
-import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.Boundaries;
 import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
@@ -54,7 +49,7 @@ import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.Genre;
 
-//TODO Dominik Bünzli positioning of the pieChart in the UI
+//TODO DB positioning of the pieChart in the UI
 public class MapViewImpl extends Composite implements MapView {
 
 	private static MapViewImplUiBinder uiBinder = GWT.create(MapViewImplUiBinder.class);
@@ -142,7 +137,6 @@ public class MapViewImpl extends Composite implements MapView {
 					GeoChartColorAxis colorAxis = GeoChartColorAxis.create();
 					colorAxis.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
 					geoChartOptions.setColorAxis(colorAxis);
-					// TODO Define GeoChart Colors
 				}
 				
 				//Create new DataTable
@@ -188,7 +182,7 @@ public class MapViewImpl extends Composite implements MapView {
 	
 	@Override
 	public void setGenreVisible(boolean visible) {
-		//TODO Maybe doing it with fade animation
+		//TODO DB/NK Fading Genre Information?
 		if(visible)
 		{
 			if(genreTable!=null)
@@ -285,7 +279,7 @@ public class MapViewImpl extends Composite implements MapView {
 					pieChartOptions.setLegend(Legend.create(LegendPosition.RIGHT));
 					//all slices under 10% are grouped together under "others"
 					pieChartOptions.setSliceVisibilityThreshold(0.1);
-					//TODO Need to define way more piechart colors (at least max depending on threshold in line above)
+					//TODO NK Need to define way more piechart colors (at least max depending on threshold in line above)
 					pieChartOptions.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
 					pieChartOptions.setTitle("Genre Chart");
 					panel.add(pieChart);

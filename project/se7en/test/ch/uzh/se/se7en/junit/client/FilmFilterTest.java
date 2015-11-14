@@ -1,9 +1,9 @@
 package ch.uzh.se.se7en.junit.client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
@@ -11,7 +11,6 @@ import org.junit.Test;
 import com.google.gwt.dev.util.collect.HashSet;
 
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public class FilmFilterTest {
 
@@ -29,21 +28,25 @@ public class FilmFilterTest {
 	
 	@Test
 	public void testFilmFilterStringIntIntIntIntListOfStringListOfStringListOfString() {
-		List<String> countries = new ArrayList<String>();
-		List<String> languages = new ArrayList<String>();
-		List<String> genres = new ArrayList<String>();
-		countries.add("Switzerland");
-		languages.add("German");
-		genres.add("Action");
+		
+		Set<Integer> countries = new HashSet<Integer>();
+		Set<Integer> languages = new HashSet<Integer>();
+		Set<Integer> genres = new HashSet<Integer>();
+		
+		countries.add(1);
+		countries.add(2);
+		languages.add(5);
+		genres.add(4);
+		
 		FilmFilter filter = new FilmFilter("Test",1,100,2000,2004,countries,languages,genres);
 		assertEquals(filter.getName(),"Test");
 		assertEquals(filter.getLengthStart(),1);
 		assertEquals(filter.getLengthEnd(),100);
 		assertEquals(filter.getYearStart(),2000);
 		assertEquals(filter.getYearEnd(),2004);
-		assertEquals(filter.getCountries(),countries);
-		assertEquals(filter.getLanguages(),languages);
-		assertEquals(filter.getGenres(),genres);
+		assertEquals(filter.getCountryIds(),countries);
+		assertEquals(filter.getLanguageIds(),languages);
+		assertEquals(filter.getGenreIds(),genres);
 	}
 
 	@Test
@@ -116,110 +119,6 @@ public class FilmFilterTest {
 		assertEquals(filter.getYearEnd(),2004);
 	}
 
-	@Test
-	public void testGetCountries() {
-		FilmFilter filter = new FilmFilter();
-		List<String> countries = new ArrayList<String>();
-		countries.add("Switzerland");
-		filter.setCountries(countries);
-		assertEquals(filter.getCountries(),countries);
-	}
-
-	@Test
-	public void testSetCountries() {
-		FilmFilter filter = new FilmFilter();
-		List<String> countries = new ArrayList<String>();
-		countries.add("Switzerland");
-		filter.setCountries(countries);
-		assertEquals(filter.getCountries(),countries);
-	}
-
-	@Test
-	public void testSetCountryOptions() {
-		FilmFilter filter = new FilmFilter();
-		SelectOption select1 = new SelectOption(1,"Switzerland");
-		List<SelectOption> options = new ArrayList<SelectOption>();
-		options.add(select1);
-		
-		filter.setCountryOptions(options);
-		String getOptionName = options.get(0).getName();
-		String getCountryString = "";
-		for(String str :filter.getCountries()){
-			getCountryString = getCountryString + str;
-		}
-		
-		assertEquals(getCountryString,getOptionName);
-	}
-
-	@Test
-	public void testSetGenreOptions() {
-		FilmFilter filter = new FilmFilter();
-		SelectOption select1 = new SelectOption(1,"Action");
-		List<SelectOption> options = new ArrayList<SelectOption>();
-		options.add(select1);
-		
-		filter.setGenreOptions(options);
-		String getOptionName = options.get(0).getName();
-		String getGenreString = "";
-		for(String str :filter.getGenres()){
-			getGenreString = getGenreString + str;
-		}
-		
-		assertEquals(getGenreString,getOptionName);
-	}
-
-	@Test
-	public void testSetLanguageOptions() {
-		FilmFilter filter = new FilmFilter();
-		SelectOption select1 = new SelectOption(1,"German");
-		List<SelectOption> options = new ArrayList<SelectOption>();
-		options.add(select1);
-		
-		filter.setLanguageOptions(options);
-		String getOptionName = options.get(0).getName();
-		String getLanguageString = "";
-		for(String str :filter.getLanguages()){
-			getLanguageString = getLanguageString + str;
-		}
-		
-		assertEquals(getLanguageString,getOptionName);
-	}
-
-	@Test
-	public void testGetLanguages() {
-		FilmFilter filter = new FilmFilter();
-		List<String> languages = new ArrayList<String>();
-		languages.add("German");
-		filter.setLanguages(languages);
-		assertEquals(filter.getLanguages(),languages);
-	}
-
-	@Test
-	public void testSetLanguages() {
-		FilmFilter filter = new FilmFilter();
-		List<String> languages = new ArrayList<String>();
-		languages.add("German");
-		filter.setLanguages(languages);
-		assertEquals(filter.getLanguages(),languages);
-	}
-
-	@Test
-	public void testGetGenres() {
-		FilmFilter filter = new FilmFilter();
-		List<String> genres = new ArrayList<String>();
-		genres.add("Action");
-		filter.setGenres(genres);
-		assertEquals(filter.getGenres(),genres);
-	}
-
-	@Test
-	public void testSetGenres() {
-		FilmFilter filter = new FilmFilter();
-		List<String> genres = new ArrayList<String>();
-		genres.add("Action");
-		filter.setGenres(genres);
-		assertEquals(filter.getGenres(),genres);
-	}
 
 	@Test
 	public void testGetCountryIds() {
@@ -301,18 +200,38 @@ public class FilmFilterTest {
 
 	@Test
 	public void testToString() {
-		List<String> countries = new ArrayList<String>();
-		List<String> languages = new ArrayList<String>();
-		List<String> genres = new ArrayList<String>();
-		countries.add("Switzerland");
-		languages.add("German");
-		genres.add("Action");
+		Set<Integer> countries = new HashSet<Integer>();
+		Set<Integer> languages = new HashSet<Integer>();
+		Set<Integer> genres = new HashSet<Integer>();
+		
+		countries.add(1);
+		countries.add(2);
+		languages.add(5);
+		genres.add(4);
+		
 		FilmFilter filter = new FilmFilter("Test",1,100,2000,2004,countries,languages,genres);
-		assertEquals(filter.toString(),"FilmFilter [name=Test, lengthStart=1, lengthEnd=100, yearStart=2000, yearEnd=2004, countries=[Switzerland], countryIds=null,"
-				+ " languages=[German], languageIds=null, genres=[Action], genreIds=null]");
+		assertEquals(filter.toString(),"FilmFilter [name=Test, lengthStart=1, lengthEnd=100, yearStart=2000, yearEnd=2004, countryIds=[2, 1],"
+				+ " languageIds=[5], genreIds=[4]]");
+	}
+	
+	@Test
+	public void testEquals()
+	{
+		Set<Integer> countries = new HashSet<Integer>();
+		Set<Integer> languages = new HashSet<Integer>();
+		Set<Integer> genres = new HashSet<Integer>();
 		
+		countries.add(1);
+		countries.add(2);
+		languages.add(5);
+		genres.add(4);
 		
-;
+		FilmFilter filter1 = new FilmFilter("Test",1,100,2000,2004,countries,languages,genres);
+		FilmFilter filter2 = new FilmFilter("Test",1,100,2000,2004,countries,languages,genres);
+		FilmFilter filter3 = new FilmFilter("Test",1,400,2000,2004,countries,languages,genres);
+		
+		assertEquals(filter1, filter2);
+		assertThat(filter1, not(filter3));
 	}
 
 }

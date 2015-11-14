@@ -1,13 +1,8 @@
 package ch.uzh.se.se7en.client.mvp.views.impl;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.gwtbootstrap3.client.ui.Button;
-import org.gwtbootstrap3.client.ui.ListGroup;
-import org.gwtbootstrap3.client.ui.ListGroupItem;
-import org.gwtbootstrap3.client.ui.PanelFooter;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 
 import com.google.gwt.core.client.GWT;
@@ -16,9 +11,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.cellview.client.ColumnSortList;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -26,9 +19,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.inject.Inject;
 
-import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -113,7 +104,7 @@ public class TableViewImpl extends Composite implements TableView {
 
 	@Override
 	public void startDownload(String downloadUrl) {
-		// TODO Start the download Window.open(download url.....)
+		// TODO CH Start the download Window.open(download url.....)
 		Window.alert("Demo Download Started; Url: " + downloadUrl);
 	}
 
