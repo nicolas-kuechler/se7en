@@ -1,8 +1,5 @@
 package ch.uzh.se.se7en.client.mvp;
 
-import java.util.Date;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
 
 /**
  This class holds the boundaries for the FilmData.

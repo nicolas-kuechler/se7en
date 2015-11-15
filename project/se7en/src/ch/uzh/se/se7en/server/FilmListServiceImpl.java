@@ -302,7 +302,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 		List<Genre> genres = new ArrayList<Genre>();
 
-		// TODO: Sprint 2
+		// TODO RS Sprint 2
 
 		// return the filled list of genres
 		

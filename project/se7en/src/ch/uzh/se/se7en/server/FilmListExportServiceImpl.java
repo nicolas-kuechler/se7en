@@ -54,6 +54,7 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 	 */
 	@Override
 	public String getFilmListDownloadUrl(FilmFilter filter) {
+
 		
 		//create GCS service
 		GcsService gcsService = GcsServiceFactory.createGcsService();
@@ -96,6 +97,7 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 		String downloadURL = "https://storage.googleapis.com/" + BUCKET_NAME + "/" + uniqueFilename;
 		
 		return downloadURL;
+
 	}
 
 }
