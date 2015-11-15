@@ -2,6 +2,8 @@ package ch.uzh.se.se7en.server;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.channels.Channels;
 import java.util.UUID;
 
@@ -11,11 +13,15 @@ import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.googlecode.jcsv.writer.CSVWriter;
 import com.googlecode.jcsv.writer.internal.CSVWriterBuilder;
 
 import ch.uzh.se.se7en.client.rpc.FilmListExportService;
+import ch.uzh.se.se7en.client.rpc.FilmListService;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
@@ -23,10 +29,12 @@ import ch.uzh.se.se7en.shared.model.FilmFilter;
 public class FilmListExportServiceImpl extends RemoteServiceServlet implements FilmListExportService {
 
 	private final String BUCKET_NAME = "se-team-se7en";
+	
+	@Inject
+	FilmListServiceImpl filmListService;
+	
 	@Override
 	public String getFilmListDownloadUrl(FilmFilter filter) {
-		//create FilmListService
-		FilmListServiceImpl filmListService = new FilmListServiceImpl();
 		
 		//create GCS service
 		GcsService gcsService = GcsServiceFactory.createGcsService();
@@ -53,18 +61,19 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 			e.printStackTrace();
 			return null;
 		}
-		BufferedWriter writer = new BufferedWriter(Channels.newWriter(writeChannel, "UTF-8"));
-		
+		Writer writer = new PrintWriter(Channels.newWriter(writeChannel, "UTF-8"));
 		//write films to CSV
 		CSVWriter<Film> csvWriter = new CSVWriterBuilder<Film>(writer).entryConverter(new FilmEntryConverter()).build();
 		try {
 			csvWriter.writeAll(filmListService.getFilmList(filter));
+			writer.flush();
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 		
-		String downloadURL = "https://storage.googleapis.com/" + BUCKET_NAME + uniqueFilename;
+		String downloadURL = "https://storage.googleapis.com/" + BUCKET_NAME + "/" + uniqueFilename;
 		
 		return downloadURL;
 	}

@@ -65,7 +65,7 @@ public class TablePresenterImpl implements TablePresenter {
 		filmListExportService.getFilmListDownloadUrl(filmDataModel.getAppliedFilter(), new AsyncCallback<String>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+				ClientLog.writeErr("RPC failed");
 
 			}
 			@Override
