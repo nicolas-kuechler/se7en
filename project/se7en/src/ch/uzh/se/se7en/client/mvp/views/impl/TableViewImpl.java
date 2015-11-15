@@ -113,7 +113,14 @@ public class TableViewImpl extends Composite implements TableView {
 		dataGrid.addColumnSortHandler(columnSortHandler);
 	}
 
-
+	/**
+	 * Start the csv download with the obtained url and show modal to start download manually
+	 * 
+	 * @author Cyrill Halter
+	 * @pre downloadUrl != null
+	 * @post -
+	 * @param String downloadUrl the obtained downloadurl
+	 */
 	@Override
 	public void startDownload(String downloadUrl) {
 		// Start the download
@@ -121,8 +128,8 @@ public class TableViewImpl extends Composite implements TableView {
 		downloadButton.setIcon(IconType.DOWNLOAD);
 		downloadButton.setIconSpin(false);
 		Window.open(downloadUrl, "CSV Download", "");
-//		Window.alert("If the download doesn't start automatically, deactivate your popup blocker or use this link: " + downloadUrl);
 		
+		//show modal to start download manually
 		Modal modal = new Modal();
 		ModalBody modalBody = new ModalBody();
 		Label downloadLabel = new Label();

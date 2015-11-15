@@ -56,7 +56,15 @@ public class TablePresenterImpl implements TablePresenter {
 	public void bind() {
 		tableView.setPresenter(this);
 	}
-
+	
+	/**
+	 * Make RPC with applied filter to trigger export to csv and retrieve download url
+	 * 
+	 * @author Cyrill Halter
+	 * @pre applied filter set in filmDataModel
+	 * @post -
+	 * @param -
+	 */
 	@Override
 	public void onDownloadStarted() {
 		//trigger export to CSV and get download URL 
