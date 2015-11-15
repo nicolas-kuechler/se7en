@@ -254,6 +254,7 @@ public class MapViewImpl extends Composite implements MapView {
 			{
 				pieChart.setVisible(false);
 				placeholderPieChart.setStyleName("placeholderPieChart");
+				placeholderGenreTable.setStyleName("placeholderGenreTable");
 
 
 			}

@@ -5,6 +5,7 @@ import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.Modal;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -45,6 +46,7 @@ public class NavigationBar extends Composite {
 		loading.setText("Hello");
 		loading.setVisible(false);
 		barSetup();
+		logoLink.getElement().getStyle().setCursor(Cursor.POINTER); 
 	}
 	
 	/**
