@@ -8,10 +8,10 @@ public interface Resources extends ClientBundle {
 	@Source("SevenBlack.png")
 	ImageResource sevenBlack();
 	
-	@Source("BackgroundSkyline.jpg")
+	@Source("backgroundNewYork.jpg")
 	ImageResource backgroundSkyline();
 	
-	@Source("BackgroundText.png")
+	@Source("backgroundTextSubtextWhite.png")
 	ImageResource backgroundText();
 
 }
