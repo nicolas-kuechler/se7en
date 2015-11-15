@@ -61,8 +61,7 @@ public class TablePresenterImpl implements TablePresenter {
 
 	@Override
 	public void onDownloadStarted() {
-		// TODO Handle CSV Download 
-
+		 
 		filmListExportService.getFilmListDownloadUrl(filmDataModel.getAppliedFilter(), new AsyncCallback<String>(){
 			@Override
 			public void onFailure(Throwable caught) {
