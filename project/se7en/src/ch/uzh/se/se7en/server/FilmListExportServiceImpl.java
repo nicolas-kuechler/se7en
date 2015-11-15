@@ -55,7 +55,6 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 	@Override
 	public String getFilmListDownloadUrl(FilmFilter filter) {
 
-		
 		//create GCS service
 		GcsService gcsService = GcsServiceFactory.createGcsService();
 		
