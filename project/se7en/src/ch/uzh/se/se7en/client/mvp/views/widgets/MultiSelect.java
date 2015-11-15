@@ -1,9 +1,18 @@
 package ch.uzh.se.se7en.client.mvp.views.widgets;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.gwtbootstrap3.extras.select.client.ui.Option;
 import org.gwtbootstrap3.extras.select.client.ui.Select;
@@ -85,7 +94,7 @@ public class MultiSelect extends Composite {
 	}
 
 	/**
-	 * This method fills the multiselect widget with options to select from
+	 * This method fills the multiselect widget with sorted options to select from
 	 * 
 	 * @author Cyrill Halter
 	 * @pre -
@@ -98,13 +107,23 @@ public class MultiSelect extends Composite {
 	public void setOptions(HashMap<Integer,String> currentOptions) {
 		Option option;
 		Set<Integer> ids = currentOptions.keySet();
-		for (Integer id : ids) {
+		Set<Map.Entry<Integer, String>> currentOptionsSet = currentOptions.entrySet();
+		List<Map.Entry<Integer, String>> currentOptionsList = 
+				new ArrayList<Map.Entry<Integer, String>>(currentOptionsSet);
+		Collections.sort(currentOptionsList, new Comparator<Map.Entry<Integer, String>>(){
+		    public int compare(Map.Entry<Integer, String> entry1, Map.Entry<Integer, String> entry2) {
+		    	return entry1.getValue().compareTo(entry2.getValue()); 
+		    }
+		});
+		
+		for (Map.Entry<Integer, String> entry : currentOptionsList) {
 			option = new Option();
-			option.setText(currentOptions.get(id));
-			option.setValue(id.toString());
+			option.setText(entry.getValue());
+			option.setValue(entry.getKey().toString());
 			select.add(option);
 		}
 		select.refresh();
 	}
+	
 
 }

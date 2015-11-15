@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 	xmlns:select="urn:import:org.gwtbootstrap3.extras.select.client.ui">
-	<select:Select title="Select something..." multiple="true"
+	<select:Select title="All" multiple="true"
 		liveSearch="true" selectedTextFormat="count>3" width="auto"
 		visibleSize="8" ui:field="select">
 	</select:Select>
