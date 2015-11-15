@@ -58,13 +58,11 @@ public class TablePresenterImpl implements TablePresenter {
 
 	@Override
 	public void onDownloadStarted() {
-		// TODO CH Handle CSV Download 
-
+		//trigger export to CSV and get download URL 
 		filmListExportService.getFilmListDownloadUrl(filmDataModel.getAppliedFilter(), new AsyncCallback<String>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO CH Define Error Handling when Download Rpc failed
-
+				ClientLog.writeErr("RPC failed");
 			}
 			@Override
 			public void onSuccess(String result) {
