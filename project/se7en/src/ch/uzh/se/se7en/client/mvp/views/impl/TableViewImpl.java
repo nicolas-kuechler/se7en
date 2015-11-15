@@ -127,22 +127,38 @@ public class TableViewImpl extends Composite implements TableView {
 		downloadButton.setText("Download");
 		downloadButton.setIcon(IconType.DOWNLOAD);
 		downloadButton.setIconSpin(false);
-		Window.open(downloadUrl, "CSV Download", "");
-		
-		//show modal to start download manually
 		Modal modal = new Modal();
 		ModalBody modalBody = new ModalBody();
 		Label downloadLabel = new Label();
-		modal.setTitle("Download CSV");
-		modal.setClosable(true);
-		modal.setFade(true);
-		downloadLabel.setText("If the download doesn't start automatically, deactivate your popup blocker or use this link: ");
-		downloadLabel.setStyleName("modalText");
-		Anchor downloadLink = new Anchor("Download Now", downloadUrl);
-		modalBody.add(downloadLabel);
-		modalBody.add(downloadLink);
-		modal.add(modalBody);
-		modal.show();
+		
+		if(downloadUrl != null){
+			
+			//download file at downloadUrl	
+			Window.open(downloadUrl, "CSV Download", "");
+
+			//show modal to start download manually
+			modal.setTitle("Download CSV");
+			modal.setClosable(true);
+			modal.setFade(true);
+			downloadLabel.setText("If the download doesn't start automatically, deactivate your popup blocker or use this link: ");
+			downloadLabel.setStyleName("modalText");
+			Anchor downloadLink = new Anchor("Download Now", downloadUrl);
+			modalBody.add(downloadLabel);
+			modalBody.add(downloadLink);
+			modal.add(modalBody);
+			modal.show();
+
+		}else{
+
+			modal.setTitle("CSV Download Failed");
+			modal.setClosable(true);
+			modal.setFade(true);
+			downloadLabel.setText("Something went wrong... Please try again later.");
+			downloadLabel.setStyleName("modalText");
+			modalBody.add(downloadLabel);
+			modal.add(modalBody);
+			modal.show();
+		}
 	}
 
 	/**

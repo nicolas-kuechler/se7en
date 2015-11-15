@@ -1,5 +1,6 @@
 package ch.uzh.se.se7en.client.rpc;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -9,7 +10,6 @@ import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.Genre;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 /**
  * The service interface for the Film server-side service.
@@ -23,9 +23,9 @@ public interface FilmListService extends RemoteService{
 	
 	public List<Genre> getGenreList(FilmFilter filter);
 	
-	public List<SelectOption> getGenreSelectOption();
+	public HashMap<Integer,String> getGenreSelectOption();
 	
-	public List<SelectOption> getCountrySelectOption();
+	public HashMap<Integer,String> getCountrySelectOption();
 	
-	public List<SelectOption> getLanguageSelectOption();
+	public HashMap<Integer,String> getLanguageSelectOption();
 }

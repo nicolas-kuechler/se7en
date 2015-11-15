@@ -2,6 +2,7 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +22,6 @@ import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 
 public class FilterPresenterImpl implements FilterPresenter {
@@ -95,21 +95,21 @@ public class FilterPresenterImpl implements FilterPresenter {
 	public void setupMultiSelects()
 	{
 		//fill genre multiselect box with options
-		filmListService.getGenreSelectOption(new AsyncCallback<List<SelectOption>>(){
+		filmListService.getGenreSelectOption(new AsyncCallback<HashMap<Integer,String>>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				ClientLog.writeErr("Failed to get genre list...");
 				
 			}
 			@Override
-			public void onSuccess(List<SelectOption> result) {
+			public void onSuccess(HashMap<Integer,String> result) {
 				filterView.setGenreOptions(result);
 				filmDataModel.setGenreOptions(result);
 			}
 		});
 		
 		//fill country multiselect box with options
-		filmListService.getCountrySelectOption(new AsyncCallback<List<SelectOption>>(){
+		filmListService.getCountrySelectOption(new AsyncCallback<HashMap<Integer,String>>(){
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -118,7 +118,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 			}
 
 			@Override
-			public void onSuccess(List<SelectOption> result) {
+			public void onSuccess(HashMap<Integer,String> result) {
 				filterView.setCountryOptions(result);
 				filmDataModel.setCountryOptions(result);
 			}
@@ -126,7 +126,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 		});
 		
 		//fill language multiselect box with options
-		filmListService.getLanguageSelectOption(new AsyncCallback<List<SelectOption>>(){
+		filmListService.getLanguageSelectOption(new AsyncCallback<HashMap<Integer,String>>(){
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -135,7 +135,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 			}
 
 			@Override
-			public void onSuccess(List<SelectOption> result) {
+			public void onSuccess(HashMap<Integer,String> result) {
 				filterView.setLanguageOptions(result);
 				filmDataModel.setLanguageOptions(result);
 			}

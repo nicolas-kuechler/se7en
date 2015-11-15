@@ -35,7 +35,6 @@ import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 @RunWith(JukitoRunner.class)
 public class TablePresenterTest {

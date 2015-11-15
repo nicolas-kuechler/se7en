@@ -1,10 +1,10 @@
 package ch.uzh.se.se7en.client.mvp.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public interface FilmDataModel {
 	/**
@@ -68,7 +68,7 @@ public interface FilmDataModel {
 	@post	selectOptions are stored in countryNames
 	@param	A list of selectOptions where all ids from minId to maxId are included without a gap.
 	 */
-	public void setCountryOptions(List<SelectOption> selectOptions);
+	public void setCountryOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
 	Allows to match the id to the name of a country.
@@ -87,7 +87,7 @@ public interface FilmDataModel {
 	@post	selectOptions are stored in genreNames
 	@param	A list of selectOptions where all ids from minId to maxId are included without a gap.
 	 */
-	public void setGenreOptions(List<SelectOption> selectOptions);
+	public void setGenreOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
 	Allows to match the id to the name of a genre.
@@ -106,7 +106,7 @@ public interface FilmDataModel {
 	@post	selectOptions are stored in languageNames
 	@param	A list of selectOptions where all ids from minId to maxId are included without a gap.
 	 */
-	public void setLanguageOptions(List<SelectOption> selectOptions);
+	public void setLanguageOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
 	Allows to match the id to the name of a language.

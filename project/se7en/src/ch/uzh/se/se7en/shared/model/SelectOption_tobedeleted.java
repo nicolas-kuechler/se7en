@@ -9,15 +9,15 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author Cyrill Halter
  *
  */
-public class SelectOption implements IsSerializable {
+public class SelectOption_tobedeleted implements IsSerializable {
 
 	private Integer id;
 	private String name;
 
-	public SelectOption() {
+	public SelectOption_tobedeleted() {
 	}
 
-	public SelectOption(int id, String name) {
+	public SelectOption_tobedeleted(int id, String name) {
 
 		this.id = id;
 		this.name = name;

@@ -1,5 +1,6 @@
 package ch.uzh.se.se7en.client.mvp.views.widgets;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +14,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 /**
  * This class defines a widget that adds functionality to the
@@ -95,13 +95,13 @@ public class MultiSelect extends Composite {
 	 *            multiselect widget
 	 * @return -
 	 */
-	public void setOptions(List<SelectOption> currentOptions) {
+	public void setOptions(HashMap<Integer,String> currentOptions) {
 		Option option;
-
-		for (int i = 0; i < currentOptions.size(); i++) {
+		Set<Integer> ids = currentOptions.keySet();
+		for (Integer id : ids) {
 			option = new Option();
-			option.setText(currentOptions.get(i).getName());
-			option.setValue(Integer.toString(currentOptions.get(i).getId()));
+			option.setText(currentOptions.get(id));
+			option.setValue(id.toString());
 			select.add(option);
 		}
 		select.refresh();
