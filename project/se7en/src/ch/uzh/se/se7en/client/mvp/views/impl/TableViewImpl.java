@@ -40,6 +40,9 @@ public class TableViewImpl extends Composite implements TableView {
 	DataGrid<Film> dataGrid;
 	@UiField(provided = true) SimplePager pager;
 	
+	@UiField 
+	Button downloadButton;
+	
 	ListDataProvider<Film> filmProvider = new ListDataProvider<Film>();
 	ListHandler<Film> columnSortHandler;
 
@@ -60,6 +63,7 @@ public class TableViewImpl extends Composite implements TableView {
 	 */
 	@UiHandler("downloadButton")
 	public void onDownloadBtnClicked(final ClickEvent event) {
+		downloadButton.setText("Loading...");
 		tablePresenter.onDownloadStarted();
 	}
 
@@ -107,8 +111,11 @@ public class TableViewImpl extends Composite implements TableView {
 
 	@Override
 	public void startDownload(String downloadUrl) {
-		// TODO CH Start the download Window.open(download url.....)
-		Window.alert("Demo Download Started; Url: " + downloadUrl);
+		// Stort the download
+		downloadButton.setText("Download");
+		Window.open(downloadUrl, "CSV Download", "");
+		Window.alert("If the download doesn't start automatically, deactivate your popup blocker or use this link: " + downloadUrl);
+
 	}
 
 	/**
