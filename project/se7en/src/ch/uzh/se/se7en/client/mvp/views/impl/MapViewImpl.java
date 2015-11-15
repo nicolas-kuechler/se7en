@@ -142,7 +142,7 @@ public class MapViewImpl extends Composite implements MapView {
 					panel.add(geoChart);
 					
 					if(placeholderIsSet){
-						ClientLog.writeMsg("placeholderIsSet");
+						//ClientLog.writeMsg("placeholderIsSet");
 					}else{
 						placeholderPieChart= new Panel();
 						placeholderGenreTable = new Panel();
@@ -160,7 +160,7 @@ public class MapViewImpl extends Composite implements MapView {
 						placeholderLabelChart.setStyleName("placeholderLabelChart");
 						placeholderLabelPie.setStyleName("placeholderLabelPie");
 
-						placeholderLabelPie.setText("Please select a country");
+						placeholderLabelPie.setText("Please select a country to show more details");
 
 						placeholderPieChart.add(placeholderLabelPie);
 						
@@ -219,12 +219,12 @@ public class MapViewImpl extends Composite implements MapView {
 	
 	public void setDimensions(){
 		if(widthIsSet){
-			ClientLog.writeMsg("WIDTH: "+panelWidth + "- HEIGHT: " + panelHeight);
+			//ClientLog.writeMsg("WIDTH: "+panelWidth + "- HEIGHT: " + panelHeight);
 		}else{
 			panelWidth = Window.getClientWidth();
 			panelHeight= Window.getClientHeight();
 			widthIsSet=true;
-			ClientLog.writeMsg("WIDTH: "+panelWidth + "- HEIGHT: " + panelHeight);
+			//ClientLog.writeMsg("WIDTH: "+panelWidth + "- HEIGHT: " + panelHeight);
 		}
 	}
 	
@@ -303,11 +303,11 @@ public class MapViewImpl extends Composite implements MapView {
 			}
 		};
 
-		genreTable.setColumnWidth(rankColumn, 10, Unit.PCT);
+		genreTable.setColumnWidth(rankColumn, 20, Unit.PCT);
 		genreTable.addColumn(rankColumn, "Rank");
 		genreTable.setColumnWidth(nameColumn, 45, Unit.PCT);
 		genreTable.addColumn(nameColumn, "Name");
-		genreTable.setColumnWidth(productionColumn, 45, Unit.PCT);
+		genreTable.setColumnWidth(productionColumn, 35, Unit.PCT);
 		genreTable.addColumn(productionColumn, "Productions");
 	}
 

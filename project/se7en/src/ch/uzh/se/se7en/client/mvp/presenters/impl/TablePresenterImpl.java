@@ -15,6 +15,7 @@ import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
 import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
+import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.shared.model.Film;
 
 /**

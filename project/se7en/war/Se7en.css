@@ -29,17 +29,18 @@ img {
 
 /** set the padding of the cell elements */
 td{
-		padding: 1% 0.5% 1% 4% !important;
-	text-align:right !important;
+		padding: 1% 1% 1% 0.5%;
+		text-align:left !important;
 }
 
 /** change the table header of table view */
 th {
-		padding: 1% 1% 1% 0.5% !important;
-	text-align:right !important;
+	padding: 1% 0.5% 1% 0.5% !important;
+	text-align:left !important;
 	background-color: #F5F5F5;
-	color: black;
-	font-size: 115%;
+	color: #555;
+	font-size: 105%;
+	overflow:hidden;
 }
 
 /** change the dataGrid to only display horizontal borders and no vertical ones */
@@ -285,6 +286,7 @@ th {
 .genreTable{
 	float:right;
 	border:1px solid #F5F5F5;
+	padding: 2%;
 }
 
 .pieChart{
@@ -333,7 +335,7 @@ th {
 }
 
 .genreTable th,.genreTable td{
-	text-align:right;
+	text-align:right !important;
 	padding: 1% !important;
 }
 
