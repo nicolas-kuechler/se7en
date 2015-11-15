@@ -32,6 +32,7 @@ public class TableViewImpl extends Composite implements TableView {
 	}
 
 	private TablePresenter tablePresenter;
+	private int panelHeight;
 	/**
 	 * The main DataGrid.
 	 */
@@ -75,6 +76,8 @@ public class TableViewImpl extends Composite implements TableView {
 	public TableViewImpl() {
 		dataGrid = new DataGrid<Film>();
 		dataGrid.setWidth("100%");
+		panelHeight= Window.getClientHeight();
+		dataGrid.setHeight((panelHeight*6)/10 + "px");
 		dataGrid.setHeight("500px");
 		dataGrid.setBordered(false);
 		dataGrid.setAutoHeaderRefreshDisabled(true);

@@ -7,7 +7,7 @@
 	<ui:style>
 
 	</ui:style>
-	<b:Panel styleName="dataContainer">
+	<b:Panel styleName="dataContainer" >
 		<b:Panel styleName="mapPanel">
 			<b:PanelHeader>
 				<b:Heading size="H3" text="Film World Map" />

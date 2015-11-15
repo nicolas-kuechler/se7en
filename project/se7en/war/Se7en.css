@@ -7,6 +7,7 @@ body {
 	overflow-y: scroll !important;
 	width: 100%; .
 	height: 100%;
+	float:left;
 }
 
 /** default image settings*/
@@ -27,12 +28,15 @@ img {
 }
 
 /** set the padding of the cell elements */
-th, td {
-	padding: 8px 8px 8px 8px !important;
+td{
+		padding: 1% 0.5% 1% 4% !important;
+	text-align:right !important;
 }
 
 /** change the table header of table view */
 th {
+		padding: 1% 1% 1% 0.5% !important;
+	text-align:right !important;
 	background-color: #F5F5F5;
 	color: black;
 	font-size: 115%;
@@ -44,6 +48,9 @@ th {
 	.table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
 	border: 0px !important;
 	border-top: 1px solid #DDD !important;
+}
+.com-google-gwt-user-cellview-client-SimplePager-Style-pageDetails{
+	padding: 4px 8px !important;
 }
 
 /*############################################GENERAL PANEL SETTINGS####################################################*/
@@ -75,6 +82,22 @@ th {
 	border: 1px solid #E5E5E5 !important;
 }
 
+#container{
+	height:59%;
+}
+
+.mapPanel{
+	float:left;
+	min-height: 80%;
+	width:100%;
+}
+.dataContainer{
+	float:left;
+	min-height: 100%;
+	width:100%;
+}
+
+
 /*############################################CONTAINER SETTINGS FOR HEADER AND FOOTER OF A PANEL####################################################*/
 
 /** don't display the header of the panels (Design descision / if reverted the headers get visible again)*/
@@ -93,12 +116,14 @@ th {
 
 /** set the space for the navigationBar and filterContainer(subContainer) between the right and left display edge to 15%*/
 #navBar, #subContainer {
+	
 	padding-left: 15% !important;
 	padding-right: 15% !important;
 }
 
 /** little workaround so we can display the image on welcome view with 100%, but the rest in the containerPanel with 15% padding. dataContainer is a subElement of containerPanel*/
 .dataContainer {
+	
 	padding-left: 15% !important;
 	padding-right: 15% !important;
 }
@@ -108,6 +133,7 @@ th {
 
 /** default settings and positioning for the filterContainer*/
 #subContainer {
+	height:30%;
 	margin-top: 7%;
 	margin-bottom: 2%;
 	float: left;
@@ -275,6 +301,42 @@ th {
 .panelPieChart{
 	float:right;
 }
+.placeholderGenreTable{
+	float:right;
+	text-align:center;
+	border-top:1px solid #F5F5F5;
+	border-right:1px solid #F5F5F5;
+	border-bottom:0px solid #F5F5F5;
+	border-left:1px solid #F5F5F5;
+}
+
+.placeholderPieChart{
+	float:right;
+	text-align:center;
+	border-top:0px solid #F5F5F5;
+	border-right:1px solid #F5F5F5;
+	border-bottom:1px solid #F5F5F5;
+	border-left:1px solid #F5F5F5;
+	
+}
+
+.placeholderLabelPie{
+	font-size: 120%;
+	font-weight: normal;
+	background-color: #F5F5F5;
+	color: #555;
+	padding: 1%;
+}
+
+.placeholderHidden{
+	display:none;
+}
+
+.genreTable th,.genreTable td{
+	text-align:right;
+	padding: 1% !important;
+}
+
 /*############################################WELCOME VIEW IMAGE SETTINGS####################################################*/
 
 /** set the background text on welcome view to be in the middle of the screen and over the background image*/
@@ -303,6 +365,7 @@ th {
 /** default settings for the navbar */
 #navBar {
 	padding-top: 1%;
+	height:11%;
 	float: left;
 }
 

@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.inject.Inject;
@@ -43,6 +44,7 @@ import com.googlecode.gwt.charts.client.options.LegendPosition;
 import com.googlecode.gwt.charts.client.util.ArrayHelper;
 
 import ch.uzh.se.se7en.client.mvp.Boundaries;
+import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
@@ -68,16 +70,26 @@ public class MapViewImpl extends Composite implements MapView {
 	private ChartLoader chartLoaderPieChart = new ChartLoader(ChartPackage.CORECHART);
 	private PieChart pieChart;
 	private PieChartOptions pieChartOptions;
+
+
+
 	private int panelWidth;
 	private int panelHeight;
-
-
+	private boolean widthIsSet = false;
+	private boolean placeholderIsSet = false;
+	
+	private Panel placeholderPieChart;
+	private Panel placeholderGenreTable;
+	private Label placeholderLabelChart;
+	private Label placeholderLabelPie;
+	
 	@UiField(provided = true)
 	RangeSlider yearSlider;
 	@UiField
 	PanelBody panel;
 	@UiField (provided = true)
 	DataGrid<Genre> genreTable;
+
 
 	
 	ListDataProvider<Genre> genreProvider = new ListDataProvider<Genre>();
@@ -89,21 +101,20 @@ public class MapViewImpl extends Composite implements MapView {
 
 	@Inject
 	public MapViewImpl() {
-
-		
+		setDimensions();
 		yearSlider = new RangeSlider();
 		genreTable = new DataGrid<Genre>();
 		yearSlider.setMin(Boundaries.MIN_YEAR);
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
-		yearSlider.setWidth("80%");
+		yearSlider.setWidth("60%");
 		yearSlider.setTooltip(TooltipType.ALWAYS);
-		buildTable();
+
 		initWidget(uiBinder.createAndBindUi(this));
+
+		buildTable();
 		
-
-
-
+		
 	}
 
 	@Override
@@ -119,7 +130,6 @@ public class MapViewImpl extends Composite implements MapView {
 
 	@Override
 	public void setGeoChart(final List<DataTableEntity> countries) {
-	
 		chartLoaderGeoChart.loadApi(new Runnable() {
 
 			public void run() {
@@ -127,13 +137,38 @@ public class MapViewImpl extends Composite implements MapView {
 					geoChart = new GeoChart();
 					geoChart.setStyleName("geoChart");
 					geoChartOptions = GeoChartOptions.create();
-					panelWidth = panel.getOffsetWidth();
-					panelHeight = panel.getOffsetHeight();
-					
-					geoChartOptions.setWidth((panelWidth*6)/10);
-					geoChartOptions.setHeight((panelHeight*3)/10);
-
+					geoChartOptions.setWidth((panelWidth*4)/10);
+					geoChartOptions.setHeight((panelHeight*6)/10);
 					panel.add(geoChart);
+					
+					if(placeholderIsSet){
+						ClientLog.writeMsg("placeholderIsSet");
+					}else{
+						placeholderPieChart= new Panel();
+						placeholderGenreTable = new Panel();
+						placeholderLabelChart= new Label();
+						placeholderLabelPie= new Label();
+						
+						placeholderGenreTable.setWidth((panelWidth*2)/10+"px");
+						placeholderGenreTable.setHeight((panelHeight*3)/10+"px");
+						
+						placeholderPieChart.setWidth((panelWidth*2)/10+"px");
+						placeholderPieChart.setHeight((panelHeight*3)/10+"px");
+						
+						placeholderGenreTable.setStyleName("placeholderGenreTable");
+						placeholderPieChart.setStyleName("placeholderPieChart");
+						placeholderLabelChart.setStyleName("placeholderLabelChart");
+						placeholderLabelPie.setStyleName("placeholderLabelPie");
+
+						placeholderLabelPie.setText("Please select a country");
+
+						placeholderPieChart.add(placeholderLabelPie);
+						
+						panel.add(placeholderGenreTable);
+						panel.add(placeholderPieChart);
+						placeholderIsSet = true;
+					}
+					
 					GeoChartColorAxis colorAxis = GeoChartColorAxis.create();
 					colorAxis.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
 					geoChartOptions.setColorAxis(colorAxis);
@@ -170,6 +205,8 @@ public class MapViewImpl extends Composite implements MapView {
 				});
 			}
 		});
+		
+
 	}
 
 	@Override
@@ -178,6 +215,17 @@ public class MapViewImpl extends Composite implements MapView {
 		int row = geoChart.getSelection().get(0).getRow();
 		//get the country id information at the selected row
 		return (int) dataTableGeoChart.getValueNumber(row, 2);	
+	}
+	
+	public void setDimensions(){
+		if(widthIsSet){
+			ClientLog.writeMsg("WIDTH: "+panelWidth + "- HEIGHT: " + panelHeight);
+		}else{
+			panelWidth = Window.getClientWidth();
+			panelHeight= Window.getClientHeight();
+			widthIsSet=true;
+			ClientLog.writeMsg("WIDTH: "+panelWidth + "- HEIGHT: " + panelHeight);
+		}
 	}
 	
 	@Override
@@ -199,10 +247,15 @@ public class MapViewImpl extends Composite implements MapView {
 			if(genreTable!=null)
 			{
 				genreTable.setVisible(false);
+				
+
 			}
 			if(pieChart!=null)
 			{
 				pieChart.setVisible(false);
+				placeholderPieChart.setStyleName("placeholderPieChart");
+
+
 			}
 		}
 	}
@@ -210,9 +263,8 @@ public class MapViewImpl extends Composite implements MapView {
 	public void buildTable(){		
 		
 		genreProvider.addDataDisplay(genreTable);
-		genreTable.setWidth("30%");
-		genreTable.setHeight("200px");
 		genreTable.setAutoHeaderRefreshDisabled(true);
+		
 		
 		rankColumn = new TextColumn<Genre>() {
 			@Override
@@ -251,7 +303,7 @@ public class MapViewImpl extends Composite implements MapView {
 			}
 		};
 
-		genreTable.setColumnWidth(rankColumn, 9, Unit.PCT);
+		genreTable.setColumnWidth(rankColumn, 10, Unit.PCT);
 		genreTable.addColumn(rankColumn, "Rank");
 		genreTable.setColumnWidth(nameColumn, 45, Unit.PCT);
 		genreTable.addColumn(nameColumn, "Name");
@@ -261,11 +313,15 @@ public class MapViewImpl extends Composite implements MapView {
 
 	@Override
 	public void setGenreTable(List<Genre> genres) {
+		placeholderGenreTable.setStyleName("placeholderHidden");
+		genreTable.setWidth((panelWidth*2)/10+ "px");
+		genreTable.setHeight((panelHeight*3)/10 + "px");
 		genreProvider.setList(genres);
 	}
 
 	@Override
 	public void setGenrePieChart(final List<DataTableEntity> genres) {
+		placeholderPieChart.setStyleName("placeholderHidden");
 		chartLoaderPieChart.loadApi(new Runnable(){
 			@Override
 			public void run() {
@@ -273,8 +329,8 @@ public class MapViewImpl extends Composite implements MapView {
 					pieChart = new PieChart();
 					pieChart.setStyleName("pieChart");
 					pieChartOptions = PieChartOptions.create();
-					pieChartOptions.setHeight((panelHeight*5)/10);
-					pieChartOptions.setWidth((panelWidth*3)/10);
+					pieChartOptions.setWidth((panelWidth*2)/10);
+					pieChartOptions.setHeight((panelHeight*3)/10);
 					//hide legend
 					pieChartOptions.setLegend(Legend.create(LegendPosition.RIGHT));
 					//all slices under 10% are grouped together under "others"
