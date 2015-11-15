@@ -1,6 +1,7 @@
 package ch.uzh.se.se7en.server;
 
 import java.io.BufferedWriter;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -25,6 +26,13 @@ import ch.uzh.se.se7en.client.rpc.FilmListService;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
+
+/**This class is used to export a list of filtered films as a csv file and delivering
+ * a download link to said file to the user
+ * 
+ * @author vagrant
+ *
+ */
 @Singleton
 public class FilmListExportServiceImpl extends RemoteServiceServlet implements FilmListExportService {
 
@@ -33,6 +41,17 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 	@Inject
 	FilmListServiceImpl filmListService;
 	
+	/**
+	 * exports a csv file for a set filter to Google Cloud Storage and
+	 * returns a download link to said file
+	 * 
+	 * @author Cyrill Halter
+	 * @pre a filter is set in the client data model
+	 * @post -
+	 * @param FilmFilter
+	 *            filter A filter object
+	 * @return String downloadURL a URL pointing to the generated CSV file in GCS
+	 */
 	@Override
 	public String getFilmListDownloadUrl(FilmFilter filter) {
 		
@@ -45,7 +64,7 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 		//create GCS file name
 		GcsFilename filename = new GcsFilename(BUCKET_NAME, uniqueFilename);
 		
-		//create options for CSV file to be exported
+		//create options for CSV file to be exported: set public read and mime-type
 		GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
 		
 		GcsFileOptions options = builder
@@ -73,6 +92,7 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 			return null;
 		}
 		
+		//return URL of created file for download
 		String downloadURL = "https://storage.googleapis.com/" + BUCKET_NAME + "/" + uniqueFilename;
 		
 		return downloadURL;

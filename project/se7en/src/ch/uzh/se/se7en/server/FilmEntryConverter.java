@@ -4,8 +4,25 @@ import com.googlecode.jcsv.writer.CSVEntryConverter;
 
 import ch.uzh.se.se7en.shared.model.Film;
 
+/**
+ * This class defines an entry converter for use with the jcsv library.
+ * @author Cyrill Halter
+ *
+ */
 public class FilmEntryConverter implements CSVEntryConverter<Film>{
 
+	/**
+	 * This method is called to convert a Film object into an array of Strings
+	 * corresponding to entries in a CSV file.
+	 * Fields that are set to null are converted to empty Strings.
+	 * 
+	 * @author Cyrill Halter
+	 * @pre -
+	 * @post -
+	 * @param Film film The Film object to be converted
+	 * @returns String [] columns The Film object represented by a String array
+	 *            
+	 */
 	@Override
 	public String[] convertEntry(Film film) {
 		String[] columns = new String[6];
