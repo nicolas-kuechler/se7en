@@ -119,7 +119,8 @@ public class MapViewImpl extends Composite implements MapView {
 				for(int i = 0; i < countries.size(); i++)
 				{
 					dataTableGeoChart.setValue(i, 0, countries.get(i).getName());
-					dataTableGeoChart.setValue(i, 1, countries.get(i).getValue());
+					//TODO NK log function at the right place
+					dataTableGeoChart.setValue(i, 1, Math.log(countries.get(i).getValue()));
 					dataTableGeoChart.setValue(i, 2, countries.get(i).getId());
 				}
 				//create dataView from dataTable
