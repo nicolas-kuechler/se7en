@@ -47,7 +47,15 @@ public class MultiSelect extends Composite {
 
 	}
 	
-	// TODO CH Verify and add comment
+	/**
+	 * This method returns the ids of all selected options
+	 * 
+	 * @author Cyrill Halter
+	 * @pre -
+	 * @post -
+	 * @param -
+	 * @return Set<Integer> ids The set of all selected ids
+	 */
 	public Set<Integer> getAllSelectedIds()
 	{
 		List<String> selected =  select.getAllSelectedValues();
@@ -59,10 +67,24 @@ public class MultiSelect extends Composite {
 		return ids;
 	}
 	
-	//TODO CH Write Comment
+	/**
+	 * Selects a set of entries in the multiselect widget
+	 * 
+	 * @author Cyrill Halter
+	 * @pre -
+	 * @post getAllSelectedIds().contains(ids)
+	 * @param Set<Integer> ids The set of all selected ids
+	 * @return -
+	 */
 	public void select(Set<Integer> ids)
 	{
-		//TODO CH Write metho to select values in the multiselects
+		String [] idStrings = new String[ids.size()];
+		int i = 0;
+		for (Integer id : ids){
+			idStrings[i] = id.toString();
+			i++;
+		}
+		select.setValues(idStrings);
 	}
 
 
