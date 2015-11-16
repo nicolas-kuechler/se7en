@@ -36,7 +36,6 @@ import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.Genre;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 @RunWith(JukitoRunner.class)
 public class MapPresenterTest {

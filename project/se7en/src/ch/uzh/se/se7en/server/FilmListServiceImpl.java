@@ -2,6 +2,7 @@ package ch.uzh.se.se7en.server;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,7 +25,6 @@ import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 import ch.uzh.se.se7en.shared.model.Genre;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 /**
  * Handles the server side of RPC requests, coordinates with the database
@@ -328,15 +328,15 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 *         genres as SelectOption objects
 	 */
 	@Override
-	public List<SelectOption> getGenreSelectOption() {
-		List<SelectOption> availableGenres = new ArrayList<SelectOption>();
+	public HashMap<Integer,String> getGenreSelectOption() {
+		HashMap<Integer,String> availableGenres = new HashMap<Integer,String>();
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 
 		// select * from the genre table
 		dbGenres = em.get().createQuery("FROM GenreDB ORDER BY name", GenreDB.class).getResultList();
 
 		for (GenreDB genre : dbGenres) {
-			availableGenres.add(new SelectOption(genre.getId(), genre.getName()));
+			availableGenres.put(genre.getId(), genre.getName());
 		}
 
 		return availableGenres;
@@ -354,15 +354,15 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 *         countries as SelectOption objects
 	 */
 	@Override
-	public List<SelectOption> getCountrySelectOption() {
-		List<SelectOption> availableCountries = new ArrayList<SelectOption>();
+	public HashMap<Integer,String> getCountrySelectOption() {
+		HashMap<Integer,String> availableCountries = new HashMap<Integer,String>();
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 
 		// select * from the country table
 		dbCountries = em.get().createQuery("FROM CountryDB ORDER BY name", CountryDB.class).getResultList();
 
 		for (CountryDB country : dbCountries) {
-			availableCountries.add(new SelectOption(country.getId(), country.getName()));
+			availableCountries.put(country.getId(), country.getName());
 		}
 
 		return availableCountries;
@@ -380,15 +380,15 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 *         languages as SelectOption objects
 	 */
 	@Override
-	public List<SelectOption> getLanguageSelectOption() {
-		List<SelectOption> availableLanguages = new ArrayList<SelectOption>();
+	public HashMap<Integer,String> getLanguageSelectOption() {
+		HashMap<Integer,String> availableLanguages = new HashMap<Integer,String>();
 		List<LanguageDB> dbLanguages = new ArrayList<LanguageDB>();
 
 		// select * from the language table
 		dbLanguages = em.get().createQuery("FROM LanguageDB ORDER BY name", LanguageDB.class).getResultList();
 
 		for (LanguageDB language : dbLanguages) {
-			availableLanguages.add(new SelectOption(language.getId(), language.getName()));
+			availableLanguages.put(language.getId(), language.getName());
 		}
 
 		return availableLanguages;
