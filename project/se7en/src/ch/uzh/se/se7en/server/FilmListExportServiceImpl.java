@@ -48,14 +48,12 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 	 * @author Cyrill Halter
 	 * @pre a filter is set in the client data model
 	 * @post -
-	 * @param FilmFilter
-	 *            filter A filter object
+	 * @param FilmFilter filter A filter object
 	 * @return String downloadURL a URL pointing to the generated CSV file in GCS
 	 */
 	@Override
 	public String getFilmListDownloadUrl(FilmFilter filter) {
 
-		
 		//create GCS service
 		GcsService gcsService = GcsServiceFactory.createGcsService();
 		

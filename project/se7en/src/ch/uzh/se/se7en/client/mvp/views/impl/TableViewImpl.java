@@ -3,7 +3,13 @@ package ch.uzh.se.se7en.client.mvp.views.impl;
 import java.util.Comparator;
 import java.util.List;
 
+
+import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Label;
+import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.ModalBody;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 
 import com.google.gwt.core.client.GWT;
@@ -65,6 +71,8 @@ public class TableViewImpl extends Composite implements TableView {
 	@UiHandler("downloadButton")
 	public void onDownloadBtnClicked(final ClickEvent event) {
 		downloadButton.setText("Loading...");
+		downloadButton.setIcon(IconType.REFRESH);
+		downloadButton.setIconSpin(true);
 		tablePresenter.onDownloadStarted();
 	}
 
@@ -109,14 +117,52 @@ public class TableViewImpl extends Composite implements TableView {
 		dataGrid.addColumnSortHandler(columnSortHandler);
 	}
 
-
+	/**
+	 * Start the csv download with the obtained url and show modal to start download manually
+	 * 
+	 * @author Cyrill Halter
+	 * @pre downloadUrl != null
+	 * @post -
+	 * @param String downloadUrl the obtained downloadurl
+	 */
 	@Override
 	public void startDownload(String downloadUrl) {
-		// Stort the download
+		// Start the download
 		downloadButton.setText("Download");
-		Window.open(downloadUrl, "CSV Download", "");
-		Window.alert("If the download doesn't start automatically, deactivate your popup blocker or use this link: " + downloadUrl);
+		downloadButton.setIcon(IconType.DOWNLOAD);
+		downloadButton.setIconSpin(false);
+		Modal modal = new Modal();
+		ModalBody modalBody = new ModalBody();
+		Label downloadLabel = new Label();
+		
+		if(downloadUrl != null){
+			
+			//download file at downloadUrl	
+			Window.open(downloadUrl, "CSV Download", "");
 
+			//show modal to start download manually
+			modal.setTitle("Download CSV");
+			modal.setClosable(true);
+			modal.setFade(true);
+			downloadLabel.setText("If the download doesn't start automatically, deactivate your popup blocker or use this link: ");
+			downloadLabel.setStyleName("modalText");
+			Anchor downloadLink = new Anchor("Download Now", downloadUrl);
+			modalBody.add(downloadLabel);
+			modalBody.add(downloadLink);
+			modal.add(modalBody);
+			modal.show();
+
+		}else{
+
+			modal.setTitle("CSV Download Failed");
+			modal.setClosable(true);
+			modal.setFade(true);
+			downloadLabel.setText("Something went wrong... Please try again later.");
+			downloadLabel.setStyleName("modalText");
+			modalBody.add(downloadLabel);
+			modal.add(modalBody);
+			modal.show();
+		}
 	}
 
 	/**

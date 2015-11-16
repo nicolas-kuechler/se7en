@@ -20,7 +20,6 @@ import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 @RunWith(JukitoRunner.class)
 public class UrlTokenTest {

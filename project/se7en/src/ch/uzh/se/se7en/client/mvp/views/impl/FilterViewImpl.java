@@ -1,5 +1,6 @@
 package ch.uzh.se.se7en.client.mvp.views.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +31,6 @@ import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.mvp.views.widgets.AppliedFilterBox;
 import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public class FilterViewImpl extends Composite implements FilterView {
 
@@ -185,7 +185,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public void setCountryOptions(List<SelectOption> selectOptions) {
+	public void setCountryOptions(HashMap<Integer,String> selectOptions) {
 		countrySelect.setOptions(selectOptions);
 	}
 
@@ -207,7 +207,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public void setLanguageOptions(List<SelectOption> selectOptions) {
+	public void setLanguageOptions(HashMap<Integer,String> selectOptions) {
 		languageSelect.setOptions(selectOptions);		
 	}
 
@@ -230,7 +230,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public void setGenreOptions(List<SelectOption> selectOptions) {
+	public void setGenreOptions(HashMap<Integer,String> selectOptions) {
 		genreSelect.setOptions(selectOptions);
 	}
 
