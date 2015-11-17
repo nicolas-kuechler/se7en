@@ -77,6 +77,18 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Transactional
 	public List<FilmDB> getFilmEntitiesList(FilmFilter filter) {
+		// the starting position of the query
+		// TODO: replace by filter information
+		int startPosition = 0;
+		
+		// the max number of results the query should return
+		// TODO: replace by filter information
+		int maxResults = 500;
+		
+		// defines the ordering of the query results
+		// TODO: replace by filter information
+		String ordering = "f.name";
+		
 		// create an empty list of film entities
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
 
@@ -113,10 +125,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		}
 
 		// concat the query string
-		String queryString = selector + joiners + " " + wheres + " ORDER BY f.name";
+		String queryString = selector + joiners + " " + wheres + " ORDER BY " + ordering;
 
 		// create a typed query from our query string
 		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
+		
+		// set offset and limit
+		query.setFirstResult(startPosition);
+		query.setMaxResults(maxResults);
 
 		// set the min & max length params
 		query.setParameter("minLength", filter.getLengthStart());
@@ -329,12 +345,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public HashMap<Integer,String> getGenreSelectOption() {
-		HashMap<Integer,String> availableGenres = new HashMap<Integer,String>();
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 
 		// select * from the genre table
-		dbGenres = em.get().createQuery("FROM GenreDB ORDER BY name", GenreDB.class).getResultList();
+		dbGenres = em.get().createQuery("FROM GenreDB", GenreDB.class).getResultList();
 
+		HashMap<Integer,String> availableGenres = new HashMap<Integer,String>(dbGenres.size());
+		
 		for (GenreDB genre : dbGenres) {
 			availableGenres.put(genre.getId(), genre.getName());
 		}
@@ -355,11 +372,12 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public HashMap<Integer,String> getCountrySelectOption() {
-		HashMap<Integer,String> availableCountries = new HashMap<Integer,String>();
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 
 		// select * from the country table
-		dbCountries = em.get().createQuery("FROM CountryDB ORDER BY name", CountryDB.class).getResultList();
+		dbCountries = em.get().createQuery("FROM CountryDB", CountryDB.class).getResultList();
+		
+		HashMap<Integer,String> availableCountries = new HashMap<Integer,String>(dbCountries.size());
 
 		for (CountryDB country : dbCountries) {
 			availableCountries.put(country.getId(), country.getName());
@@ -381,12 +399,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public HashMap<Integer,String> getLanguageSelectOption() {
-		HashMap<Integer,String> availableLanguages = new HashMap<Integer,String>();
 		List<LanguageDB> dbLanguages = new ArrayList<LanguageDB>();
 
 		// select * from the language table
-		dbLanguages = em.get().createQuery("FROM LanguageDB ORDER BY name", LanguageDB.class).getResultList();
+		dbLanguages = em.get().createQuery("FROM LanguageDB", LanguageDB.class).getResultList();
 
+		HashMap<Integer,String> availableLanguages = new HashMap<Integer,String>(dbLanguages.size());
+		
 		for (LanguageDB language : dbLanguages) {
 			availableLanguages.put(language.getId(), language.getName());
 		}
