@@ -22,6 +22,7 @@ import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.FilterOptions;
 
 
 public class FilterPresenterImpl implements FilterPresenter {
@@ -95,51 +96,26 @@ public class FilterPresenterImpl implements FilterPresenter {
 	public void setupMultiSelects()
 	{
 		//fill genre multiselect box with options
-		filmListService.getGenreSelectOption(new AsyncCallback<HashMap<Integer,String>>(){
+		filmListService.getSelectOptions(new AsyncCallback<FilterOptions>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				ClientLog.writeErr("Failed to get genre list...");
 				
 			}
 			@Override
-			public void onSuccess(HashMap<Integer,String> result) {
-				filterView.setGenreOptions(result);
-				filmDataModel.setGenreOptions(result);
-			}
-		});
-		
-		//fill country multiselect box with options
-		filmListService.getCountrySelectOption(new AsyncCallback<HashMap<Integer,String>>(){
-
-			@Override
-			public void onFailure(Throwable caught) {
-				ClientLog.writeErr("Failed to get country list...");
+			public void onSuccess(FilterOptions result) {
+				//fill genre multiselect box with options
+				filterView.setGenreOptions(result.getGenreSelectOptions());
+				filmDataModel.setGenreOptions(result.getGenreSelectOptions());
 				
-			}
-
-			@Override
-			public void onSuccess(HashMap<Integer,String> result) {
-				filterView.setCountryOptions(result);
-				filmDataModel.setCountryOptions(result);
-			}
-			
-		});
-		
-		//fill language multiselect box with options
-		filmListService.getLanguageSelectOption(new AsyncCallback<HashMap<Integer,String>>(){
-
-			@Override
-			public void onFailure(Throwable caught) {
-				ClientLog.writeErr("Failed to get language list...");
+				//fill language multiselect box with options
+				filterView.setLanguageOptions(result.getLanguageSelectOptions());
+				filmDataModel.setLanguageOptions(result.getLanguageSelectOptions());
 				
+				////fill country multiselect box with options
+				filterView.setCountryOptions(result.getCountrySelectOptions());
+				filmDataModel.setCountryOptions(result.getCountrySelectOptions());
 			}
-
-			@Override
-			public void onSuccess(HashMap<Integer,String> result) {
-				filterView.setLanguageOptions(result);
-				filmDataModel.setLanguageOptions(result);
-			}
-			
 		});
 	}
 

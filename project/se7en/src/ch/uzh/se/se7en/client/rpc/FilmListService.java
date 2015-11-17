@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.FilterOptions;
 import ch.uzh.se.se7en.shared.model.Genre;
 
 /**
@@ -23,9 +24,5 @@ public interface FilmListService extends RemoteService{
 	
 	public List<Genre> getGenreList(FilmFilter filter);
 	
-	public HashMap<Integer,String> getGenreSelectOption();
-	
-	public HashMap<Integer,String> getCountrySelectOption();
-	
-	public HashMap<Integer,String> getLanguageSelectOption();
+	public FilterOptions getSelectOptions();
 }
