@@ -35,7 +35,6 @@ import ch.uzh.se.se7en.server.model.CountryDB;
 import ch.uzh.se.se7en.server.model.FilmCountryDB;
 import ch.uzh.se.se7en.server.model.FilmDB;
 import ch.uzh.se.se7en.server.model.FilmGenreDB;
-import ch.uzh.se.se7en.server.model.FilmHelper;
 import ch.uzh.se.se7en.server.model.FilmLanguageDB;
 import ch.uzh.se.se7en.server.model.GenreDB;
 import ch.uzh.se.se7en.server.model.LanguageDB;
@@ -59,7 +58,8 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	private Map<String, CountryDB> countryMap = new HashMap<String, CountryDB>();
 	private Map<String, GenreDB> genreMap = new HashMap<String, GenreDB>();
 	private Map<String, LanguageDB> languageMap = new HashMap<String, LanguageDB>();
-
+	private final String BUCKET_NAME = "se-team-se7en";
+	
 	/**
 	 * This method is called to to import a file from the Google Cloud Storage
 	 * file repository and convert it to a list of film objects
@@ -73,30 +73,22 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	 */
 	@Override
 	public boolean importFile(String nameOfFile) {
-		List<Film> importedFilms = new LinkedList<Film>();	
+		List<Film> importedFilms = null;	
 		try{
 
 			GcsService gcsService = GcsServiceFactory.createGcsService();
-			GcsFilename gcsFilename = new GcsFilename("se-team-se7en", nameOfFile);
+			GcsFilename gcsFilename = new GcsFilename(BUCKET_NAME, nameOfFile);
 
 			// open GCS channel for specified file name and create reader
 			GcsInputChannel csvReadChannel = gcsService.openReadChannel(gcsFilename, 0);
-			Reader csvFileReader = new InputStreamReader(Channels.newInputStream(csvReadChannel));
+			Reader csvFileReader = new InputStreamReader(Channels.newInputStream(csvReadChannel), "UTF-8");
 
 			// create csv reader on inputstream reader
-			ValueProcessorProvider vpp = new ValueProcessorProvider();
-			CSVReader<FilmHelper> filmReader = new CSVReaderBuilder<FilmHelper>(csvFileReader)
-					.entryParser(new AnnotationEntryParser<FilmHelper>(FilmHelper.class, vpp)).build();
+			CSVReader<Film> filmReader = new CSVReaderBuilder<Film>(csvFileReader)
+					.entryParser(new FilmEntryParser()).build();
 
-			// read csv to FilmHelper objects, convert them to Film objects and
-			// add them to the importedFilms List
-			FilmHelper tempFilm;
-			while ((tempFilm = filmReader.readNext()) != null) {
-				importedFilms.add(new Film(tempFilm.getName(), tempFilm.getLength(), tempFilm.getYear(),
-						new ArrayList<String>(Arrays.asList(tempFilm.getCountries().split("--"))),
-						new ArrayList<String>(Arrays.asList(tempFilm.getLanguages().split("--"))),
-						new ArrayList<String>(Arrays.asList(tempFilm.getGenres().split("--")))));
-			}
+			// read csv to Film objects
+			importedFilms = filmReader.readAll();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -111,26 +103,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		return false;
 	}
 
-	public CSVReader<FilmHelper> initCsvFileReader(String nameOfFile){
-		GcsService gcsService = GcsServiceFactory.createGcsService();
-		GcsFilename gcsFilename = new GcsFilename("se-team-se7en", nameOfFile);
 
-		CSVReader<FilmHelper> filmReader = null;
-		try {
-
-			// open GCS channel for specified file name and create reader
-			GcsInputChannel csvReadChannel = gcsService.openReadChannel(gcsFilename, 0);
-			Reader csvFileReader = new InputStreamReader(Channels.newInputStream(csvReadChannel));
-
-			// create csv reader on inputstream reader
-			ValueProcessorProvider vpp = new ValueProcessorProvider();
-			filmReader = new CSVReaderBuilder<FilmHelper>(csvFileReader)
-					.entryParser(new AnnotationEntryParser<FilmHelper>(FilmHelper.class, vpp)).build();
-		}catch (IOException e){
-			e.printStackTrace();
-		}
-		return filmReader;
-	}
 	/**
 	 * Imports the parsed films into the database
 	 * 

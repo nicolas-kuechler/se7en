@@ -1,7 +1,18 @@
 package ch.uzh.se.se7en.client.mvp.views.widgets;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.gwtbootstrap3.extras.select.client.ui.Option;
 import org.gwtbootstrap3.extras.select.client.ui.Select;
@@ -12,9 +23,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
-//TODO Cyrill: Missing method to set the current selectedOptions. Necessary for the filter parsing from the url.
 /**
  * This class defines a widget that adds functionality to the
  * gwtbootstrap3.extras.select widget.
@@ -32,64 +41,52 @@ public class MultiSelect extends Composite {
 	@UiField
 	Select select;
 
-	private List<SelectOption> currentOptions;
-
 	public MultiSelect() {
 		initWidget(uiBinder.createAndBindUi(this));
 		select.setEnabled(true);
 
 	}
-
+	
 	/**
-	 * This method delivers a list of SelectOption objects according to what was
-	 * selected by the user in the multiselect widget
+	 * This method returns the ids of all selected options
 	 * 
 	 * @author Cyrill Halter
 	 * @pre -
 	 * @post -
 	 * @param -
-	 * @return List<SelectOption> selectedOption A list of selected Options as
-	 *         SelectOption objects
+	 * @return Set<Integer> ids The set of all selected ids
 	 */
-	public List<SelectOption> getSelectedOptions() {
-		List<String> ids = select.getAllSelectedValues();
-		List<SelectOption> selectedOptions = new ArrayList<SelectOption>();
-		for (String id : ids) {
-			int i = 0;
-			SelectOption tempOption = currentOptions.get(i);
-			while (Integer.parseInt(id) != tempOption.getId()) {
-				tempOption = currentOptions.get(++i);
-			}
-			selectedOptions.add(tempOption);
+	public Set<Integer> getAllSelectedIds()
+	{
+		List<String> selected =  select.getAllSelectedValues();
+		Set<Integer> ids = new HashSet<Integer>();
+		for(String s : selected)
+		{
+			ids.add(Integer.parseInt(s));
 		}
-		return selectedOptions;
+		return ids;
 	}
-
+	
 	/**
-	 * This method delivers a list of strings according to what was selected by
-	 * the user in the multiselect widget. This has to be done for integration
-	 * with the existing code.
+	 * Selects a set of entries in the multiselect widget
 	 * 
 	 * @author Cyrill Halter
 	 * @pre -
-	 * @post -
-	 * @param -
-	 * @return List<Strings> selectedOption A list of selected Options as
-	 *         strings
+	 * @post getAllSelectedIds().contains(ids)
+	 * @param Set<Integer> ids The set of all selected ids
+	 * @return -
 	 */
-	public List<String> getValue() {
-		List<String> ids = select.getAllSelectedValues();
-		List<String> selectedOptions = new ArrayList<String>();
-		for (String id : ids) {
-			int i = 0;
-			SelectOption tempOption = currentOptions.get(i);
-			while (Integer.parseInt(id) != tempOption.getId()) {
-				tempOption = currentOptions.get(++i);
-			}
-			selectedOptions.add(tempOption.getName());
+	public void select(Set<Integer> ids)
+	{
+		String [] idStrings = new String[ids.size()];
+		int i = 0;
+		for (Integer id : ids){
+			idStrings[i] = id.toString();
+			i++;
 		}
-		return selectedOptions;
+		select.setValues(idStrings);
 	}
+
 
 	/**
 	 * This method deselects all options in the multiselect widget
@@ -119,7 +116,7 @@ public class MultiSelect extends Composite {
 	}
 
 	/**
-	 * This method fills the multiselect widget with options to select from
+	 * This method fills the multiselect widget with sorted options to select from
 	 * 
 	 * @author Cyrill Halter
 	 * @pre -
@@ -129,19 +126,26 @@ public class MultiSelect extends Composite {
 	 *            multiselect widget
 	 * @return -
 	 */
-	public void setOptions(List<SelectOption> currentOptions) {
+	public void setOptions(HashMap<Integer,String> currentOptions) {
 		Option option;
-		this.currentOptions = currentOptions;
-
-		for (int i = 0; i < currentOptions.size(); i++) {
+		Set<Integer> ids = currentOptions.keySet();
+		Set<Map.Entry<Integer, String>> currentOptionsSet = currentOptions.entrySet();
+		List<Map.Entry<Integer, String>> currentOptionsList = 
+				new ArrayList<Map.Entry<Integer, String>>(currentOptionsSet);
+		Collections.sort(currentOptionsList, new Comparator<Map.Entry<Integer, String>>(){
+		    public int compare(Map.Entry<Integer, String> entry1, Map.Entry<Integer, String> entry2) {
+		    	return entry1.getValue().compareTo(entry2.getValue()); 
+		    }
+		});
+		
+		for (Map.Entry<Integer, String> entry : currentOptionsList) {
 			option = new Option();
-			option.setText(currentOptions.get(i).getName());
-			option.setValue(Integer.toString(currentOptions.get(i).getId()));
+			option.setText(entry.getValue());
+			option.setValue(entry.getKey().toString());
 			select.add(option);
 		}
-
 		select.refresh();
-
 	}
+	
 
 }

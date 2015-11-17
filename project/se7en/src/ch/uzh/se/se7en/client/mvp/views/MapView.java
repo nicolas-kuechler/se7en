@@ -2,11 +2,7 @@ package ch.uzh.se.se7en.client.mvp.views;
 
 import java.util.List;
 
-import org.gwtbootstrap3.extras.slider.client.ui.Range;
-
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.googlecode.gwt.charts.client.DataTable;
 
 import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
