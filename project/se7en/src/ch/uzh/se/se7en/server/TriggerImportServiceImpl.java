@@ -118,25 +118,37 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	 */
 	@Transactional
 	public boolean importFilmsToDB(List<Film> films) {
+		// TODO: replace this boolean with a parameter
+		boolean force = false;
+		
 		// get an instance of the entity manager
 		EntityManager manager = em.get();
 
 		boolean success = false;
 
-		// get all the existing entities from the database
-		List<CountryDB> dbCountries = manager.createQuery("from CountryDB", CountryDB.class).getResultList();
-		List<GenreDB> dbGenres = manager.createQuery("from GenreDB", GenreDB.class).getResultList();
-		List<LanguageDB> dbLanguages = manager.createQuery("from LanguageDB", LanguageDB.class).getResultList();
+		// clear the hashmaps to remove any existing entities from previous imports
+		countryMap.clear();
+		genreMap.clear();
+		languageMap.clear();
+		
+		// if the import was forced, don't get the entities from the database
+		// only do this if the db was purged beforehand!!! (resolves caching problem)
+		if(!force) {
+			// get all the existing entities from the database
+			List<CountryDB> dbCountries = manager.createQuery("from CountryDB", CountryDB.class).getResultList();
+			List<GenreDB> dbGenres = manager.createQuery("from GenreDB", GenreDB.class).getResultList();
+			List<LanguageDB> dbLanguages = manager.createQuery("from LanguageDB", LanguageDB.class).getResultList();
 
-		// hydrate the maps with the existing entities
-		for (CountryDB country : dbCountries) {
-			countryMap.put(country.getName(), country);
-		}
-		for (GenreDB genre : dbGenres) {
-			genreMap.put(genre.getName(), genre);
-		}
-		for (LanguageDB language : dbLanguages) {
-			languageMap.put(language.getName(), language);
+			// hydrate the maps with the existing entities
+			for (CountryDB country : dbCountries) {
+				countryMap.put(country.getName(), country);
+			}
+			for (GenreDB genre : dbGenres) {
+				genreMap.put(genre.getName(), genre);
+			}
+			for (LanguageDB language : dbLanguages) {
+				languageMap.put(language.getName(), language);
+			}
 		}
 
 		// iterate over each new film
