@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -16,6 +17,8 @@ import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.Boundaries;
 import ch.uzh.se.se7en.client.mvp.Tokens;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
+import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedEvent;
+import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
@@ -32,6 +35,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private FilmDataModel filmDataModel;
 	private String mode ="";
 	private FilmListServiceAsync filmListService;
+	private boolean areFilterOptionsLoaded = false;
 
 	@Inject
 	public FilterPresenterImpl(EventBus eventBus, final FilterView filterView, FilmDataModel filmDataModel, 
@@ -115,6 +119,8 @@ public class FilterPresenterImpl implements FilterPresenter {
 				////fill country multiselect box with options
 				filterView.setCountryOptions(result.getCountrySelectOptions());
 				filmDataModel.setCountryOptions(result.getCountrySelectOptions());
+				
+				eventBus.fireEvent(new FilterOptionsLoadedEvent());
 			}
 		});
 	}
@@ -261,7 +267,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	}
 
 	@Override //TODO NK Test and Comments
-	public void setFilter(String filterToken) {
+	public void setFilter(final String filterToken) {
 		if(filterToken.equals("")) //Url doesn't contain filter information (option1 Tab Change, optio2 No filter set)
 		{
 			String historyToken;
@@ -284,16 +290,32 @@ public class FilterPresenterImpl implements FilterPresenter {
 		else //Url contains Filter information
 		{		
 			//Parse a filter object from the token
-			FilmFilter filter = UrlToken.parseFilter(filterToken); //TODO NK Define ExceptionHandling
+			final FilmFilter filter = UrlToken.parseFilter(filterToken); //TODO NK Define ExceptionHandling
 			
-			//fill filterFields in view
-			updateFilterFieldsInView(filter);
-			
-			//If AutoSearch flag is set, start search
-			if(filterToken.startsWith("?sb=1"))
+			if(areFilterOptionsLoaded)
 			{
-				onSearch();
+				
 			}
+			else
+			{
+				eventBus.addHandler(FilterOptionsLoadedEvent.getType(), new FilterOptionsLoadedHandler(){
+					@Override
+					public void onFilterOptionsLoadedEvent(FilterOptionsLoadedEvent event) {
+						areFilterOptionsLoaded = true;
+						
+						//now that the filter options are loaded, the filterFields in view can be filled
+						updateFilterFieldsInView(filter);
+						
+						//If AutoSearch flag is set, start search
+						if(filterToken.startsWith("?sb=1"))
+						{
+							onSearch();
+						}
+					}
+				});
+				
+			}
+
 		}
 	}
 	
