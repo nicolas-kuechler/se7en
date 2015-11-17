@@ -151,14 +151,23 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			}
 		}
 
+		int i = 0;
 		// iterate over each new film
 		for (Film film : films) {
+			i++;
+			
+			// query batching to prevent out of memory exception
+			if(i % 50 == 0) {
+				manager.flush();
+				manager.clear();
+			}
+			
 			// extract information from the film object and initialize the sets
-			Set<String> countries = film.getCountries().isEmpty() ? new HashSet<String>()
+			Set<String> countries = film.getCountries() == null || film.getCountries().isEmpty() ? new HashSet<String>()
 					: new HashSet<String>(film.getCountries());
-			Set<String> genres = film.getGenres().isEmpty() ? new HashSet<String>()
+			Set<String> genres = film.getGenres() == null || film.getGenres().isEmpty() ? new HashSet<String>()
 					: new HashSet<String>(film.getGenres());
-			Set<String> languages = film.getLanguages().isEmpty() ? new HashSet<String>()
+			Set<String> languages = film.getLanguages() == null || film.getLanguages().isEmpty() ? new HashSet<String>()
 					: new HashSet<String>(film.getLanguages());
 
 			// initialize empty entity sets for the join table entites
