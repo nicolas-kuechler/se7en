@@ -38,7 +38,7 @@ public class FilmEntryParser implements CSVEntryParser<Film>{
 		
 		if (!data[0].trim().equals("")){
 			name = data[0];
-			ServerLog.writeErr(name);
+			// ServerLog.writeErr(name);
 		}
 		if(!data[1].trim().equals("")){
 			length = Integer.parseInt(data[1]);
