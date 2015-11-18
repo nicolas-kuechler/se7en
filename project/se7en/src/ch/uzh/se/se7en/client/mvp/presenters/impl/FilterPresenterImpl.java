@@ -294,7 +294,14 @@ public class FilterPresenterImpl implements FilterPresenter {
 			
 			if(areFilterOptionsLoaded)
 			{
+				//filter options are loaded, the filterFields in view can be filled
+				updateFilterFieldsInView(filter);
 				
+				//If AutoSearch flag is set, start search
+				if(filterToken.startsWith("?sb=1"))
+				{
+					onSearch();
+				}
 			}
 			else
 			{
