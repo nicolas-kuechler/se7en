@@ -400,7 +400,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		options.setCountrySelectOptions(getCountrySelectOption());
 		options.setGenreSelectOptions(getGenreSelectOption());
 		options.setLanguageSelectOptions(getLanguageSelectOption());
-		return null;
+		return options;
 	}
 
 	/**

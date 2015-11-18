@@ -1,6 +1,5 @@
 package ch.uzh.se.se7en.client.rpc;
 
-import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;

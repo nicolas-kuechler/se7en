@@ -2,7 +2,6 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -108,6 +107,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 			}
 			@Override
 			public void onSuccess(FilterOptions result) {
+				ClientLog.writeMsg("MultiSelectCall returned: \n" +result.toString());
 				//fill genre multiselect box with options
 				filterView.setGenreOptions(result.getGenreSelectOptions());
 				filmDataModel.setGenreOptions(result.getGenreSelectOptions());
@@ -221,14 +221,14 @@ public class FilterPresenterImpl implements FilterPresenter {
 		}
 
 		//length (if length is at boundary values, then it is not converted)
-		if(filter.getLengthStart()!=Boundaries.MIN_LENGTH && filter.getLengthEnd()!=Boundaries.MAX_LENGTH)
+		if(filter.getLengthStart()!=Boundaries.MIN_LENGTH || filter.getLengthEnd()!=Boundaries.MAX_LENGTH)
 		{
 			filterList.add("Film Length = " +filter.getLengthStart() + "-" + filter.getLengthEnd());
 		}
 		
 
 		//year (if year is at boundary values, then it is not converted)
-		if(filter.getYearStart()!=Boundaries.MIN_YEAR && filter.getYearEnd()!=Boundaries.MAX_YEAR)
+		if(filter.getYearStart()!=Boundaries.MIN_YEAR || filter.getYearEnd()!=Boundaries.MAX_YEAR)
 		{
 			filterList.add("Production Year = " +filter.getYearStart() + "-" + filter.getYearEnd());
 		}

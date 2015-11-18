@@ -1,5 +1,6 @@
 package ch.uzh.se.se7en.shared.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -8,7 +9,7 @@ import java.util.HashMap;
  * @author Cyrill Halter
  *
  */
-public class FilterOptions {
+public class FilterOptions implements Serializable {
 
 	private HashMap<Integer,String> genreSelectOptions;
 	private HashMap<Integer,String> languageSelectOptions;
@@ -63,4 +64,14 @@ public class FilterOptions {
 	public void setCountrySelectOptions(HashMap<Integer, String> countrySelectOptions) {
 		this.countrySelectOptions = countrySelectOptions;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "FilterOptions [genreSelectOptions=" + genreSelectOptions + ", languageSelectOptions="
+				+ languageSelectOptions + ", countrySelectOptions=" + countrySelectOptions + "]";
+	}
+	
+	
 }
