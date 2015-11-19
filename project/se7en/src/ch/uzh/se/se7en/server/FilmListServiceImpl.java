@@ -1,6 +1,7 @@
 package ch.uzh.se.se7en.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -18,6 +20,9 @@ import com.google.inject.persist.Transactional;
 
 import ch.uzh.se.se7en.client.rpc.FilmListService;
 import ch.uzh.se.se7en.server.model.CountryDB;
+import ch.uzh.se.se7en.server.model.CountryYearCountDB;
+import ch.uzh.se.se7en.server.model.CountryYearCountDBId;
+import ch.uzh.se.se7en.server.model.FilmCountryDB;
 import ch.uzh.se.se7en.server.model.FilmDB;
 import ch.uzh.se.se7en.server.model.GenreDB;
 import ch.uzh.se.se7en.server.model.LanguageDB;
@@ -80,15 +85,15 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// the starting position of the query
 		// TODO: replace by filter information
 		int startPosition = 0;
-		
+
 		// the max number of results the query should return
 		// TODO: replace by filter information
-		int maxResults = 500;
-		
+		int maxResults = 10000;
+
 		// defines the ordering of the query results
 		// TODO: replace by filter information
 		String ordering = "f.name";
-		
+
 		// create an empty list of film entities
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
 
@@ -96,7 +101,29 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		String selector = "SELECT DISTINCT f FROM FilmDB f";
 
 		// initialize the where string with the basic filters
-		String wheres = "WHERE (f.length BETWEEN :minLength AND :maxLength) AND (f.year BETWEEN :minYear AND :maxYear)";
+		String wheres = "";
+		String whereLength = "";
+		String whereYear = "";
+
+		if (filter.getLengthStart() > 0 || filter.getLengthEnd() < 600) {
+			whereLength = "(f.length BETWEEN :minLength AND :maxLength)";
+			wheres += whereLength;
+		}
+
+		if (filter.getYearStart() > 1890 || filter.getYearEnd() < 2015) {
+			if (wheres.length() > 0) {
+				wheres += " AND ";
+			}
+
+			whereYear = "(f.year BETWEEN :minYear AND :maxYear)";
+			wheres += whereYear;
+		}
+
+		if (wheres.length() > 0) {
+			wheres = "WHERE " + wheres;
+		} else {
+			wheres = "WHERE 1=1";
+		}
 
 		// initialize an empty string for all the joins
 		String joiners = "";
@@ -129,18 +156,22 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// create a typed query from our query string
 		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
-		
+
 		// set offset and limit
 		query.setFirstResult(startPosition);
 		query.setMaxResults(maxResults);
 
-		// set the min & max length params
-		query.setParameter("minLength", filter.getLengthStart());
-		query.setParameter("maxLength", filter.getLengthEnd());
+		if (whereLength.length() > 0) {
+			// set the min & max length params
+			query.setParameter("minLength", filter.getLengthStart());
+			query.setParameter("maxLength", filter.getLengthEnd());
+		}
 
-		// set the min & max year params
-		query.setParameter("minYear", filter.getYearStart());
-		query.setParameter("maxYear", filter.getYearEnd());
+		if (whereYear.length() > 0) {
+			// set the min & max year params
+			query.setParameter("minYear", filter.getYearStart());
+			query.setParameter("maxYear", filter.getYearEnd());
+		}
 
 		// if the name in the filter is set, set the param
 		if (filter.getName() != null) {
@@ -196,21 +227,15 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// convert each CountryDB instance to a Country DataTransferObject
 		for (CountryDB country : dbCountries) {
 			Country c = country.toCountry();
-
-			// set the wanted countries to only this id
-			Set<Integer> wantedCountries = new HashSet<Integer>();
-			wantedCountries.add(c.getId());
-			filter.setCountryIds(wantedCountries);
-
-			// get the filtered films for each country
-			List<FilmDB> filteredFilms = getFilmEntitiesList(filter);
-
+			
 			// initialize a new array for all years
 			int[] filmsPerYear = new int[currentYear - Country.YEAR_OFFSET + 1];
 
 			// for each film entity, increment it's year in the array
-			for (FilmDB film : filteredFilms) {
-				filmsPerYear[film.getYear() - Country.YEAR_OFFSET]++;
+			for (FilmCountryDB filmCountry : country.getFilmCountryEntities()) {
+				if (filmCountry.getFilm().getYear() != null) {
+					filmsPerYear[filmCountry.getFilm().getYear() - Country.YEAR_OFFSET]++;
+				}
 			}
 
 			// start the number of films array transformation
@@ -238,13 +263,35 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	public List<CountryDB> getCountryEntitiesList(FilmFilter filter) {
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 		// initialize the selector in the query
-		String selector = "SELECT DISTINCT c FROM CountryDB c";
+		/*String selector = "SELECT DISTINCT c FROM CountryDB c";
 
 		// initialize the where string with the basic filters
-		String wheres = "WHERE (fi.length BETWEEN :minLength AND :maxLength) AND (fi.year BETWEEN :minYear AND :maxYear)";
+		String wheres = "";
+		String whereLength = "";
+		String whereYear = "";
+
+		if (filter.getLengthStart() > 0 || filter.getLengthEnd() < 600) {
+			whereLength = "(f.length BETWEEN :minLength AND :maxLength)";
+			wheres += whereLength;
+		}
+
+		if (filter.getYearStart() > 1890 || filter.getYearEnd() < 2015) {
+			if (wheres.length() > 0) {
+				wheres += " AND ";
+			}
+
+			whereYear = "(f.year BETWEEN :minYear AND :maxYear)";
+			wheres += whereYear;
+		}
+
+		if (wheres.length() > 0) {
+			wheres = "WHERE " + wheres;
+		} else {
+			wheres = "WHERE 1=1";
+		}
 
 		// initialize an empty string for all the joins
-		String joiners = "JOIN c.filmCountryEntities fc JOIN fc.primaryKey.film fi";
+		String joiners = "JOIN FETCH c.filmCountryEntities fc JOIN FETCH fc.primaryKey.film fi";
 
 		// if the name in the filter is set
 		if (filter.getName() != null) {
@@ -269,13 +316,17 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// select all countries from the database
 		TypedQuery<CountryDB> query = em.get().createQuery(queryString, CountryDB.class);
 
-		// set the min & max length params
-		query.setParameter("minLength", filter.getLengthStart());
-		query.setParameter("maxLength", filter.getLengthEnd());
+		if (whereLength.length() > 0) {
+			// set the min & max length params
+			query.setParameter("minLength", filter.getLengthStart());
+			query.setParameter("maxLength", filter.getLengthEnd());
+		}
 
-		// set the min & max year params
-		query.setParameter("minYear", filter.getYearStart());
-		query.setParameter("maxYear", filter.getYearEnd());
+		if (whereYear.length() > 0) {
+			// set the min & max year params
+			query.setParameter("minYear", filter.getYearStart());
+			query.setParameter("maxYear", filter.getYearEnd());
+		}
 
 		// if the name in the filter is set, set the param
 		if (filter.getName() != null) {
@@ -294,8 +345,11 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		}
 
 		// execute the query
-		dbCountries = query.getResultList();
-
+		dbCountries = query.getResultList();*/
+		
+		Query yearCounts = em.get().createNativeQuery("SELECT c.name, f.year, COUNT(*) FROM countries c JOIN film_countries fc ON c.id = fc.country_id JOIN films f ON fc.film_id = f.id GROUP BY c.name, f.year", CountryYearCountDB.class); 
+		//em.get().createQuery("SELECT CountryYearCountDB FROM CountryDB c JOIN c.filmCountryEntities fc JOIN fc.primaryKey.film f GROUP BY c.name, f.year", CountryYearCountDB.class);
+		
 		// return the filtered list of countries
 		return dbCountries;
 	}
@@ -321,14 +375,12 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// TODO RS Sprint 2
 
 		// return the filled list of genres
-		
-		
-		
-		//DEMO Code Start
+
+		// DEMO Code Start
 		genres.add(new Genre(1, "Action", 10));
 		genres.add(new Genre(2, "Adventure", 5));
 		genres.add(new Genre(3, "Comedy", 20));
-		//DEMO Code Start
+		// DEMO Code Start
 		return genres;
 	}
 
@@ -344,14 +396,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 *         genres as SelectOption objects
 	 */
 	@Override
-	public HashMap<Integer,String> getGenreSelectOption() {
+	public HashMap<Integer, String> getGenreSelectOption() {
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 
 		// select * from the genre table
 		dbGenres = em.get().createQuery("FROM GenreDB", GenreDB.class).getResultList();
 
-		HashMap<Integer,String> availableGenres = new HashMap<Integer,String>(dbGenres.size());
-		
+		HashMap<Integer, String> availableGenres = new HashMap<Integer, String>(dbGenres.size());
+
 		for (GenreDB genre : dbGenres) {
 			availableGenres.put(genre.getId(), genre.getName());
 		}
@@ -371,13 +423,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 *         countries as SelectOption objects
 	 */
 	@Override
-	public HashMap<Integer,String> getCountrySelectOption() {
+	public HashMap<Integer, String> getCountrySelectOption() {
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 
 		// select * from the country table
 		dbCountries = em.get().createQuery("FROM CountryDB", CountryDB.class).getResultList();
-		
-		HashMap<Integer,String> availableCountries = new HashMap<Integer,String>(dbCountries.size());
+
+		HashMap<Integer, String> availableCountries = new HashMap<Integer, String>(dbCountries.size());
 
 		for (CountryDB country : dbCountries) {
 			availableCountries.put(country.getId(), country.getName());
@@ -398,14 +450,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 *         languages as SelectOption objects
 	 */
 	@Override
-	public HashMap<Integer,String> getLanguageSelectOption() {
+	public HashMap<Integer, String> getLanguageSelectOption() {
 		List<LanguageDB> dbLanguages = new ArrayList<LanguageDB>();
 
 		// select * from the language table
 		dbLanguages = em.get().createQuery("FROM LanguageDB", LanguageDB.class).getResultList();
 
-		HashMap<Integer,String> availableLanguages = new HashMap<Integer,String>(dbLanguages.size());
-		
+		HashMap<Integer, String> availableLanguages = new HashMap<Integer, String>(dbLanguages.size());
+
 		for (LanguageDB language : dbLanguages) {
 			availableLanguages.put(language.getId(), language.getName());
 		}
