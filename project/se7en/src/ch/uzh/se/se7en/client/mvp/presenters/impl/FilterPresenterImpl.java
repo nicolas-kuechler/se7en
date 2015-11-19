@@ -64,7 +64,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 		eventBus.fireEvent(new FilterAppliedEvent());
 		updateAppliedFilterBox();
 
-		// TODO NK adjust test
+		// TODO NK Refactoring in Sprint 3?
 		String filterToken = "";
 		if (mode.equals(Tokens.MAP)) {
 			filterToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
@@ -326,7 +326,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 	
 	@param	a FilmFilter object that contains the filter which should be filled in the filterView
 	 */
-	//TODO NK Test
 	public void updateFilterFieldsInView(FilmFilter filter) {
 		onClear(); // make sure all fields are set to default first
 		if (filter.getName() != null) {
