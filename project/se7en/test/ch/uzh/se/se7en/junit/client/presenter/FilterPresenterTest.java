@@ -28,11 +28,13 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.Tokens;
+import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.FilterPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.FilterOptions;
 
 @RunWith(JukitoRunner.class)
 public class FilterPresenterTest {
@@ -137,49 +139,36 @@ public class FilterPresenterTest {
 		when(filmDataModel.getCountryName(2)).thenReturn("Germany");
 		when(filmDataModel.getLanguageName(5)).thenReturn("German");
 		
-		//imitate the onSuccess method of the rpc call getCountrySelectOptions
-		doAnswer(new Answer<HashMap<Integer, String>>(){
-			@Override
-			public HashMap<Integer, String> answer(InvocationOnMock invocation) throws Throwable {
-				AsyncCallback<HashMap<Integer, String>> callback = (AsyncCallback) invocation.getArguments()[0];
-				
-				HashMap<Integer, String> options = new HashMap<Integer, String>();
-				options.put(1, "Switzerland");
-				options.put(2, "Germany");
-				options.put(3, "Austria");
-			     callback.onSuccess(options);
-				return null;
-			}
-		}).when(filmService).getCountrySelectOption((AsyncCallback<HashMap<Integer, String>>) Mockito.any());
+		//imitate the onSuccess method of the rpc call getSelectOptions
+				doAnswer(new Answer<FilterOptions>(){
+					@Override
+					public FilterOptions answer(InvocationOnMock invocation) throws Throwable {
+						AsyncCallback<FilterOptions> callback = (AsyncCallback) invocation.getArguments()[0];
+						
+						HashMap<Integer, String> genreOptions = new HashMap<Integer, String>();
+						genreOptions.put(1, "Action");
+						genreOptions.put(2, "Adventure");
+						genreOptions.put(3, "Comedy");
+						
+						HashMap<Integer, String> languageOptions = new HashMap<Integer, String>();
+						languageOptions.put(1, "German");
+						languageOptions.put(2, "English");
+						
+						HashMap<Integer, String> countryOptions = new HashMap<Integer, String>();
+						countryOptions.put(1, "Switzerland");
+						countryOptions.put(2, "Germany");
+						countryOptions.put(3, "Austria");
+						
+						FilterOptions options = new FilterOptions();
+						options.setGenreSelectOptions(genreOptions);
+						options.setLanguageSelectOptions(languageOptions);
+						options.setCountrySelectOptions(countryOptions);
+						
+					     callback.onSuccess(options);
+						return null;
+					}
+				}).when(filmService).getSelectOptions((AsyncCallback<FilterOptions>) Mockito.any());
 		
-		//imitate the onSuccess method of the rpc call getLanguageSelectOptions
-		doAnswer(new Answer<HashMap<Integer, String>>(){
-			@Override
-			public HashMap<Integer, String> answer(InvocationOnMock invocation) throws Throwable {
-				AsyncCallback<HashMap<Integer, String>> callback = (AsyncCallback) invocation.getArguments()[0];
-				
-				HashMap<Integer, String> options = new HashMap<Integer, String>();
-				options.put(1, "German");
-				options.put(2, "English");
-			     callback.onSuccess(options);
-				return null;
-			}
-		}).when(filmService).getLanguageSelectOption((AsyncCallback<HashMap<Integer, String>>) Mockito.any());
-		
-		//imitate the onSuccess method of the rpc call getGenreSelectOptions
-		doAnswer(new Answer<HashMap<Integer, String>>(){
-			@Override
-			public HashMap<Integer, String> answer(InvocationOnMock invocation) throws Throwable {
-				AsyncCallback<HashMap<Integer, String>> callback = (AsyncCallback) invocation.getArguments()[0];
-				
-				HashMap<Integer, String> options = new HashMap<Integer, String>();
-				options.put(1, "Action");
-				options.put(2, "Adventure");
-				options.put(3, "Comedy");
-			     callback.onSuccess(options);
-				return null;
-			}
-		}).when(filmService).getGenreSelectOption((AsyncCallback<HashMap<Integer, String>>) Mockito.any());
 		
 		//After all mocks are setup, create the instance of the filterPresenter
 		filterPresenter = new FilterPresenterImpl(eventBus, filterView, filmDataModel, filmService);
@@ -200,6 +189,19 @@ public class FilterPresenterTest {
 		verify(container).clear();
 		verify(container).add(filterView.asWidget());
 	}
+	
+	@Test
+	public void testUpdateFilterFieldsInView()
+	{
+		filterPresenter.updateFilterFieldsInView(normalFilter);
+		verify(filterView).setName(normalFilter.getName());
+		verify(filterView).setLengthSlider(normalFilter.getLengthStart(), normalFilter.getLengthEnd());
+		verify(filterView).setYearSlider(normalFilter.getYearStart(), normalFilter.getYearEnd());
+		verify(filterView).setSelectedCountryOptions(normalFilter.getCountryIds());
+		verify(filterView).setSelectedLanguageOptions(normalFilter.getLanguageIds());
+		verify(filterView, times(2)).setSelectedGenreOptions(normalFilter.getGenreIds());
+	}
+	
 	
 	@Test
 	public void testOnSearch(){
@@ -242,6 +244,11 @@ public class FilterPresenterTest {
 		verify(filterView).setGenreOptions((HashMap<Integer, String>) Matchers.anyMap());
 		verify(filterView).setLanguageOptions((HashMap<Integer, String>) Matchers.anyMap());
 		
+		verify(filmDataModel).setCountryOptions((HashMap<Integer, String>) Matchers.anyMap());
+		verify(filmDataModel).setGenreOptions((HashMap<Integer, String>) Matchers.anyMap());
+		verify(filmDataModel).setLanguageOptions((HashMap<Integer, String>) Matchers.anyMap());
+		
+		verify(eventBus).fireEvent(Matchers.any(FilterOptionsLoadedEvent.class));
 	}
 	
 	@Test

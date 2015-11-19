@@ -13,7 +13,6 @@ import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class FilmDataModelImplTest {
-//TODO NK Write test for id name matching components (country, genre, language)
 	
 	@Test
 	public void testFilmDataModelImpl() {

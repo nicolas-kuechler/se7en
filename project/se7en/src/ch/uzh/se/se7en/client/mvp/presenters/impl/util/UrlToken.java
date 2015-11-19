@@ -107,9 +107,6 @@ public class UrlToken {
 			fieldId = part.substring(0, 2);
 			value = part.substring(3);
 			switch(fieldId){
-			case "sb":
-				//TODO NK Define what to do with autosearch
-				break;
 			case "na":
 				filter.setName(URL.decodePathSegment(value));
 				//filter.setName(value); TODO NK Problem to solve calling static native method (used for junit test)
