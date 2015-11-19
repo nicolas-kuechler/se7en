@@ -18,10 +18,14 @@ import org.gwtbootstrap3.extras.select.client.ui.Option;
 import org.gwtbootstrap3.extras.select.client.ui.Select;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+
+import ch.uzh.se.se7en.client.ClientLog;
 
 
 /**
@@ -44,7 +48,15 @@ public class MultiSelect extends Composite {
 	public MultiSelect() {
 		initWidget(uiBinder.createAndBindUi(this));
 		select.setEnabled(true);
+		select.addChangeHandler(new ChangeHandler(){
 
+			@Override
+			public void onChange(ChangeEvent event) {
+				ClientLog.writeMsg("MultiSelect Changed Selected Values:" + select.getAllSelectedValues()); //TODO NK remove
+				
+			}
+			
+		});
 	}
 	
 	/**

@@ -8,6 +8,7 @@ import java.util.Set;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
@@ -172,10 +173,12 @@ public class FilterPresenterImpl implements FilterPresenter {
 		if (filterView.getSelectedCountryIds() == null || filterView.getSelectedCountryIds().size()==0)
 		{
 			currentFilter.setCountryIds(null);
+			ClientLog.writeMsg("country Id's set to null"); //TODO NK remove
 		}
 		else
 		{
 			currentFilter.setCountryIds(filterView.getSelectedCountryIds());
+			ClientLog.writeMsg("country Id's set to effective value: " + filterView.getSelectedCountryIds()); //TODO NK remove
 		}
 
 		//setting value to null if no genre filter is applied
@@ -270,6 +273,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	public void setFilter(final String filterToken) {
 		if(filterToken.equals("")) //Url doesn't contain filter information (option1 Tab Change, optio2 No filter set)
 		{
+			ClientLog.writeMsg("setFilter Method and token doesn't contain filter information"); //TODO NK remove
 			String historyToken;
 			//Tab Change or Without Filter
 			if(mode.equals(Tokens.MAP))
@@ -291,32 +295,50 @@ public class FilterPresenterImpl implements FilterPresenter {
 		{		
 			//Parse a filter object from the token
 			final FilmFilter filter = UrlToken.parseFilter(filterToken); //TODO NK Define ExceptionHandling
+			final Timer searchTimer = new Timer(){
+				@Override
+				public void run() {
+					onSearch();
+				}
+			};
 			
 			if(areFilterOptionsLoaded)
 			{
+				ClientLog.writeMsg("setFilter Method and token contains filter information filterOptionsLoaded"); //TODO NK remove
 				//filter options are loaded, the filterFields in view can be filled
 				updateFilterFieldsInView(filter);
+				
+				ClientLog.writeMsg("after updateFilterFieldsinView() countryId's" + filterView.getSelectedCountryIds()); //TODO NK remove
 				
 				//If AutoSearch flag is set, start search
 				if(filterToken.startsWith("?sb=1"))
 				{
-					onSearch();
+					
+					searchTimer.schedule(1000);
 				}
 			}
 			else
 			{
+				
+				ClientLog.writeMsg("filterOptionsNotLoaded yet"); //TODO NK remove
 				eventBus.addHandler(FilterOptionsLoadedEvent.getType(), new FilterOptionsLoadedHandler(){
 					@Override
 					public void onFilterOptionsLoadedEvent(FilterOptionsLoadedEvent event) {
 						areFilterOptionsLoaded = true;
 						
+						ClientLog.writeMsg("event with options received"); //TODO NK remove
+						
 						//now that the filter options are loaded, the filterFields in view can be filled
 						updateFilterFieldsInView(filter);
+						
+						ClientLog.writeMsg("after updateFilterFieldsinView() countryId's: " + filterView.getSelectedCountryIds().toString() + "   size: "+filterView.getSelectedCountryIds().size()); //TODO NK remove
+						
+					
 						
 						//If AutoSearch flag is set, start search
 						if(filterToken.startsWith("?sb=1"))
 						{
-							onSearch();
+							searchTimer.schedule(1000);
 						}
 					}
 				});
