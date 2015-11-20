@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.gwtbootstrap3.extras.slider.client.ui.Range;
-
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -60,7 +58,7 @@ public class MapPresenterImpl implements MapPresenter {
 		updateGeoChart();
 	}
 
-	@Override //TODO NK Method Test
+	@Override
 	public void onCountrySelected() {
 		//makes sure genre info is not visible
 		mapView.setGenreVisible(false);
@@ -81,7 +79,7 @@ public class MapPresenterImpl implements MapPresenter {
 		filmListService.getGenreList(filter, new AsyncCallback<List<Genre>>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Handle Error for User
+				// TODO NK Handle Error for User when Genre Rpc failed
 				ClientLog.writeErr("getGenreList failed");
 			}
 			@Override
@@ -91,7 +89,6 @@ public class MapPresenterImpl implements MapPresenter {
 		});
 	}
 	
-	//TODO NK Method Test
 	/**
 	Updates the Genre Information (piechart & genreTable) in the view with a new list of genres
 	@author Nicolas Küchler
@@ -174,8 +171,6 @@ public class MapPresenterImpl implements MapPresenter {
 				entities.add(new DataTableEntity(c.getName(), numberOfProductions, c.getId()));
 			}
 		}
-		//store new entitylist in filmdatamodel
-		filmDataModel.setCountryDataTable(entities);
 		//set the geochart with the new list
 		mapView.setGeoChart(entities);
 	}
@@ -189,7 +184,6 @@ public class MapPresenterImpl implements MapPresenter {
 	public void fetchData() {
 		//update of the yearSlider in the mapView
 		mapView.setYearRange(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd());
-		//TODO finding position in code for displaying empty geochart as loading information
 		filmDataModel.setCountryList(new ArrayList<Country>());
 		updateGeoChart();
 
@@ -199,7 +193,7 @@ public class MapPresenterImpl implements MapPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO ERROR HANDLING NEEDS TO BE IMPLEMENTED
+				// TODO NK Error Handling when Rpc for Map failed
 				// Maybe logging to console?
 				// User needs to be informed aswell
 

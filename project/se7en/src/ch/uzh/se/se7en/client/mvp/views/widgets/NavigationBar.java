@@ -1,20 +1,17 @@
 package ch.uzh.se.se7en.client.mvp.views.widgets;
 
 import org.gwtbootstrap3.client.ui.AnchorListItem;
-import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.Modal;
-import org.gwtbootstrap3.client.ui.NavbarHeader;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import ch.uzh.se.se7en.client.mvp.Tokens;
@@ -49,6 +46,7 @@ public class NavigationBar extends Composite {
 		loading.setText("Hello");
 		loading.setVisible(false);
 		barSetup();
+		logoLink.getElement().getStyle().setCursor(Cursor.POINTER); 
 	}
 	
 	/**
@@ -61,11 +59,9 @@ public class NavigationBar extends Composite {
 	 * @return -
 	 */
 	public void setLoading(boolean isVisible, String message)
-	{
-		//TODO 
+	{ 
 		if(isVisible)
 		{
-			//TODO Figure out how to set the text
 			loading.setVisible(true);
 			loading.setText(message);
 		}

@@ -7,13 +7,14 @@
 	<ui:style>
 
 	</ui:style>
-	<b:Panel styleName="dataContainer">
+	<b:Panel styleName="dataContainer" >
 		<b:Panel styleName="mapPanel">
 			<b:PanelHeader>
 				<b:Heading size="H3" text="Film World Map" />
 			</b:PanelHeader>
 			<b:PanelBody ui:field="panel">
 				<c:DataGrid ui:field='genreTable' styleName="genreTable"/>
+
 			</b:PanelBody>
 			<b:PanelFooter>
 				<b:Heading size="H5" text="Production Year" />

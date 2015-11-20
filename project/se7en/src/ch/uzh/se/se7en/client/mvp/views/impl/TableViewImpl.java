@@ -1,13 +1,15 @@
 package ch.uzh.se.se7en.client.mvp.views.impl;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+
+import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.Button;
-import org.gwtbootstrap3.client.ui.ListGroup;
-import org.gwtbootstrap3.client.ui.ListGroupItem;
-import org.gwtbootstrap3.client.ui.PanelFooter;
+import org.gwtbootstrap3.client.ui.Label;
+import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.ModalBody;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 
 import com.google.gwt.core.client.GWT;
@@ -16,9 +18,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.cellview.client.ColumnSortList;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -26,9 +26,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.inject.Inject;
 
-import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -41,12 +39,16 @@ public class TableViewImpl extends Composite implements TableView {
 	}
 
 	private TablePresenter tablePresenter;
+	private int panelHeight;
 	/**
 	 * The main DataGrid.
 	 */
 	@UiField(provided = true)
 	DataGrid<Film> dataGrid;
 	@UiField(provided = true) SimplePager pager;
+	
+	@UiField 
+	Button downloadButton;
 	
 	ListDataProvider<Film> filmProvider = new ListDataProvider<Film>();
 	ListHandler<Film> columnSortHandler;
@@ -68,6 +70,9 @@ public class TableViewImpl extends Composite implements TableView {
 	 */
 	@UiHandler("downloadButton")
 	public void onDownloadBtnClicked(final ClickEvent event) {
+		downloadButton.setText("Loading...");
+		downloadButton.setIcon(IconType.REFRESH);
+		downloadButton.setIconSpin(true);
 		tablePresenter.onDownloadStarted();
 	}
 
@@ -84,6 +89,8 @@ public class TableViewImpl extends Composite implements TableView {
 	public TableViewImpl() {
 		dataGrid = new DataGrid<Film>();
 		dataGrid.setWidth("100%");
+		panelHeight= Window.getClientHeight();
+		dataGrid.setHeight((panelHeight*6)/10 + "px");
 		dataGrid.setHeight("500px");
 		dataGrid.setBordered(false);
 		dataGrid.setAutoHeaderRefreshDisabled(true);
@@ -110,11 +117,52 @@ public class TableViewImpl extends Composite implements TableView {
 		dataGrid.addColumnSortHandler(columnSortHandler);
 	}
 
-
+	/**
+	 * Start the csv download with the obtained url and show modal to start download manually
+	 * 
+	 * @author Cyrill Halter
+	 * @pre downloadUrl != null
+	 * @post -
+	 * @param String downloadUrl the obtained downloadurl
+	 */
 	@Override
 	public void startDownload(String downloadUrl) {
-		// TODO Start the download Window.open(download url.....)
-		Window.alert("Demo Download Started; Url: " + downloadUrl);
+		// Start the download
+		downloadButton.setText("Download");
+		downloadButton.setIcon(IconType.DOWNLOAD);
+		downloadButton.setIconSpin(false);
+		Modal modal = new Modal();
+		ModalBody modalBody = new ModalBody();
+		Label downloadLabel = new Label();
+		
+		if(downloadUrl != null){
+			
+			//download file at downloadUrl	
+			Window.open(downloadUrl, "CSV Download", "");
+
+			//show modal to start download manually
+			modal.setTitle("Download CSV");
+			modal.setClosable(true);
+			modal.setFade(true);
+			downloadLabel.setText("If the download doesn't start automatically, deactivate your popup blocker or use this link: ");
+			downloadLabel.setStyleName("modalText");
+			Anchor downloadLink = new Anchor("Download Now", downloadUrl);
+			modalBody.add(downloadLabel);
+			modalBody.add(downloadLink);
+			modal.add(modalBody);
+			modal.show();
+
+		}else{
+
+			modal.setTitle("CSV Download Failed");
+			modal.setClosable(true);
+			modal.setFade(true);
+			downloadLabel.setText("Something went wrong... Please try again later.");
+			downloadLabel.setStyleName("modalText");
+			modalBody.add(downloadLabel);
+			modal.add(modalBody);
+			modal.show();
+		}
 	}
 
 	/**
@@ -215,17 +263,17 @@ public class TableViewImpl extends Composite implements TableView {
 		};
 		genreColumn.setSortable(true);
 
-		dataGrid.setColumnWidth(nameColumn, 21.5, Unit.PCT);
+		dataGrid.setColumnWidth(nameColumn, 18.5, Unit.PCT);
 		dataGrid.addColumn(nameColumn, "Name");
-		dataGrid.setColumnWidth(yearColumn, 7, Unit.PCT);
+		dataGrid.setColumnWidth(yearColumn, 11, Unit.PCT);
 		dataGrid.addColumn(yearColumn, "Year");
-		dataGrid.setColumnWidth(lengthColumn, 7, Unit.PCT);
+		dataGrid.setColumnWidth(lengthColumn, 11, Unit.PCT);
 		dataGrid.addColumn(lengthColumn, "Length");
-		dataGrid.setColumnWidth(countryColumn, 21.5, Unit.PCT);
+		dataGrid.setColumnWidth(countryColumn, 19.5, Unit.PCT);
 		dataGrid.addColumn(countryColumn, "Country");
-		dataGrid.setColumnWidth(languageColumn, 21.5, Unit.PCT);
+		dataGrid.setColumnWidth(languageColumn, 19.5, Unit.PCT);
 		dataGrid.addColumn(languageColumn, "Language");
-		dataGrid.setColumnWidth(genreColumn, 21.5, Unit.PCT);
+		dataGrid.setColumnWidth(genreColumn, 20.5, Unit.PCT);
 		dataGrid.addColumn(genreColumn, "Genre");
 
 	}

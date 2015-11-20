@@ -2,9 +2,12 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
@@ -15,10 +18,10 @@ import ch.uzh.se.se7en.client.mvp.Tokens;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 
 public class FilterPresenterImpl implements FilterPresenter {
@@ -26,7 +29,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private EventBus eventBus;
 	private FilterView filterView;
 	private FilmDataModel filmDataModel;
-	private String mode;
+	private String mode ="";
 	private FilmListServiceAsync filmListService;
 
 	@Inject
@@ -57,6 +60,18 @@ public class FilterPresenterImpl implements FilterPresenter {
 		updateFilterFromView();
 		eventBus.fireEvent(new FilterAppliedEvent());
 		updateAppliedFilterBox();
+		
+		//TODO NK adjust test
+		String filterToken = "";
+		if(mode.equals(Tokens.MAP))
+		{
+			filterToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
+		}
+		else if(mode.equals(Tokens.TABLE))
+		{
+			filterToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
+		}
+		History.newItem(filterToken, false);
 	}
 
 	@Override
@@ -80,20 +95,21 @@ public class FilterPresenterImpl implements FilterPresenter {
 	public void setupMultiSelects()
 	{
 		//fill genre multiselect box with options
-		filmListService.getGenreSelectOption(new AsyncCallback<List<SelectOption>>(){
+		filmListService.getGenreSelectOption(new AsyncCallback<HashMap<Integer,String>>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				ClientLog.writeErr("Failed to get genre list...");
 				
 			}
 			@Override
-			public void onSuccess(List<SelectOption> result) {
+			public void onSuccess(HashMap<Integer,String> result) {
 				filterView.setGenreOptions(result);
+				filmDataModel.setGenreOptions(result);
 			}
 		});
 		
 		//fill country multiselect box with options
-		filmListService.getCountrySelectOption(new AsyncCallback<List<SelectOption>>(){
+		filmListService.getCountrySelectOption(new AsyncCallback<HashMap<Integer,String>>(){
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -102,14 +118,15 @@ public class FilterPresenterImpl implements FilterPresenter {
 			}
 
 			@Override
-			public void onSuccess(List<SelectOption> result) {
+			public void onSuccess(HashMap<Integer,String> result) {
 				filterView.setCountryOptions(result);
+				filmDataModel.setCountryOptions(result);
 			}
 			
 		});
 		
 		//fill language multiselect box with options
-		filmListService.getLanguageSelectOption(new AsyncCallback<List<SelectOption>>(){
+		filmListService.getLanguageSelectOption(new AsyncCallback<HashMap<Integer,String>>(){
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -118,8 +135,9 @@ public class FilterPresenterImpl implements FilterPresenter {
 			}
 
 			@Override
-			public void onSuccess(List<SelectOption> result) {
+			public void onSuccess(HashMap<Integer,String> result) {
 				filterView.setLanguageOptions(result);
+				filmDataModel.setLanguageOptions(result);
 			}
 			
 		});
@@ -169,36 +187,33 @@ public class FilterPresenterImpl implements FilterPresenter {
 		currentFilter.setYearEnd(filterView.getYearEnd());
 
 		//setting value to null if no country filter is applied
-		if (filterView.getSelectedCountryOptions() == null || filterView.getSelectedCountryOptions().size()==0)
+		if (filterView.getSelectedCountryIds() == null || filterView.getSelectedCountryIds().size()==0)
 		{
-			currentFilter.setCountries(null);
 			currentFilter.setCountryIds(null);
 		}
 		else
 		{
-			currentFilter.setCountryOptions(filterView.getSelectedCountryOptions());
+			currentFilter.setCountryIds(filterView.getSelectedCountryIds());
 		}
 
 		//setting value to null if no genre filter is applied
-		if (filterView.getSelectedGenreOptions() == null || filterView.getSelectedGenreOptions().size()==0)
+		if (filterView.getSelectedGenreIds() == null || filterView.getSelectedGenreIds().size()==0)
 		{
-			currentFilter.setGenres(null);
 			currentFilter.setGenreIds(null);
 		}
 		else
 		{
-			currentFilter.setGenreOptions(filterView.getSelectedGenreOptions());
+			currentFilter.setGenreIds(filterView.getSelectedGenreIds());
 		}
 
 		//setting value to null if no language filter is applied
-		if (filterView.getSelectedLanguageOptions() == null || filterView.getSelectedLanguageOptions().size()==0)
+		if (filterView.getSelectedLanguageIds() == null || filterView.getSelectedLanguageIds().size()==0)
 		{
-			currentFilter.setLanguages(null);
 			currentFilter.setLanguageIds(null);
 		}
 		else
 		{
-			currentFilter.setLanguageOptions(filterView.getSelectedLanguageOptions());
+			currentFilter.setLanguageIds(filterView.getSelectedLanguageIds());
 		}
 
 
@@ -206,7 +221,6 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filmDataModel.setAppliedMapFilter(adjustedMapFilter(currentFilter));
 	}
 
-	//TODO Decide if not better part of class FilmFilter
 	/**
 	Helper method to convert a FilmFilter Object to a List<String> Object.
 	@author Nicolas Küchler
@@ -224,43 +238,107 @@ public class FilterPresenterImpl implements FilterPresenter {
 			filterList.add("Film Name = " + filter.getName());
 		}
 
-		//length
-		filterList.add("Film Length = " +filter.getLengthStart() + "-" + filter.getLengthEnd());
+		//length (if length is at boundary values, then it is not converted)
+		if(filter.getLengthStart()!=Boundaries.MIN_LENGTH && filter.getLengthEnd()!=Boundaries.MAX_LENGTH)
+		{
+			filterList.add("Film Length = " +filter.getLengthStart() + "-" + filter.getLengthEnd());
+		}
 		
 
-		//year
-		filterList.add("Production Year = " +filter.getYearStart() + "-" + filter.getYearEnd());
-		
+		//year (if year is at boundary values, then it is not converted)
+		if(filter.getYearStart()!=Boundaries.MIN_YEAR && filter.getYearEnd()!=Boundaries.MAX_YEAR)
+		{
+			filterList.add("Production Year = " +filter.getYearStart() + "-" + filter.getYearEnd());
+		}
 
 		//country
-		for(int i = 0; filter.getCountries() != null && i < filter.getCountries().size(); i++)
+		Set<Integer> countries = filter.getCountryIds();
+		if(countries!=null)
 		{
-			filterList.add("Production Country = " + filter.getCountries().get(i));
+			for(Integer id : countries)
+			{
+				filterList.add("Production Country = " + filmDataModel.getCountryName(id));
+			}
 		}
 		
-
 		//language
-		for(int i = 0; filter.getLanguages() != null &&  i < filter.getLanguages().size(); i++)
+		Set<Integer> languages = filter.getLanguageIds();
+		if(languages!=null)
 		{
-			filterList.add("Film Language = " + filter.getLanguages().get(i));
+			for(Integer id : languages)
+			{
+				filterList.add("Film Language = " + filmDataModel.getLanguageName(id));
+			}
 		}
 
-		//genre
-		for(int i = 0; filter.getGenres() != null && i < filter.getGenres().size(); i++)
+		//genre	
+		Set<Integer> genres = filter.getGenreIds();
+		if(genres != null)
 		{
-			filterList.add("Film Genre = " + filter.getGenres().get(i));
+			for(Integer id : genres)
+			{
+				filterList.add("Film Genre = " + filmDataModel.getGenreName(id));
+			}
 		}
 
 		return filterList;
 	}
 
-	@Override
+	@Override //TODO NK Test and Comments
 	public void setFilter(String filterToken) {
-		// TODO FilterParsing from Token
-		// Tbd if the method just fills out the filterviewform or if it starts the search for data automatically.
-		// --> could have a combination decided by "autoSearch" in filterToken
-
+		if(filterToken.equals("")) //Url doesn't contain filter information (option1 Tab Change, optio2 No filter set)
+		{
+			String historyToken;
+			//Tab Change or Without Filter
+			if(mode.equals(Tokens.MAP))
+			{
+				historyToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
+			}
+			else if(mode.equals(Tokens.TABLE))
+			{
+				historyToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
+			}
+			else
+			{
+				ClientLog.writeErr("Filter setMode() was not called before setFilter() or unknown mode.");
+				historyToken = History.getToken();
+			}
+			History.replaceItem(historyToken, false);
+		}
+		else //Url contains Filter information
+		{		
+			//Parse a filter object from the token
+			FilmFilter filter = UrlToken.parseFilter(filterToken); //TODO NK Define ExceptionHandling
+			
+			//fill filterFields in view
+			updateFilterFieldsInView(filter);
+			
+			//If AutoSearch flag is set, start search
+			if(filterToken.startsWith("?sb=1"))
+			{
+				onSearch();
+			}
+		}
 	}
+	
+	//TODO NK Comment & Test
+	public void updateFilterFieldsInView(FilmFilter filter)
+	{
+		onClear(); //make sure all fields are set to default first
+		if(filter.getName()!=null)
+		{
+			filterView.setName(filter.getName());
+		}
+		
+		filterView.setLengthSlider(filter.getLengthStart(), filter.getLengthEnd());
+		filterView.setYearSlider(filter.getYearStart(), filter.getYearEnd());
+		
+		//if filter.getXYZIds() == null then all options are deselected
+		filterView.setSelectedCountryOptions(filter.getCountryIds()); 
+		filterView.setSelectedLanguageOptions(filter.getLanguageIds());
+		filterView.setSelectedGenreOptions(filter.getGenreIds());
+	}
+	
 
 	/**
 	Helper method to adjust the currently appliedFilter for the map. Because the filtering of the year 
@@ -280,9 +358,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filter.setName(appliedFilter.getName());
 		filter.setLengthStart(appliedFilter.getLengthStart());
 		filter.setLengthEnd(appliedFilter.getLengthEnd());
-		filter.setGenres(appliedFilter.getGenres());
 		filter.setGenreIds(appliedFilter.getGenreIds());
-		filter.setLanguages(appliedFilter.getLanguages());
 		filter.setLanguageIds(appliedFilter.getLanguageIds());
 
 		//adjusting year range because filtering of that is done in the map on client side
@@ -290,11 +366,8 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filter.setYearEnd(Boundaries.MAX_YEAR);
 
 		//removing the country filter because in the map always all the countries should be considered
-		filter.setCountries(null);
 		filter.setCountryIds(null);
 
 		return filter;
 	}
-
-
 }

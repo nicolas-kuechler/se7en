@@ -3,9 +3,7 @@ package ch.uzh.se.se7en.client.mvp.presenters.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
@@ -18,6 +16,7 @@ import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
 import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
+import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.shared.model.Film;
 
 /**
@@ -58,16 +57,22 @@ public class TablePresenterImpl implements TablePresenter {
 	public void bind() {
 		tableView.setPresenter(this);
 	}
-
+	
+	/**
+	 * Make RPC with applied filter to trigger export to csv and retrieve download url
+	 * 
+	 * @author Cyrill Halter
+	 * @pre applied filter set in filmDataModel
+	 * @post -
+	 * @param -
+	 */
 	@Override
 	public void onDownloadStarted() {
-		// TODO Handle CSV Download 
-
+		//trigger export to CSV and get download URL 
 		filmListExportService.getFilmListDownloadUrl(filmDataModel.getAppliedFilter(), new AsyncCallback<String>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-
+				ClientLog.writeErr("RPC failed");
 			}
 			@Override
 			public void onSuccess(String result) {
@@ -105,7 +110,6 @@ public class TablePresenterImpl implements TablePresenter {
 	 */
 	public void updateTable(List<Film> films)
 	{
-		filmDataModel.setFilmList(films);
 		tableView.setTable(films);
 	}
 
@@ -139,7 +143,7 @@ public class TablePresenterImpl implements TablePresenter {
 			public void onFailure(Throwable caught) {
 				//rpc did not get back to client -> display error to the user
 				updateTable(createPseudoFilmList("Error while loading films, please try again"));
-				//TODO Logging to console?
+				//TODO NK FilmList Rpc Error Handling
 			}
 			@Override
 			public void onSuccess(List<Film> result) {

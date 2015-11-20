@@ -1,16 +1,12 @@
 package ch.uzh.se.se7en.client.mvp.views;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
-import org.gwtbootstrap3.extras.slider.client.ui.Range;
-
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
-import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
-import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public interface FilterView extends IsWidget {
 	/**
@@ -103,7 +99,7 @@ public interface FilterView extends IsWidget {
 	@post	countrySelect available Options == selectOptions
 	@param selectOptions a list of SelectOption
 	 */
-	public void setCountryOptions(List<SelectOption> selectOptions);
+	public void setCountryOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
 	Gets the information about the currently chosen (selected) options in the MultiSelect Country
@@ -112,7 +108,7 @@ public interface FilterView extends IsWidget {
 	@post	countrySelect selected options == countrySelect selected options @pre
 	@return	A List of SelectOption which include the currently selected options. 
 	 */
-	public List<SelectOption> getSelectedCountryOptions();
+	public Set<Integer> getSelectedCountryIds();
 	
 	/**
 	Sets currently chosen (selected) options in the MultiSelect Country
@@ -121,7 +117,7 @@ public interface FilterView extends IsWidget {
 	@post	countrySelect selected options == selectedOptions
 	@param	selectedOptions Options that are available in the MultiSelect and should be selected
 	 */
-	public void setSelectedCountryOptions(List<String> selectedOptions);
+	public void setSelectedCountryOptions(Set<Integer> selectedOptions);
 	
 	/**
 	Sets the available options to choose in the MultiSelect Language
@@ -130,7 +126,7 @@ public interface FilterView extends IsWidget {
 	@post	languageSelect available Options == selectOptions
 	@param 	selectOptions a list of SelectOption
 	 */
-	public void setLanguageOptions(List<SelectOption> selectOptions);
+	public void setLanguageOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
 	Gets the information about the currently chosen (selected) options in the MultiSelect Language
@@ -139,7 +135,7 @@ public interface FilterView extends IsWidget {
 	@post	languageSelect selected options == languageSelect selected options @pre
 	@return	A List of SelectOption which include the currently selected options. 
 	 */
-	public List<SelectOption> getSelectedLanguageOptions();
+	public Set<Integer> getSelectedLanguageIds();
 	
 	/**
 	Sets currently chosen (selected) options in the MultiSelect Language
@@ -148,7 +144,7 @@ public interface FilterView extends IsWidget {
 	@post	languageSelect selected options == selectedOptions
 	@param	selectedOptions Options that are available in the MultiSelect and should be selected
 	 */
-	public void setSelectedLanguageOptions(List<String> selectedOptions);
+	public void setSelectedLanguageOptions(Set<Integer> selectedOptions);
 	
 	/**
 	Sets the available options to choose in the MultiSelect Genre
@@ -157,7 +153,7 @@ public interface FilterView extends IsWidget {
 	@post	genreSelect available Options == selectOptions
 	@param selectOptions a list of SelectOption
 	 */
-	public void setGenreOptions(List<SelectOption> selectOptions);
+	public void setGenreOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
 	Gets the information about the currently chosen (selected) options in the MultiSelect Genre
@@ -166,7 +162,7 @@ public interface FilterView extends IsWidget {
 	@post	genreSelect selected options == genreSelect selected options @pre
 	@return	A List of SelectOption which include the currently selected options. 
 	 */
-	public List<SelectOption> getSelectedGenreOptions();
+	public Set<Integer> getSelectedGenreIds();
 	
 	/**
 	Sets currently chosen (selected) options in the MultiSelect Genre
@@ -175,7 +171,7 @@ public interface FilterView extends IsWidget {
 	@post	genreSelect selected options == selectedOptions
 	@param	selectedOptions Options that are available in the MultiSelect and should be selected
 	 */
-	public void setSelectedGenreOptions(List<String> selectedOptions);
+	public void setSelectedGenreOptions(Set<Integer> selectedOptions);
 	
 	/**
 	Provides access to the UI Component AppliedFilter for the filterPresenter

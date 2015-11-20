@@ -58,7 +58,8 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	private Map<String, CountryDB> countryMap = new HashMap<String, CountryDB>();
 	private Map<String, GenreDB> genreMap = new HashMap<String, GenreDB>();
 	private Map<String, LanguageDB> languageMap = new HashMap<String, LanguageDB>();
-
+	private final String BUCKET_NAME = "se-team-se7en";
+	
 	/**
 	 * This method is called to to import a file from the Google Cloud Storage
 	 * file repository and convert it to a list of film objects
@@ -76,7 +77,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		try{
 
 			GcsService gcsService = GcsServiceFactory.createGcsService();
-			GcsFilename gcsFilename = new GcsFilename("se-team-se7en", nameOfFile);
+			GcsFilename gcsFilename = new GcsFilename(BUCKET_NAME, nameOfFile);
 
 			// open GCS channel for specified file name and create reader
 			GcsInputChannel csvReadChannel = gcsService.openReadChannel(gcsFilename, 0);

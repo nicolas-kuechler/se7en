@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +39,6 @@ import ch.uzh.se.se7en.server.model.LanguageDB;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 /**
  * Tests for the answering of rpc calls
@@ -354,7 +354,7 @@ public class FilmListServiceTest {
 
 	@Test
 	public void testGetGenreList() {
-		// TODO: Sprint 2
+		// TODO RS Sprint 2
 	}
 
 	@Test
@@ -362,7 +362,7 @@ public class FilmListServiceTest {
 		/* INITIALIZATION BLOCK */
 
 		/* EXECUTION BLOCK */
-		List<SelectOption> genreSelects = rpcService.getGenreSelectOption();
+		HashMap<Integer, String> genreSelects = rpcService.getGenreSelectOption();
 
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
@@ -374,9 +374,8 @@ public class FilmListServiceTest {
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(genreQuery);
 
-		// assert that the select options were properly created
-		assertEquals(genreSelects.get(0).getId(), new Integer(0));
-		assertEquals(genreSelects.get(0).getName(), "Horror");
+		// assert that the HashMap entries were properly created
+		assertEquals(genreSelects.get(0), "Horror");
 	}
 
 	@Test
@@ -384,7 +383,7 @@ public class FilmListServiceTest {
 		/* INITIALIZATION BLOCK */
 
 		/* EXECUTION BLOCK */
-		List<SelectOption> countrySelects = rpcService.getCountrySelectOption();
+		HashMap<Integer, String> countrySelects = rpcService.getCountrySelectOption();
 
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
@@ -396,9 +395,8 @@ public class FilmListServiceTest {
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(countryQuery);
 
-		// assert that the select options were properly created
-		assertEquals(countrySelects.get(0).getId(), new Integer(0));
-		assertEquals(countrySelects.get(0).getName(), "Switzerland");
+		// assert that the HashMap entries were properly created
+		assertEquals(countrySelects.get(0), "Switzerland");
 	}
 
 	@Test
@@ -406,7 +404,7 @@ public class FilmListServiceTest {
 		/* INITIALIZATION BLOCK */
 
 		/* EXECUTION BLOCK */
-		List<SelectOption> languageSelects = rpcService.getLanguageSelectOption();
+		HashMap<Integer, String> languageSelects = rpcService.getLanguageSelectOption();
 
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
@@ -418,8 +416,7 @@ public class FilmListServiceTest {
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(languageQuery);
 
-		// assert that the select options were properly created
-		assertEquals(languageSelects.get(0).getId(), new Integer(0));
-		assertEquals(languageSelects.get(0).getName(), "German");
+		// assert that the HashMap entries were properly created
+		assertEquals(languageSelects.get(0), "German");
 	}
 }
