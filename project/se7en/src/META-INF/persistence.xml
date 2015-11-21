@@ -29,6 +29,7 @@
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.connection.pool_size" value="0" />
 			<property name="hibernate.jdbc.batch_size" value="50" />
+			<property name="hibernate.jdbc.fetch_size" value="10000" />
 		</properties>
 
 	</persistence-unit>
