@@ -139,14 +139,8 @@ public class FilmListServiceTest {
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
 		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT f FROM FilmDB f WHERE (f.length BETWEEN :minLength AND :maxLength) AND (f.year BETWEEN :minYear AND :maxYear) ORDER BY f.name",
+				"SELECT DISTINCT f FROM FilmDB f WHERE 1=1 ORDER BY f.name",
 				FilmDB.class);
-
-		// verify that all the parameters are correctly set
-		verify(filmQuery, times(1)).setParameter("minLength", filter.getLengthStart());
-		verify(filmQuery, times(1)).setParameter("maxLength", filter.getLengthEnd());
-		verify(filmQuery, times(1)).setParameter("minYear", filter.getYearStart());
-		verify(filmQuery, times(1)).setParameter("maxYear", filter.getYearEnd());
 
 		// verify that the query is then executed
 		verify(filmQuery, times(1)).getResultList();
@@ -156,7 +150,7 @@ public class FilmListServiceTest {
 	}
 
 	@Test
-	public void testGetFilmEntitiesListFilterByName() {
+	public void testGetFilmEntitiesListFilterByNameAndCountryIds() {
 		/* INITIALIZATION BLOCK */
 		// set the filters
 		FilmFilter filter = new FilmFilter("Hallo");
@@ -171,14 +165,10 @@ public class FilmListServiceTest {
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
 		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT f FROM FilmDB f JOIN f.filmCountryEntities fc WHERE (f.length BETWEEN :minLength AND :maxLength) AND (f.year BETWEEN :minYear AND :maxYear) AND LOWER(f.name) LIKE :findName AND fc.countryId IN :countryIds ORDER BY f.name",
+				"SELECT DISTINCT f FROM FilmDB f JOIN f.filmCountryEntities fc WHERE 1=1 AND LOWER(f.name) LIKE :findName AND fc.countryId IN :countryIds ORDER BY f.name",
 				FilmDB.class);
 
 		// verify that all the parameters are correctly set
-		verify(filmQuery, times(1)).setParameter("minLength", filter.getLengthStart());
-		verify(filmQuery, times(1)).setParameter("maxLength", filter.getLengthEnd());
-		verify(filmQuery, times(1)).setParameter("minYear", filter.getYearStart());
-		verify(filmQuery, times(1)).setParameter("maxYear", filter.getYearEnd());
 		verify(filmQuery, times(1)).setParameter("findName", "%hallo%");
 		verify(filmQuery, times(1)).setParameter("countryIds", filter.getCountryIds());
 

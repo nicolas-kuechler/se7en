@@ -103,7 +103,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// the max number of results the query should return
 		// TODO: replace by filter information?
-		int maxResults = 10000;
+		int maxResults = 80000;
 
 		// defines the ordering of the query results
 		// TODO: replace by filter information?
@@ -237,7 +237,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * Returns a filtered list of countries to the client
 	 * 
 	 * @author Roland Schläfli
-	 * @pre -
+	 * @pre There are only films with years 1890-2015 in the database
 	 * @post -
 	 * @param FilmFilter
 	 *            filter A filter object
@@ -262,7 +262,8 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		for(FilmDB film : dbFilms) {
 			
 			// check if we have the necessary data to include the film in the calculation
-			if(film.getYear() != null && film.getCountryString() != null) {
+			// TODO: allow 2016 as a year
+			if(film.getYear() != null && film.getYear() <= 2015 && film.getCountryString() != null) {
 				
 				// for each country that is associated with this film
 				for(FilmCountryDB filmCountry : film.getFilmCountryEntities()) {
