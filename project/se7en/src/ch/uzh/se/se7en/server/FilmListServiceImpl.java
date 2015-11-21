@@ -6,11 +6,15 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
+import org.hibernate.annotations.QueryHints;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Inject;
@@ -41,6 +45,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	// guice injection of an entity manager
 	@Inject
 	Provider<EntityManager> em;
+	
+	// TODO: find other way of caching stuff
+	FilmFilter cachedFilter;
+	List<FilmDB> cachedFilms;
+	HashMap<Integer, String> cachedCountries;
+	HashMap<Integer, String> cachedGenres;
+	HashMap<Integer, String> cachedLanguages;
 
 	/**
 	 * Returns a filtered list of films to the client
@@ -81,14 +92,18 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<FilmDB> dbFilms A filtered list of film entities
 	 */
 	@Transactional
-	public List<FilmDB> getFilmEntitiesList(FilmFilter filter) {
+	public List<FilmDB> getFilmEntitiesList(FilmFilter filter) {	
+		if(cachedFilter != null && cachedFilms != null && filter.equals(cachedFilter)) {
+			return cachedFilms;
+		}
+		
 		// the starting position of the query
 		// TODO: replace by filter information?
 		int startPosition = 0;
 
 		// the max number of results the query should return
 		// TODO: replace by filter information?
-		int maxResults = 80000;
+		int maxResults = 10000;
 
 		// defines the ordering of the query results
 		// TODO: replace by filter information?
@@ -139,7 +154,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// if at least one country is in the list of filter countries
 		if (filter.getCountryIds() != null) {
-			joiners += " JOIN f.filmCountryEntities fc";
+			joiners += " JOIN FETCH f.filmCountryEntities fc";
 			wheres += " AND fc.countryId IN :countryIds";
 		}
 
@@ -161,6 +176,12 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// create a typed query from our query string
 		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
 
+		// make the query cacheable if it is select *
+		// TODO: query cache
+		/* if(wheres == "WHERE 1=1") {
+			query.setHint(QueryHints.CACHEABLE, true);
+		} */
+		
 		// set offset and limit
 		query.setFirstResult(startPosition);
 		query.setMaxResults(maxResults);
@@ -202,7 +223,12 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// execute the query
 		dbFilms = query.getResultList();
-
+		
+		// fill the local "cache"
+		// TODO: use another way of caching
+		cachedFilter = filter;
+		cachedFilms = dbFilms;
+		
 		// return the list of film entities
 		return dbFilms;
 	}
@@ -224,8 +250,50 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 		List<Country> countries = new ArrayList<Country>();
 
+		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
+		dbFilms = getFilmEntitiesList(filter);
+		
+		Map<String, int[]> filmsPerYear = new HashMap<String, int[]>(250);
+		
+		// get the current year
+		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+				
+		// iterate over each film
+		for(FilmDB film : dbFilms) {
+			
+			// check if we have the necessary data to include the film in the calculation
+			if(film.getYear() != null && film.getCountryString() != null) {
+				
+				// for each country that is associated with this film
+				for(FilmCountryDB filmCountry : film.getFilmCountryEntities()) {
+					
+					// calculate 
+					if(filmsPerYear.containsKey(filmCountry.getCountryName())) {
+						int[] calculationArray = filmsPerYear.get(filmCountry.getCountryName());
+						
+						calculationArray[filmCountry.getFilm().getYear() - Country.YEAR_OFFSET]++;
+						
+						filmsPerYear.put(filmCountry.getCountryName(), calculationArray);
+					} else {
+						// initialize a new array for all years
+						int[] calculationArray = new int[currentYear - Country.YEAR_OFFSET + 1];
+						
+						calculationArray[filmCountry.getFilm().getYear() - Country.YEAR_OFFSET]++;
+						
+						filmsPerYear.put(filmCountry.getCountryName(), calculationArray);
+					}
+				}
+			}
+		}
+		
+		for(Entry<String, int[]> country : filmsPerYear.entrySet()) {
+			Country c = new Country(country.getKey());
+			c.setNumberOfFilms(country.getValue());
+			countries.add(c);
+		}
+		
 		// fetch the list of filtered country entities from the database
-		dbCountries = getCountryEntitiesList(filter);
+		/*dbCountries = getCountryEntitiesList(filter);
 
 		// get the current year
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -249,7 +317,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 			// add the country to the result list
 			countries.add(c);
-		}
+		}*/
 
 		// return the filled list of countries
 		return countries;
@@ -269,7 +337,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	public List<CountryDB> getCountryEntitiesList(FilmFilter filter) {
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 		// initialize the selector in the query
-		/*String selector = "SELECT DISTINCT c FROM CountryDB c";
+		String selector = "SELECT DISTINCT c FROM CountryDB c";
 
 		// initialize the where string with the basic filters
 		String wheres = "";
@@ -351,9 +419,9 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		}
 
 		// execute the query
-		dbCountries = query.getResultList();*/
+		dbCountries = query.getResultList();
 		
-		Query yearCounts = em.get().createNativeQuery("SELECT c.name AS name, f.year AS year, COUNT(*) AS count FROM countries c JOIN film_countries fc ON c.id = fc.country_id JOIN films f ON fc.film_id = f.id GROUP BY c.name, f.year", CountryYearCountDB.class); 
+		//Query yearCounts = em.get().createNativeQuery("SELECT c.name AS name, f.year AS year, COUNT(*) AS count FROM countries c JOIN film_countries fc ON c.id = fc.country_id JOIN films f ON fc.film_id = f.id GROUP BY c.name, f.year", CountryYearCountDB.class); 
 		//em.get().createQuery("SELECT CountryYearCountDB FROM CountryDB c JOIN c.filmCountryEntities fc JOIN fc.primaryKey.film f GROUP BY c.name, f.year", CountryYearCountDB.class);
 		
 		// return the filtered list of countries
@@ -403,16 +471,23 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public HashMap<Integer, String> getGenreSelectOption() {
+		if(cachedGenres != null) {
+			return cachedGenres;
+		}
+		
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 
 		// select * from the genre table
+		// TODO: query cache .setHint(QueryHints.CACHEABLE, true)
 		dbGenres = em.get().createQuery("FROM GenreDB", GenreDB.class).getResultList();
-
+		
 		HashMap<Integer, String> availableGenres = new HashMap<Integer, String>(dbGenres.size());
 
 		for (GenreDB genre : dbGenres) {
 			availableGenres.put(genre.getId(), genre.getName());
 		}
+		
+		cachedGenres = availableGenres;
 
 		return availableGenres;
 	}
@@ -430,9 +505,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public HashMap<Integer, String> getCountrySelectOption() {
+		if(cachedCountries != null) {
+			return cachedCountries;
+		}
+		
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 
 		// select * from the country table
+		// TODO: query cache .setHint(QueryHints.CACHEABLE, true)
 		dbCountries = em.get().createQuery("FROM CountryDB", CountryDB.class).getResultList();
 
 		HashMap<Integer, String> availableCountries = new HashMap<Integer, String>(dbCountries.size());
@@ -441,6 +521,8 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			availableCountries.put(country.getId(), country.getName());
 		}
 
+		cachedCountries = availableCountries;
+		
 		return availableCountries;
 	}
 
@@ -457,9 +539,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Override
 	public HashMap<Integer, String> getLanguageSelectOption() {
+		if(cachedLanguages != null) {
+			return cachedLanguages;
+		}
+		
 		List<LanguageDB> dbLanguages = new ArrayList<LanguageDB>();
 
 		// select * from the language table
+		// TODO: query cache .setHint(QueryHints.CACHEABLE, true)
 		dbLanguages = em.get().createQuery("FROM LanguageDB", LanguageDB.class).getResultList();
 
 		HashMap<Integer, String> availableLanguages = new HashMap<Integer, String>(dbLanguages.size());
@@ -467,6 +554,8 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		for (LanguageDB language : dbLanguages) {
 			availableLanguages.put(language.getId(), language.getName());
 		}
+		
+		cachedLanguages = availableLanguages;
 
 		return availableLanguages;
 	}
