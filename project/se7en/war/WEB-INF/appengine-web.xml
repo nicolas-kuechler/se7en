@@ -5,7 +5,7 @@
 	
 	<instance-class>B8</instance-class>
     <basic-scaling>
-        <max-instances>2</max-instances>
+        <max-instances>4</max-instances>
     </basic-scaling>
 
 	<!-- GIR uses the MySQL connector for CloudSQL access -->
