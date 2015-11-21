@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.FilterOptions;
 import ch.uzh.se.se7en.shared.model.Genre;
 
 public interface FilmListServiceAsync {
@@ -18,10 +19,6 @@ public interface FilmListServiceAsync {
 
 	void getGenreList(FilmFilter filter, AsyncCallback<List<Genre>> callback);
 
-	void getGenreSelectOption(AsyncCallback<HashMap<Integer,String>> callback);
-
-	void getCountrySelectOption(AsyncCallback<HashMap<Integer,String>> callback);
-
-	void getLanguageSelectOption(AsyncCallback<HashMap<Integer,String>> callback);
+	void getSelectOptions(AsyncCallback<FilterOptions> callback);
 
 }

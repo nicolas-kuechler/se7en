@@ -24,6 +24,7 @@ import ch.uzh.se.se7en.server.model.LanguageDB;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.FilterOptions;
 import ch.uzh.se.se7en.shared.model.Genre;
 
 /**
@@ -327,7 +328,6 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<SelectOption> availableGenres The list of all available
 	 *         genres as SelectOption objects
 	 */
-	@Override
 	public HashMap<Integer,String> getGenreSelectOption() {
 		HashMap<Integer,String> availableGenres = new HashMap<Integer,String>();
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
@@ -353,7 +353,6 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<SelectOption> availableCountries The list of all available
 	 *         countries as SelectOption objects
 	 */
-	@Override
 	public HashMap<Integer,String> getCountrySelectOption() {
 		HashMap<Integer,String> availableCountries = new HashMap<Integer,String>();
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
@@ -379,7 +378,6 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<SelectOption> availableLanguages The list of all available
 	 *         languages as SelectOption objects
 	 */
-	@Override
 	public HashMap<Integer,String> getLanguageSelectOption() {
 		HashMap<Integer,String> availableLanguages = new HashMap<Integer,String>();
 		List<LanguageDB> dbLanguages = new ArrayList<LanguageDB>();
@@ -393,6 +391,17 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		return availableLanguages;
 	}
+	
+	//TODO RS comment,test...
+	//TODO Ich han das eifach mal so für mich zum teste gmacht. Fallses ändere wettsch machsch eifach. -Nicolas
+	@Override
+	public FilterOptions getSelectOptions() {
+		FilterOptions options = new FilterOptions();
+		options.setCountrySelectOptions(getCountrySelectOption());
+		options.setGenreSelectOptions(getGenreSelectOption());
+		options.setLanguageSelectOptions(getLanguageSelectOption());
+		return options;
+	}
 
 	/**
 	 * @pre -
@@ -403,4 +412,6 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	public void setEm(Provider<EntityManager> em) {
 		this.em = em;
 	}
+
+
 }
