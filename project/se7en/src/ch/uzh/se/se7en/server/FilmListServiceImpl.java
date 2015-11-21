@@ -83,15 +83,15 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Transactional
 	public List<FilmDB> getFilmEntitiesList(FilmFilter filter) {
 		// the starting position of the query
-		// TODO: replace by filter information
+		// TODO: replace by filter information?
 		int startPosition = 0;
 
 		// the max number of results the query should return
-		// TODO: replace by filter information
-		int maxResults = 10000;
+		// TODO: replace by filter information?
+		int maxResults = 80000;
 
 		// defines the ordering of the query results
-		// TODO: replace by filter information
+		// TODO: replace by filter information?
 		String ordering = "f.name";
 
 		// create an empty list of film entities
@@ -105,11 +105,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		String whereLength = "";
 		String whereYear = "";
 
+		// only filter for a length if the filter values are not the defaults
 		if (filter.getLengthStart() > 0 || filter.getLengthEnd() < 600) {
 			whereLength = "(f.length BETWEEN :minLength AND :maxLength)";
 			wheres += whereLength;
 		}
 
+		// only filter for a year if the filter values are not the defaults
 		if (filter.getYearStart() > 1890 || filter.getYearEnd() < 2015) {
 			if (wheres.length() > 0) {
 				wheres += " AND ";
@@ -119,9 +121,11 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			wheres += whereYear;
 		}
 
+		// if some where clauses have been set already
 		if (wheres.length() > 0) {
 			wheres = "WHERE " + wheres;
 		} else {
+			// TODO: refactor so that we don't need this :)
 			wheres = "WHERE 1=1";
 		}
 
@@ -161,12 +165,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		query.setFirstResult(startPosition);
 		query.setMaxResults(maxResults);
 
+		// if filter for length != defaults
 		if (whereLength.length() > 0) {
 			// set the min & max length params
 			query.setParameter("minLength", filter.getLengthStart());
 			query.setParameter("maxLength", filter.getLengthEnd());
 		}
 
+		// if filter for year != defaults
 		if (whereYear.length() > 0) {
 			// set the min & max year params
 			query.setParameter("minYear", filter.getYearStart());
@@ -347,7 +353,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// execute the query
 		dbCountries = query.getResultList();*/
 		
-		Query yearCounts = em.get().createNativeQuery("SELECT c.name, f.year, COUNT(*) FROM countries c JOIN film_countries fc ON c.id = fc.country_id JOIN films f ON fc.film_id = f.id GROUP BY c.name, f.year", CountryYearCountDB.class); 
+		Query yearCounts = em.get().createNativeQuery("SELECT c.name AS name, f.year AS year, COUNT(*) AS count FROM countries c JOIN film_countries fc ON c.id = fc.country_id JOIN films f ON fc.film_id = f.id GROUP BY c.name, f.year", CountryYearCountDB.class); 
 		//em.get().createQuery("SELECT CountryYearCountDB FROM CountryDB c JOIN c.filmCountryEntities fc JOIN fc.primaryKey.film f GROUP BY c.name, f.year", CountryYearCountDB.class);
 		
 		// return the filtered list of countries
