@@ -387,13 +387,11 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<SelectOption> availableGenres The list of all available
 	 *         genres as SelectOption objects
 	 */
-	@Override
 	public HashMap<Integer, String> getGenreSelectOption() {
 		if (cachedGenres != null) {
 			return cachedGenres;
 		}
 
-		HashMap<Integer,String> availableGenres = new HashMap<Integer,String>();
 		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 
 		// select * from the genre table
@@ -422,13 +420,11 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<SelectOption> availableCountries The list of all available
 	 *         countries as SelectOption objects
 	 */
-	@Override
 	public HashMap<Integer, String> getCountrySelectOption() {
 		if (cachedCountries != null) {
 			return cachedCountries;
 		}
 
-		HashMap<Integer,String> availableCountries = new HashMap<Integer,String>();
 		List<CountryDB> dbCountries = new ArrayList<CountryDB>();
 
 		// select * from the country table
@@ -457,13 +453,11 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<SelectOption> availableLanguages The list of all available
 	 *         languages as SelectOption objects
 	 */
-	@Override
 	public HashMap<Integer, String> getLanguageSelectOption() {
 		if (cachedLanguages != null) {
 			return cachedLanguages;
 		}
 
-		HashMap<Integer,String> availableLanguages = new HashMap<Integer,String>();
 		List<LanguageDB> dbLanguages = new ArrayList<LanguageDB>();
 
 		// select * from the language table
