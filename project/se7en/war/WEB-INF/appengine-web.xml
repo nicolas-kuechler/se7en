@@ -3,6 +3,7 @@
 	<application>se-team-se7en</application>
 	<version>sprint2</version>
 	
+	<!-- <instance-class>F4_1G</instance-class> -->
 	<instance-class>B8</instance-class>
     <basic-scaling>
         <max-instances>4</max-instances>
