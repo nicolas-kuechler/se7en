@@ -55,7 +55,7 @@ public class Country implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Id: " + id + " - Name: " + name + " - Code: " + code + " - Anzahl Filme: " + numberOfFilms;
+		return "Id: " + id + " - Name: " + name + " - Code: " + code + " - Anzahl Filme: " + Arrays.toString(numberOfFilms);
 	}
 
 	/**
