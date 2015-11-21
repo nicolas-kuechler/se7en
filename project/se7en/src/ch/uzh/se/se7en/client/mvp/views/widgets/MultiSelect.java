@@ -18,10 +18,15 @@ import org.gwtbootstrap3.extras.select.client.ui.Option;
 import org.gwtbootstrap3.extras.select.client.ui.Select;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+
+import ch.uzh.se.se7en.client.ClientLog;
 
 
 /**
@@ -43,15 +48,15 @@ public class MultiSelect extends Composite {
 
 	public MultiSelect() {
 		initWidget(uiBinder.createAndBindUi(this));
-		select.setEnabled(true);
-
+		select.setEnabled(false);
 	}
 	
 	/**
 	 * This method returns the ids of all selected options
 	 * 
 	 * @author Cyrill Halter
-	 * @pre -
+	 * @pre After method select(Set<Integer> ids) is called it is necessary to wait 
+	 * around 1000ms before this method returns the selected values. (Problem of the Select Library)
 	 * @post -
 	 * @param -
 	 * @return Set<Integer> ids The set of all selected ids
@@ -85,6 +90,7 @@ public class MultiSelect extends Composite {
 			i++;
 		}
 		select.setValues(idStrings);
+
 	}
 
 
@@ -144,7 +150,9 @@ public class MultiSelect extends Composite {
 			option.setValue(entry.getKey().toString());
 			select.add(option);
 		}
+		select.setEnabled(true);
 		select.refresh();
+		
 	}
 	
 
