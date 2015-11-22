@@ -261,6 +261,13 @@ public class MapViewImpl extends Composite implements MapView {
 		}
 	}
 	
+	/**
+	Builds the Table for the GenreTable
+	@author Dominik Bünzli
+	@pre	
+	@post	genreTableColumns are initialized and their width is set
+	 */
+	
 	public void buildTable(){		
 		
 		genreProvider.addDataDisplay(genreTable);

@@ -107,10 +107,6 @@ th {
 	margin-bottom: 5%
 }
 
-.mapFooter{
-	background-color: #FFF;
-}
-
 /*############################################CONTAINER SETTINGS FOR HEADER AND FOOTER OF A PANEL####################################################*/
 
 /** don't display the header of the panels (Design descision / if reverted the headers get visible again)*/
@@ -403,7 +399,7 @@ th {
 }
 
 #navBar li a{
-	font-size: 1.5em !important;
+	font-size: 1.25em !important;
 }
 
 

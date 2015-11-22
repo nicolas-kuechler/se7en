@@ -16,7 +16,7 @@
 				<c:DataGrid ui:field='genreTable' styleName="genreTable"/>
 
 			</b:PanelBody>
-			<b:PanelFooter styleName="mapFooter">
+			<b:PanelFooter>
 				<b:Heading size="H5" text="Production Year" />
 				<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
 			</b:PanelFooter>

@@ -5,9 +5,9 @@
 	
 	<!-- <instance-class>F4_1G</instance-class> -->
 	<instance-class>B8</instance-class>
-    <basic-scaling>
-        <max-instances>4</max-instances>
-    </basic-scaling>
+<!--     <basic-scaling> -->
+<!--         <max-instances>4</max-instances> -->
+<!--     </basic-scaling> -->
 
 	<!-- GIR uses the MySQL connector for CloudSQL access -->
 	<use-google-connector-j>true</use-google-connector-j>
