@@ -41,6 +41,9 @@ public class FilmDBTest {
 		dbFilm = new FilmDB("Der Tiger", 120, 1993);
 		dbFilm.setId(11);
 		dbFilm.setWikipedia("a7ah34ad");
+		dbFilm.setCountryString("AbsurdiString");
+		dbFilm.setGenreString("HorroString");
+		dbFilm.setLanguageString("DeutString");
 
 		CountryDB country = new CountryDB("Absurdistan");
 		country.setId(22);
@@ -109,11 +112,11 @@ public class FilmDBTest {
 		assertEquals(film.getLength(), new Integer(120));
 		assertEquals(film.getYear(), new Integer(1993));
 		assertEquals(film.getCountries().size(), 1);
-		assertEquals(film.getCountries().get(0), "Absurdistan");
+		assertEquals(film.getCountries().get(0), "AbsurdiString");
 		assertEquals(film.getGenres().size(), 1);
-		assertEquals(film.getGenres().get(0), "Horror");
+		assertEquals(film.getGenres().get(0), "HorroString");
 		assertEquals(film.getLanguages().size(), 1);
-		assertEquals(film.getLanguages().get(0), "Deutsch");
+		assertEquals(film.getLanguages().get(0), "DeutString");
 	}
 	
 	// test getters and setters
@@ -170,6 +173,39 @@ public class FilmDBTest {
 	public void testSetWikipedia() {
 		dbFilm.setWikipedia("a8m2of9");
 		assertEquals(dbFilm.getWikipedia(), "a8m2of9");
+	}
+	
+	@Test
+	public void testGetCountyString() {
+		assertEquals(dbFilm.getCountryString(), "AbsurdiString");
+	}
+
+	@Test
+	public void testSetCountryString() {
+		dbFilm.setCountryString("Wawrinka");
+		assertEquals(dbFilm.getCountryString(), "Wawrinka");
+	}
+	
+	@Test
+	public void testGetGenreString() {
+		assertEquals(dbFilm.getGenreString(), "HorroString");
+	}
+
+	@Test
+	public void testSetGenreString() {
+		dbFilm.setGenreString("Federer");
+		assertEquals(dbFilm.getGenreString(), "Federer");
+	}
+	
+	@Test
+	public void testGetLanguageString() {
+		assertEquals(dbFilm.getLanguageString(), "DeutString");
+	}
+
+	@Test
+	public void testSetLanguageString() {
+		dbFilm.setLanguageString("Französisch");
+		assertEquals(dbFilm.getLanguageString(), "Französisch");
 	}
 
 	@Test
