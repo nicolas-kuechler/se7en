@@ -3,6 +3,7 @@ package ch.uzh.se.se7en.client.mvp.views.impl;
 import java.util.Comparator;
 import java.util.List;
 
+
 import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Label;
@@ -38,6 +39,7 @@ public class TableViewImpl extends Composite implements TableView {
 	}
 
 	private TablePresenter tablePresenter;
+	private int panelHeight;
 	/**
 	 * The main DataGrid.
 	 */
@@ -87,6 +89,8 @@ public class TableViewImpl extends Composite implements TableView {
 	public TableViewImpl() {
 		dataGrid = new DataGrid<Film>();
 		dataGrid.setWidth("100%");
+		panelHeight= Window.getClientHeight();
+		dataGrid.setHeight((panelHeight*6)/10 + "px");
 		dataGrid.setHeight("500px");
 		dataGrid.setBordered(false);
 		dataGrid.setAutoHeaderRefreshDisabled(true);
@@ -259,17 +263,17 @@ public class TableViewImpl extends Composite implements TableView {
 		};
 		genreColumn.setSortable(true);
 
-		dataGrid.setColumnWidth(nameColumn, 21.5, Unit.PCT);
+		dataGrid.setColumnWidth(nameColumn, 18.5, Unit.PCT);
 		dataGrid.addColumn(nameColumn, "Name");
-		dataGrid.setColumnWidth(yearColumn, 7, Unit.PCT);
+		dataGrid.setColumnWidth(yearColumn, 11, Unit.PCT);
 		dataGrid.addColumn(yearColumn, "Year");
-		dataGrid.setColumnWidth(lengthColumn, 7, Unit.PCT);
+		dataGrid.setColumnWidth(lengthColumn, 11, Unit.PCT);
 		dataGrid.addColumn(lengthColumn, "Length");
-		dataGrid.setColumnWidth(countryColumn, 21.5, Unit.PCT);
+		dataGrid.setColumnWidth(countryColumn, 19.5, Unit.PCT);
 		dataGrid.addColumn(countryColumn, "Country");
-		dataGrid.setColumnWidth(languageColumn, 21.5, Unit.PCT);
+		dataGrid.setColumnWidth(languageColumn, 19.5, Unit.PCT);
 		dataGrid.addColumn(languageColumn, "Language");
-		dataGrid.setColumnWidth(genreColumn, 21.5, Unit.PCT);
+		dataGrid.setColumnWidth(genreColumn, 20.5, Unit.PCT);
 		dataGrid.addColumn(genreColumn, "Genre");
 
 	}

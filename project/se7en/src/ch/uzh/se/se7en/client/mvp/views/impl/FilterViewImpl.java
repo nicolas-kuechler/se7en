@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.FormGroup;
+import org.gwtbootstrap3.client.ui.PanelBody;
+import org.gwtbootstrap3.client.ui.PanelCollapse;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
@@ -56,12 +58,12 @@ public class FilterViewImpl extends Composite implements FilterView {
 	Button clearBtn;
 	@UiField
 	Button searchBtn;
-
 	@UiField
 	AppliedFilterBox appliedFilter;
 	@UiField
 	FocusPanel focusPanel;
-
+	@UiField
+	PanelCollapse collapseBox;
 	@UiField
 	FormGroup yearColumn;
 	@UiField
@@ -82,7 +84,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
 		initWidget(uiBinder.createAndBindUi(this));
-
+		collapseBox.setIn(true);
 		// Setting Up Listening for Enter Pressed Events to start the search
 		focusPanel.addKeyDownHandler(new KeyDownHandler() {
 			@Override
@@ -109,6 +111,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	 */
 	@UiHandler("searchBtn")
 	public void onSearchBtnClick(final ClickEvent event) {
+		collapseBox.setIn(false);
 		filterPresenter.onSearch();
 	}
 

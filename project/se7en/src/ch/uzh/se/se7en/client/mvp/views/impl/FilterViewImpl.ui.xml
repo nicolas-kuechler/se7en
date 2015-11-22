@@ -17,7 +17,7 @@
 				</b:Column>
 			</b:Row>
 		</b:PanelHeader>
-		<b:PanelCollapse b:id="collapseOne">
+		<b:PanelCollapse ui:field ="collapseBox" b:id="collapseOne">
 		<b:PanelBody>
 			<g:FocusPanel ui:field="focusPanel">
 				<b:Form>
