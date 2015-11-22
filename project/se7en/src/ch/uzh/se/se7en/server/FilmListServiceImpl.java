@@ -148,19 +148,19 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// if at least one country is in the list of filter countries
 		if (filter.getCountryIds() != null) {
 			joiners += " JOIN FETCH f.filmCountryEntities fc";
-			wheres += " AND fc.countryId IN :countryIds";
+			wheres += " AND fc.countryId IN (:countryIds)";
 		}
 
 		// if at least one genre is in the list of filter genres
 		if (filter.getGenreIds() != null) {
 			joiners += " JOIN f.filmGenreEntities fg";
-			wheres += " AND fg.genreId IN :genreIds";
+			wheres += " AND fg.genreId IN (:genreIds)";
 		}
 
 		// if at least one language is in the list of filter languages
 		if (filter.getLanguageIds() != null) {
 			joiners += " JOIN f.filmLanguageEntities fl";
-			wheres += " AND fl.languageId IN :languageIds";
+			wheres += " AND fl.languageId IN (:languageIds)";
 		}
 
 		// concat the query string
@@ -248,7 +248,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
 		// build the query
-		String selector = "SELECT DISTINCT c.id, c.name, f.year, COUNT(*)";
+		String selector = "SELECT c.id, c.name, f.year, COUNT(*)";
 
 		// initialize the where string with the basic filters
 		String wheres = "";
@@ -271,13 +271,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// if at least one genre is in the list of filter genres
 		if (filter.getGenreIds() != null) {
 			joiners += " JOIN film_genres fg ON f.id = fg.film_id";
-			wheres += " AND fg.genre_id IN :genreIds";
+			wheres += " AND fg.genre_id IN (:genreIds)";
 		}
 
 		// if at least one language is in the list of filter languages
 		if (filter.getLanguageIds() != null) {
 			joiners += " JOIN film_languages fl ON f.id = fl.film_id";
-			wheres += " AND fl.language_id IN :languageIds";
+			wheres += " AND fl.language_id IN (:languageIds)";
 		}
 
 		String queryString = selector + " FROM films f " + joiners + " " + wheres
@@ -360,18 +360,75 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Transactional
 	public List<Genre> getGenreList(FilmFilter filter) {
 		// create an empty list of genres
-		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 		List<Genre> genres = new ArrayList<Genre>();
+		
+		String wheres = "";
+		String whereLength = "";
 
-		// TODO RS Sprint 2
+		if (filter.getLengthStart() > 0 || filter.getLengthEnd() < 600) {
+			whereLength = "AND (f.length BETWEEN :minLength AND :maxLength) ";
+			wheres += whereLength;
+		}
+		
+		// if the name in the filter is set
+		if (filter.getName() != null) {
+			wheres += "AND LOWER(f.name) LIKE :findName ";
+		}
+		
+		if(filter.getGenreIds() != null) {
+			wheres += "AND g.id IN (:genreIds) ";
+		}
+		
+		if(filter.getLanguageIds() != null) {
+			wheres += "AND fl.language_id IN (:languageIds) ";
+		}
+		
+		String queryString = 
+				"SELECT sel.id, sel.name, COUNT(*) AS count "
+				+ "FROM ( "
+					+ "SELECT DISTINCT g.id AS id, g.name AS name, f.name AS film "
+					+ "FROM films f "
+						+ "JOIN film_genres fg ON f.id = fg.film_id "
+						+ "JOIN genres g ON fg.genre_id = g.id "
+						+ "JOIN film_countries fc ON f.id = fc.film_id "
+						+ "JOIN film_languages fl ON f.id = fl.film_id "
+					+ "WHERE fc.country_id = :countryId " 
+					+ wheres
+				+ ") AS sel "
+				+ "GROUP BY sel.id "
+				+ "ORDER BY count desc";
+		
+		Query query = em.get().createNativeQuery(queryString);
+		
+		query.setParameter("countryId", filter.getCountryIds().toArray()[0]);
+		
+		if (whereLength.length() > 0) { // set the min & max length params
+			query.setParameter("minLength", filter.getLengthStart());
+			query.setParameter("maxLength", filter.getLengthEnd());
+		}
 
-		// return the filled list of genres
+		// if the name in the filter is set, set the param
+		if (filter.getName() != null) { // use % to also find incomplete words
+			query.setParameter("findName", "%" + filter.getName().toLowerCase() + "%");
+		}
+		
+		// if there are genres specified as a list of Integers
+		if (filter.getGenreIds() != null) {
+			query.setParameter("genreIds", filter.getGenreIds());
+		}
 
-		// DEMO Code Start
-		genres.add(new Genre(1, "Action", 10));
-		genres.add(new Genre(2, "Adventure", 5));
-		genres.add(new Genre(3, "Comedy", 20));
-		// DEMO Code Start
+		// if there are languages specified as a list of Integers
+		if (filter.getLanguageIds() != null) {
+			query.setParameter("languageIds", filter.getLanguageIds());
+		}
+
+		List<Object[]> rows = query.getResultList();
+		
+		for(Object[] row : rows) {
+			genres.add(new Genre((int)row[0], (String)row[1], ((BigInteger)row[2]).intValue()));
+		}
+		
+		// return the filled list of genres, ordered by count
 		return genres;
 	}
 
