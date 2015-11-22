@@ -39,11 +39,11 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	Provider<EntityManager> em;
 
 	// TODO: find other way of caching stuff
-	FilmFilter cachedFilter;
-	List<FilmDB> cachedFilms;
-	HashMap<Integer, String> cachedCountries;
-	HashMap<Integer, String> cachedGenres;
-	HashMap<Integer, String> cachedLanguages;
+	public FilmFilter cachedFilter;
+	public List<FilmDB> cachedFilms;
+	public HashMap<Integer, String> cachedCountries;
+	public HashMap<Integer, String> cachedGenres;
+	public HashMap<Integer, String> cachedLanguages;
 
 	/**
 	 * Returns a filtered list of films to the client
@@ -324,9 +324,12 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			// as long as the next element's id equals the first one, use the
 			// same array
 			while (i + j < yearCounts.size() && yearCounts.get(i + j - 1)[0] == yearCounts.get(i + j)[0]) {
-				filmsPerYear[(int) yearCounts.get(i + j)[2]
-						- Country.YEAR_OFFSET] = ((BigInteger) yearCounts.get(i + j)[3]).intValue();
-				j++;
+				// TODO: make the max and min years dynamic, depending on real data
+				if((int)yearCounts.get(i + j)[2] >= 1890 && (int)yearCounts.get(i + j)[2] <= 2015) {
+					filmsPerYear[(int) yearCounts.get(i + j)[2]
+							- Country.YEAR_OFFSET] = ((BigInteger) yearCounts.get(i + j)[3]).intValue();
+					j++;
+				}
 			}
 
 			// hydrate a new country and add it to the result list
@@ -335,12 +338,8 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			c.setId((int) yearCounts.get(i)[0]);
 			countries.add(c);
 
-			i = i + j + 1;
+			i = i + j;
 		}
-
-		/*
-		 * for(Country c : countries) { System.err.println(c.toString()); }
-		 */
 
 		// return the filled list of countries
 		return countries;
