@@ -37,7 +37,7 @@ public class Film implements Serializable {
 		this.genres = genres;
 	}
 
-	public Film(int id, String name, int length, int year, List<String> countries, List<String> languages,
+	public Film(int id, String name, Integer length, Integer year, List<String> countries, List<String> languages,
 			List<String> genres) {
 		this(name, length, year, countries, languages, genres);
 
