@@ -104,7 +104,7 @@ th {
 	float:left;
 	min-height: 95%;
 	width:100%;
-	margin-bottom: 5%
+	margin-bottom: 0%
 }
 
 /*############################################CONTAINER SETTINGS FOR HEADER AND FOOTER OF A PANEL####################################################*/
@@ -343,7 +343,7 @@ th {
 }
 
 .genreTable th,.genreTable td{
-	text-align:right !important;
+	text-align:centerd !important;
 	padding: 1% !important;
 }
 
