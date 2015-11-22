@@ -43,6 +43,7 @@ import ch.uzh.se.se7en.server.model.LanguageDB;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.Genre;
 
 /**
  * Tests for the answering of rpc calls
@@ -75,6 +76,7 @@ public class FilmListServiceTest {
 	TypedQuery<GenreDB> genreQuery = mockQuery(dbGenres);
 	TypedQuery<LanguageDB> languageQuery = mockQuery(dbLanguages);
 	Query countryYearCount;
+	Query countryGenresQuery;
 
 	// setup the fake data for testing
 	@Before
@@ -106,20 +108,31 @@ public class FilmListServiceTest {
 		doReturn(countryQuery).when(manager).createQuery(Matchers.anyString(), Matchers.same(CountryDB.class));
 		doReturn(genreQuery).when(manager).createQuery(Matchers.anyString(), Matchers.same(GenreDB.class));
 		doReturn(languageQuery).when(manager).createQuery(Matchers.anyString(), Matchers.same(LanguageDB.class));
-		
+
 		// setup the native query mock for getCountryList
 		List<Object[]> nativeResult = new ArrayList<Object[]>();
-		Object[] firstRow = {1, "Germany", 1890, BigInteger.valueOf(25)};
-		Object[] secondRow = {2, "Singapur", 2011, BigInteger.valueOf(33)};
-		Object[] thirdRow = {2, "Singapur", 2015, BigInteger.valueOf(45)};
-		Object[] fourthRow = {3, "Italy", 1960, BigInteger.valueOf(20)};
+		Object[] firstRow = { 1, "Germany", 1890, BigInteger.valueOf(25) };
+		Object[] secondRow = { 2, "Singapur", 2011, BigInteger.valueOf(33) };
+		Object[] thirdRow = { 2, "Singapur", 2015, BigInteger.valueOf(45) };
+		Object[] fourthRow = { 3, "Italy", 1960, BigInteger.valueOf(20) };
 		nativeResult.add(firstRow);
 		nativeResult.add(secondRow);
 		nativeResult.add(thirdRow);
 		nativeResult.add(fourthRow);
 		countryYearCount = mockUntypedQuery(nativeResult);
-		doReturn(countryYearCount).when(manager).createNativeQuery(Matchers.anyString());
-		
+
+		// setup the native query mock for getGenreList
+		List<Object[]> nativeResult2 = new ArrayList<Object[]>();
+		Object[] firstRow2 = { 1, "Horror", BigInteger.valueOf(55) };
+		Object[] secondRow2 = { 2, "Adult", BigInteger.valueOf(46) };
+		Object[] thirdRow2 = { 3, "Romance", BigInteger.valueOf(33) };
+		Object[] fourthRow2 = { 4, "Action", BigInteger.valueOf(20) };
+		nativeResult2.add(firstRow2);
+		nativeResult2.add(secondRow2);
+		nativeResult2.add(thirdRow2);
+		nativeResult2.add(fourthRow2);
+		countryGenresQuery = mockUntypedQuery(nativeResult2);
+
 		// mock the call get() on the provider
 		doReturn(manager).when(em).get();
 
@@ -160,9 +173,8 @@ public class FilmListServiceTest {
 
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
-		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT f FROM FilmDB f WHERE 1=1 ORDER BY f.name",
-				FilmDB.class);
+		verify(manager, times(1))
+				.createQuery("SELECT DISTINCT f FROM FilmDB f WHERE 1=1 ORDER BY f.name", FilmDB.class);
 
 		// verify that the query is then executed
 		verify(filmQuery, times(1)).getResultList();
@@ -171,7 +183,7 @@ public class FilmListServiceTest {
 		// TODO: other than default values
 		verify(filmQuery, times(1)).setFirstResult(0);
 		verify(filmQuery, times(1)).setMaxResults(80000);
-		
+
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(filmQuery);
 	}
@@ -192,8 +204,15 @@ public class FilmListServiceTest {
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
 		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT f FROM FilmDB f JOIN FETCH f.filmCountryEntities fc WHERE 1=1 AND LOWER(f.name) LIKE :findName AND fc.countryId IN :countryIds ORDER BY f.name",
-				FilmDB.class);
+			"SELECT DISTINCT f " 
+			+ "FROM FilmDB f "
+				+ "JOIN FETCH f.filmCountryEntities fc " 
+			+ "WHERE 1=1 " 
+				+ "AND LOWER(f.name) LIKE :findName "
+				+ "AND fc.countryId IN (:countryIds) " 
+			+ "ORDER BY f.name", 
+			FilmDB.class
+		);
 
 		// verify that all the parameters are correctly set
 		verify(filmQuery, times(1)).setParameter("findName", "%hallo%");
@@ -201,7 +220,7 @@ public class FilmListServiceTest {
 
 		// verify that the query is then executed
 		verify(filmQuery, times(1)).getResultList();
-		
+
 		// verify that min/max results are correctly set
 		// TODO: other than default values
 		verify(filmQuery, times(1)).setFirstResult(0);
@@ -234,8 +253,20 @@ public class FilmListServiceTest {
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
 		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT f FROM FilmDB f JOIN FETCH f.filmCountryEntities fc JOIN f.filmGenreEntities fg JOIN f.filmLanguageEntities fl WHERE (f.length BETWEEN :minLength AND :maxLength) AND (f.year BETWEEN :minYear AND :maxYear) AND LOWER(f.name) LIKE :findName AND fc.countryId IN :countryIds AND fg.genreId IN :genreIds AND fl.languageId IN :languageIds ORDER BY f.name",
-				FilmDB.class);
+			"SELECT DISTINCT f " 
+			+ "FROM FilmDB f "
+				+ "JOIN FETCH f.filmCountryEntities fc " 
+				+ "JOIN f.filmGenreEntities fg "
+				+ "JOIN f.filmLanguageEntities fl " 
+			+ "WHERE (f.length BETWEEN :minLength AND :maxLength) "
+				+ "AND (f.year BETWEEN :minYear AND :maxYear) " 
+				+ "AND LOWER(f.name) LIKE :findName "
+				+ "AND fc.countryId IN (:countryIds) " 
+				+ "AND fg.genreId IN (:genreIds) "
+				+ "AND fl.languageId IN (:languageIds) " 
+			+ "ORDER BY f.name", 
+			FilmDB.class
+		);
 
 		// verify that all the parameters are correctly set
 		verify(filmQuery, times(1)).setParameter("minLength", filter.getLengthStart());
@@ -249,7 +280,7 @@ public class FilmListServiceTest {
 
 		// verify that the query is then executed
 		verify(filmQuery, times(1)).getResultList();
-		
+
 		// verify that min/max results are correctly set
 		// TODO: other than default values
 		verify(filmQuery, times(1)).setFirstResult(0);
@@ -262,6 +293,8 @@ public class FilmListServiceTest {
 	@Test
 	public void testGetCountryListFilterDefault() {
 		/* INITIALIZATION BLOCK */
+		doReturn(countryYearCount).when(manager).createNativeQuery(Matchers.anyString());
+
 		// filter with the default filters
 		FilmFilter filter = new FilmFilter();
 
@@ -270,26 +303,42 @@ public class FilmListServiceTest {
 
 		/* VERIFICATION BLOCK */
 		verify(manager, times(1)).createNativeQuery(
-				"SELECT DISTINCT c.id, c.name, f.year, COUNT(*) "
-				+ "FROM films f "
-				+ "JOIN film_countries fc ON f.id = fc.film_id JOIN countries c ON fc.country_id = c.id "
-				+ "WHERE 1=1 "
-				+ "GROUP BY c.name, f.year HAVING f.year IS NOT NULL ORDER BY c.name, f.year");
-		
+			"SELECT c.id, c.name, f.year, COUNT(*) " 
+			+ "FROM films f "
+				+ "JOIN film_countries fc ON f.id = fc.film_id "
+				+ "JOIN countries c ON fc.country_id = c.id " 
+			+ "WHERE 1=1 "
+			+ "GROUP BY c.name, f.year "
+			+ "HAVING f.year IS NOT NULL "
+			+ "ORDER BY c.name, f.year"
+		);
+
 		// assert that all 3 countries are present
 		assertEquals(countries.size(), 3);
-		
+
 		// assert that the correct countries are present
 		assertEquals(countries.get(0).getName(), "Germany");
 		assertEquals(countries.get(1).getName(), "Singapur");
 		assertEquals(countries.get(2).getName(), "Italy");
-		
+
 		// assert that the countries contain the correct array
 		// TODO NK check if those are correct :)
-		int[] countGermany = {0, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25};
-		int[] countSingapur = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 33, 33, 33, 78};
-		int[] countItaly = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20};
-		
+		int[] countGermany = { 0, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25 };
+		int[] countSingapur = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 33, 33, 33, 78 };
+		int[] countItaly = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+				20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+				20, 20, 20, 20, 20, 20, 20, 20, 20 };
+
 		assertTrue(Arrays.equals(countries.get(0).getNumberOfFilms(), countGermany));
 		assertTrue(Arrays.equals(countries.get(1).getNumberOfFilms(), countSingapur));
 		assertTrue(Arrays.equals(countries.get(2).getNumberOfFilms(), countItaly));
@@ -298,6 +347,8 @@ public class FilmListServiceTest {
 	@Test
 	public void testGetCountryListFilterByEverything() {
 		/* INITIALIZATION BLOCK */
+		doReturn(countryYearCount).when(manager).createNativeQuery(Matchers.anyString());
+
 		// filter with the default filters
 		FilmFilter filter = new FilmFilter();
 		Set<Integer> ids = new HashSet<Integer>();
@@ -317,47 +368,193 @@ public class FilmListServiceTest {
 
 		/* VERIFICATION BLOCK */
 		verify(manager, times(1)).createNativeQuery(
-				"SELECT DISTINCT c.id, c.name, f.year, COUNT(*) "
-				+ "FROM films f "
-				+ "JOIN film_countries fc ON f.id = fc.film_id JOIN countries c ON fc.country_id = c.id JOIN film_genres fg ON f.id = fg.film_id JOIN film_languages fl ON f.id = fl.film_id "
-				+ "WHERE (f.length BETWEEN :minLength AND :maxLength) AND LOWER(f.name) LIKE :findName AND fg.genre_id IN :genreIds AND fl.language_id IN :languageIds "
-				+ "GROUP BY c.name, f.year HAVING f.year IS NOT NULL ORDER BY c.name, f.year");
-		
-		// verify that all the parameters are correctly set (and year / country were not filtered by!)
+			"SELECT c.id, c.name, f.year, COUNT(*) " 
+			+ "FROM films f "
+				+ "JOIN film_countries fc ON f.id = fc.film_id " 
+				+ "JOIN countries c ON fc.country_id = c.id "
+				+ "JOIN film_genres fg ON f.id = fg.film_id " 
+				+ "JOIN film_languages fl ON f.id = fl.film_id "
+			+ "WHERE (f.length BETWEEN :minLength AND :maxLength) " 
+				+ "AND LOWER(f.name) LIKE :findName "
+				+ "AND fg.genre_id IN (:genreIds) " 
+				+ "AND fl.language_id IN (:languageIds) "
+			+ "GROUP BY c.name, f.year " 
+			+ "HAVING f.year IS NOT NULL " 
+			+ "ORDER BY c.name, f.year"
+		);
+
+		// verify that all the parameters are correctly set (and year / country
+		// were not filtered by!)
 		verify(countryYearCount, times(1)).setParameter("minLength", 11);
 		verify(countryYearCount, times(1)).setParameter("maxLength", 22);
 		verify(countryYearCount, times(1)).setParameter("findName", "%hallo%");
 		verify(countryYearCount, times(1)).setParameter("genreIds", filter.getGenreIds());
 		verify(countryYearCount, times(1)).setParameter("languageIds", filter.getLanguageIds());
-		
+
 		// verify that the query is then executed
 		verify(countryYearCount, times(1)).getResultList();
 
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(countryYearCount);
-		
+
 		// assert that all 3 countries are present
 		assertEquals(countries.size(), 3);
-		
+
 		// assert that the correct countries are present
 		assertEquals(countries.get(0).getName(), "Germany");
 		assertEquals(countries.get(1).getName(), "Singapur");
 		assertEquals(countries.get(2).getName(), "Italy");
-		
+
 		// assert that the countries contain the correct array
 		// TODO NK check if those are correct :)
-		int[] countGermany = {0, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25};
-		int[] countSingapur = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 33, 33, 33, 78};
-		int[] countItaly = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20};
-		
+		int[] countGermany = { 0, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25 };
+		int[] countSingapur = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 33, 33, 33, 78 };
+		int[] countItaly = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+				20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+				20, 20, 20, 20, 20, 20, 20, 20, 20 };
+
 		assertTrue(Arrays.equals(countries.get(0).getNumberOfFilms(), countGermany));
 		assertTrue(Arrays.equals(countries.get(1).getNumberOfFilms(), countSingapur));
 		assertTrue(Arrays.equals(countries.get(2).getNumberOfFilms(), countItaly));
 	}
-	
+
 	@Test
-	public void testGetGenreList() {
-		// TODO RS Sprint 2
+	public void testGetGenreListFilterDefault() {
+		/* INITIALIZATION BLOCK */
+		doReturn(countryGenresQuery).when(manager).createNativeQuery(Matchers.anyString());
+
+		// filter with the default filters and country id 99
+		FilmFilter filter = new FilmFilter();
+		Set<Integer> countryIds = new HashSet<Integer>();
+		countryIds.add(99);
+		filter.setCountryIds(countryIds);
+
+		/* EXECUTION BLOCK */
+		List<Genre> genres = rpcService.getGenreList(filter);
+
+		/* VERIFICATION BLOCK */
+		verify(manager, times(1)).createNativeQuery(
+			"SELECT sel.id, sel.name, COUNT(*) AS count " 
+			+ "FROM ( "
+				+ "SELECT DISTINCT g.id AS id, g.name AS name, f.name AS film " 
+				+ "FROM films f "
+					+ "JOIN film_genres fg ON f.id = fg.film_id " 
+					+ "JOIN genres g ON fg.genre_id = g.id "
+					+ "JOIN film_countries fc ON f.id = fc.film_id " 
+					+ "JOIN film_languages fl ON f.id = fl.film_id "
+				+ "WHERE fc.country_id = :countryId " 
+			+ ") AS sel " 
+			+ "GROUP BY sel.id " 
+			+ "ORDER BY count desc"
+		);
+
+		// verify that the correct country id is taken
+		verify(countryGenresQuery, times(1)).setParameter("countryId", 99);
+
+		// verify that the query is then executed
+		verify(countryGenresQuery, times(1)).getResultList();
+
+		// verify that the query isn't touched any further
+		verifyNoMoreInteractions(countryGenresQuery);
+
+		// assert that all 4 genres are present
+		assertEquals(genres.size(), 4);
+
+		// assert that the correct genres are present in the right order
+		assertEquals(genres.get(0).getName(), "Horror");
+		assertEquals(genres.get(1).getName(), "Adult");
+		assertEquals(genres.get(2).getName(), "Romance");
+		assertEquals(genres.get(3).getName(), "Action");
+
+		// assert that the genres contain the right counts
+		assertEquals(genres.get(0).getNumberOfFilms(), 55);
+		assertEquals(genres.get(1).getNumberOfFilms(), 46);
+		assertEquals(genres.get(2).getNumberOfFilms(), 33);
+		assertEquals(genres.get(3).getNumberOfFilms(), 20);
+	}
+
+	@Test
+	public void testGetGenreListFilterByEverything() {
+		/* INITIALIZATION BLOCK */
+		doReturn(countryGenresQuery).when(manager).createNativeQuery(Matchers.anyString());
+
+		// filter with the default filters and country id 99
+		FilmFilter filter = new FilmFilter();
+		Set<Integer> countryIds = new HashSet<Integer>();
+		countryIds.add(99);
+		filter.setName("Hallo");
+		filter.setLengthStart(11);
+		filter.setLengthEnd(22);
+		filter.setYearStart(2013);
+		filter.setYearEnd(2015);
+		filter.setCountryIds(countryIds);
+		filter.setGenreIds(countryIds);
+		filter.setLanguageIds(countryIds);
+
+		/* EXECUTION BLOCK */
+		List<Genre> genres = rpcService.getGenreList(filter);
+
+		/* VERIFICATION BLOCK */
+		verify(manager, times(1)).createNativeQuery(
+			"SELECT sel.id, sel.name, COUNT(*) AS count " 
+			+ "FROM ( "
+				+ "SELECT DISTINCT g.id AS id, g.name AS name, f.name AS film " 
+				+ "FROM films f "
+					+ "JOIN film_genres fg ON f.id = fg.film_id " 
+					+ "JOIN genres g ON fg.genre_id = g.id "
+					+ "JOIN film_countries fc ON f.id = fc.film_id " 
+					+ "JOIN film_languages fl ON f.id = fl.film_id "
+				+ "WHERE fc.country_id = :countryId " 
+					+ "AND (f.length BETWEEN :minLength AND :maxLength) "
+					+ "AND LOWER(f.name) LIKE :findName " 
+					+ "AND g.id IN (:genreIds) "
+					+ "AND fl.language_id IN (:languageIds) " 
+				+ ") AS sel " 
+			+ "GROUP BY sel.id " 
+			+ "ORDER BY count desc"
+		);
+
+		// verify that the correct country id is taken
+		verify(countryGenresQuery, times(1)).setParameter("countryId", 99);
+
+		// verify that all the parameters are correctly set (and year / country
+		// were not filtered by!)
+		verify(countryGenresQuery, times(1)).setParameter("minLength", 11);
+		verify(countryGenresQuery, times(1)).setParameter("maxLength", 22);
+		verify(countryGenresQuery, times(1)).setParameter("findName", "%hallo%");
+		verify(countryGenresQuery, times(1)).setParameter("genreIds", filter.getGenreIds());
+		verify(countryGenresQuery, times(1)).setParameter("languageIds", filter.getLanguageIds());
+
+		// verify that the query is then executed
+		verify(countryGenresQuery, times(1)).getResultList();
+
+		// verify that the query isn't touched any further
+		verifyNoMoreInteractions(countryGenresQuery);
+
+		// assert that all 4 genres are present
+		assertEquals(genres.size(), 4);
+
+		// assert that the correct genres are present in the right order
+		assertEquals(genres.get(0).getName(), "Horror");
+		assertEquals(genres.get(1).getName(), "Adult");
+		assertEquals(genres.get(2).getName(), "Romance");
+		assertEquals(genres.get(3).getName(), "Action");
+
+		// assert that the genres contain the right counts
+		assertEquals(genres.get(0).getNumberOfFilms(), 55);
+		assertEquals(genres.get(1).getNumberOfFilms(), 46);
+		assertEquals(genres.get(2).getNumberOfFilms(), 33);
+		assertEquals(genres.get(3).getNumberOfFilms(), 20);
 	}
 
 	@Test
@@ -422,9 +619,9 @@ public class FilmListServiceTest {
 		// assert that the HashMap entries were properly created
 		assertEquals(languageSelects.get(0), "German");
 	}
-	
+
 	@Test
 	public void testGetSelectOptions() {
-		// TODO RS
+		// TODO
 	}
 }
