@@ -360,18 +360,28 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Transactional
 	public List<Genre> getGenreList(FilmFilter filter) {
 		// create an empty list of genres
-		List<GenreDB> dbGenres = new ArrayList<GenreDB>();
 		List<Genre> genres = new ArrayList<Genre>();
+		
+		String queryString = "SELECT g.id, g.name, COUNT(*) AS count "
+				+ "FROM films f "
+				+ "JOIN film_genres fg ON f.id = fg.film_id "
+				+ "JOIN genres g ON fg.genre_id = g.id "
+				+ "JOIN film_countries fc ON fc.film_id = f.id "
+				+ "WHERE fc.country_id = :countryId "
+				+ "GROUP BY g.name "
+				+ "ORDER BY count desc";
+		
+		Query query = em.get().createNativeQuery(queryString);
+		
+		query.setParameter("countryId", filter.getCountryIds().toArray()[0]);
 
-		// TODO RS Sprint 2
-
-		// return the filled list of genres
-
-		// DEMO Code Start
-		genres.add(new Genre(1, "Action", 10));
-		genres.add(new Genre(2, "Adventure", 5));
-		genres.add(new Genre(3, "Comedy", 20));
-		// DEMO Code Start
+		List<Object[]> rows = query.getResultList();
+		
+		for(Object[] row : rows) {
+			genres.add(new Genre((int)row[0], (String)row[1], ((BigInteger)row[2]).intValue()));
+		}
+		
+		// return the filled list of genres, ordered by count
 		return genres;
 	}
 
