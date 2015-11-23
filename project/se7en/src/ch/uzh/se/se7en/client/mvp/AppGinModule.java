@@ -15,6 +15,7 @@ import ch.uzh.se.se7en.client.mvp.presenters.impl.FilterPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.MapPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.TablePresenterImpl;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.WelcomePresenterImpl;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.BrowserUtil;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
@@ -38,6 +39,7 @@ public class AppGinModule extends AbstractGinModule {
 		bind(FilterView.class).to(FilterViewImpl.class).in(Singleton.class);
 		bind(WelcomeView.class).to(WelcomeViewImpl.class).in(Singleton.class);
 		
+		bind(BrowserUtil.class);
 		
 		bind(FilmDataModel.class).to(FilmDataModelImpl.class).in(Singleton.class);
 		bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
