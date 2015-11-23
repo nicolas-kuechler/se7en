@@ -35,16 +35,18 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private String mode = "";
 	private FilmListServiceAsync filmListService;
 	private BrowserUtil browserUtil;
+	private UrlToken urlToken;
 	private boolean areFilterOptionsLoaded = false;
 
 	@Inject
 	public FilterPresenterImpl(EventBus eventBus, final FilterView filterView, FilmDataModel filmDataModel,
-			FilmListServiceAsync filmListService, BrowserUtil browserUtil) {
+			FilmListServiceAsync filmListService, BrowserUtil browserUtil, UrlToken urlToken) {
 		this.filmListService = filmListService;
 		this.eventBus = eventBus;
 		this.filterView = filterView;
 		this.filmDataModel = filmDataModel;
 		this.browserUtil = browserUtil;
+		this.urlToken = urlToken;
 		bind();
 		updateFilterFromView();
 		setupMultiSelects();
@@ -70,9 +72,11 @@ public class FilterPresenterImpl implements FilterPresenter {
 		// TODO NK Refactoring in Sprint 3?
 		String filterToken = "";
 		if (mode.equals(Tokens.MAP)) {
-			filterToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
+			//filterToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false); TODO NK Remove
+			filterToken = Tokens.MAP + urlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
 		} else if (mode.equals(Tokens.TABLE)) {
-			filterToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
+			//filterToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false); //TODO NK Remove
+			filterToken = Tokens.TABLE + urlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 		}
 		browserUtil.newHistoryItem(filterToken, false);
 		//History.newItem(filterToken, false); TODO NK remove
@@ -252,6 +256,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 	@Override
 	public void setFilter(final String filterToken) {
+		
 		if (filterToken.equals("")) // Url doesn't contain filter information
 									// (option1 Tab Change, optio2 No filter
 									// set)
@@ -259,9 +264,11 @@ public class FilterPresenterImpl implements FilterPresenter {
 			String historyToken;
 			// Tab Change or Without Filter
 			if (mode.equals(Tokens.MAP)) {
-				historyToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
+				//TODO NK Remove historyToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
+				historyToken = Tokens.MAP + urlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
 			} else if (mode.equals(Tokens.TABLE)) {
-				historyToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
+				//TODO NK Remove historyToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
+				historyToken = Tokens.TABLE + urlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 			} else {
 				browserUtil.writeErr("Filter setMode() was not called before setFilter() or unknown mode.");
 				//ClientLog.writeErr("Filter setMode() was not called before setFilter() or unknown mode."); TODO NK Remove 
@@ -273,11 +280,8 @@ public class FilterPresenterImpl implements FilterPresenter {
 		} else // Url contains Filter information
 		{
 			// Parse a filter object from the token
-			final FilmFilter filter = UrlToken.parseFilter(filterToken); // TODO
-																			// NK
-																			// Define
-																			// ExceptionHandling
-
+			//TODO NK Remove final FilmFilter filter = UrlToken.parseFilter(filterToken); 
+			final FilmFilter filter = urlToken.parseFilter(filterToken); 
 			// This timer is necessary due to the fact that the multiselects
 			// cannot handle
 			// select(ids) and getSelectedIds() immediately after each other.
