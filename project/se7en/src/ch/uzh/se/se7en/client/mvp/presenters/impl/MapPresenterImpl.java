@@ -60,6 +60,8 @@ public class MapPresenterImpl implements MapPresenter {
 
 	@Override
 	public void onCountrySelected() {
+		ClientLog.writeMsg("onCountrySelected() from filterpresenter"); //TODO NK Remove 
+		
 		//makes sure genre info is not visible
 		mapView.setGenreVisible(false);
 		
@@ -79,7 +81,6 @@ public class MapPresenterImpl implements MapPresenter {
 		filmListService.getGenreList(filter, new AsyncCallback<List<Genre>>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO NK Handle Error for User when Genre Rpc failed
 				ClientLog.writeErr("getGenreList failed");
 			}
 			@Override

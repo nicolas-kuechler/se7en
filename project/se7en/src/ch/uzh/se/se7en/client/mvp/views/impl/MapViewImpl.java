@@ -51,7 +51,6 @@ import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.Genre;
 
-//TODO DB positioning of the pieChart in the UI
 public class MapViewImpl extends Composite implements MapView {
 
 	private static MapViewImplUiBinder uiBinder = GWT.create(MapViewImplUiBinder.class);
@@ -196,10 +195,12 @@ public class MapViewImpl extends Composite implements MapView {
 				
 				geoChart.draw(dataViewGeoChart, geoChartOptions);
 				
+				geoChart.removeAllHandlers();
 				//add a selectHandler to the map to detect users selecting a country on the map
 				geoChart.addSelectHandler(new SelectHandler(){
 					@Override
 					public void onSelect(SelectEvent event) {
+							ClientLog.writeMsg("Country Selected: (onSelect(SelectEvent) from View"); //TODO NK remove
 							mapPresenter.onCountrySelected();	 //inform the mapPresenter that a country was selected
 					}
 				});
@@ -267,7 +268,6 @@ public class MapViewImpl extends Composite implements MapView {
 	@pre	
 	@post	genreTableColumns are initialized and their width is set
 	 */
-	
 	public void buildTable(){		
 		
 		genreProvider.addDataDisplay(genreTable);
@@ -342,7 +342,7 @@ public class MapViewImpl extends Composite implements MapView {
 					//hide legend
 					pieChartOptions.setLegend(Legend.create(LegendPosition.RIGHT));
 					//all slices under 10% are grouped together under "others"
-					pieChartOptions.setSliceVisibilityThreshold(0.1);
+					pieChartOptions.setSliceVisibilityThreshold(0.03);
 					//TODO NK Need to define way more piechart colors (at least max depending on threshold in line above)
 					pieChartOptions.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
 					pieChartOptions.setTitle("Genre Chart");
