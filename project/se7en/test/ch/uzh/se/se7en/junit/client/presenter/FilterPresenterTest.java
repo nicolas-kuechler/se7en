@@ -31,6 +31,7 @@ import ch.uzh.se.se7en.client.mvp.Tokens;
 import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedEvent;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.FilterPresenterImpl;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.BrowserUtil;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
@@ -51,6 +52,8 @@ public class FilterPresenterTest {
 	@Inject
 	HasWidgets container;
 	@Inject FilmListServiceAsync filmService;
+	
+	@Inject BrowserUtil browserUtil;
 	
 	FilmFilter normalFilter;
 	FilmFilter mapFilter;
@@ -171,7 +174,7 @@ public class FilterPresenterTest {
 		
 		
 		//After all mocks are setup, create the instance of the filterPresenter
-		filterPresenter = new FilterPresenterImpl(eventBus, filterView, filmDataModel, filmService);
+		filterPresenter = new FilterPresenterImpl(eventBus, filterView, filmDataModel, filmService, browserUtil);
 		
 		//set a mode
 		filterPresenter.setMode(Tokens.TABLE);

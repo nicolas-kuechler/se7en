@@ -4,10 +4,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.google.gwt.http.client.URL;
+import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.shared.model.FilmFilter;
 
 public class UrlToken {
+	
+	BrowserUtil browserUtil;
+	
+	@Inject
+	public UrlToken(BrowserUtil browserUtil)
+	{
+		this.browserUtil = browserUtil;
+	}
+	
 	//TODO NK Test encode decode method (looking if & are replaced aswell)
 	/**
 
@@ -17,7 +27,7 @@ public class UrlToken {
 
 	@return
 	 */ //TODO NK Test, Comments
-	public static String createUrlToken(FilmFilter filter, boolean autoSearch)
+	public String createUrlToken(FilmFilter filter, boolean autoSearch)
 	{
 		String token = "?sb=";
 
@@ -34,8 +44,8 @@ public class UrlToken {
 		//Name --> need to encode 
 		if(filter.getName()!=null)
 		{
-			//token+= "&na="+ filter.getName(); TODO NK Problem to solve calling static native method (used for junit test)
-			token+= "&na="+ URL.encodePathSegment(filter.getName());
+			//token+= "&na="+ URL.encodePathSegment(filter.getName()); TODO NK remove
+			token+= "&na="+ browserUtil.encode(filter.getName());
 		}
 
 		//Length
@@ -94,7 +104,7 @@ public class UrlToken {
 
 	@return
 	 */
-	public static FilmFilter parseFilter(String urlToken)
+	public FilmFilter parseFilter(String urlToken)
 	{
 		//TODO NK Define Exception Handling
 		FilmFilter filter = new FilmFilter();
@@ -108,8 +118,8 @@ public class UrlToken {
 			value = part.substring(3);
 			switch(fieldId){
 			case "na":
-				filter.setName(URL.decodePathSegment(value));
-				//filter.setName(value); TODO NK Problem to solve calling static native method (used for junit test)
+				//filter.setName(URL.decodePathSegment(value)); TODO NK remove
+				filter.setName(browserUtil.decode(value));
 				break;
 
 			case "le":

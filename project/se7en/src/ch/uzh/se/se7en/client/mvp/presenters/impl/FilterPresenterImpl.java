@@ -20,6 +20,7 @@ import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedEvent;
 import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.BrowserUtil;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
@@ -33,15 +34,17 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private FilmDataModel filmDataModel;
 	private String mode = "";
 	private FilmListServiceAsync filmListService;
+	private BrowserUtil browserUtil;
 	private boolean areFilterOptionsLoaded = false;
 
 	@Inject
 	public FilterPresenterImpl(EventBus eventBus, final FilterView filterView, FilmDataModel filmDataModel,
-			FilmListServiceAsync filmListService) {
+			FilmListServiceAsync filmListService, BrowserUtil browserUtil) {
 		this.filmListService = filmListService;
 		this.eventBus = eventBus;
 		this.filterView = filterView;
 		this.filmDataModel = filmDataModel;
+		this.browserUtil = browserUtil;
 		bind();
 		updateFilterFromView();
 		setupMultiSelects();
@@ -71,7 +74,8 @@ public class FilterPresenterImpl implements FilterPresenter {
 		} else if (mode.equals(Tokens.TABLE)) {
 			filterToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 		}
-		History.newItem(filterToken, false);
+		browserUtil.newHistoryItem(filterToken, false);
+		//History.newItem(filterToken, false); TODO NK remove
 	}
 
 	@Override
@@ -259,10 +263,13 @@ public class FilterPresenterImpl implements FilterPresenter {
 			} else if (mode.equals(Tokens.TABLE)) {
 				historyToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 			} else {
-				ClientLog.writeErr("Filter setMode() was not called before setFilter() or unknown mode.");
-				historyToken = History.getToken();
+				browserUtil.writeErr("Filter setMode() was not called before setFilter() or unknown mode.");
+				//ClientLog.writeErr("Filter setMode() was not called before setFilter() or unknown mode."); TODO NK Remove 
+				//historyToken = History.getToken(); TODO NK Remove 
+				historyToken = browserUtil.getHistoryToken();
 			}
-			History.replaceItem(historyToken, false);
+			//History.replaceItem(historyToken, false); TODO NK Remove 
+			browserUtil.replaceHistoryItem(historyToken, false);
 		} else // Url contains Filter information
 		{
 			// Parse a filter object from the token
