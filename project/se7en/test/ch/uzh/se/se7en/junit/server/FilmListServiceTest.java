@@ -516,6 +516,7 @@ public class FilmListServiceTest {
 					+ "JOIN film_languages fl ON f.id = fl.film_id "
 				+ "WHERE fc.country_id = :countryId " 
 					+ "AND (f.length BETWEEN :minLength AND :maxLength) "
+					+ "AND (f.year BETWEEN :minYear AND :maxYear) "
 					+ "AND LOWER(f.name) LIKE :findName " 
 					+ "AND g.id IN (:genreIds) "
 					+ "AND fl.language_id IN (:languageIds) " 
@@ -531,6 +532,8 @@ public class FilmListServiceTest {
 		// were not filtered by!)
 		verify(countryGenresQuery, times(1)).setParameter("minLength", 11);
 		verify(countryGenresQuery, times(1)).setParameter("maxLength", 22);
+		verify(countryGenresQuery, times(1)).setParameter("minYear", 2013);
+		verify(countryGenresQuery, times(1)).setParameter("maxYear", 2015);
 		verify(countryGenresQuery, times(1)).setParameter("findName", "%hallo%");
 		verify(countryGenresQuery, times(1)).setParameter("genreIds", filter.getGenreIds());
 		verify(countryGenresQuery, times(1)).setParameter("languageIds", filter.getLanguageIds());

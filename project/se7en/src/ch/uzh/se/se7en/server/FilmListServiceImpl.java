@@ -364,10 +364,17 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		
 		String wheres = "";
 		String whereLength = "";
+		String whereYear = "";
 
 		if (filter.getLengthStart() > 0 || filter.getLengthEnd() < 600) {
 			whereLength = "AND (f.length BETWEEN :minLength AND :maxLength) ";
 			wheres += whereLength;
+		}
+		
+		// only filter for a year if the filter values are not the defaults
+		if (filter.getYearStart() > 1890 || filter.getYearEnd() < 2015) {
+			whereYear = "AND (f.year BETWEEN :minYear AND :maxYear) ";
+			wheres += whereYear;
 		}
 		
 		// if the name in the filter is set
@@ -405,6 +412,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		if (whereLength.length() > 0) { // set the min & max length params
 			query.setParameter("minLength", filter.getLengthStart());
 			query.setParameter("maxLength", filter.getLengthEnd());
+		}
+		
+		// if filter for year != defaults
+		if (whereYear.length() > 0) {
+			// set the min & max year params
+			query.setParameter("minYear", filter.getYearStart());
+			query.setParameter("maxYear", filter.getYearEnd());
 		}
 
 		// if the name in the filter is set, set the param
