@@ -78,7 +78,7 @@ public class MapPresenterImpl implements MapPresenter {
 		
 		
 		//start rpc to get Genre List
-		filmListService.getGenreList(filter, new AsyncCallback<List<Genre>>(){
+		filmListService.getGenreList(genreFilter, new AsyncCallback<List<Genre>>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				ClientLog.writeErr("getGenreList failed");
@@ -194,10 +194,6 @@ public class MapPresenterImpl implements MapPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO NK Error Handling when Rpc for Map failed
-				// Maybe logging to console?
-				// User needs to be informed aswell
-
 				// displays empty chart for user
 				filmDataModel.setCountryList(new ArrayList<Country>());
 				updateGeoChart();

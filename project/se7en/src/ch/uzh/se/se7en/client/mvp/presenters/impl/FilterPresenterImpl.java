@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -69,17 +68,13 @@ public class FilterPresenterImpl implements FilterPresenter {
 		eventBus.fireEvent(new FilterAppliedEvent());
 		updateAppliedFilterBox();
 
-		// TODO NK Refactoring in Sprint 3?
 		String filterToken = "";
 		if (mode.equals(Tokens.MAP)) {
-			//filterToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false); TODO NK Remove
 			filterToken = Tokens.MAP + urlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
 		} else if (mode.equals(Tokens.TABLE)) {
-			//filterToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false); //TODO NK Remove
 			filterToken = Tokens.TABLE + urlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 		}
 		browserUtil.newHistoryItem(filterToken, false);
-		//History.newItem(filterToken, false); TODO NK remove
 	}
 
 	@Override
@@ -264,23 +259,17 @@ public class FilterPresenterImpl implements FilterPresenter {
 			String historyToken;
 			// Tab Change or Without Filter
 			if (mode.equals(Tokens.MAP)) {
-				//TODO NK Remove historyToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
 				historyToken = Tokens.MAP + urlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
 			} else if (mode.equals(Tokens.TABLE)) {
-				//TODO NK Remove historyToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 				historyToken = Tokens.TABLE + urlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 			} else {
 				browserUtil.writeErr("Filter setMode() was not called before setFilter() or unknown mode.");
-				//ClientLog.writeErr("Filter setMode() was not called before setFilter() or unknown mode."); TODO NK Remove 
-				//historyToken = History.getToken(); TODO NK Remove 
 				historyToken = browserUtil.getHistoryToken();
 			}
-			//History.replaceItem(historyToken, false); TODO NK Remove 
 			browserUtil.replaceHistoryItem(historyToken, false);
 		} else // Url contains Filter information
 		{
 			// Parse a filter object from the token
-			//TODO NK Remove final FilmFilter filter = UrlToken.parseFilter(filterToken); 
 			final FilmFilter filter = urlToken.parseFilter(filterToken); 
 			
 			// This timer is necessary due to the fact that the multiselects
