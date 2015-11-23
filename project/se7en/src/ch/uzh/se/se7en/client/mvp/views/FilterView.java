@@ -1,16 +1,12 @@
 package ch.uzh.se.se7en.client.mvp.views;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
-import org.gwtbootstrap3.extras.slider.client.ui.Range;
-
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
-import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
-import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public interface FilterView extends IsWidget {
 	/**
@@ -23,80 +19,159 @@ public interface FilterView extends IsWidget {
 	public void setPresenter(FilterPresenter presenter);
 	
 	/**
-	Provides access to the UI Component nameBox for the filterPresenter
+	Provides access to the input in the filter field name
 	@author Nicolas Küchler
 	@pre 	nameBox != null && filterPresenter != null
 	@post	nameBox == nameBox @pre
-	@return	Objects that allows syntax to get access: getNameBox().setValue(text) or getNameBox().getValue()
+	@return input of the nameBox
 	 */
-	//public HasValue<String> getNameBox();
-	
 	public String getName();
+	
+	/**
+	Provides access to set the input in the filter field name
+	@author Nicolas Küchler
+	@pre 	nameBox != null && filterPresenter != null
+	@post	nameBox.getValue() == name
+	@param  name the name that should be displayed in the filter field 
+	 */
 	public void setName(String name);
 	
 	/**
-	Provides access to the UI Component lengthSlider for the filterPresenter
+	Provides access to set the Range in the RangeSlider Length
+	@author Nicolas Küchler
+	@pre 	lengthSlider != null && filterPresenter != null
+	@post	lengthSlider range == startLength:endLength
+	@param  startLength the starting length (from)
+	@param 	endLength the ending length (too)
+	 */
+	public void setLengthSlider(int startLength, int endLength);
+	
+	/**
+	Provides access to the RangeSlider Length starting position
 	@author Nicolas Küchler
 	@pre 	lengthSlider != null && filterPresenter != null
 	@post	lengthSlider == lengthSlider @pre
-	@return	Objects that allows syntax to get access: getLengthSlider().setValue(range) or getLengthSlider().getValue()
+	@return starting position of the lengthSlider
 	 */
-	//public HasValue<Range> getLengthSlider();
-	
-	public void setLengthSlider(int startLength, int endLength);
 	public int getLengthStart();
+	
+	/**
+	Provides access to the RangeSlider Length ending position
+	@author Nicolas Küchler
+	@pre 	lengthSlider != null && filterPresenter != null
+	@post	lengthSlider == lengthSlider @pre
+	@return ending position of the lengthSlider
+	 */
 	public int getLengthEnd();
 	
 	/**
-	Provides access to the UI Component yearSlider for the filterPresenter
+	Provides access to set the Range in the RangeSlider Year
+	@author Nicolas Küchler
+	@pre 	yearSlider != null && filterPresenter != null
+	@post	yearSlider range == startYear:endYear
+	@param  startYear the starting year (from)
+	@param 	endYear the ending year (too)
+	 */
+	public void setYearSlider(int startYear, int endYear);
+	
+	/**
+	Provides access to the RangeSlider Year starting position
 	@author Nicolas Küchler
 	@pre 	yearSlider != null && filterPresenter != null
 	@post	yearSlider == yearSlider @pre
-	@return	Objects that allows syntax to get access: getYearSlider().setValue(range) or getYearSlider().getValue()
+	@return starting position of the yearSlider
 	 */
-	//public HasValue<Range> getYearSlider();
-	public void setYearSlider(int startYear, int endYear);
 	public int getYearStart();
+	
+	/**
+	Provides access to the RangeSlider Year ending position
+	@author Nicolas Küchler
+	@pre 	yearSlider != null && filterPresenter != null
+	@post	yearSlider == yearSlider @pre
+	@return ending position of the yearSlider
+	 */
 	public int getYearEnd();
 	
 	/**
-	Provides access to the UI Component countrySelect for the filterPresenter
+	Sets the available options to choose in the MultiSelect Country
 	@author Nicolas Küchler
 	@pre 	countrySelect != null && filterPresenter != null
-	@post	countrySelect == countrySelect @pre
-	@return	Objects that allows syntax to get access: getCountrySelect().setValue(countryList) or getCountrySelect().getValue()
+	@post	countrySelect available Options == selectOptions
+	@param selectOptions a list of SelectOption
 	 */
-	//public MultiSelect getCountrySelect();
-	
-	public void setCountryOptions(List<SelectOption> selectOptions);
-	public List<SelectOption> getSelectedCountryOptions();
-	public void setSelectedCountryOptions(List<String> selectedOptions);
+	public void setCountryOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
-	Provides access to the UI Component languageSelect for the filterPresenter
+	Gets the information about the currently chosen (selected) options in the MultiSelect Country
+	@author Nicolas Küchler
+	@pre 	countrySelect != null && filterPresenter != null
+	@post	countrySelect selected options == countrySelect selected options @pre
+	@return	A List of SelectOption which include the currently selected options. 
+	 */
+	public Set<Integer> getSelectedCountryIds();
+	
+	/**
+	Sets currently chosen (selected) options in the MultiSelect Country
+	@author Nicolas Küchler
+	@pre 	countrySelect != null && filterPresenter != null
+	@post	countrySelect selected options == selectedOptions
+	@param	selectedOptions Options that are available in the MultiSelect and should be selected
+	 */
+	public void setSelectedCountryOptions(Set<Integer> selectedOptions);
+	
+	/**
+	Sets the available options to choose in the MultiSelect Language
 	@author Nicolas Küchler
 	@pre 	languageSelect != null && filterPresenter != null
-	@post	languageSelect == languageSelect @pre
-	@return	Objects that allows syntax to get access: getLanguageSelect().setValue(languageList) or getLanguageSelect().getValue()
+	@post	languageSelect available Options == selectOptions
+	@param 	selectOptions a list of SelectOption
 	 */
-	//public MultiSelect getLanguageSelect();
-	
-	public void setLanguageOptions(List<SelectOption> selectOptions);
-	public List<SelectOption> getSelectedLanguageOptions();
-	public void setSelectedLanguageOptions(List<String> selectedOptions);
+	public void setLanguageOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
-	Provides access to the UI Component genreSelect for the filterPresenter
+	Gets the information about the currently chosen (selected) options in the MultiSelect Language
+	@author Nicolas Küchler
+	@pre 	languageSelect != null && filterPresenter != null
+	@post	languageSelect selected options == languageSelect selected options @pre
+	@return	A List of SelectOption which include the currently selected options. 
+	 */
+	public Set<Integer> getSelectedLanguageIds();
+	
+	/**
+	Sets currently chosen (selected) options in the MultiSelect Language
+	@author Nicolas Küchler
+	@pre 	languageSelect != null && filterPresenter != null
+	@post	languageSelect selected options == selectedOptions
+	@param	selectedOptions Options that are available in the MultiSelect and should be selected
+	 */
+	public void setSelectedLanguageOptions(Set<Integer> selectedOptions);
+	
+	/**
+	Sets the available options to choose in the MultiSelect Genre
 	@author Nicolas Küchler
 	@pre 	genreSelect != null && filterPresenter != null
-	@post	genreSelect == genreSelect @pre
-	@return	Objects that allows syntax to get access: getGenreSelect().setValue(languageList) or getGenreSelect().getValue()
+	@post	genreSelect available Options == selectOptions
+	@param selectOptions a list of SelectOption
 	 */
-	//public MultiSelect getGenreSelect();
+	public void setGenreOptions(HashMap<Integer,String> selectOptions);
 	
-	public void setGenreOptions(List<SelectOption> selectOptions);
-	public List<SelectOption> getSelectedGenreOptions();
-	public void setSelectedGenreOptions(List<String> selectedOptions);
+	/**
+	Gets the information about the currently chosen (selected) options in the MultiSelect Genre
+	@author Nicolas Küchler
+	@pre 	genreSelect != null && filterPresenter != null
+	@post	genreSelect selected options == genreSelect selected options @pre
+	@return	A List of SelectOption which include the currently selected options. 
+	 */
+	public Set<Integer> getSelectedGenreIds();
+	
+	/**
+	Sets currently chosen (selected) options in the MultiSelect Genre
+	@author Nicolas Küchler
+	@pre 	genreSelect != null && filterPresenter != null
+	@post	genreSelect selected options == selectedOptions
+	@param	selectedOptions Options that are available in the MultiSelect and should be selected
+	 */
+	public void setSelectedGenreOptions(Set<Integer> selectedOptions);
 	
 	/**
 	Provides access to the UI Component AppliedFilter for the filterPresenter

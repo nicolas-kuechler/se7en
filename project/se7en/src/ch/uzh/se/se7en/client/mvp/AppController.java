@@ -3,29 +3,21 @@
  */
 package ch.uzh.se.se7en.client.mvp;
 
-import org.gwtbootstrap3.client.ui.Icon;
-import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlPosition;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
-import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import ch.uzh.se.se7en.client.mvp.presenters.impl.MapPresenterImpl;
-import ch.uzh.se.se7en.client.mvp.presenters.impl.TablePresenterImpl;
-import ch.uzh.se.se7en.client.mvp.presenters.impl.WelcomePresenterImpl;
 import ch.uzh.se.se7en.client.mvp.views.widgets.NavigationBar;
-import ch.uzh.se.se7en.client.rpc.FilmListService;
 import ch.uzh.se.se7en.client.rpc.TriggerImportService;
 import ch.uzh.se.se7en.client.rpc.TriggerImportServiceAsync;
 
@@ -39,7 +31,6 @@ import ch.uzh.se.se7en.client.rpc.TriggerImportServiceAsync;
 public class AppController implements ValueChangeHandler<String> {
 
 	private final AppGinjector injector = GWT.create(AppGinjector.class);
-	private EventBus eventBus;
 	private HasWidgets container;
 	private HasWidgets subContainer;
 	private NavigationBar navBar;
@@ -79,6 +70,14 @@ public class AppController implements ValueChangeHandler<String> {
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
 		String token = event.getValue();
+		String filterToken = "";
+		
+		if(token.indexOf('?')>0) //if there is a query part in the url
+		{
+			filterToken =token.substring(token.indexOf('?'));
+			token = token.substring(0, token.indexOf('?'));
+		}
+		
 		if ((token != null) && (!token.equals(Tokens.HOME))) // if there is a
 																// specific
 																// token set
@@ -86,11 +85,11 @@ public class AppController implements ValueChangeHandler<String> {
 			if (token.startsWith(Tokens.MAP)) // it's the map token
 			{
 				// Filter Parsing needs to be implemented
-				doMapView();
+				doMapView(filterToken);
 			} else if (token.startsWith(Tokens.TABLE)) // it's the table token
 			{
 				// Filter Parsing needs to be implemented
-				doTableView();
+				doTableView(filterToken);
 			} else if (token.startsWith(Tokens.IMPORT)) {
 				doImport(token);
 				doWelcomeView();
@@ -109,7 +108,6 @@ public class AppController implements ValueChangeHandler<String> {
 
 	private void doReloadMultiSelect() {
 		injector.getFilterPresenter().setupMultiSelects();
-
 	}
 
 	/**
@@ -123,8 +121,6 @@ public class AppController implements ValueChangeHandler<String> {
 	private void bind() {
 		// Listen for History Change Events
 		History.addValueChangeHandler(this);
-
-		// Setup listening for events on the event bus
 	}
 
 	/**
@@ -134,12 +130,13 @@ public class AppController implements ValueChangeHandler<String> {
 	 * @pre container != null
 	 * @post
 	 */
-	private void doMapView() {
+	private void doMapView(String filterToken) {
 		navBar.setActive(Tokens.MAP);
 		Window.setTitle("GIR | Map");
 		RootPanel.get("subContainer").setVisible(true);
 		injector.getFilterPresenter().go(subContainer);
 		injector.getFilterPresenter().setMode(Tokens.MAP);
+		injector.getFilterPresenter().setFilter(filterToken);
 		injector.getMapPresenter().go(container);
 	}
 
@@ -151,12 +148,13 @@ public class AppController implements ValueChangeHandler<String> {
 	 * @pre container != null
 	 * @post
 	 */
-	private void doTableView() {
+	private void doTableView(String filterToken) {
 		navBar.setActive(Tokens.TABLE);
 		Window.setTitle("GIR | Table");
 		RootPanel.get("subContainer").setVisible(true);
 		injector.getFilterPresenter().go(subContainer);
 		injector.getFilterPresenter().setMode(Tokens.TABLE);
+		injector.getFilterPresenter().setFilter(filterToken);
 		injector.getTablePresenter().go(container);
 	}
 
@@ -185,7 +183,6 @@ public class AppController implements ValueChangeHandler<String> {
 	 *            token
 	 */
 	private void doImport(String token) {
-		// TODO Import RPC Service
 		final String fileName = token.substring(Tokens.IMPORT.length() + 1); // token
 																				// has
 																				// format:

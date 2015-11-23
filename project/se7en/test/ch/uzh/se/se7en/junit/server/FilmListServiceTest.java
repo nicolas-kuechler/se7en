@@ -1,21 +1,26 @@
 package ch.uzh.se.se7en.junit.server;
 
 import static ch.uzh.se.se7en.junit.server.TestUtil.mockQuery;
+import static ch.uzh.se.se7en.junit.server.TestUtil.mockUntypedQuery;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.jukito.JukitoRunner;
@@ -38,7 +43,7 @@ import ch.uzh.se.se7en.server.model.LanguageDB;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
+import ch.uzh.se.se7en.shared.model.Genre;
 
 /**
  * Tests for the answering of rpc calls
@@ -70,6 +75,8 @@ public class FilmListServiceTest {
 	TypedQuery<CountryDB> countryQuery = mockQuery(dbCountries);
 	TypedQuery<GenreDB> genreQuery = mockQuery(dbGenres);
 	TypedQuery<LanguageDB> languageQuery = mockQuery(dbLanguages);
+	Query countryYearCount;
+	Query countryGenresQuery;
 
 	// setup the fake data for testing
 	@Before
@@ -91,6 +98,9 @@ public class FilmListServiceTest {
 		fakeFilm.setFilmCountryEntities(dbFilmCountries);
 		fakeFilm.setFilmGenreEntities(dbFilmGenres);
 		fakeFilm.setFilmLanguageEntities(dbFilmLanguages);
+		fakeFilm.setCountryString("Switzerland");
+		fakeFilm.setGenreString("Horror");
+		fakeFilm.setLanguageString("German");
 		dbFilms.add(fakeFilm);
 
 		// the mocked queries should return the fake results
@@ -98,6 +108,30 @@ public class FilmListServiceTest {
 		doReturn(countryQuery).when(manager).createQuery(Matchers.anyString(), Matchers.same(CountryDB.class));
 		doReturn(genreQuery).when(manager).createQuery(Matchers.anyString(), Matchers.same(GenreDB.class));
 		doReturn(languageQuery).when(manager).createQuery(Matchers.anyString(), Matchers.same(LanguageDB.class));
+
+		// setup the native query mock for getCountryList
+		List<Object[]> nativeResult = new ArrayList<Object[]>();
+		Object[] firstRow = { 1, "Germany", 1890, BigInteger.valueOf(25) };
+		Object[] secondRow = { 2, "Singapur", 2011, BigInteger.valueOf(33) };
+		Object[] thirdRow = { 2, "Singapur", 2015, BigInteger.valueOf(45) };
+		Object[] fourthRow = { 3, "Italy", 1960, BigInteger.valueOf(20) };
+		nativeResult.add(firstRow);
+		nativeResult.add(secondRow);
+		nativeResult.add(thirdRow);
+		nativeResult.add(fourthRow);
+		countryYearCount = mockUntypedQuery(nativeResult);
+
+		// setup the native query mock for getGenreList
+		List<Object[]> nativeResult2 = new ArrayList<Object[]>();
+		Object[] firstRow2 = { 1, "Horror", BigInteger.valueOf(55) };
+		Object[] secondRow2 = { 2, "Adult", BigInteger.valueOf(46) };
+		Object[] thirdRow2 = { 3, "Romance", BigInteger.valueOf(33) };
+		Object[] fourthRow2 = { 4, "Action", BigInteger.valueOf(20) };
+		nativeResult2.add(firstRow2);
+		nativeResult2.add(secondRow2);
+		nativeResult2.add(thirdRow2);
+		nativeResult2.add(fourthRow2);
+		countryGenresQuery = mockUntypedQuery(nativeResult2);
 
 		// mock the call get() on the provider
 		doReturn(manager).when(em).get();
@@ -122,6 +156,7 @@ public class FilmListServiceTest {
 		assertEquals(film.getName(), "Film 1");
 		assertEquals(film.getLength(), new Integer(90));
 		assertEquals(film.getYear(), new Integer(2015));
+		// TODO: update such that we only need to return the string
 		assertEquals(film.getCountries().get(0), "Switzerland");
 		assertEquals(film.getGenres().get(0), "Horror");
 		assertEquals(film.getLanguages().get(0), "German");
@@ -138,25 +173,23 @@ public class FilmListServiceTest {
 
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
-		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT f FROM FilmDB f WHERE (f.length BETWEEN :minLength AND :maxLength) AND (f.year BETWEEN :minYear AND :maxYear) ORDER BY f.name",
-				FilmDB.class);
-
-		// verify that all the parameters are correctly set
-		verify(filmQuery, times(1)).setParameter("minLength", filter.getLengthStart());
-		verify(filmQuery, times(1)).setParameter("maxLength", filter.getLengthEnd());
-		verify(filmQuery, times(1)).setParameter("minYear", filter.getYearStart());
-		verify(filmQuery, times(1)).setParameter("maxYear", filter.getYearEnd());
+		verify(manager, times(1))
+				.createQuery("SELECT DISTINCT f FROM FilmDB f WHERE 1=1 ORDER BY f.name", FilmDB.class);
 
 		// verify that the query is then executed
 		verify(filmQuery, times(1)).getResultList();
+
+		// verify that min/max results are correctly set
+		// TODO: other than default values
+		verify(filmQuery, times(1)).setFirstResult(0);
+		verify(filmQuery, times(1)).setMaxResults(80000);
 
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(filmQuery);
 	}
 
 	@Test
-	public void testGetFilmEntitiesListFilterByName() {
+	public void testGetFilmEntitiesListFilterByNameAndCountryIds() {
 		/* INITIALIZATION BLOCK */
 		// set the filters
 		FilmFilter filter = new FilmFilter("Hallo");
@@ -171,19 +204,27 @@ public class FilmListServiceTest {
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
 		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT f FROM FilmDB f JOIN f.filmCountryEntities fc WHERE (f.length BETWEEN :minLength AND :maxLength) AND (f.year BETWEEN :minYear AND :maxYear) AND LOWER(f.name) LIKE :findName AND fc.countryId IN :countryIds ORDER BY f.name",
-				FilmDB.class);
+			"SELECT DISTINCT f " 
+			+ "FROM FilmDB f "
+				+ "LEFT JOIN FETCH f.filmCountryEntities fc " 
+			+ "WHERE 1=1 " 
+				+ "AND LOWER(f.name) LIKE :findName "
+				+ "AND fc.countryId IN (:countryIds) " 
+			+ "ORDER BY f.name", 
+			FilmDB.class
+		);
 
 		// verify that all the parameters are correctly set
-		verify(filmQuery, times(1)).setParameter("minLength", filter.getLengthStart());
-		verify(filmQuery, times(1)).setParameter("maxLength", filter.getLengthEnd());
-		verify(filmQuery, times(1)).setParameter("minYear", filter.getYearStart());
-		verify(filmQuery, times(1)).setParameter("maxYear", filter.getYearEnd());
 		verify(filmQuery, times(1)).setParameter("findName", "%hallo%");
 		verify(filmQuery, times(1)).setParameter("countryIds", filter.getCountryIds());
 
 		// verify that the query is then executed
 		verify(filmQuery, times(1)).getResultList();
+
+		// verify that min/max results are correctly set
+		// TODO: other than default values
+		verify(filmQuery, times(1)).setFirstResult(0);
+		verify(filmQuery, times(1)).setMaxResults(80000);
 
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(filmQuery);
@@ -212,8 +253,20 @@ public class FilmListServiceTest {
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
 		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT f FROM FilmDB f JOIN f.filmCountryEntities fc JOIN f.filmGenreEntities fg JOIN f.filmLanguageEntities fl WHERE (f.length BETWEEN :minLength AND :maxLength) AND (f.year BETWEEN :minYear AND :maxYear) AND LOWER(f.name) LIKE :findName AND fc.countryId IN :countryIds AND fg.genreId IN :genreIds AND fl.languageId IN :languageIds ORDER BY f.name",
-				FilmDB.class);
+			"SELECT DISTINCT f " 
+			+ "FROM FilmDB f "
+				+ "LEFT JOIN FETCH f.filmCountryEntities fc " 
+				+ "LEFT JOIN f.filmGenreEntities fg "
+				+ "LEFT JOIN f.filmLanguageEntities fl " 
+			+ "WHERE (f.length BETWEEN :minLength AND :maxLength) "
+				+ "AND (f.year BETWEEN :minYear AND :maxYear) " 
+				+ "AND LOWER(f.name) LIKE :findName "
+				+ "AND fc.countryId IN (:countryIds) " 
+				+ "AND fg.genreId IN (:genreIds) "
+				+ "AND fl.languageId IN (:languageIds) " 
+			+ "ORDER BY f.name", 
+			FilmDB.class
+		);
 
 		// verify that all the parameters are correctly set
 		verify(filmQuery, times(1)).setParameter("minLength", filter.getLengthStart());
@@ -228,92 +281,75 @@ public class FilmListServiceTest {
 		// verify that the query is then executed
 		verify(filmQuery, times(1)).getResultList();
 
+		// verify that min/max results are correctly set
+		// TODO: other than default values
+		verify(filmQuery, times(1)).setFirstResult(0);
+		verify(filmQuery, times(1)).setMaxResults(80000);
+
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(filmQuery);
 	}
 
 	@Test
-	public void testGetCountryList() {
+	public void testGetCountryListFilterDefault() {
 		/* INITIALIZATION BLOCK */
+		doReturn(countryYearCount).when(manager).createNativeQuery(Matchers.anyString());
+
 		// filter with the default filters
 		FilmFilter filter = new FilmFilter();
-		int[] numOfFilms = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 
 		/* EXECUTION BLOCK */
 		List<Country> countries = rpcService.getCountryList(filter);
-		Country country = countries.get(0);
 
 		/* VERIFICATION BLOCK */
-		assertEquals(country.getName(), "Switzerland");
+		verify(manager, times(1)).createNativeQuery(
+			"SELECT DISTINCT c.id, c.name, f.year, COUNT(*) " 
+			+ "FROM films f "
+				+ "LEFT JOIN film_countries fc ON f.id = fc.film_id "
+				+ "JOIN countries c ON fc.country_id = c.id " 
+			+ "WHERE 1=1 "
+			+ "GROUP BY c.name, f.year "
+			+ "HAVING f.year IS NOT NULL "
+			+ "ORDER BY c.name, f.year"
+		);
 
-		// assert that the number of films array was correctly generated
-		assertTrue(Arrays.equals(country.getNumberOfFilms(), numOfFilms));
+		// assert that all 3 countries are present
+		assertEquals(countries.size(), 3);
+
+		// assert that the correct countries are present
+		assertEquals(countries.get(0).getName(), "Germany");
+		assertEquals(countries.get(1).getName(), "Singapur");
+		assertEquals(countries.get(2).getName(), "Italy");
+
+		// assert that the countries contain the correct array
+		// TODO NK check if those are correct :)
+		int[] countGermany = { 0, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25 };
+		int[] countSingapur = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 33, 33, 33, 78 };
+		int[] countItaly = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+				20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+				20, 20, 20, 20, 20, 20, 20, 20, 20 };
+
+		assertTrue(Arrays.equals(countries.get(0).getNumberOfFilms(), countGermany));
+		assertTrue(Arrays.equals(countries.get(1).getNumberOfFilms(), countSingapur));
+		assertTrue(Arrays.equals(countries.get(2).getNumberOfFilms(), countItaly));
 	}
 
 	@Test
-	public void testGetCountryEntitiesListFilteredDefault() {
+	public void testGetCountryListFilterByEverything() {
 		/* INITIALIZATION BLOCK */
+		doReturn(countryYearCount).when(manager).createNativeQuery(Matchers.anyString());
+
 		// filter with the default filters
-		FilmFilter filter = new FilmFilter();
-
-		/* EXECUTION BLOCK */
-		List<CountryDB> countries = rpcService.getCountryEntitiesList(filter);
-
-		/* VERIFICATION BLOCK */
-		// verify that the correct query string is generated
-		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT c FROM CountryDB c JOIN c.filmCountryEntities fc JOIN fc.primaryKey.film fi WHERE (fi.length BETWEEN :minLength AND :maxLength) AND (fi.year BETWEEN :minYear AND :maxYear) ORDER BY c.name",
-				CountryDB.class);
-
-		// verify that all the parameters are correctly set
-		verify(countryQuery, times(1)).setParameter("minLength", filter.getLengthStart());
-		verify(countryQuery, times(1)).setParameter("maxLength", filter.getLengthEnd());
-		verify(countryQuery, times(1)).setParameter("minYear", filter.getYearStart());
-		verify(countryQuery, times(1)).setParameter("maxYear", filter.getYearEnd());
-
-		// verify that the query is then executed
-		verify(countryQuery, times(1)).getResultList();
-
-		// verify that the query isn't touched any further
-		verifyNoMoreInteractions(countryQuery);
-	}
-
-	@Test
-	public void testGetCountryEntitiesListFilteredByName() {
-		/* INITIALIZATION BLOCK */
-		// filter by name only
-		FilmFilter filter = new FilmFilter("Hallo");
-
-		/* EXECUTION BLOCK */
-		List<CountryDB> countries = rpcService.getCountryEntitiesList(filter);
-
-		/* VERIFICATION BLOCK */
-		// verify that the correct query string is generated
-		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT c FROM CountryDB c JOIN c.filmCountryEntities fc JOIN fc.primaryKey.film fi WHERE (fi.length BETWEEN :minLength AND :maxLength) AND (fi.year BETWEEN :minYear AND :maxYear) AND LOWER(fi.name) LIKE :findName ORDER BY c.name",
-				CountryDB.class);
-
-		// verify that all the parameters are correctly set
-		verify(countryQuery, times(1)).setParameter("minLength", filter.getLengthStart());
-		verify(countryQuery, times(1)).setParameter("maxLength", filter.getLengthEnd());
-		verify(countryQuery, times(1)).setParameter("minYear", filter.getYearStart());
-		verify(countryQuery, times(1)).setParameter("maxYear", filter.getYearEnd());
-		verify(countryQuery, times(1)).setParameter("findName", "%hallo%");
-
-		// verify that the query is then executed
-		verify(countryQuery, times(1)).getResultList();
-
-		// verify that the query isn't touched any further
-		verifyNoMoreInteractions(countryQuery);
-	}
-
-	@Test
-	public void testGetCountryEntitiesListFilteredByEverything() {
-		/* INITIALIZATION BLOCK */
-		// set the filters
 		FilmFilter filter = new FilmFilter();
 		Set<Integer> ids = new HashSet<Integer>();
 		ids.add(1);
@@ -323,38 +359,207 @@ public class FilmListServiceTest {
 		filter.setLengthEnd(22);
 		filter.setYearStart(2013);
 		filter.setYearEnd(2015);
-		filter.setCountryIds(ids); // should not have any effect
+		filter.setCountryIds(ids);
 		filter.setGenreIds(ids);
 		filter.setLanguageIds(ids);
 
 		/* EXECUTION BLOCK */
-		List<CountryDB> countries = rpcService.getCountryEntitiesList(filter);
+		List<Country> countries = rpcService.getCountryList(filter);
 
 		/* VERIFICATION BLOCK */
-		// verify that the correct query string is generated
-		verify(manager, times(1)).createQuery(
-				"SELECT DISTINCT c FROM CountryDB c JOIN c.filmCountryEntities fc JOIN fc.primaryKey.film fi JOIN fi.filmGenreEntities fg JOIN fi.filmLanguageEntities fl WHERE (fi.length BETWEEN :minLength AND :maxLength) AND (fi.year BETWEEN :minYear AND :maxYear) AND LOWER(fi.name) LIKE :findName AND fg.genreId IN :genreIds AND fl.languageId IN :languageIds ORDER BY c.name",
-				CountryDB.class);
+		verify(manager, times(1)).createNativeQuery(
+			"SELECT DISTINCT c.id, c.name, f.year, COUNT(*) " 
+			+ "FROM films f "
+				+ "LEFT JOIN film_countries fc ON f.id = fc.film_id " 
+				+ "JOIN countries c ON fc.country_id = c.id "
+				+ "LEFT JOIN film_genres fg ON f.id = fg.film_id " 
+				+ "LEFT JOIN film_languages fl ON f.id = fl.film_id "
+			+ "WHERE (f.length BETWEEN :minLength AND :maxLength) " 
+				+ "AND LOWER(f.name) LIKE :findName "
+				+ "AND fg.genre_id IN (:genreIds) " 
+				+ "AND fl.language_id IN (:languageIds) "
+			+ "GROUP BY c.name, f.year " 
+			+ "HAVING f.year IS NOT NULL " 
+			+ "ORDER BY c.name, f.year"
+		);
 
-		// verify that all the parameters are correctly set
-		verify(countryQuery, times(1)).setParameter("minLength", filter.getLengthStart());
-		verify(countryQuery, times(1)).setParameter("maxLength", filter.getLengthEnd());
-		verify(countryQuery, times(1)).setParameter("minYear", filter.getYearStart());
-		verify(countryQuery, times(1)).setParameter("maxYear", filter.getYearEnd());
-		verify(countryQuery, times(1)).setParameter("findName", "%hallo%");
-		verify(countryQuery, times(1)).setParameter("genreIds", ids);
-		verify(countryQuery, times(1)).setParameter("languageIds", ids);
+		// verify that all the parameters are correctly set (and year / country
+		// were not filtered by!)
+		verify(countryYearCount, times(1)).setParameter("minLength", 11);
+		verify(countryYearCount, times(1)).setParameter("maxLength", 22);
+		verify(countryYearCount, times(1)).setParameter("findName", "%hallo%");
+		verify(countryYearCount, times(1)).setParameter("genreIds", filter.getGenreIds());
+		verify(countryYearCount, times(1)).setParameter("languageIds", filter.getLanguageIds());
 
 		// verify that the query is then executed
-		verify(countryQuery, times(1)).getResultList();
+		verify(countryYearCount, times(1)).getResultList();
 
 		// verify that the query isn't touched any further
-		verifyNoMoreInteractions(countryQuery);
+		verifyNoMoreInteractions(countryYearCount);
+
+		// assert that all 3 countries are present
+		assertEquals(countries.size(), 3);
+
+		// assert that the correct countries are present
+		assertEquals(countries.get(0).getName(), "Germany");
+		assertEquals(countries.get(1).getName(), "Singapur");
+		assertEquals(countries.get(2).getName(), "Italy");
+
+		// assert that the countries contain the correct array
+		// TODO NK check if those are correct :)
+		int[] countGermany = { 0, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+				25 };
+		int[] countSingapur = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 33, 33, 33, 78 };
+		int[] countItaly = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+				20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+				20, 20, 20, 20, 20, 20, 20, 20, 20 };
+
+		assertTrue(Arrays.equals(countries.get(0).getNumberOfFilms(), countGermany));
+		assertTrue(Arrays.equals(countries.get(1).getNumberOfFilms(), countSingapur));
+		assertTrue(Arrays.equals(countries.get(2).getNumberOfFilms(), countItaly));
 	}
 
 	@Test
-	public void testGetGenreList() {
-		// TODO: Sprint 2
+	public void testGetGenreListFilterDefault() {
+		/* INITIALIZATION BLOCK */
+		doReturn(countryGenresQuery).when(manager).createNativeQuery(Matchers.anyString());
+
+		// filter with the default filters and country id 99
+		FilmFilter filter = new FilmFilter();
+		Set<Integer> countryIds = new HashSet<Integer>();
+		countryIds.add(99);
+		filter.setCountryIds(countryIds);
+
+		/* EXECUTION BLOCK */
+		List<Genre> genres = rpcService.getGenreList(filter);
+
+		/* VERIFICATION BLOCK */
+		verify(manager, times(1)).createNativeQuery(
+			"SELECT sel.id, sel.name, COUNT(*) AS count " 
+			+ "FROM ( "
+				+ "SELECT DISTINCT g.id AS id, g.name AS name, f.id AS film " 
+				+ "FROM films f "
+					+ "LEFT JOIN film_genres fg ON f.id = fg.film_id " 
+					+ "JOIN genres g ON fg.genre_id = g.id "
+					+ "LEFT JOIN film_countries fc ON f.id = fc.film_id " 
+					+ "LEFT JOIN film_languages fl ON f.id = fl.film_id "
+				+ "WHERE fc.country_id = :countryId "
+					+ "AND f.year IS NOT NULL " 
+			+ ") AS sel " 
+			+ "GROUP BY sel.id " 
+			+ "ORDER BY count desc"
+		);
+
+		// verify that the correct country id is taken
+		verify(countryGenresQuery, times(1)).setParameter("countryId", 99);
+
+		// verify that the query is then executed
+		verify(countryGenresQuery, times(1)).getResultList();
+
+		// verify that the query isn't touched any further
+		verifyNoMoreInteractions(countryGenresQuery);
+
+		// assert that all 4 genres are present
+		assertEquals(genres.size(), 4);
+
+		// assert that the correct genres are present in the right order
+		assertEquals(genres.get(0).getName(), "Horror");
+		assertEquals(genres.get(1).getName(), "Adult");
+		assertEquals(genres.get(2).getName(), "Romance");
+		assertEquals(genres.get(3).getName(), "Action");
+
+		// assert that the genres contain the right counts
+		assertEquals(genres.get(0).getNumberOfFilms(), 55);
+		assertEquals(genres.get(1).getNumberOfFilms(), 46);
+		assertEquals(genres.get(2).getNumberOfFilms(), 33);
+		assertEquals(genres.get(3).getNumberOfFilms(), 20);
+	}
+
+	@Test
+	public void testGetGenreListFilterByEverything() {
+		/* INITIALIZATION BLOCK */
+		doReturn(countryGenresQuery).when(manager).createNativeQuery(Matchers.anyString());
+
+		// filter with the default filters and country id 99
+		FilmFilter filter = new FilmFilter();
+		Set<Integer> countryIds = new HashSet<Integer>();
+		countryIds.add(99);
+		filter.setName("Hallo");
+		filter.setLengthStart(11);
+		filter.setLengthEnd(22);
+		filter.setYearStart(2013);
+		filter.setYearEnd(2015);
+		filter.setCountryIds(countryIds);
+		filter.setGenreIds(countryIds);
+		filter.setLanguageIds(countryIds);
+
+		/* EXECUTION BLOCK */
+		List<Genre> genres = rpcService.getGenreList(filter);
+
+		/* VERIFICATION BLOCK */
+		verify(manager, times(1)).createNativeQuery(
+			"SELECT sel.id, sel.name, COUNT(*) AS count " 
+			+ "FROM ( "
+				+ "SELECT DISTINCT g.id AS id, g.name AS name, f.id AS film " 
+				+ "FROM films f "
+					+ "LEFT JOIN film_genres fg ON f.id = fg.film_id " 
+					+ "JOIN genres g ON fg.genre_id = g.id "
+					+ "LEFT JOIN film_countries fc ON f.id = fc.film_id " 
+					+ "LEFT JOIN film_languages fl ON f.id = fl.film_id "
+				+ "WHERE fc.country_id = :countryId "
+					+ "AND f.year IS NOT NULL " 
+					+ "AND (f.length BETWEEN :minLength AND :maxLength) "
+					+ "AND (f.year BETWEEN :minYear AND :maxYear) "
+					+ "AND LOWER(f.name) LIKE :findName " 
+					+ "AND g.id IN (:genreIds) "
+					+ "AND fl.language_id IN (:languageIds) " 
+				+ ") AS sel " 
+			+ "GROUP BY sel.id " 
+			+ "ORDER BY count desc"
+		);
+
+		// verify that the correct country id is taken
+		verify(countryGenresQuery, times(1)).setParameter("countryId", 99);
+
+		// verify that all the parameters are correctly set (and year / country
+		// were not filtered by!)
+		verify(countryGenresQuery, times(1)).setParameter("minLength", 11);
+		verify(countryGenresQuery, times(1)).setParameter("maxLength", 22);
+		verify(countryGenresQuery, times(1)).setParameter("minYear", 2013);
+		verify(countryGenresQuery, times(1)).setParameter("maxYear", 2015);
+		verify(countryGenresQuery, times(1)).setParameter("findName", "%hallo%");
+		verify(countryGenresQuery, times(1)).setParameter("genreIds", filter.getGenreIds());
+		verify(countryGenresQuery, times(1)).setParameter("languageIds", filter.getLanguageIds());
+
+		// verify that the query is then executed
+		verify(countryGenresQuery, times(1)).getResultList();
+
+		// verify that the query isn't touched any further
+		verifyNoMoreInteractions(countryGenresQuery);
+
+		// assert that all 4 genres are present
+		assertEquals(genres.size(), 4);
+
+		// assert that the correct genres are present in the right order
+		assertEquals(genres.get(0).getName(), "Horror");
+		assertEquals(genres.get(1).getName(), "Adult");
+		assertEquals(genres.get(2).getName(), "Romance");
+		assertEquals(genres.get(3).getName(), "Action");
+
+		// assert that the genres contain the right counts
+		assertEquals(genres.get(0).getNumberOfFilms(), 55);
+		assertEquals(genres.get(1).getNumberOfFilms(), 46);
+		assertEquals(genres.get(2).getNumberOfFilms(), 33);
+		assertEquals(genres.get(3).getNumberOfFilms(), 20);
 	}
 
 	@Test
@@ -362,11 +567,11 @@ public class FilmListServiceTest {
 		/* INITIALIZATION BLOCK */
 
 		/* EXECUTION BLOCK */
-		List<SelectOption> genreSelects = rpcService.getGenreSelectOption();
+		HashMap<Integer, String> genreSelects = rpcService.getGenreSelectOption();
 
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
-		verify(manager, times(1)).createQuery("FROM GenreDB ORDER BY name", GenreDB.class);
+		verify(manager, times(1)).createQuery("FROM GenreDB", GenreDB.class);
 
 		// verify that the query is then executed
 		verify(genreQuery, times(1)).getResultList();
@@ -374,9 +579,8 @@ public class FilmListServiceTest {
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(genreQuery);
 
-		// assert that the select options were properly created
-		assertEquals(genreSelects.get(0).getId(), new Integer(0));
-		assertEquals(genreSelects.get(0).getName(), "Horror");
+		// assert that the HashMap entries were properly created
+		assertEquals(genreSelects.get(0), "Horror");
 	}
 
 	@Test
@@ -384,11 +588,11 @@ public class FilmListServiceTest {
 		/* INITIALIZATION BLOCK */
 
 		/* EXECUTION BLOCK */
-		List<SelectOption> countrySelects = rpcService.getCountrySelectOption();
+		HashMap<Integer, String> countrySelects = rpcService.getCountrySelectOption();
 
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
-		verify(manager, times(1)).createQuery("FROM CountryDB ORDER BY name", CountryDB.class);
+		verify(manager, times(1)).createQuery("FROM CountryDB", CountryDB.class);
 
 		// verify that the query is then executed
 		verify(countryQuery, times(1)).getResultList();
@@ -396,9 +600,8 @@ public class FilmListServiceTest {
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(countryQuery);
 
-		// assert that the select options were properly created
-		assertEquals(countrySelects.get(0).getId(), new Integer(0));
-		assertEquals(countrySelects.get(0).getName(), "Switzerland");
+		// assert that the HashMap entries were properly created
+		assertEquals(countrySelects.get(0), "Switzerland");
 	}
 
 	@Test
@@ -406,11 +609,11 @@ public class FilmListServiceTest {
 		/* INITIALIZATION BLOCK */
 
 		/* EXECUTION BLOCK */
-		List<SelectOption> languageSelects = rpcService.getLanguageSelectOption();
+		HashMap<Integer, String> languageSelects = rpcService.getLanguageSelectOption();
 
 		/* VERIFICATION BLOCK */
 		// verify that the correct query string is generated
-		verify(manager, times(1)).createQuery("FROM LanguageDB ORDER BY name", LanguageDB.class);
+		verify(manager, times(1)).createQuery("FROM LanguageDB", LanguageDB.class);
 
 		// verify that the query is then executed
 		verify(languageQuery, times(1)).getResultList();
@@ -418,8 +621,12 @@ public class FilmListServiceTest {
 		// verify that the query isn't touched any further
 		verifyNoMoreInteractions(languageQuery);
 
-		// assert that the select options were properly created
-		assertEquals(languageSelects.get(0).getId(), new Integer(0));
-		assertEquals(languageSelects.get(0).getName(), "German");
+		// assert that the HashMap entries were properly created
+		assertEquals(languageSelects.get(0), "German");
+	}
+
+	@Test
+	public void testGetSelectOptions() {
+		// TODO
 	}
 }

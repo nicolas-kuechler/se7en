@@ -1,9 +1,9 @@
 package ch.uzh.se.se7en.client.mvp.presenters.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import org.gwtbootstrap3.extras.slider.client.ui.Range;
+import java.util.Set;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,6 +19,8 @@ import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
+import ch.uzh.se.se7en.shared.model.FilmFilter;
+import ch.uzh.se.se7en.shared.model.Genre;
 
 public class MapPresenterImpl implements MapPresenter {
 
@@ -42,6 +44,7 @@ public class MapPresenterImpl implements MapPresenter {
 	public void go(HasWidgets container) {
 		container.clear();
 		container.add(mapView.asWidget());
+		mapView.setGenreVisible(false);
 
 	}
 
@@ -57,13 +60,57 @@ public class MapPresenterImpl implements MapPresenter {
 
 	@Override
 	public void onCountrySelected() {
-		// TODO Auto-generated method stub
-		// 1. clear genreTable & genrePieChart
-		// 2. get year range from view
-		// 3. get Information which Country was selected (getGeoChartSelection() tbd if row index or what)
-		// 4. getAppliedFilter Info from filmDataModel
-		// 5. start rpc call 
-		// 6. setGenretable, setGenrePieChart
+		
+		//makes sure genre info is not visible
+		mapView.setGenreVisible(false);
+		
+		
+		//Creating Filter (base comes from filmDataModel)
+				FilmFilter filter = filmDataModel.getAppliedMapFilter();
+		
+		//add the id of the country which was selected to the filter
+		Set<Integer> countryId = new HashSet<Integer>();
+		countryId.add(mapView.getGeoChartSelectionCountryId());
+		
+		//Creating a copy of the appliedMapFilter with the id from the selected Country and the year information from the map yearRangeSlider
+		FilmFilter genreFilter = new FilmFilter(filter.getName(), filter.getLengthStart(), filter.getLengthEnd(), 
+						mapView.getMinYear(), mapView.getMaxYear(), countryId, filter.getLanguageIds(), filter.getGenreIds());
+		
+		
+		//start rpc to get Genre List
+		filmListService.getGenreList(genreFilter, new AsyncCallback<List<Genre>>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientLog.writeErr("getGenreList failed");
+			}
+			@Override
+			public void onSuccess(List<Genre> result) {
+				updateGenre(result);
+			}
+		});
+	}
+	
+	/**
+	Updates the Genre Information (piechart & genreTable) in the view with a new list of genres
+	@author Nicolas Küchler
+	@pre	mapView != null
+	@post	mapView.genreTable && mapView.pieChart display genres
+	@param 	genres List of Genre that should be displayed
+	 */
+	public void updateGenre(List<Genre> genres) {
+		//Creating and filling a DataTableEntity List which represents a DataTable in vanilla Java code
+		List<DataTableEntity> entities = new ArrayList<DataTableEntity>(genres.size());
+		for(Genre g : genres)
+		{
+			entities.add(new DataTableEntity(g.getName(), g.getNumberOfFilms()));
+		}
+		//makes sure genre info is visible
+		mapView.setGenreVisible(true);
+		
+		//giving the piechart in the view a new entity list to display
+		mapView.setGenrePieChart(entities);
+		//giving the genreTable a new genre list to display
+		mapView.setGenreTable(genres);
 	}
 
 	/**
@@ -99,6 +146,9 @@ public class MapPresenterImpl implements MapPresenter {
 	 */
 	public void updateGeoChart()
 	{	
+		//whenever the geochart is updated, the genre info needs to be hidden.
+		mapView.setGenreVisible(false);
+		
 		//get country list according to currently applied filter from client side data model
 		List<Country> countries = filmDataModel.getCountryList();
 
@@ -119,11 +169,9 @@ public class MapPresenterImpl implements MapPresenter {
 
 			if(numberOfProductions>0)
 			{	//if at least one film was produced, add country to entity list
-				entities.add(new DataTableEntity(c.getName(), numberOfProductions));
+				entities.add(new DataTableEntity(c.getName(), numberOfProductions, c.getId()));
 			}
 		}
-		//store new entitylist in filmdatamodel
-		filmDataModel.setCountryDataTable(entities);
 		//set the geochart with the new list
 		mapView.setGeoChart(entities);
 	}
@@ -137,7 +185,6 @@ public class MapPresenterImpl implements MapPresenter {
 	public void fetchData() {
 		//update of the yearSlider in the mapView
 		mapView.setYearRange(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd());
-		//TODO finding position in code for displaying empty geochart as loading information
 		filmDataModel.setCountryList(new ArrayList<Country>());
 		updateGeoChart();
 
@@ -147,10 +194,6 @@ public class MapPresenterImpl implements MapPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO ERROR HANDLING NEEDS TO BE IMPLEMENTED
-				// Maybe logging to console?
-				// User needs to be informed aswell
-
 				// displays empty chart for user
 				filmDataModel.setCountryList(new ArrayList<Country>());
 				updateGeoChart();

@@ -1,37 +1,46 @@
 package ch.uzh.se.se7en.junit.client.presenter;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jukito.JukitoRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwtmockito.AsyncAnswers;
 import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.Tokens;
 import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
+import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedEvent;
+import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.FilterPresenterImpl;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.BrowserUtil;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
+import ch.uzh.se.se7en.shared.model.FilterOptions;
 
 @RunWith(JukitoRunner.class)
 public class FilterPresenterTest {
@@ -49,6 +58,11 @@ public class FilterPresenterTest {
 	HasWidgets container;
 	@Inject FilmListServiceAsync filmService;
 	
+	@Mock
+	BrowserUtil browserUtil;
+	@Mock
+	UrlToken urlToken;
+	
 	FilmFilter normalFilter;
 	FilmFilter mapFilter;
 	
@@ -59,6 +73,8 @@ public class FilterPresenterTest {
 	@Before
 	public void setup()
 	{
+		MockitoAnnotations.initMocks(this);
+		
 		//demo values used to test
 		String testName = "TestFilm";
 		int testLengthStart = 10;
@@ -69,16 +85,16 @@ public class FilterPresenterTest {
 		int testMaxYear = 2015;
 		
 		// multiple entries from multiselect are selected
-		List<SelectOption> selectedCountry = new ArrayList<SelectOption>();
-		selectedCountry.add(new SelectOption(1, "Switzerland"));
-		selectedCountry.add(new SelectOption(2, "Germany"));
+		Set<Integer> selectedCountry = new HashSet<Integer>();
+		selectedCountry.add(1);
+		selectedCountry.add(2);
 		
 		// only one entry from multiselect is selected
-		List<SelectOption> selectedLanguage = new ArrayList<SelectOption>();
-		selectedLanguage.add(new SelectOption(1, "German"));
+		Set<Integer> selectedLanguage = new HashSet<Integer>();
+		selectedLanguage.add(5);
 		
 		// no entry from multiselect is selected
-		List<SelectOption> selectedGenre = new ArrayList<SelectOption>();
+		Set<Integer> selectedGenre = new HashSet<Integer>();
 		
 		//mocking answers of the filterView Mock
 		when(filterView.getName()).thenReturn(testName);
@@ -86,9 +102,9 @@ public class FilterPresenterTest {
 		when(filterView.getLengthEnd()).thenReturn(testLengthEnd);
 		when(filterView.getYearStart()).thenReturn(testYearStart);
 		when(filterView.getYearEnd()).thenReturn(testYearEnd);
-		when(filterView.getSelectedCountryOptions()).thenReturn(selectedCountry);
-		when(filterView.getSelectedLanguageOptions()).thenReturn(selectedLanguage);
-		when(filterView.getSelectedGenreOptions()).thenReturn(selectedGenre);
+		when(filterView.getSelectedCountryIds()).thenReturn(selectedCountry);
+		when(filterView.getSelectedLanguageIds()).thenReturn(selectedLanguage);
+		when(filterView.getSelectedGenreIds()).thenReturn(selectedGenre);
 		
 		//creating a demo Filter object which is expected to be produced given the filterView fields configuration from above
 		normalFilter = new FilmFilter();
@@ -97,9 +113,9 @@ public class FilterPresenterTest {
 		normalFilter.setLengthEnd(testLengthEnd);
 		normalFilter.setYearStart(testYearStart);
 		normalFilter.setYearEnd(testYearEnd);
-		normalFilter.setCountryOptions(selectedCountry);
-		normalFilter.setLanguageOptions(selectedLanguage);
-		normalFilter.setGenreOptions(selectedGenre);
+		normalFilter.setCountryIds(selectedCountry);
+		normalFilter.setLanguageIds(selectedLanguage);
+		normalFilter.setGenreIds(null);
 		
 		//creating a filter object which should be produced when adjusting the normalFilter from above with setting the default values for country and year
 		mapFilter = new FilmFilter();
@@ -108,9 +124,9 @@ public class FilterPresenterTest {
 		mapFilter.setLengthEnd(testLengthEnd);
 		mapFilter.setYearStart(testMinYear);
 		mapFilter.setYearEnd(testMaxYear);
-		mapFilter.setCountryOptions(null);
-		mapFilter.setLanguageOptions(selectedLanguage);
-		mapFilter.setGenreOptions(selectedGenre);
+		mapFilter.setCountryIds(null);
+		mapFilter.setLanguageIds(selectedLanguage);
+		mapFilter.setGenreIds(null);
 		
 		//creating an expected List<String> which should be produced when the normalFilter from above is converted
 		normalFilterList = new ArrayList<String>();
@@ -125,66 +141,59 @@ public class FilterPresenterTest {
 		mapFilterList = new ArrayList<String>();
 		mapFilterList.add("Film Name = "+testName);
 		mapFilterList.add("Film Length = "+testLengthStart +"-"+testLengthEnd);
-		mapFilterList.add("Production Year = "+testMinYear +"-"+testMaxYear);
 		mapFilterList.add("Film Language = German");
 	
 		//mocking answer from filmDataModel mock
 		when(filmDataModel.getAppliedFilter()).thenReturn(normalFilter);
 		when(filmDataModel.getAppliedMapFilter()).thenReturn(mapFilter);
 		
-		//imitate the onSuccess method of the rpc call getCountrySelectOptions
-		doAnswer(new Answer<List<SelectOption>>(){
-			@Override
-			public List<SelectOption> answer(InvocationOnMock invocation) throws Throwable {
-				AsyncCallback<List<SelectOption>> callback = (AsyncCallback) invocation.getArguments()[0];
-				
-				List<SelectOption> options = new ArrayList<SelectOption>();
-				options.add(new SelectOption(1, "Switzerland"));
-				options.add(new SelectOption(2, "Germany"));
-				options.add(new SelectOption(3, "Austria"));
-			     callback.onSuccess(options);
-				return null;
-			}
-		}).when(filmService).getCountrySelectOption((AsyncCallback<List<SelectOption>>) Mockito.any());
 		
-		//imitate the onSuccess method of the rpc call getLanguageSelectOptions
-		doAnswer(new Answer<List<SelectOption>>(){
-			@Override
-			public List<SelectOption> answer(InvocationOnMock invocation) throws Throwable {
-				AsyncCallback<List<SelectOption>> callback = (AsyncCallback) invocation.getArguments()[0];
-				
-				List<SelectOption> options = new ArrayList<SelectOption>();
-				options.add(new SelectOption(1, "German"));
-				options.add(new SelectOption(2, "English"));
-			     callback.onSuccess(options);
-				return null;
-			}
-		}).when(filmService).getLanguageSelectOption((AsyncCallback<List<SelectOption>>) Mockito.any());
+		when(filmDataModel.getCountryName(1)).thenReturn("Switzerland");
+		when(filmDataModel.getCountryName(2)).thenReturn("Germany");
+		when(filmDataModel.getLanguageName(5)).thenReturn("German");
 		
-		//imitate the onSuccess method of the rpc call getGenreSelectOptions
-		doAnswer(new Answer<List<SelectOption>>(){
-			@Override
-			public List<SelectOption> answer(InvocationOnMock invocation) throws Throwable {
-				AsyncCallback<List<SelectOption>> callback = (AsyncCallback) invocation.getArguments()[0];
-				
-				List<SelectOption> options = new ArrayList<SelectOption>();
-				options.add(new SelectOption(1, "Action"));
-				options.add(new SelectOption(2, "Adventure"));
-				options.add(new SelectOption(3, "Comedy"));
-			     callback.onSuccess(options);
-				return null;
-			}
-		}).when(filmService).getGenreSelectOption((AsyncCallback<List<SelectOption>>) Mockito.any());
+		//imitate the onSuccess method of the rpc call getSelectOptions
+				doAnswer(new Answer<FilterOptions>(){
+					@Override
+					public FilterOptions answer(InvocationOnMock invocation) throws Throwable {
+						AsyncCallback<FilterOptions> callback = (AsyncCallback) invocation.getArguments()[0];
+						
+						HashMap<Integer, String> genreOptions = new HashMap<Integer, String>();
+						genreOptions.put(1, "Action");
+						genreOptions.put(2, "Adventure");
+						genreOptions.put(3, "Comedy");
+						
+						HashMap<Integer, String> languageOptions = new HashMap<Integer, String>();
+						languageOptions.put(1, "German");
+						languageOptions.put(2, "English");
+						
+						HashMap<Integer, String> countryOptions = new HashMap<Integer, String>();
+						countryOptions.put(1, "Switzerland");
+						countryOptions.put(2, "Germany");
+						countryOptions.put(3, "Austria");
+						
+						FilterOptions options = new FilterOptions();
+						options.setGenreSelectOptions(genreOptions);
+						options.setLanguageSelectOptions(languageOptions);
+						options.setCountrySelectOptions(countryOptions);
+						
+					     callback.onSuccess(options);
+						return null;
+					}
+				}).when(filmService).getSelectOptions((AsyncCallback<FilterOptions>) Mockito.any());
+		
+		when(urlToken.createUrlToken(normalFilter, false)).thenReturn("demoToken");
+		when(urlToken.createUrlToken(mapFilter, false)).thenReturn("demoToken");	
+		when(urlToken.parseFilter("demoToken")).thenReturn(normalFilter);
 		
 		//After all mocks are setup, create the instance of the filterPresenter
-		filterPresenter = new FilterPresenterImpl(eventBus, filterView, filmDataModel, filmService);
+		filterPresenter = new FilterPresenterImpl(eventBus, filterView, filmDataModel, filmService, browserUtil, urlToken);
 		
 		//set a mode
 		filterPresenter.setMode(Tokens.TABLE);
 	}
 	
 		
-	
 	@Test
 	public void testBind() {
 		verify(filterView).setPresenter(filterPresenter);
@@ -198,12 +207,27 @@ public class FilterPresenterTest {
 	}
 	
 	@Test
+	public void testUpdateFilterFieldsInView()
+	{
+		filterPresenter.updateFilterFieldsInView(normalFilter);
+		verify(filterView).setName(normalFilter.getName());
+		verify(filterView).setLengthSlider(normalFilter.getLengthStart(), normalFilter.getLengthEnd());
+		verify(filterView).setYearSlider(normalFilter.getYearStart(), normalFilter.getYearEnd());
+		verify(filterView).setSelectedCountryOptions(normalFilter.getCountryIds());
+		verify(filterView).setSelectedLanguageOptions(normalFilter.getLanguageIds());
+		verify(filterView, times(2)).setSelectedGenreOptions(normalFilter.getGenreIds());
+	}
+	
+	
+	@Test
 	public void testOnSearch(){
 		filterPresenter.onSearch();
 		//times(2) because the first time is in the constructor
 		verify(filmDataModel, times(2)).setAppliedFilter(Matchers.eq(normalFilter));
 		verify(filmDataModel, times(2)).setAppliedMapFilter(Matchers.eq(mapFilter));
-		verify(eventBus).fireEvent(Matchers.any(FilterAppliedEvent.class));
+		
+		//times(2) because matchers fails to make a difference between filterAppliedEvent and FilterOptionsLoadedEvent
+		verify(eventBus, times(2)).fireEvent(Matchers.any(FilterAppliedEvent.class));
 	}
 	
 	@Test
@@ -230,12 +254,18 @@ public class FilterPresenterTest {
 		verify(filterView, times(3)).setAppliedFilterBox(Matchers.anyListOf(String.class));
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testSetupMultiSelects(){
-		verify(filterView).setCountryOptions(Matchers.anyListOf(SelectOption.class));
-		verify(filterView).setGenreOptions(Matchers.anyListOf(SelectOption.class));
-		verify(filterView).setLanguageOptions(Matchers.anyListOf(SelectOption.class));
+		verify(filterView).setCountryOptions((HashMap<Integer, String>) Matchers.anyMap());
+		verify(filterView).setGenreOptions((HashMap<Integer, String>) Matchers.anyMap());
+		verify(filterView).setLanguageOptions((HashMap<Integer, String>) Matchers.anyMap());
 		
+		verify(filmDataModel).setCountryOptions((HashMap<Integer, String>) Matchers.anyMap());
+		verify(filmDataModel).setGenreOptions((HashMap<Integer, String>) Matchers.anyMap());
+		verify(filmDataModel).setLanguageOptions((HashMap<Integer, String>) Matchers.anyMap());
+		
+		verify(eventBus).fireEvent(Matchers.any(FilterOptionsLoadedEvent.class));
 	}
 	
 	@Test
@@ -260,6 +290,29 @@ public class FilterPresenterTest {
 		verify(filmDataModel, times(2)).setAppliedFilter(Matchers.eq(normalFilter));
 		verify(filmDataModel, times(2)).setAppliedMapFilter(Matchers.eq(mapFilter));
 	}
+	
+	@Test
+	public void testSetFilter()
+	{
+		filterPresenter.setFilter("");
+		verify(browserUtil).replaceHistoryItem(Matchers.anyString(), Matchers.anyBoolean());
+		
+		
+		filterPresenter.setFilter("demoToken");
+		verify(eventBus).addHandler(Matchers.eq(FilterOptionsLoadedEvent.getType()), Matchers.any(FilterOptionsLoadedHandler.class));
+		
+		filterPresenter.setFilterOptionsLoaded(true);
+		filterPresenter.setFilter("demoToken");
+		
+		verify(filterView).setName(normalFilter.getName());
+		verify(filterView).setLengthSlider(normalFilter.getLengthStart(), normalFilter.getLengthEnd());
+		verify(filterView).setYearSlider(normalFilter.getYearStart(), normalFilter.getYearEnd());
+		verify(filterView, times(2)).setSelectedGenreOptions(normalFilter.getGenreIds());
+		verify(filterView).setSelectedLanguageOptions(normalFilter.getLanguageIds());
+		verify(filterView).setSelectedCountryOptions(normalFilter.getCountryIds());
+	}
+	
+
 	
 	@Test
 	public void testConvertFilmFilterToList(){

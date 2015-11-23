@@ -28,6 +28,9 @@
 			<property name="hibernate.connection.useUnicode" value="true" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.connection.pool_size" value="0" />
+			<property name="hibernate.jdbc.batch_size" value="50" />
+			<property name="hibernate.jdbc.fetch_size" value="10000" />
+			<!-- <property name="hibernate.cache.use_query_cache" value="true" /> -->
 		</properties>
 
 	</persistence-unit>

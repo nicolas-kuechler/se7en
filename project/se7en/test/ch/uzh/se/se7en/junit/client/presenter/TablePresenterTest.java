@@ -35,7 +35,6 @@ import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 @RunWith(JukitoRunner.class)
 public class TablePresenterTest {
@@ -63,7 +62,6 @@ public class TablePresenterTest {
 		doAnswer(new Answer<List<Film>>(){
 			@Override
 			public List<Film> answer(InvocationOnMock invocation) throws Throwable {
-				// TODO Auto-generated method stub
 				AsyncCallback<List<Film>> callback = (AsyncCallback) invocation.getArguments()[1];
 				FilmFilter filter = (FilmFilter) invocation.getArguments()[0];
 				List<Film> filmsMatchingFilter = new ArrayList<Film>();
@@ -118,7 +116,6 @@ public class TablePresenterTest {
 	public void testUpdateTable() {
 		List<Film> films = Arrays.asList(new Film("Test"));
 		tablePresenter.updateTable(films);
-		verify(filmDataModel).setFilmList(films);
 		verify(tableView).setTable(films);
 	}
 

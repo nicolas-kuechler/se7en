@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.BatchSize;
+
 import ch.uzh.se.se7en.shared.model.Film;
 
 /**
@@ -39,6 +41,15 @@ public class FilmDB {
 
 	@Column(name = "wikipedia", nullable = true)
 	private String wikipedia;
+	
+	@Column(name = "country_string", nullable = true)
+	private String countryString;
+	
+	@Column(name = "genre_string", nullable = true)
+	private String genreString;
+	
+	@Column(name = "language_string", nullable = true)
+	private String languageString;
 
 	// the corresponding entities in the join table film_countries
 	@OneToMany(mappedBy = "primaryKey.film", cascade = { CascadeType.PERSIST,
@@ -82,34 +93,21 @@ public class FilmDB {
 	 * @return Film The FilmDB entity converted to a film data transfer object
 	 */
 	public Film toFilm() {
-		// TODO: better way? => generic method, via interface
+		// TODO RS: better way? => generic method, via interface
 		List<String> filmCountryEntityNames = new ArrayList<String>();
 		List<String> filmGenreEntityNames = new ArrayList<String>();
 		List<String> filmLanguageEntityNames = new ArrayList<String>();
-
-		// parse all the entities into lists of strings
-		if (filmCountryEntities != null) {
-			for (FilmCountryDB f : filmCountryEntities) {
-				filmCountryEntityNames.add(f.getCountryName());
-			}
-
-			java.util.Collections.sort(filmCountryEntityNames);
+		
+		if(countryString != null) {
+			filmCountryEntityNames.add(countryString);
 		}
-
-		if (filmGenreEntities != null) {
-			for (FilmGenreDB g : filmGenreEntities) {
-				filmGenreEntityNames.add(g.getGenreName());
-			}
-
-			java.util.Collections.sort(filmGenreEntityNames);
+		
+		if(genreString != null) {
+			filmGenreEntityNames.add(genreString);
 		}
-
-		if (filmLanguageEntities != null) {
-			for (FilmLanguageDB l : filmLanguageEntities) {
-				filmLanguageEntityNames.add(l.getLanguageName());
-			}
-
-			java.util.Collections.sort(filmLanguageEntityNames);
+		
+		if(languageString != null) {
+			filmLanguageEntityNames.add(languageString);
 		}
 
 		return new Film(id, name, length, year, filmCountryEntityNames, filmLanguageEntityNames, filmGenreEntityNames);
@@ -208,6 +206,60 @@ public class FilmDB {
 	 */
 	public void setWikipedia(String wikipedia) {
 		this.wikipedia = wikipedia;
+	}
+
+	/**
+	@pre countryString!= null
+	@post -
+	@return the countryString
+	 */
+	public String getCountryString() {
+		return countryString;
+	}
+
+	/**
+	@pre -
+	@post countryString==countryString
+	@param countryString the countryString to set
+	*/
+	public void setCountryString(String countryString) {
+		this.countryString = countryString;
+	}
+
+	/**
+	@pre genreString!= null
+	@post -
+	@return the genreString
+	 */
+	public String getGenreString() {
+		return genreString;
+	}
+
+	/**
+	@pre -
+	@post genreString==genreString
+	@param genreString the genreString to set
+	*/
+	public void setGenreString(String genreString) {
+		this.genreString = genreString;
+	}
+
+	/**
+	@pre languageString!= null
+	@post -
+	@return the languageString
+	 */
+	public String getLanguageString() {
+		return languageString;
+	}
+
+	/**
+	@pre -
+	@post languageString==languageString
+	@param languageString the languageString to set
+	*/
+	public void setLanguageString(String languageString) {
+		this.languageString = languageString;
 	}
 
 	/**
