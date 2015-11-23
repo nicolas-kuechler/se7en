@@ -3,7 +3,6 @@ package ch.uzh.se.se7en.client.mvp.presenters.impl.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.shared.model.FilmFilter;
@@ -18,15 +17,15 @@ public class UrlToken {
 		this.browserUtil = browserUtil;
 	}
 	
-	//TODO NK Test encode decode method (looking if & are replaced aswell)
 	/**
-
+	Method to create an Url Token representing the filter given as an argument.
 	@author Nicolas Küchler
-	@pre
-	@post
-
-	@return
-	 */ //TODO NK Test, Comments
+	@pre -
+	@post -
+	@param filter a FilmFilter object that should pe parsed to a token
+	@param autoSearch defines if the autoSearch flag in the token should be set
+	@return	the token representing the given FilmFilter
+	 */ 
 	public String createUrlToken(FilmFilter filter, boolean autoSearch)
 	{
 		String token = "?sb=";
@@ -41,10 +40,9 @@ public class UrlToken {
 			token += "0";
 		}
 
-		//Name --> need to encode 
+		//Name --> need to encode due to possible occurrence of & in search
 		if(filter.getName()!=null)
 		{
-			//token+= "&na="+ URL.encodePathSegment(filter.getName()); TODO NK remove
 			token+= "&na="+ browserUtil.encode(filter.getName());
 		}
 
@@ -97,16 +95,15 @@ public class UrlToken {
 	}
 
 	/**
-	TODO: NK Test and Comments. Probably better to put into a Utils class
+	Creates a FilmFilter object from a given Url Token
 	@author Nicolas Küchler
-	@pre
-	@post
-
-	@return
+	@pre	-
+	@post	-
+	@param 	urlToken needs to match the defined structure.
+	@return	FilmFilter object with the fields set according to the urlToken
 	 */
 	public FilmFilter parseFilter(String urlToken)
 	{
-		//TODO NK Define Exception Handling
 		FilmFilter filter = new FilmFilter();
 		
 		String[] parts = urlToken.substring(1).split("&");
@@ -118,7 +115,6 @@ public class UrlToken {
 			value = part.substring(3);
 			switch(fieldId){
 			case "na":
-				//filter.setName(URL.decodePathSegment(value)); TODO NK remove
 				filter.setName(browserUtil.decode(value));
 				break;
 

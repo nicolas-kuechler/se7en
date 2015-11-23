@@ -282,9 +282,9 @@ public class FilterPresenterImpl implements FilterPresenter {
 			// Parse a filter object from the token
 			//TODO NK Remove final FilmFilter filter = UrlToken.parseFilter(filterToken); 
 			final FilmFilter filter = urlToken.parseFilter(filterToken); 
+			
 			// This timer is necessary due to the fact that the multiselects
-			// cannot handle
-			// select(ids) and getSelectedIds() immediately after each other.
+			// cannot handle select(ids) and getSelectedIds() immediately after each other.
 			// Therefore this timer can be used to delay the search.
 			final Timer searchTimer = new Timer() {
 				@Override
@@ -386,5 +386,17 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filter.setCountryIds(null);
 
 		return filter;
+	}
+	
+	/**
+	Helper Method for JUnit Test to set the information if the filterOptions are loaded or not.
+	@author Nicolas Küchler
+	@pre	-
+	@post	areFilterOptionsLoaded == loaded
+	@param loaded defines if the filterValues are already loaded from the server
+	 */
+	public void setFilterOptionsLoaded(boolean loaded)
+	{
+		areFilterOptionsLoaded = loaded;
 	}
 }
