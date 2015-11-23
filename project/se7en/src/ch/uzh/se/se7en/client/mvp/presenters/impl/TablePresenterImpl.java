@@ -16,7 +16,6 @@ import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
 import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
-import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.shared.model.Film;
 
 /**
@@ -143,7 +142,6 @@ public class TablePresenterImpl implements TablePresenter {
 			public void onFailure(Throwable caught) {
 				//rpc did not get back to client -> display error to the user
 				updateTable(createPseudoFilmList("Error while loading films, please try again"));
-				//TODO NK FilmList Rpc Error Handling
 			}
 			@Override
 			public void onSuccess(List<Film> result) {

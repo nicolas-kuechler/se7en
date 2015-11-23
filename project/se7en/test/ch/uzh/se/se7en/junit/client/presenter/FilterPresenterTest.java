@@ -18,7 +18,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -28,9 +30,13 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 
 import ch.uzh.se.se7en.client.mvp.Tokens;
+import ch.uzh.se.se7en.client.mvp.events.FilterAppliedEvent;
 import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedEvent;
+import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.FilterPresenterImpl;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.BrowserUtil;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
@@ -52,6 +58,11 @@ public class FilterPresenterTest {
 	HasWidgets container;
 	@Inject FilmListServiceAsync filmService;
 	
+	@Mock
+	BrowserUtil browserUtil;
+	@Mock
+	UrlToken urlToken;
+	
 	FilmFilter normalFilter;
 	FilmFilter mapFilter;
 	
@@ -62,6 +73,8 @@ public class FilterPresenterTest {
 	@Before
 	public void setup()
 	{
+		MockitoAnnotations.initMocks(this);
+		
 		//demo values used to test
 		String testName = "TestFilm";
 		int testLengthStart = 10;
@@ -169,9 +182,12 @@ public class FilterPresenterTest {
 					}
 				}).when(filmService).getSelectOptions((AsyncCallback<FilterOptions>) Mockito.any());
 		
+		when(urlToken.createUrlToken(normalFilter, false)).thenReturn("demoToken");
+		when(urlToken.createUrlToken(mapFilter, false)).thenReturn("demoToken");	
+		when(urlToken.parseFilter("demoToken")).thenReturn(normalFilter);
 		
 		//After all mocks are setup, create the instance of the filterPresenter
-		filterPresenter = new FilterPresenterImpl(eventBus, filterView, filmDataModel, filmService);
+		filterPresenter = new FilterPresenterImpl(eventBus, filterView, filmDataModel, filmService, browserUtil, urlToken);
 		
 		//set a mode
 		filterPresenter.setMode(Tokens.TABLE);
@@ -205,12 +221,13 @@ public class FilterPresenterTest {
 	
 	@Test
 	public void testOnSearch(){
-		//TODO NK Testing static native methods
-//		filterPresenter.onSearch();
-//		//times(2) because the first time is in the constructor
-//		verify(filmDataModel, times(2)).setAppliedFilter(Matchers.eq(normalFilter));
-//		verify(filmDataModel, times(2)).setAppliedMapFilter(Matchers.eq(mapFilter));
-//		verify(eventBus).fireEvent(Matchers.any(FilterAppliedEvent.class));
+		filterPresenter.onSearch();
+		//times(2) because the first time is in the constructor
+		verify(filmDataModel, times(2)).setAppliedFilter(Matchers.eq(normalFilter));
+		verify(filmDataModel, times(2)).setAppliedMapFilter(Matchers.eq(mapFilter));
+		
+		//times(2) because matchers fails to make a difference between filterAppliedEvent and FilterOptionsLoadedEvent
+		verify(eventBus, times(2)).fireEvent(Matchers.any(FilterAppliedEvent.class));
 	}
 	
 	@Test
@@ -273,6 +290,29 @@ public class FilterPresenterTest {
 		verify(filmDataModel, times(2)).setAppliedFilter(Matchers.eq(normalFilter));
 		verify(filmDataModel, times(2)).setAppliedMapFilter(Matchers.eq(mapFilter));
 	}
+	
+	@Test
+	public void testSetFilter()
+	{
+		filterPresenter.setFilter("");
+		verify(browserUtil).replaceHistoryItem(Matchers.anyString(), Matchers.anyBoolean());
+		
+		
+		filterPresenter.setFilter("demoToken");
+		verify(eventBus).addHandler(Matchers.eq(FilterOptionsLoadedEvent.getType()), Matchers.any(FilterOptionsLoadedHandler.class));
+		
+		filterPresenter.setFilterOptionsLoaded(true);
+		filterPresenter.setFilter("demoToken");
+		
+		verify(filterView).setName(normalFilter.getName());
+		verify(filterView).setLengthSlider(normalFilter.getLengthStart(), normalFilter.getLengthEnd());
+		verify(filterView).setYearSlider(normalFilter.getYearStart(), normalFilter.getYearEnd());
+		verify(filterView, times(2)).setSelectedGenreOptions(normalFilter.getGenreIds());
+		verify(filterView).setSelectedLanguageOptions(normalFilter.getLanguageIds());
+		verify(filterView).setSelectedCountryOptions(normalFilter.getCountryIds());
+	}
+	
+
 	
 	@Test
 	public void testConvertFilmFilterToList(){

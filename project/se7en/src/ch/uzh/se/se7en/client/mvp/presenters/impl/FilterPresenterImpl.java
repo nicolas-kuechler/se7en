@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -20,6 +19,7 @@ import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedEvent;
 import ch.uzh.se.se7en.client.mvp.events.FilterOptionsLoadedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.BrowserUtil;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
@@ -33,15 +33,19 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private FilmDataModel filmDataModel;
 	private String mode = "";
 	private FilmListServiceAsync filmListService;
+	private BrowserUtil browserUtil;
+	private UrlToken urlToken;
 	private boolean areFilterOptionsLoaded = false;
 
 	@Inject
 	public FilterPresenterImpl(EventBus eventBus, final FilterView filterView, FilmDataModel filmDataModel,
-			FilmListServiceAsync filmListService) {
+			FilmListServiceAsync filmListService, BrowserUtil browserUtil, UrlToken urlToken) {
 		this.filmListService = filmListService;
 		this.eventBus = eventBus;
 		this.filterView = filterView;
 		this.filmDataModel = filmDataModel;
+		this.browserUtil = browserUtil;
+		this.urlToken = urlToken;
 		bind();
 		updateFilterFromView();
 		setupMultiSelects();
@@ -64,14 +68,13 @@ public class FilterPresenterImpl implements FilterPresenter {
 		eventBus.fireEvent(new FilterAppliedEvent());
 		updateAppliedFilterBox();
 
-		// TODO NK Refactoring in Sprint 3?
 		String filterToken = "";
 		if (mode.equals(Tokens.MAP)) {
-			filterToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
+			filterToken = Tokens.MAP + urlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
 		} else if (mode.equals(Tokens.TABLE)) {
-			filterToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
+			filterToken = Tokens.TABLE + urlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 		}
-		History.newItem(filterToken, false);
+		browserUtil.newHistoryItem(filterToken, false);
 	}
 
 	@Override
@@ -248,6 +251,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 	@Override
 	public void setFilter(final String filterToken) {
+		
 		if (filterToken.equals("")) // Url doesn't contain filter information
 									// (option1 Tab Change, optio2 No filter
 									// set)
@@ -255,25 +259,21 @@ public class FilterPresenterImpl implements FilterPresenter {
 			String historyToken;
 			// Tab Change or Without Filter
 			if (mode.equals(Tokens.MAP)) {
-				historyToken = Tokens.MAP + UrlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
+				historyToken = Tokens.MAP + urlToken.createUrlToken(filmDataModel.getAppliedMapFilter(), false);
 			} else if (mode.equals(Tokens.TABLE)) {
-				historyToken = Tokens.TABLE + UrlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
+				historyToken = Tokens.TABLE + urlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 			} else {
-				ClientLog.writeErr("Filter setMode() was not called before setFilter() or unknown mode.");
-				historyToken = History.getToken();
+				browserUtil.writeErr("Filter setMode() was not called before setFilter() or unknown mode.");
+				historyToken = browserUtil.getHistoryToken();
 			}
-			History.replaceItem(historyToken, false);
+			browserUtil.replaceHistoryItem(historyToken, false);
 		} else // Url contains Filter information
 		{
 			// Parse a filter object from the token
-			final FilmFilter filter = UrlToken.parseFilter(filterToken); // TODO
-																			// NK
-																			// Define
-																			// ExceptionHandling
-
+			final FilmFilter filter = urlToken.parseFilter(filterToken); 
+			
 			// This timer is necessary due to the fact that the multiselects
-			// cannot handle
-			// select(ids) and getSelectedIds() immediately after each other.
+			// cannot handle select(ids) and getSelectedIds() immediately after each other.
 			// Therefore this timer can be used to delay the search.
 			final Timer searchTimer = new Timer() {
 				@Override
@@ -375,5 +375,17 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filter.setCountryIds(null);
 
 		return filter;
+	}
+	
+	/**
+	Helper Method for JUnit Test to set the information if the filterOptions are loaded or not.
+	@author Nicolas Küchler
+	@pre	-
+	@post	areFilterOptionsLoaded == loaded
+	@param loaded defines if the filterValues are already loaded from the server
+	 */
+	public void setFilterOptionsLoaded(boolean loaded)
+	{
+		areFilterOptionsLoaded = loaded;
 	}
 }

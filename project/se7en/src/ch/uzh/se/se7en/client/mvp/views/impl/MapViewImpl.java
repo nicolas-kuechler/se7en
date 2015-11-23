@@ -16,14 +16,9 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
-
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.inject.Inject;
@@ -44,14 +39,11 @@ import com.googlecode.gwt.charts.client.options.LegendPosition;
 import com.googlecode.gwt.charts.client.util.ArrayHelper;
 
 import ch.uzh.se.se7en.client.mvp.Boundaries;
-import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
-import ch.uzh.se.se7en.shared.model.Film;
 import ch.uzh.se.se7en.shared.model.Genre;
 
-//TODO DB positioning of the pieChart in the UI
 public class MapViewImpl extends Composite implements MapView {
 
 	private static MapViewImplUiBinder uiBinder = GWT.create(MapViewImplUiBinder.class);
@@ -196,6 +188,7 @@ public class MapViewImpl extends Composite implements MapView {
 				
 				geoChart.draw(dataViewGeoChart, geoChartOptions);
 				
+				geoChart.removeAllHandlers();
 				//add a selectHandler to the map to detect users selecting a country on the map
 				geoChart.addSelectHandler(new SelectHandler(){
 					@Override
@@ -267,7 +260,6 @@ public class MapViewImpl extends Composite implements MapView {
 	@pre	
 	@post	genreTableColumns are initialized and their width is set
 	 */
-	
 	public void buildTable(){		
 		
 		genreProvider.addDataDisplay(genreTable);
@@ -341,8 +333,8 @@ public class MapViewImpl extends Composite implements MapView {
 					pieChartOptions.setHeight((panelHeight*3)/10);
 					//hide legend
 					pieChartOptions.setLegend(Legend.create(LegendPosition.RIGHT));
-					//all slices under 10% are grouped together under "others"
-					pieChartOptions.setSliceVisibilityThreshold(0.1);
+					//all slices under 3% are grouped together under "others"
+					pieChartOptions.setSliceVisibilityThreshold(0.03);
 					//TODO NK Need to define way more piechart colors (at least max depending on threshold in line above)
 					pieChartOptions.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
 					pieChartOptions.setTitle("Genre Chart");
