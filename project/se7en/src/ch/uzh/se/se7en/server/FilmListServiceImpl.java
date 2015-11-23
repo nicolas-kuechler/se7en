@@ -399,7 +399,8 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 						+ "JOIN genres g ON fg.genre_id = g.id "
 						+ "LEFT JOIN film_countries fc ON f.id = fc.film_id "
 						+ "LEFT JOIN film_languages fl ON f.id = fl.film_id "
-					+ "WHERE fc.country_id = :countryId " 
+					+ "WHERE fc.country_id = :countryId "
+						+ "AND f.year IS NOT NULL " 
 					+ wheres
 				+ ") AS sel "
 				+ "GROUP BY sel.id "
