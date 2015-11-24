@@ -3,6 +3,7 @@ package ch.uzh.se.se7en.junit.client;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Test;
@@ -10,10 +11,8 @@ import org.junit.Test;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModelImpl;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public class FilmDataModelImplTest {
-//TODO NK Write test for id name matching components (country, genre, language)
 	
 	@Test
 	public void testFilmDataModelImpl() {
@@ -78,9 +77,9 @@ public class FilmDataModelImplTest {
 	@Test
 	public void testSetGetCountryOptions()
 	{
-		List<SelectOption> options= new ArrayList<SelectOption>();
-		options.add(new SelectOption(1, "Switzerland"));
-		options.add(new SelectOption(2, "Germany"));
+		HashMap<Integer,String> options= new HashMap<Integer,String>();
+		options.put(1, "Switzerland");
+		options.put(2, "Germany");
 		FilmDataModelImpl model = new FilmDataModelImpl();
 		
 		model.setCountryOptions(options);
@@ -90,7 +89,7 @@ public class FilmDataModelImplTest {
 		assertEquals(model.getCountryName(3), null);
 		
 		//Simulate that ids have a gap (some options were deleted in db)
-		options.add(new SelectOption(5, "France"));
+		options.put(5, "France");
 		model.setCountryOptions(options);
 		assertEquals(model.getCountryName(1), "Switzerland");
 		assertEquals(model.getCountryName(2), "Germany");
@@ -103,9 +102,9 @@ public class FilmDataModelImplTest {
 	@Test
 	public void testSetGetGenreOptions()
 	{
-		List<SelectOption> options= new ArrayList<SelectOption>();
-		options.add(new SelectOption(1, "Action"));
-		options.add(new SelectOption(2, "Adventure"));
+		HashMap<Integer,String> options= new HashMap<Integer,String>();
+		options.put(1, "Action");
+		options.put(2, "Adventure");
 		FilmDataModelImpl model = new FilmDataModelImpl();
 		
 		model.setGenreOptions(options);
@@ -115,7 +114,7 @@ public class FilmDataModelImplTest {
 		assertEquals(model.getGenreName(3), null);
 		
 		//Simulate that ids have a gap (some options were deleted in db)
-		options.add(new SelectOption(6, "Comedy"));
+		options.put(6, "Comedy");
 		model.setGenreOptions(options);
 		assertEquals(model.getGenreName(1), "Action");
 		assertEquals(model.getGenreName(2), "Adventure");
@@ -128,9 +127,9 @@ public class FilmDataModelImplTest {
 	@Test
 	public void testSetGetLanguageOptions()
 	{
-		List<SelectOption> options= new ArrayList<SelectOption>();
-		options.add(new SelectOption(1, "German"));
-		options.add(new SelectOption(2, "English"));
+		HashMap<Integer,String> options= new HashMap<Integer,String>();
+		options.put(1, "German");
+		options.put(2, "English");
 		FilmDataModelImpl model = new FilmDataModelImpl();
 		
 		model.setLanguageOptions(options);
@@ -140,7 +139,7 @@ public class FilmDataModelImplTest {
 		assertEquals(model.getLanguageName(3), null);
 		
 		//Simulate that ids have a gap (some options were deleted in db)
-		options.add(new SelectOption(5, "French"));
+		options.put(5, "French");
 		model.setLanguageOptions(options);
 		assertEquals(model.getLanguageName(1), "German");
 		assertEquals(model.getLanguageName(2), "English");
@@ -150,16 +149,6 @@ public class FilmDataModelImplTest {
 		assertEquals(model.getLanguageName(6), null);
 	}
 	
-	@Test
-	public void testGetMaxId()
-	{
-		List<SelectOption> options= new ArrayList<SelectOption>();
-		options.add(new SelectOption(1, "Opt1"));
-		options.add(new SelectOption(2, "Opt2"));
-		options.add(new SelectOption(7, "Opt3"));
-		options.add(new SelectOption(4, "Opt4"));
-		FilmDataModelImpl model = new FilmDataModelImpl();
-		assertEquals(model.getMaxId(options), 7);
-	}
+
 
 }

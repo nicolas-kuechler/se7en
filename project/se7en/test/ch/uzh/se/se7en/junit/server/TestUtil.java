@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -32,6 +33,26 @@ public class TestUtil {
 	 */
 	public static <T> TypedQuery<T> mockQuery(List<T> returnValue) {
 		TypedQuery<T> mockedQuery = (TypedQuery<T>) mock(TypedQuery.class);
+
+		when(mockedQuery.getResultList()).thenReturn(returnValue);
+
+		return mockedQuery;
+	}
+	
+	/**
+	 * A generic test util for mocking untyped database queries
+	 *
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param List<T>
+	 *            returnValue A list of generic type which will be returned by
+	 *            the query
+	 * @return Query mockjedQuery A mock of a query, returning the
+	 *         value specified on getResultList() call
+	 */
+	public static <T> Query mockUntypedQuery(List<T> returnValue) {
+		Query mockedQuery = mock(Query.class);
 
 		when(mockedQuery.getResultList()).thenReturn(returnValue);
 

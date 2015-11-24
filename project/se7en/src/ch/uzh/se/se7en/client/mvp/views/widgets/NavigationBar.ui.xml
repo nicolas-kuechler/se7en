@@ -4,11 +4,11 @@
 	xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
 <ui:with field='res' type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources'/>
 	
-	<b:Navbar position="FIXED_TOP" height="11%" >
+	<b:Navbar position="FIXED_TOP" >
 		<b:NavbarHeader width="23%">
 			<b:Image resource='{res.sevenBlack}' ui:field="logoLink"></b:Image>
 		</b:NavbarHeader>
-		<b:NavbarCollapse height="11%" width="77%">
+		<b:NavbarCollapse width="77%">
 			<b:NavbarNav>
 			<b:AnchorListItem ui:field="loading" icon="REFRESH" iconSpin="true" iconSize="TIMES2"></b:AnchorListItem>
 			<b:AnchorListItem ui:field="homeNav" icon="HOME">Home</b:AnchorListItem>

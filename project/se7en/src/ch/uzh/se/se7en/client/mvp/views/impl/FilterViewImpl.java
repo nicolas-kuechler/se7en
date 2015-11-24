@@ -1,10 +1,12 @@
 package ch.uzh.se.se7en.client.mvp.views.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.FormGroup;
+import org.gwtbootstrap3.client.ui.PanelCollapse;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
@@ -28,7 +30,6 @@ import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.mvp.views.widgets.AppliedFilterBox;
 import ch.uzh.se.se7en.client.mvp.views.widgets.MultiSelect;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public class FilterViewImpl extends Composite implements FilterView {
 
@@ -56,12 +57,12 @@ public class FilterViewImpl extends Composite implements FilterView {
 	Button clearBtn;
 	@UiField
 	Button searchBtn;
-
 	@UiField
 	AppliedFilterBox appliedFilter;
 	@UiField
 	FocusPanel focusPanel;
-
+	@UiField
+	PanelCollapse collapseBox;
 	@UiField
 	FormGroup yearColumn;
 	@UiField
@@ -82,7 +83,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
 		initWidget(uiBinder.createAndBindUi(this));
-
+		collapseBox.setIn(true);
 		// Setting Up Listening for Enter Pressed Events to start the search
 		focusPanel.addKeyDownHandler(new KeyDownHandler() {
 			@Override
@@ -109,6 +110,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	 */
 	@UiHandler("searchBtn")
 	public void onSearchBtnClick(final ClickEvent event) {
+		collapseBox.setIn(false);
 		filterPresenter.onSearch();
 	}
 
@@ -182,7 +184,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public void setCountryOptions(List<SelectOption> selectOptions) {
+	public void setCountryOptions(HashMap<Integer,String> selectOptions) {
 		countrySelect.setOptions(selectOptions);
 	}
 
@@ -204,7 +206,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public void setLanguageOptions(List<SelectOption> selectOptions) {
+	public void setLanguageOptions(HashMap<Integer,String> selectOptions) {
 		languageSelect.setOptions(selectOptions);		
 	}
 
@@ -227,7 +229,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	@Override
-	public void setGenreOptions(List<SelectOption> selectOptions) {
+	public void setGenreOptions(HashMap<Integer,String> selectOptions) {
 		genreSelect.setOptions(selectOptions);
 	}
 

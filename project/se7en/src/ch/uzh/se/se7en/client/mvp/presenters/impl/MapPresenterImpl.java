@@ -60,26 +60,27 @@ public class MapPresenterImpl implements MapPresenter {
 
 	@Override
 	public void onCountrySelected() {
+		
 		//makes sure genre info is not visible
 		mapView.setGenreVisible(false);
 		
-		//Creating Filter (base comes from filmDataModel)
-		FilmFilter filter = filmDataModel.getAppliedMapFilter();
 		
-		//add current year information from mapView yearRangeSlider
-		filter.setYearStart(mapView.getMinYear());
-		filter.setYearEnd(mapView.getMaxYear());
+		//Creating Filter (base comes from filmDataModel)
+				FilmFilter filter = filmDataModel.getAppliedMapFilter();
 		
 		//add the id of the country which was selected to the filter
 		Set<Integer> countryId = new HashSet<Integer>();
 		countryId.add(mapView.getGeoChartSelectionCountryId());
-		filter.setCountryIds(countryId);
+		
+		//Creating a copy of the appliedMapFilter with the id from the selected Country and the year information from the map yearRangeSlider
+		FilmFilter genreFilter = new FilmFilter(filter.getName(), filter.getLengthStart(), filter.getLengthEnd(), 
+						mapView.getMinYear(), mapView.getMaxYear(), countryId, filter.getLanguageIds(), filter.getGenreIds());
+		
 		
 		//start rpc to get Genre List
-		filmListService.getGenreList(filter, new AsyncCallback<List<Genre>>(){
+		filmListService.getGenreList(genreFilter, new AsyncCallback<List<Genre>>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO NK Handle Error for User when Genre Rpc failed
 				ClientLog.writeErr("getGenreList failed");
 			}
 			@Override
@@ -193,10 +194,6 @@ public class MapPresenterImpl implements MapPresenter {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO NK Error Handling when Rpc for Map failed
-				// Maybe logging to console?
-				// User needs to be informed aswell
-
 				// displays empty chart for user
 				filmDataModel.setCountryList(new ArrayList<Country>());
 				updateGeoChart();

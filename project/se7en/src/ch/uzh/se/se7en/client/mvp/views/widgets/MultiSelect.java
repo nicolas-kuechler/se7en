@@ -1,7 +1,12 @@
 package ch.uzh.se.se7en.client.mvp.views.widgets;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.gwtbootstrap3.extras.select.client.ui.Option;
@@ -13,7 +18,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 /**
  * This class defines a widget that adds functionality to the
@@ -34,11 +38,19 @@ public class MultiSelect extends Composite {
 
 	public MultiSelect() {
 		initWidget(uiBinder.createAndBindUi(this));
-		select.setEnabled(true);
-
+		select.setEnabled(false);
 	}
 	
-	// TODO CH Verify and add comment
+	/**
+	 * This method returns the ids of all selected options
+	 * 
+	 * @author Cyrill Halter
+	 * @pre After method select(Set<Integer> ids) is called it is necessary to wait 
+	 * around 1000ms before this method returns the selected values. (Problem of the Select Library)
+	 * @post -
+	 * @param -
+	 * @return Set<Integer> ids The set of all selected ids
+	 */
 	public Set<Integer> getAllSelectedIds()
 	{
 		List<String> selected =  select.getAllSelectedValues();
@@ -50,10 +62,25 @@ public class MultiSelect extends Composite {
 		return ids;
 	}
 	
-	//TODO CH Write Comment
+	/**
+	 * Selects a set of entries in the multiselect widget
+	 * 
+	 * @author Cyrill Halter
+	 * @pre -
+	 * @post getAllSelectedIds().contains(ids)
+	 * @param Set<Integer> ids The set of all selected ids
+	 * @return -
+	 */
 	public void select(Set<Integer> ids)
 	{
-		//TODO CH Write metho to select values in the multiselects
+		String [] idStrings = new String[ids.size()];
+		int i = 0;
+		for (Integer id : ids){
+			idStrings[i] = id.toString();
+			i++;
+		}
+		select.setValues(idStrings);
+
 	}
 
 
@@ -85,7 +112,7 @@ public class MultiSelect extends Composite {
 	}
 
 	/**
-	 * This method fills the multiselect widget with options to select from
+	 * This method fills the multiselect widget with sorted options to select from
 	 * 
 	 * @author Cyrill Halter
 	 * @pre -
@@ -95,15 +122,24 @@ public class MultiSelect extends Composite {
 	 *            multiselect widget
 	 * @return -
 	 */
-	public void setOptions(List<SelectOption> currentOptions) {
+	public void setOptions(HashMap<Integer,String> currentOptions) {
 		Option option;
-
-		for (int i = 0; i < currentOptions.size(); i++) {
+		Set<Map.Entry<Integer, String>> currentOptionsSet = currentOptions.entrySet();
+		List<Map.Entry<Integer, String>> currentOptionsList = 
+				new ArrayList<Map.Entry<Integer, String>>(currentOptionsSet);
+		Collections.sort(currentOptionsList, new Comparator<Map.Entry<Integer, String>>(){
+		    public int compare(Map.Entry<Integer, String> entry1, Map.Entry<Integer, String> entry2) {
+		    	return entry1.getValue().compareTo(entry2.getValue()); 
+		    }
+		});
+		
+		for (Map.Entry<Integer, String> entry : currentOptionsList) {
 			option = new Option();
-			option.setText(currentOptions.get(i).getName());
-			option.setValue(Integer.toString(currentOptions.get(i).getId()));
+			option.setText(entry.getValue());
+			option.setValue(entry.getKey().toString());
 			select.add(option);
 		}
+		select.setEnabled(true);
 		select.refresh();
 	}
 

@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.nio.channels.Channels;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -58,6 +59,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	private Map<String, CountryDB> countryMap = new HashMap<String, CountryDB>();
 	private Map<String, GenreDB> genreMap = new HashMap<String, GenreDB>();
 	private Map<String, LanguageDB> languageMap = new HashMap<String, LanguageDB>();
+	private final String BUCKET_NAME = "se-team-se7en";
 
 	/**
 	 * This method is called to to import a file from the Google Cloud Storage
@@ -72,19 +74,19 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	 */
 	@Override
 	public boolean importFile(String nameOfFile) {
-		List<Film> importedFilms = null;	
-		try{
+		List<Film> importedFilms = null;
+		try {
 
 			GcsService gcsService = GcsServiceFactory.createGcsService();
-			GcsFilename gcsFilename = new GcsFilename("se-team-se7en", nameOfFile);
+			GcsFilename gcsFilename = new GcsFilename(BUCKET_NAME, nameOfFile);
 
 			// open GCS channel for specified file name and create reader
 			GcsInputChannel csvReadChannel = gcsService.openReadChannel(gcsFilename, 0);
 			Reader csvFileReader = new InputStreamReader(Channels.newInputStream(csvReadChannel), "UTF-8");
 
 			// create csv reader on inputstream reader
-			CSVReader<Film> filmReader = new CSVReaderBuilder<Film>(csvFileReader)
-					.entryParser(new FilmEntryParser()).build();
+			CSVReader<Film> filmReader = new CSVReaderBuilder<Film>(csvFileReader).entryParser(new FilmEntryParser())
+					.build();
 
 			// read csv to Film objects
 			importedFilms = filmReader.readAll();
@@ -102,7 +104,6 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 		return false;
 	}
 
-
 	/**
 	 * Imports the parsed films into the database
 	 * 
@@ -117,35 +118,58 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	 */
 	@Transactional
 	public boolean importFilmsToDB(List<Film> films) {
+		// TODO: replace this boolean with a parameter
+		boolean force = false;
+
 		// get an instance of the entity manager
 		EntityManager manager = em.get();
 
 		boolean success = false;
 
-		// get all the existing entities from the database
-		List<CountryDB> dbCountries = manager.createQuery("from CountryDB", CountryDB.class).getResultList();
-		List<GenreDB> dbGenres = manager.createQuery("from GenreDB", GenreDB.class).getResultList();
-		List<LanguageDB> dbLanguages = manager.createQuery("from LanguageDB", LanguageDB.class).getResultList();
+		// clear the hashmaps to remove any existing entities from previous
+		// imports
+		countryMap.clear();
+		genreMap.clear();
+		languageMap.clear();
 
-		// hydrate the maps with the existing entities
-		for (CountryDB country : dbCountries) {
-			countryMap.put(country.getName(), country);
-		}
-		for (GenreDB genre : dbGenres) {
-			genreMap.put(genre.getName(), genre);
-		}
-		for (LanguageDB language : dbLanguages) {
-			languageMap.put(language.getName(), language);
+		// if the import was forced, don't get the entities from the database
+		// only do this if the db was purged beforehand!!! (resolves caching
+		// problem)
+		if (!force) {
+			// get all the existing entities from the database
+			List<CountryDB> dbCountries = manager.createQuery("from CountryDB", CountryDB.class).getResultList();
+			List<GenreDB> dbGenres = manager.createQuery("from GenreDB", GenreDB.class).getResultList();
+			List<LanguageDB> dbLanguages = manager.createQuery("from LanguageDB", LanguageDB.class).getResultList();
+
+			// hydrate the maps with the existing entities
+			for (CountryDB country : dbCountries) {
+				countryMap.put(country.getName(), country);
+			}
+			for (GenreDB genre : dbGenres) {
+				genreMap.put(genre.getName(), genre);
+			}
+			for (LanguageDB language : dbLanguages) {
+				languageMap.put(language.getName(), language);
+			}
 		}
 
+		int i = 0;
 		// iterate over each new film
 		for (Film film : films) {
+			i++;
+
+			// query batching to prevent out of memory exception
+			if (i % 50 == 0) {
+				manager.flush();
+				manager.clear();
+			}
+
 			// extract information from the film object and initialize the sets
-			Set<String> countries = film.getCountries().isEmpty() ? new HashSet<String>()
+			Set<String> countries = film.getCountries() == null || film.getCountries().isEmpty() ? new HashSet<String>()
 					: new HashSet<String>(film.getCountries());
-			Set<String> genres = film.getGenres().isEmpty() ? new HashSet<String>()
+			Set<String> genres = film.getGenres() == null || film.getGenres().isEmpty() ? new HashSet<String>()
 					: new HashSet<String>(film.getGenres());
-			Set<String> languages = film.getLanguages().isEmpty() ? new HashSet<String>()
+			Set<String> languages = film.getLanguages() == null || film.getLanguages().isEmpty() ? new HashSet<String>()
 					: new HashSet<String>(film.getLanguages());
 
 			// initialize empty entity sets for the join table entites
@@ -156,6 +180,10 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 			// create a new FilmDB object with the basic content
 			FilmDB dbFilm = new FilmDB(film.getName(), film.getLength(), film.getYear());
 
+			dbFilm.setCountryString(asSortedString(countries));
+			dbFilm.setGenreString(asSortedString(genres));
+			dbFilm.setLanguageString(asSortedString(languages));
+			
 			// for each country, look it up and add it if necessary
 			for (String c : countries) {
 				CountryDB country;
@@ -237,7 +265,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 
 			// save the language join table entities into the film
 			dbFilm.setFilmLanguageEntities(filmLanguageEntities);
-
+			
 			// persist the new film
 			try {
 				manager.persist(dbFilm);
@@ -287,5 +315,33 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	 */
 	public Map<String, LanguageDB> getLanguageMap() {
 		return languageMap;
+	}
+
+	/**
+	 * Static method for converting an unsorted collection of strings into its string representation
+	 * 
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param Collection<String>
+	 *            An unsorted collection of strings
+	 * @return String A string containing the sorted items of the collection
+	 */
+	public static String asSortedString(Collection<String> c) {
+		// TODO: test
+		List<String> list = new ArrayList<String>(c);
+		String sorted = "";
+		
+		java.util.Collections.sort(list);
+		
+		for(String string : list) {
+			if(sorted.length() == 0) {
+				sorted += string;
+			} else {
+				sorted += " / " + string;
+			}
+		}
+		
+		return sorted;
 	}
 }

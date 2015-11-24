@@ -1,12 +1,12 @@
 package ch.uzh.se.se7en.client.mvp.views;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
 import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
-import ch.uzh.se.se7en.shared.model.SelectOption;
 
 public interface FilterView extends IsWidget {
 	/**
@@ -99,7 +99,7 @@ public interface FilterView extends IsWidget {
 	@post	countrySelect available Options == selectOptions
 	@param selectOptions a list of SelectOption
 	 */
-	public void setCountryOptions(List<SelectOption> selectOptions);
+	public void setCountryOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
 	Gets the information about the currently chosen (selected) options in the MultiSelect Country
@@ -126,7 +126,7 @@ public interface FilterView extends IsWidget {
 	@post	languageSelect available Options == selectOptions
 	@param 	selectOptions a list of SelectOption
 	 */
-	public void setLanguageOptions(List<SelectOption> selectOptions);
+	public void setLanguageOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
 	Gets the information about the currently chosen (selected) options in the MultiSelect Language
@@ -153,7 +153,7 @@ public interface FilterView extends IsWidget {
 	@post	genreSelect available Options == selectOptions
 	@param selectOptions a list of SelectOption
 	 */
-	public void setGenreOptions(List<SelectOption> selectOptions);
+	public void setGenreOptions(HashMap<Integer,String> selectOptions);
 	
 	/**
 	Gets the information about the currently chosen (selected) options in the MultiSelect Genre
