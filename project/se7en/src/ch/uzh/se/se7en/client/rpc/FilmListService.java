@@ -19,7 +19,7 @@ public interface FilmListService extends RemoteService{
 	
 	public List<Country> getCountryList(FilmFilter filter);
 	
-	public List<Film> getFilmList(FilmFilter filter, int startRange, int endRange);
+	public List<Film> getFilmList(FilmFilter filter, int startRange, int numberOfResults);
 	
 	public List<Genre> getGenreList(FilmFilter filter);
 	

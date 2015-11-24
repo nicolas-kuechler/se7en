@@ -95,7 +95,7 @@ public class TablePresenterImpl implements TablePresenter {
 		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
 			@Override
 			public void onFilterAppliedEvent(FilterAppliedEvent event) {
-				fetchData();
+				fetchData(0, 50);
 			}
 		});
 	}
@@ -133,11 +133,11 @@ public class TablePresenterImpl implements TablePresenter {
 	@pre -
 	@post tableView is updated and server response is saved in filmdatamodel
 	 */
-	public void fetchData() {
+	public void fetchData(int startRange, int numberOfResults) {
 		//create pseudo film that informs the user about the loading
 		updateTable(createPseudoFilmList("Loading..."));
 
-		filmListService.getFilmList(filmDataModel.getAppliedFilter(), new AsyncCallback<List<Film>>(){
+		filmListService.getFilmList(filmDataModel.getAppliedFilter(), startRange, numberOfResults, new AsyncCallback<List<Film>>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				//rpc did not get back to client -> display error to the user
@@ -161,9 +161,6 @@ public class TablePresenterImpl implements TablePresenter {
 
 	@Override
 	public void onTableRangeChanged(int startRange, int numberOfResults) {
-		// TODO Auto-generated method stub
-		
+		fetchData(startRange, numberOfResults);
 	}
-
-
 }
