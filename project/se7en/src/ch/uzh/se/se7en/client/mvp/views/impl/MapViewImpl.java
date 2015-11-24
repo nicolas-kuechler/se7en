@@ -25,8 +25,10 @@ import com.google.inject.Inject;
 import com.googlecode.gwt.charts.client.ChartLoader;
 import com.googlecode.gwt.charts.client.ChartPackage;
 import com.googlecode.gwt.charts.client.ColumnType;
+import com.googlecode.gwt.charts.client.DataColumn;
 import com.googlecode.gwt.charts.client.DataTable;
 import com.googlecode.gwt.charts.client.DataView;
+import com.googlecode.gwt.charts.client.RoleType;
 import com.googlecode.gwt.charts.client.corechart.PieChart;
 import com.googlecode.gwt.charts.client.corechart.PieChartOptions;
 import com.googlecode.gwt.charts.client.event.SelectEvent;
@@ -131,6 +133,7 @@ public class MapViewImpl extends Composite implements MapView {
 					geoChartOptions = GeoChartOptions.create();
 					geoChartOptions.setWidth((panelWidth*4)/10);
 					geoChartOptions.setHeight((panelHeight*6)/10);
+					geoChartOptions.hideLegend();
 					panel.add(geoChart);
 					
 					if(placeholderIsSet){
@@ -169,8 +172,12 @@ public class MapViewImpl extends Composite implements MapView {
 				//Create new DataTable
 				dataTableGeoChart = DataTable.create();
 				dataTableGeoChart.addColumn(ColumnType.STRING, "Country");
+				//Add Productions Colum which holds log(realNumberOfProduction)
 				dataTableGeoChart.addColumn(ColumnType.NUMBER, "Productions");
 				dataTableGeoChart.addColumn(ColumnType.NUMBER, "Id");
+				//Add Tooltip role column to display real number of productions in tooltip
+				dataTableGeoChart.addColumn(DataColumn.create(ColumnType.STRING, RoleType.TOOLTIP));
+				
 				//add number of necessary rows
 				dataTableGeoChart.addRows(countries.size());
 				
@@ -180,6 +187,7 @@ public class MapViewImpl extends Composite implements MapView {
 					//TODO NK log function at the right place
 					dataTableGeoChart.setValue(i, 1, Math.log(countries.get(i).getValue()));
 					dataTableGeoChart.setValue(i, 2, countries.get(i).getId());
+					dataTableGeoChart.setValue(i, 3, "Productions: "+countries.get(i).getValue());
 				}
 				//create dataView from dataTable
 				dataViewGeoChart = DataView.create(dataTableGeoChart);
