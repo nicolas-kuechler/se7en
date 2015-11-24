@@ -9,5 +9,13 @@ public interface TablePresenter extends RootPresenter {
 	 */
 	public void onDownloadStarted();
 	
-
+	/**
+	
+	@author Nicolas Küchler
+	@pre	tableView != null
+	@post	rpc started to get table data
+	@param start start of visible range
+	@param numberOfResults the number of results
+	 */
+	public void onTableRangeChanged(int startRange, int numberOfResults);
 }

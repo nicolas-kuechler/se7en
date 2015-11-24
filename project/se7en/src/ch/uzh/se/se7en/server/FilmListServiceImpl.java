@@ -56,9 +56,9 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<Film> films The filtered list of film data transfer objects
 	 */
 	@Override
-	public List<Film> getFilmList(FilmFilter filter) {
+	public List<Film> getFilmList(FilmFilter filter, int startRange, int numberOfResults) {
 		// query the database for filtered entities
-		List<FilmDB> dbFilms = getFilmEntitiesList(filter);
+		List<FilmDB> dbFilms = getFilmEntitiesList(filter, startRange, numberOfResults);
 
 		// create an empty list of films
 		List<Film> films = new ArrayList<Film>();
@@ -85,18 +85,18 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<FilmDB> dbFilms A filtered list of film entities
 	 */
 	@Transactional
-	public List<FilmDB> getFilmEntitiesList(FilmFilter filter) {
+	public List<FilmDB> getFilmEntitiesList(FilmFilter filter, int startRange, int numberOfResults) {
 		if (cachedFilter != null && cachedFilms != null && filter.equals(cachedFilter)) {
 			return cachedFilms;
 		}
 
 		// the starting position of the query
 		// TODO: replace by filter information?
-		int startPosition = 0;
+		int startPosition = startRange;
 
 		// the max number of results the query should return
 		// TODO: replace by filter information?
-		int maxResults = 80000;
+		int maxResults = numberOfResults;
 
 		// defines the ordering of the query results
 		// TODO: replace by filter information?

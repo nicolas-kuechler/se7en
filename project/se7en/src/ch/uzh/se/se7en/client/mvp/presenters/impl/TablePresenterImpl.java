@@ -158,4 +158,12 @@ public class TablePresenterImpl implements TablePresenter {
 			}
 		});
 	}
+
+	@Override
+	public void onTableRangeChanged(int startRange, int numberOfResults) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 }
