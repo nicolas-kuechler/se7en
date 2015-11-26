@@ -19,7 +19,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.AsyncHandler;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.ColumnSortList;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -92,9 +94,7 @@ public class TableViewImpl extends Composite implements TableView {
 	    SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 	    pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
 	    pager.setDisplay(dataGrid);
-		
 		initWidget(uiBinder.createAndBindUi(this));
-		
 	}
 
 	@Override
@@ -126,6 +126,7 @@ public class TableViewImpl extends Composite implements TableView {
 	      @Override
 	      protected void onRangeChanged(HasData<Film> display) {
 	        final Range range = display.getVisibleRange();
+	        final ColumnSortList sortList = dataGrid.getColumnSortList();
 	        if(tablePresenter!=null)
 	        {
 	        	tablePresenter.onTableRangeChanged(range.getStart(), range.getLength());
@@ -133,17 +134,17 @@ public class TableViewImpl extends Composite implements TableView {
 	      }
 	    };
 	    
+	    AsyncHandler columnSortHandler = new AsyncHandler(dataGrid);
+	    dataGrid.addColumnSortHandler(columnSortHandler);
 	    dataProvider.addDataDisplay(dataGrid);
 	}
 
 	@Override
 	public void setTable(List<Film> films, int start) {
 		dataProvider.updateRowData(start, films);
-		dataProvider.updateRowCount(films.size(), false);
 		
-//		filmProvider.setList(films);
-//		createColumnSortHandler();
-//		dataGrid.addColumnSortHandler(columnSortHandler);
+		//TODO NK update the row count when new filter applied
+		//dataProvider.updateRowCount(films.size(), false);
 	}
 
 	/**

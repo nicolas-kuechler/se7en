@@ -37,7 +37,6 @@ public class TablePresenterImpl implements TablePresenter {
 	@Inject
 	public TablePresenterImpl(EventBus eventBus, TableView tableView, FilmDataModel filmDataModel,
 			FilmListServiceAsync filmListService, FilmListExportServiceAsync filmListExportService) {
-		ClientLog.writeMsg("Constructor TablePresenter started"); //TODO NK remove
 		this.eventBus = eventBus;
 		this.tableView = tableView;
 		this.filmDataModel = filmDataModel;
@@ -45,7 +44,6 @@ public class TablePresenterImpl implements TablePresenter {
 		this.filmListExportService = filmListExportService;
 		bind();
 		setupTableUpdate();
-		ClientLog.writeMsg("Constructor TablePresenter finished"); //TODO NK remove
 	}
 
 	@Override

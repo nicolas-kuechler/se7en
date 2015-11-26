@@ -86,9 +86,10 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Transactional
 	public List<FilmDB> getFilmEntitiesList(FilmFilter filter, int startRange, int numberOfResults) {
-		if (cachedFilter != null && cachedFilms != null && filter.equals(cachedFilter)) {
-			return cachedFilms;
-		}
+		//TODO RS this caching does not work with the range stuff
+//		if (cachedFilter != null && cachedFilms != null && filter.equals(cachedFilter)) {
+//			return cachedFilms;
+//		}
 
 		// the starting position of the query
 		// TODO: replace by filter information?
