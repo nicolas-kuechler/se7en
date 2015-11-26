@@ -83,7 +83,7 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 		//write films to CSV
 		CSVWriter<Film> csvWriter = new CSVWriterBuilder<Film>(writer).entryConverter(new FilmEntryConverter()).build();
 		try {
-			csvWriter.writeAll(filmListService.getFilmList(filter));
+			csvWriter.writeAll(filmListService.getFilmList(filter, 0, 80000)); //TODO RS CH check if possible to get all somehow without hardcoding it
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {

@@ -9,5 +9,22 @@ public interface TablePresenter extends RootPresenter {
 	 */
 	public void onDownloadStarted();
 	
-
+	/**
+	
+	@author Nicolas Küchler
+	@pre	tableView != null
+	@post	rpc started to get table data
+	@param start start of visible range
+	@param numberOfResults the number of results
+	 */
+	public void onTableRangeChanged(int startRange, int numberOfResults);
+	
+	/**
+	Method to give the tablePresenter the information about the ordering that is applied in the table
+	@author Nicolas Küchler
+	@pre	tableView!=null
+	@post	filmDataModel.getAppliedFilter().getOrderBy() == orderBy
+	@param	orderBy in form: f.name desc
+	 */
+	public void orderFilmListBy(String orderBy);
 }

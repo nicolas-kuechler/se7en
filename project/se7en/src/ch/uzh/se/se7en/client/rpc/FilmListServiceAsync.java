@@ -14,7 +14,7 @@ public interface FilmListServiceAsync {
 
 	void getCountryList(FilmFilter filter, AsyncCallback<List<Country>> callback);
 
-	void getFilmList(FilmFilter filter, AsyncCallback<List<Film>> callback);
+	void getFilmList(FilmFilter filter, int startRange, int numberOfResults, AsyncCallback<List<Film>> callback);
 
 	void getGenreList(FilmFilter filter, AsyncCallback<List<Genre>> callback);
 
