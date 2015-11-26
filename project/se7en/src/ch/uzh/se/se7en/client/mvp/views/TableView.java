@@ -24,7 +24,7 @@ public interface TableView extends IsWidget {
 	@post 	film table displays films
 	@param 	films films != null && films.size() > 0
 	 */
-	public void setTable(List<Film> films);
+	public void setTable(List<Film> films, int start);
 	
 	/**
 	When the download Url is ready, the download can be started from the Ui

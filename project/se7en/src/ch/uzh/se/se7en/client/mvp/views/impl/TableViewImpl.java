@@ -1,5 +1,6 @@
 package ch.uzh.se.se7en.client.mvp.views.impl;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -25,8 +26,12 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.Range;
 
+import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -37,6 +42,7 @@ public class TableViewImpl extends Composite implements TableView {
 
 	interface TableViewImplUiBinder extends UiBinder<Widget, TableViewImpl> {
 	}
+	
 
 	private TablePresenter tablePresenter;
 	private int panelHeight;
@@ -50,7 +56,8 @@ public class TableViewImpl extends Composite implements TableView {
 	@UiField 
 	Button downloadButton;
 	
-	ListDataProvider<Film> filmProvider = new ListDataProvider<Film>();
+	AsyncDataProvider<Film> dataProvider;
+	
 	ListHandler<Film> columnSortHandler;
 
 	TextColumn<Film> nameColumn;
@@ -60,6 +67,42 @@ public class TableViewImpl extends Composite implements TableView {
 	TextColumn<Film> yearColumn;
 	TextColumn<Film> genreColumn;
 
+
+	/**
+	 * Initialize table view and set default height, width, headerRefresh=true
+	 * and border=false
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param -
+	 */
+	public TableViewImpl() {
+		dataGrid = new DataGrid<Film>();
+		dataGrid.setWidth("100%");
+		panelHeight= Window.getClientHeight();
+		dataGrid.setHeight((panelHeight*6)/10 + "px");
+		dataGrid.setHeight("500px");
+		dataGrid.setBordered(false);
+		dataGrid.setAutoHeaderRefreshDisabled(true);
+
+		buildTable();
+		setupAsyncDataProvider();
+		
+	    SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+	    pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
+	    pager.setDisplay(dataGrid);
+		
+		initWidget(uiBinder.createAndBindUi(this));
+		
+	}
+
+	@Override
+	public void setPresenter(TablePresenter presenter) {
+		this.tablePresenter = presenter;
+
+	}
+	
 	/**
 	 * triggers the download when user clicks on download link
 	 * 
@@ -75,46 +118,32 @@ public class TableViewImpl extends Composite implements TableView {
 		downloadButton.setIconSpin(true);
 		tablePresenter.onDownloadStarted();
 	}
-
-	/**
-	 * Initialize table view and set default height, width, headerRefresh=true
-	 * and border=false
-	 * 
-	 * @author Dominik Bünzli
-	 * @pre container != null
-	 * @post -
-	 * @param -
-	 */
-
-	public TableViewImpl() {
-		dataGrid = new DataGrid<Film>();
-		dataGrid.setWidth("100%");
-		panelHeight= Window.getClientHeight();
-		dataGrid.setHeight((panelHeight*6)/10 + "px");
-		dataGrid.setHeight("500px");
-		dataGrid.setBordered(false);
-		dataGrid.setAutoHeaderRefreshDisabled(true);
-
-	    SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
-	    pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
-	    pager.setDisplay(dataGrid);
-
-		buildTable();
-		filmProvider.addDataDisplay(dataGrid);
-
-		initWidget(uiBinder.createAndBindUi(this));
+	
+	private void setupAsyncDataProvider()
+	{
+		// Create a data provider.
+	    dataProvider = new AsyncDataProvider<Film>() {
+	      @Override
+	      protected void onRangeChanged(HasData<Film> display) {
+	        final Range range = display.getVisibleRange();
+	        if(tablePresenter!=null)
+	        {
+	        	tablePresenter.onTableRangeChanged(range.getStart(), range.getLength());
+	        }
+	      }
+	    };
+	    
+	    dataProvider.addDataDisplay(dataGrid);
 	}
 
 	@Override
-	public void setPresenter(TablePresenter presenter) {
-		this.tablePresenter = presenter;
-	}
-
-	@Override
-	public void setTable(List<Film> films) {
-		filmProvider.setList(films);
-		createColumnSortHandler();
-		dataGrid.addColumnSortHandler(columnSortHandler);
+	public void setTable(List<Film> films, int start) {
+		dataProvider.updateRowData(start, films);
+		dataProvider.updateRowCount(films.size(), false);
+		
+//		filmProvider.setList(films);
+//		createColumnSortHandler();
+//		dataGrid.addColumnSortHandler(columnSortHandler);
 	}
 
 	/**
@@ -286,122 +315,122 @@ public class TableViewImpl extends Composite implements TableView {
 	 * @post -
 	 * @param -
 	 */
-	private void createColumnSortHandler() {
-		columnSortHandler = new ListHandler<Film>(filmProvider.getList());
-
-		columnSortHandler.setComparator(nameColumn, new Comparator<Film>() {
-			@Override
-			public int compare(Film o1, Film o2) {
-				if (o1.getName() == o2.getName()) {
-					return 0;
-				}
-
-				if (o1.getName() == null) {
-					return 1;
-				}
-				if (o2.getName() == null) {
-					return -1;
-				}
-
-				return o1.getName().compareTo(o2.getName());
-			}
-
-		});
-
-		columnSortHandler.setComparator(lengthColumn, new Comparator<Film>() {
-			@Override
-			public int compare(Film o1, Film o2) {
-
-				if (o1.getLength() == o2.getLength()) {
-					return 0;
-				}
-				if (o1.getLength() == null) {
-					return 1;
-				}
-				if (o2.getLength() == null) {
-					return -1;
-				}
-
-				if (o1.getLength() < o2.getLength()) {
-					return -1;
-				} else {
-					return 1;
-				}
-			}
-		});
-
-		columnSortHandler.setComparator(countryColumn, new Comparator<Film>() {
-			@Override
-			public int compare(Film o1, Film o2) {
-				if (o1.getCountries() == o2.getCountries()) {
-					return 0;
-				}
-				if (o1.getCountries() == null) {
-					return 1;
-				}
-				if (o2.getCountries() == null) {
-					return -1;
-				}
-
-				return listToString(o1.getCountries()).compareTo(listToString(o2.getCountries()));
-			}
-		});
-
-		columnSortHandler.setComparator(languageColumn, new Comparator<Film>() {
-			@Override
-			public int compare(Film o1, Film o2) {
-				if (o1.getLanguages() == o2.getLanguages()) {
-					return 0;
-				}
-				if (o1.getLanguages() == null) {
-					return 1;
-				}
-				if (o2.getLanguages() == null) {
-					return -1;
-				}
-				return listToString(o1.getLanguages()).compareTo(listToString(o2.getLanguages()));
-			}
-		});
-
-		columnSortHandler.setComparator(yearColumn, new Comparator<Film>() {
-			@Override
-			public int compare(Film o1, Film o2) {
-				if (o1.getYear() == o2.getYear()) {
-					return 0;
-				}
-				if (o1.getYear() == null) {
-					return 1;
-				}
-				if (o2.getYear() == null) {
-					return -1;
-				}
-
-				if (o1.getYear() < o2.getYear()) {
-					return -1;
-				} else {
-					return 1;
-				}
-			}
-		});
-
-		columnSortHandler.setComparator(genreColumn, new Comparator<Film>() {
-			@Override
-			public int compare(Film o1, Film o2) {
-				if (o1.getGenres() == o2.getGenres()) {
-					return 0;
-				}
-				if (o1.getGenres() == null) {
-					return 1;
-				}
-				if (o2.getGenres() == null) {
-					return -1;
-				}
-
-				return listToString(o1.getGenres()).compareTo(listToString(o2.getGenres()));
-			}
-		});
-
-	}
+//	private void createColumnSortHandler() {
+//		columnSortHandler = new ListHandler<Film>(filmProvider.getList());
+//
+//		columnSortHandler.setComparator(nameColumn, new Comparator<Film>() {
+//			@Override
+//			public int compare(Film o1, Film o2) {
+//				if (o1.getName() == o2.getName()) {
+//					return 0;
+//				}
+//
+//				if (o1.getName() == null) {
+//					return 1;
+//				}
+//				if (o2.getName() == null) {
+//					return -1;
+//				}
+//
+//				return o1.getName().compareTo(o2.getName());
+//			}
+//
+//		});
+//
+//		columnSortHandler.setComparator(lengthColumn, new Comparator<Film>() {
+//			@Override
+//			public int compare(Film o1, Film o2) {
+//
+//				if (o1.getLength() == o2.getLength()) {
+//					return 0;
+//				}
+//				if (o1.getLength() == null) {
+//					return 1;
+//				}
+//				if (o2.getLength() == null) {
+//					return -1;
+//				}
+//
+//				if (o1.getLength() < o2.getLength()) {
+//					return -1;
+//				} else {
+//					return 1;
+//				}
+//			}
+//		});
+//
+//		columnSortHandler.setComparator(countryColumn, new Comparator<Film>() {
+//			@Override
+//			public int compare(Film o1, Film o2) {
+//				if (o1.getCountries() == o2.getCountries()) {
+//					return 0;
+//				}
+//				if (o1.getCountries() == null) {
+//					return 1;
+//				}
+//				if (o2.getCountries() == null) {
+//					return -1;
+//				}
+//
+//				return listToString(o1.getCountries()).compareTo(listToString(o2.getCountries()));
+//			}
+//		});
+//
+//		columnSortHandler.setComparator(languageColumn, new Comparator<Film>() {
+//			@Override
+//			public int compare(Film o1, Film o2) {
+//				if (o1.getLanguages() == o2.getLanguages()) {
+//					return 0;
+//				}
+//				if (o1.getLanguages() == null) {
+//					return 1;
+//				}
+//				if (o2.getLanguages() == null) {
+//					return -1;
+//				}
+//				return listToString(o1.getLanguages()).compareTo(listToString(o2.getLanguages()));
+//			}
+//		});
+//
+//		columnSortHandler.setComparator(yearColumn, new Comparator<Film>() {
+//			@Override
+//			public int compare(Film o1, Film o2) {
+//				if (o1.getYear() == o2.getYear()) {
+//					return 0;
+//				}
+//				if (o1.getYear() == null) {
+//					return 1;
+//				}
+//				if (o2.getYear() == null) {
+//					return -1;
+//				}
+//
+//				if (o1.getYear() < o2.getYear()) {
+//					return -1;
+//				} else {
+//					return 1;
+//				}
+//			}
+//		});
+//
+//		columnSortHandler.setComparator(genreColumn, new Comparator<Film>() {
+//			@Override
+//			public int compare(Film o1, Film o2) {
+//				if (o1.getGenres() == o2.getGenres()) {
+//					return 0;
+//				}
+//				if (o1.getGenres() == null) {
+//					return 1;
+//				}
+//				if (o2.getGenres() == null) {
+//					return -1;
+//				}
+//
+//				return listToString(o1.getGenres()).compareTo(listToString(o2.getGenres()));
+//			}
+//		});
+//
+//	}
 
 	/**
 	 * method that converts a list of genres, countries or languages into a

@@ -37,6 +37,7 @@ public class TablePresenterImpl implements TablePresenter {
 	@Inject
 	public TablePresenterImpl(EventBus eventBus, TableView tableView, FilmDataModel filmDataModel,
 			FilmListServiceAsync filmListService, FilmListExportServiceAsync filmListExportService) {
+		ClientLog.writeMsg("Constructor TablePresenter started"); //TODO NK remove
 		this.eventBus = eventBus;
 		this.tableView = tableView;
 		this.filmDataModel = filmDataModel;
@@ -44,6 +45,7 @@ public class TablePresenterImpl implements TablePresenter {
 		this.filmListExportService = filmListExportService;
 		bind();
 		setupTableUpdate();
+		ClientLog.writeMsg("Constructor TablePresenter finished"); //TODO NK remove
 	}
 
 	@Override
@@ -90,7 +92,7 @@ public class TablePresenterImpl implements TablePresenter {
 	public void setupTableUpdate()
 	{
 		//initialize table with message
-		updateTable(createPseudoFilmList("No Search Results Found"));
+		updateTable(createPseudoFilmList("No Search Results Found"), 0);
 
 		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
 			@Override
@@ -107,9 +109,9 @@ public class TablePresenterImpl implements TablePresenter {
 	@post	table is updated
 	@param films films.size()>0
 	 */
-	public void updateTable(List<Film> films)
+	public void updateTable(List<Film> films, int start)
 	{
-		tableView.setTable(films);
+		tableView.setTable(films, start);
 	}
 
 	/**
@@ -133,27 +135,27 @@ public class TablePresenterImpl implements TablePresenter {
 	@pre -
 	@post tableView is updated and server response is saved in filmdatamodel
 	 */
-	public void fetchData(int startRange, int numberOfResults) {
+	public void fetchData(final int startRange, int numberOfResults) {
 		//create pseudo film that informs the user about the loading
-		updateTable(createPseudoFilmList("Loading..."));
+		updateTable(createPseudoFilmList("Loading..."), 0);
 
 		filmListService.getFilmList(filmDataModel.getAppliedFilter(), startRange, numberOfResults, new AsyncCallback<List<Film>>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				//rpc did not get back to client -> display error to the user
-				updateTable(createPseudoFilmList("Error while loading films, please try again"));
+				updateTable(createPseudoFilmList("Error while loading films, please try again"), 0);
 			}
 			@Override
 			public void onSuccess(List<Film> result) {
 				if(result.size()==0)
 				{
 					//no films match the filter, so the result is empty --> inform user with pseudoFilmList
-					updateTable(createPseudoFilmList("No Search Results Found"));
+					updateTable(createPseudoFilmList("No Search Results Found"), 0);
 				}
 				else
 				{
 					//result is back and contains films --> display films and save them to the FilmDataModel
-					updateTable(result);
+					updateTable(result, startRange);
 				}
 			}
 		});
