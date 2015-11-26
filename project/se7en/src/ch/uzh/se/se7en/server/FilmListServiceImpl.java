@@ -101,7 +101,8 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// defines the ordering of the query results
 		// TODO: replace by filter information?
-		String ordering = "f.name";
+		//String ordering = "f.name";
+		String ordering = filter.getOrderBy();
 
 		// create an empty list of film entities
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();

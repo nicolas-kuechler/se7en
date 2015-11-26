@@ -95,6 +95,7 @@ public class TablePresenterImpl implements TablePresenter {
 		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
 			@Override
 			public void onFilterAppliedEvent(FilterAppliedEvent event) {
+				//get the data in the default range 0-50
 				fetchData(0, 50);
 			}
 		});
@@ -162,5 +163,10 @@ public class TablePresenterImpl implements TablePresenter {
 	@Override
 	public void onTableRangeChanged(int startRange, int numberOfResults) {
 		fetchData(startRange, numberOfResults);
+	}
+
+	@Override
+	public void orderFilmListBy(String orderBy) {
+		filmDataModel.getAppliedFilter().setOrderBy(orderBy);
 	}
 }
