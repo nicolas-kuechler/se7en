@@ -1,5 +1,6 @@
 package ch.uzh.se.se7en.server;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -88,7 +89,6 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Transactional
 	public List<FilmDB> getFilmEntitiesList(FilmFilter filter, int startRange, int numberOfResults) {
-		//TODO RS this caching does not work with the range stuff
 		if (cachedFilter != null 
 				&& cachedFilms != null 
 				&& filter.equals(cachedFilter)
@@ -164,9 +164,11 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// concat the query string
 		String queryString = selector + joiners + " " + wheres + " ORDER BY " + ordering;
-
+		String countString = "SELECT COUNT(*) FROM FilmDB f" + joiners + " " + wheres;
+		
 		// create a typed query from our query string
 		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
+		Query countQuery = em.get().createQuery(countString);
 
 		// set offset and limit
 		query.setFirstResult(startRange);
@@ -177,6 +179,8 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			// set the min & max length params
 			query.setParameter("minLength", filter.getLengthStart());
 			query.setParameter("maxLength", filter.getLengthEnd());
+			countQuery.setParameter("minLength", filter.getLengthStart());
+			countQuery.setParameter("maxLength", filter.getLengthEnd());
 		}
 
 		// if filter for year != defaults
@@ -184,32 +188,44 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			// set the min & max year params
 			query.setParameter("minYear", filter.getYearStart());
 			query.setParameter("maxYear", filter.getYearEnd());
+			countQuery.setParameter("minYear", filter.getYearStart());
+			countQuery.setParameter("maxYear", filter.getYearEnd());
 		}
 
 		// if the name in the filter is set, set the param
 		if (filter.getName() != null) {
 			// use % to also find incomplete words
 			query.setParameter("findName", "%" + filter.getName().toLowerCase() + "%");
+			countQuery.setParameter("findName", "%" + filter.getName().toLowerCase() + "%");
 		}
 
 		// if there are countries specified as a list of Integers
 		if (filter.getCountryIds() != null) {
 			query.setParameter("countryIds", filter.getCountryIds());
+			countQuery.setParameter("countryIds", filter.getCountryIds());
 		}
 
 		// if there are genres specified as a list of Integers
 		if (filter.getGenreIds() != null) {
 			query.setParameter("genreIds", filter.getGenreIds());
+			countQuery.setParameter("genreIds", filter.getGenreIds());
 		}
 
 		// if there are languages specified as a list of Integers
 		if (filter.getLanguageIds() != null) {
 			query.setParameter("languageIds", filter.getLanguageIds());
+			countQuery.setParameter("languageIds", filter.getLanguageIds());
 		}
-
+		
 		// execute the query
 		dbFilms = query.getResultList();
-
+		
+		if (!filter.equals(cachedFilter)) {
+			long longCount = (long) countQuery.getSingleResult();
+			int count = new BigDecimal(longCount).intValue();
+			dbFilms.add(0, new FilmDB("GIR_QUERY_COUNT", count, null));
+		}
+		
 		// fill the local "cache"
 		cachedFilter = filter;
 		cachedStartRange = startRange;
