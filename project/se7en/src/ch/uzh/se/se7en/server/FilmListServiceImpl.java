@@ -38,12 +38,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Inject
 	Provider<EntityManager> em;
 
-	// TODO: find other way of caching stuff
-	public FilmFilter cachedFilter;
-	public List<FilmDB> cachedFilms;
-	public HashMap<Integer, String> cachedCountries;
-	public HashMap<Integer, String> cachedGenres;
-	public HashMap<Integer, String> cachedLanguages;
+	// create a local "cache" like storage in the singleton
+	public static FilmFilter cachedFilter;
+	public static List<FilmDB> cachedFilms;
+	public static int cachedStartRange;
+	public static int cachedNumResults;
+	public static HashMap<Integer, String> cachedCountries;
+	public static HashMap<Integer, String> cachedGenres;
+	public static HashMap<Integer, String> cachedLanguages;
 
 	/**
 	 * Returns a filtered list of films to the client
@@ -87,21 +89,16 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Transactional
 	public List<FilmDB> getFilmEntitiesList(FilmFilter filter, int startRange, int numberOfResults) {
 		//TODO RS this caching does not work with the range stuff
-//		if (cachedFilter != null && cachedFilms != null && filter.equals(cachedFilter)) {
-//			return cachedFilms;
-//		}
-
-		// the starting position of the query
-		// TODO: replace by filter information?
-		int startPosition = startRange;
-
-		// the max number of results the query should return
-		// TODO: replace by filter information?
-		int maxResults = numberOfResults;
+		if (cachedFilter != null 
+				&& cachedFilms != null 
+				&& filter.equals(cachedFilter)
+				&& cachedStartRange == startRange
+				&& cachedNumResults == numberOfResults) {
+			return cachedFilms;
+		}
 
 		// defines the ordering of the query results
-		// TODO: replace by filter information?
-		//String ordering = "f.name";
+		// TODO: security concerns? injection?
 		String ordering = filter.getOrderBy();
 
 		// create an empty list of film entities
@@ -110,7 +107,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// initialize the selector in the query
 		String selector = "SELECT DISTINCT f FROM FilmDB f";
 
-		// initialize the where string with the basic filters
+		// initialize the where strings
 		String wheres = "";
 		String whereLength = "";
 		String whereYear = "";
@@ -171,16 +168,9 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// create a typed query from our query string
 		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
 
-		// make the query cacheable if it is select *
-		// TODO: query cache
-		/*
-		 * if(wheres == "WHERE 1=1") { query.setHint(QueryHints.CACHEABLE,
-		 * true); }
-		 */
-
 		// set offset and limit
-		query.setFirstResult(startPosition);
-		query.setMaxResults(maxResults);
+		query.setFirstResult(startRange);
+		query.setMaxResults(numberOfResults);
 
 		// if filter for length != defaults
 		if (whereLength.length() > 0) {
@@ -221,8 +211,9 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		dbFilms = query.getResultList();
 
 		// fill the local "cache"
-		// TODO: use another way of caching
 		cachedFilter = filter;
+		cachedStartRange = startRange;
+		cachedNumResults = numberOfResults;
 		cachedFilms = dbFilms;
 
 		// return the list of film entities

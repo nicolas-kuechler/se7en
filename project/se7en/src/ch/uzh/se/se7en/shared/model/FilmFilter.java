@@ -257,6 +257,8 @@ public class FilmFilter implements Serializable {
 			return false;
 		if (yearStart != other.yearStart)
 			return false;
+		if (orderBy != other.orderBy)
+			return false;
 		return true;
 	}
 
