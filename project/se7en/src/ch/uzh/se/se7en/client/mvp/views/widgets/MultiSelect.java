@@ -1,32 +1,22 @@
 package ch.uzh.se.se7en.client.mvp.views.widgets;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.gwtbootstrap3.extras.select.client.ui.Option;
 import org.gwtbootstrap3.extras.select.client.ui.Select;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
-
-import ch.uzh.se.se7en.client.ClientLog;
 
 
 /**
@@ -134,7 +124,6 @@ public class MultiSelect extends Composite {
 	 */
 	public void setOptions(HashMap<Integer,String> currentOptions) {
 		Option option;
-		Set<Integer> ids = currentOptions.keySet();
 		Set<Map.Entry<Integer, String>> currentOptionsSet = currentOptions.entrySet();
 		List<Map.Entry<Integer, String>> currentOptionsList = 
 				new ArrayList<Map.Entry<Integer, String>>(currentOptionsSet);
@@ -152,8 +141,6 @@ public class MultiSelect extends Composite {
 		}
 		select.setEnabled(true);
 		select.refresh();
-		
 	}
-	
 
 }

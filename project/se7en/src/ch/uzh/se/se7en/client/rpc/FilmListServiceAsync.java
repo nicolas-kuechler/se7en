@@ -1,6 +1,5 @@
 package ch.uzh.se.se7en.client.rpc;
 
-import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -15,7 +14,7 @@ public interface FilmListServiceAsync {
 
 	void getCountryList(FilmFilter filter, AsyncCallback<List<Country>> callback);
 
-	void getFilmList(FilmFilter filter, AsyncCallback<List<Film>> callback);
+	void getFilmList(FilmFilter filter, int startRange, int numberOfResults, AsyncCallback<List<Film>> callback);
 
 	void getGenreList(FilmFilter filter, AsyncCallback<List<Genre>> callback);
 

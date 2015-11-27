@@ -56,9 +56,9 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<Film> films The filtered list of film data transfer objects
 	 */
 	@Override
-	public List<Film> getFilmList(FilmFilter filter) {
+	public List<Film> getFilmList(FilmFilter filter, int startRange, int numberOfResults) {
 		// query the database for filtered entities
-		List<FilmDB> dbFilms = getFilmEntitiesList(filter);
+		List<FilmDB> dbFilms = getFilmEntitiesList(filter, startRange, numberOfResults);
 
 		// create an empty list of films
 		List<Film> films = new ArrayList<Film>();
@@ -85,22 +85,24 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * @return List<FilmDB> dbFilms A filtered list of film entities
 	 */
 	@Transactional
-	public List<FilmDB> getFilmEntitiesList(FilmFilter filter) {
-		if (cachedFilter != null && cachedFilms != null && filter.equals(cachedFilter)) {
-			return cachedFilms;
-		}
+	public List<FilmDB> getFilmEntitiesList(FilmFilter filter, int startRange, int numberOfResults) {
+		//TODO RS this caching does not work with the range stuff
+//		if (cachedFilter != null && cachedFilms != null && filter.equals(cachedFilter)) {
+//			return cachedFilms;
+//		}
 
 		// the starting position of the query
 		// TODO: replace by filter information?
-		int startPosition = 0;
+		int startPosition = startRange;
 
 		// the max number of results the query should return
 		// TODO: replace by filter information?
-		int maxResults = 80000;
+		int maxResults = numberOfResults;
 
 		// defines the ordering of the query results
 		// TODO: replace by filter information?
-		String ordering = "f.name";
+		//String ordering = "f.name";
+		String ordering = filter.getOrderBy();
 
 		// create an empty list of film entities
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
@@ -147,19 +149,19 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// if at least one country is in the list of filter countries
 		if (filter.getCountryIds() != null) {
-			joiners += " JOIN FETCH f.filmCountryEntities fc";
+			joiners += " LEFT JOIN FETCH f.filmCountryEntities fc";
 			wheres += " AND fc.countryId IN (:countryIds)";
 		}
 
 		// if at least one genre is in the list of filter genres
 		if (filter.getGenreIds() != null) {
-			joiners += " JOIN f.filmGenreEntities fg";
+			joiners += " LEFT JOIN f.filmGenreEntities fg";
 			wheres += " AND fg.genreId IN (:genreIds)";
 		}
 
 		// if at least one language is in the list of filter languages
 		if (filter.getLanguageIds() != null) {
-			joiners += " JOIN f.filmLanguageEntities fl";
+			joiners += " LEFT JOIN f.filmLanguageEntities fl";
 			wheres += " AND fl.languageId IN (:languageIds)";
 		}
 
@@ -248,7 +250,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
 		// build the query
-		String selector = "SELECT c.id, c.name, f.year, COUNT(*)";
+		String selector = "SELECT DISTINCT c.id, c.name, f.year, COUNT(*)";
 
 		// initialize the where string with the basic filters
 		String wheres = "";
@@ -261,7 +263,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			wheres = "WHERE 1=1";
 		}
 
-		String joiners = "JOIN film_countries fc ON f.id = fc.film_id JOIN countries c ON fc.country_id = c.id";
+		String joiners = "LEFT JOIN film_countries fc ON f.id = fc.film_id JOIN countries c ON fc.country_id = c.id";
 
 		// if the name in the filter is set
 		if (filter.getName() != null) {
@@ -270,13 +272,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// if at least one genre is in the list of filter genres
 		if (filter.getGenreIds() != null) {
-			joiners += " JOIN film_genres fg ON f.id = fg.film_id";
+			joiners += " LEFT JOIN film_genres fg ON f.id = fg.film_id";
 			wheres += " AND fg.genre_id IN (:genreIds)";
 		}
 
 		// if at least one language is in the list of filter languages
 		if (filter.getLanguageIds() != null) {
-			joiners += " JOIN film_languages fl ON f.id = fl.film_id";
+			joiners += " LEFT JOIN film_languages fl ON f.id = fl.film_id";
 			wheres += " AND fl.language_id IN (:languageIds)";
 		}
 
@@ -364,10 +366,17 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		
 		String wheres = "";
 		String whereLength = "";
+		String whereYear = "";
 
 		if (filter.getLengthStart() > 0 || filter.getLengthEnd() < 600) {
 			whereLength = "AND (f.length BETWEEN :minLength AND :maxLength) ";
 			wheres += whereLength;
+		}
+		
+		// only filter for a year if the filter values are not the defaults
+		if (filter.getYearStart() > 1890 || filter.getYearEnd() < 2015) {
+			whereYear = "AND (f.year BETWEEN :minYear AND :maxYear) ";
+			wheres += whereYear;
 		}
 		
 		// if the name in the filter is set
@@ -386,13 +395,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		String queryString = 
 				"SELECT sel.id, sel.name, COUNT(*) AS count "
 				+ "FROM ( "
-					+ "SELECT DISTINCT g.id AS id, g.name AS name, f.name AS film "
+					+ "SELECT DISTINCT g.id AS id, g.name AS name, f.id AS film "
 					+ "FROM films f "
-						+ "JOIN film_genres fg ON f.id = fg.film_id "
+						+ "LEFT JOIN film_genres fg ON f.id = fg.film_id "
 						+ "JOIN genres g ON fg.genre_id = g.id "
-						+ "JOIN film_countries fc ON f.id = fc.film_id "
-						+ "JOIN film_languages fl ON f.id = fl.film_id "
-					+ "WHERE fc.country_id = :countryId " 
+						+ "LEFT JOIN film_countries fc ON f.id = fc.film_id "
+						+ "LEFT JOIN film_languages fl ON f.id = fl.film_id "
+					+ "WHERE fc.country_id = :countryId "
+						+ "AND f.year IS NOT NULL " 
 					+ wheres
 				+ ") AS sel "
 				+ "GROUP BY sel.id "
@@ -405,6 +415,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		if (whereLength.length() > 0) { // set the min & max length params
 			query.setParameter("minLength", filter.getLengthStart());
 			query.setParameter("maxLength", filter.getLengthEnd());
+		}
+		
+		// if filter for year != defaults
+		if (whereYear.length() > 0) {
+			// set the min & max year params
+			query.setParameter("minYear", filter.getYearStart());
+			query.setParameter("maxYear", filter.getYearEnd());
 		}
 
 		// if the name in the filter is set, set the param

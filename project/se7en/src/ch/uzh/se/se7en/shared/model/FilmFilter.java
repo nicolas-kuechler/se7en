@@ -21,6 +21,9 @@ public class FilmFilter implements Serializable {
 	private Set<Integer> countryIds;
 	private Set<Integer> languageIds;
 	private Set<Integer> genreIds;
+	private String orderBy;
+
+	
 
 	public FilmFilter() {
 
@@ -40,6 +43,24 @@ public class FilmFilter implements Serializable {
 		this.countryIds = countryIds;
 		this.languageIds = languageIds;
 		this.genreIds = genreIds;
+	}
+	
+	/**
+	@pre orderBy!= null
+	@post -
+	@return the orderBy
+	 */
+	public String getOrderBy() {
+		return orderBy;
+	}
+
+	/**
+	@pre -
+	@post orderBy==orderBy
+	@param orderBy the orderBy to set
+	*/
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
 	}
 
 	/**

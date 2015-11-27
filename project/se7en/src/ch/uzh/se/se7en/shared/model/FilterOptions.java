@@ -11,6 +11,8 @@ import java.util.HashMap;
  */
 public class FilterOptions implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private HashMap<Integer,String> genreSelectOptions;
 	private HashMap<Integer,String> languageSelectOptions;
 	private HashMap<Integer,String> countrySelectOptions;

@@ -16,7 +16,6 @@ import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
 import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
-import ch.uzh.se.se7en.client.ClientLog;
 import ch.uzh.se.se7en.shared.model.Film;
 
 /**
@@ -91,12 +90,13 @@ public class TablePresenterImpl implements TablePresenter {
 	public void setupTableUpdate()
 	{
 		//initialize table with message
-		updateTable(createPseudoFilmList("No Search Results Found"));
+		updateTable(createPseudoFilmList("No Search Results Found"), 0);
 
 		eventBus.addHandler(FilterAppliedEvent.getType(), new FilterAppliedHandler(){
 			@Override
 			public void onFilterAppliedEvent(FilterAppliedEvent event) {
-				fetchData();
+				//get the data in the default range 0-50
+				fetchData(0, 50);
 			}
 		});
 	}
@@ -108,9 +108,9 @@ public class TablePresenterImpl implements TablePresenter {
 	@post	table is updated
 	@param films films.size()>0
 	 */
-	public void updateTable(List<Film> films)
+	public void updateTable(List<Film> films, int start)
 	{
-		tableView.setTable(films);
+		tableView.setTable(films, start);
 	}
 
 	/**
@@ -134,30 +134,39 @@ public class TablePresenterImpl implements TablePresenter {
 	@pre -
 	@post tableView is updated and server response is saved in filmdatamodel
 	 */
-	public void fetchData() {
+	public void fetchData(final int startRange, int numberOfResults) {
 		//create pseudo film that informs the user about the loading
-		updateTable(createPseudoFilmList("Loading..."));
+		updateTable(createPseudoFilmList("Loading..."), 0);
 
-		filmListService.getFilmList(filmDataModel.getAppliedFilter(), new AsyncCallback<List<Film>>(){
+		filmListService.getFilmList(filmDataModel.getAppliedFilter(), startRange, numberOfResults, new AsyncCallback<List<Film>>(){
 			@Override
 			public void onFailure(Throwable caught) {
 				//rpc did not get back to client -> display error to the user
-				updateTable(createPseudoFilmList("Error while loading films, please try again"));
-				//TODO NK FilmList Rpc Error Handling
+				updateTable(createPseudoFilmList("Error while loading films, please try again"), 0);
 			}
 			@Override
 			public void onSuccess(List<Film> result) {
 				if(result.size()==0)
 				{
 					//no films match the filter, so the result is empty --> inform user with pseudoFilmList
-					updateTable(createPseudoFilmList("No Search Results Found"));
+					updateTable(createPseudoFilmList("No Search Results Found"), 0);
 				}
 				else
 				{
 					//result is back and contains films --> display films and save them to the FilmDataModel
-					updateTable(result);
+					updateTable(result, startRange);
 				}
 			}
 		});
+	}
+
+	@Override
+	public void onTableRangeChanged(int startRange, int numberOfResults) {
+		fetchData(startRange, numberOfResults);
+	}
+
+	@Override
+	public void orderFilmListBy(String orderBy) {
+		filmDataModel.getAppliedFilter().setOrderBy(orderBy);
 	}
 }

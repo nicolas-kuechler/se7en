@@ -62,7 +62,7 @@ public class TablePresenterTest {
 		doAnswer(new Answer<List<Film>>(){
 			@Override
 			public List<Film> answer(InvocationOnMock invocation) throws Throwable {
-				AsyncCallback<List<Film>> callback = (AsyncCallback) invocation.getArguments()[1];
+				AsyncCallback<List<Film>> callback = (AsyncCallback) invocation.getArguments()[3];
 				FilmFilter filter = (FilmFilter) invocation.getArguments()[0];
 				List<Film> filmsMatchingFilter = new ArrayList<Film>();
 				if(filter.getName().equals("filter with result.size()>0"))
@@ -73,7 +73,7 @@ public class TablePresenterTest {
 				callback.onSuccess(filmsMatchingFilter);
 				return null;
 			}
-		}).when(filmService).getFilmList(Matchers.any(FilmFilter.class),(AsyncCallback<List<Film>>) Mockito.any());
+		}).when(filmService).getFilmList(Matchers.any(FilmFilter.class), Matchers.anyInt(), Matchers.anyInt(),(AsyncCallback<List<Film>>) Mockito.any());
 		
 		tablePresenter = new TablePresenterImpl(eventBus, tableView, filmDataModel, filmService, filmExportService);
 	}
@@ -90,16 +90,16 @@ public class TablePresenterTest {
 	{
 		//result from server is a list with at least one film -> give this film list to tableView
 		when(filmDataModel.getAppliedFilter()).thenReturn(demoFilterWithResult);
-		tablePresenter.fetchData();
+		tablePresenter.fetchData(0, 50);
 		//1st called from constructor (no results info), 2nd called when rpc starts loading (loading info),3rd the result from the rpc
-		verify(tableView, times(3)).setTable(Matchers.anyListOf(Film.class));
+		verify(tableView, times(3)).setTable(Matchers.anyListOf(Film.class), Matchers.anyInt());
 		
 		
 		//result from server is empty list -> tableView receives pseudo film list with information
 		when(filmDataModel.getAppliedFilter()).thenReturn(demoFilterWithoutResult);
-		tablePresenter.fetchData();
+		tablePresenter.fetchData(0, 50);
 		//1st called from constructor (no results info), 2nd the result of the empty rpc 
-		verify(tableView, times(2)).setTable(Matchers.eq(tablePresenter.createPseudoFilmList("No Search Results Found")));
+		verify(tableView, times(2)).setTable(Matchers.eq(tablePresenter.createPseudoFilmList("No Search Results Found")), Matchers.anyInt());
 	}
 	
 	@Test
@@ -115,8 +115,8 @@ public class TablePresenterTest {
 	@Test
 	public void testUpdateTable() {
 		List<Film> films = Arrays.asList(new Film("Test"));
-		tablePresenter.updateTable(films);
-		verify(tableView).setTable(films);
+		tablePresenter.updateTable(films, 0);
+		verify(tableView).setTable(films, 0);
 	}
 
 	@Test
@@ -129,6 +129,22 @@ public class TablePresenterTest {
 		tablePresenter.go(container);
 		verify(container).clear();
 		verify(container).add(tableView.asWidget());
+	}
+	
+	@Test
+	public void testOnTableRangeChanged()
+	{
+		when(filmDataModel.getAppliedFilter()).thenReturn(demoFilterWithResult);
+		tablePresenter.onTableRangeChanged(0, 50);
+		verify(tableView, times(3)).setTable(Matchers.anyListOf(Film.class), Matchers.anyInt());
+	}
+	
+	@Test
+	public void testOrderFilmListBy()
+	{
+		when(filmDataModel.getAppliedFilter()).thenReturn(demoFilterWithResult);
+		tablePresenter.orderFilmListBy("f.name desc");
+		verify(filmDataModel).getAppliedFilter();
 	}
 
 }

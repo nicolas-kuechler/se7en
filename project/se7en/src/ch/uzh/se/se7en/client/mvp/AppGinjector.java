@@ -9,6 +9,8 @@ import ch.uzh.se.se7en.client.mvp.presenters.FilterPresenter;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.presenters.WelcomePresenter;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.BrowserUtil;
+import ch.uzh.se.se7en.client.mvp.presenters.impl.util.UrlToken;
 import ch.uzh.se.se7en.client.mvp.views.FilterView;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
@@ -33,9 +35,12 @@ public interface AppGinjector extends Ginjector {
 	
 	EventBus getEventBus();
 	
+	BrowserUtil getBrowserUtil();
+	UrlToken getUrlToken();
+	
 	FilmListServiceAsync getFilmListServiceAsync();
 	
 	FilmListExportServiceAsync getFilmListExportServiceAsync();
 	
-
+	
 }
