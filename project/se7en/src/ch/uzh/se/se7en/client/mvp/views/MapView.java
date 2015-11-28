@@ -28,6 +28,10 @@ public interface MapView extends IsWidget{
 	 */
 	public void setGeoChart(List<DataTableEntity> countries);
 	
+	//TODO: Add comment
+	public String getGeoChartDownloadURI();
+	
+	
 	/**
 	Allows the mapPresenter to get access to the current selection from the geoChart
 	@author Nicolas Küchler

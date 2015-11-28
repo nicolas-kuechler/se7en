@@ -5,9 +5,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.util.UUID;
 
+import com.google.api.client.util.Base64;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
@@ -94,6 +96,50 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 		//return URL of created file for download
 		String downloadURL = "https://storage.googleapis.com/" + BUCKET_NAME + "/" + uniqueFilename;
 		
+		return downloadURL;
+
+	}
+
+	//TODO: add comment
+	@Override
+	public String getMapImageDownloadUrl(String imageURI) {
+		//create GCS service
+		GcsService gcsService = GcsServiceFactory.createGcsService();
+		
+		//create unique file name
+		String uniqueFilename = "filtered_map_" + UUID.randomUUID().toString() + ".png";
+		
+		//create GCS file name
+		GcsFilename filename = new GcsFilename(BUCKET_NAME, uniqueFilename);
+		
+		//create options for CSV file to be exported: set public read and mime-type
+		GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
+		
+		GcsFileOptions options = builder
+				.mimeType("image/png")
+				.acl("public-read")
+				.build();
+		
+		//open channel for writing to file
+		GcsOutputChannel writeChannel = null;
+		try {
+			writeChannel = gcsService.createOrReplace(filename, options);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		String [] parts = imageURI.split(",");
+		byte[] imageBytes = Base64.decodeBase64(parts[1].getBytes());
+		try {
+			writeChannel.write(ByteBuffer.wrap(imageBytes));
+			writeChannel.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		//return URL of created file for download
+		String downloadURL = "https://storage.googleapis.com/" + BUCKET_NAME + "/" + uniqueFilename;
+
 		return downloadURL;
 
 	}

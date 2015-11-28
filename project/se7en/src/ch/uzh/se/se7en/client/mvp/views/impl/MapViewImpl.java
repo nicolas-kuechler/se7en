@@ -2,6 +2,7 @@ package ch.uzh.se.se7en.client.mvp.views.impl;
 
 import java.util.List;
 
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.PanelBody;
@@ -12,7 +13,9 @@ import org.gwtbootstrap3.extras.slider.client.ui.base.constants.TooltipType;
 import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideStopEvent;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -84,7 +87,8 @@ public class MapViewImpl extends Composite implements MapView {
 	@UiField (provided = true)
 	DataGrid<Genre> genreTable;
 
-
+	@UiField
+	Button downloadBtn;
 	
 	ListDataProvider<Genre> genreProvider = new ListDataProvider<Genre>();
 
@@ -210,6 +214,12 @@ public class MapViewImpl extends Composite implements MapView {
 
 	}
 
+	public String getGeoChartDownloadURI()
+	{
+		    return geoChart.chartObject.getImageURI();
+	}
+	
+	
 	@Override
 	public int getGeoChartSelectionCountryId() {
 		//get information from selection which row in datatable was selected
@@ -381,5 +391,10 @@ public class MapViewImpl extends Composite implements MapView {
 	@Override
 	public void setYearRange(int yearStart, int yearEnd) {
 		yearSlider.setValue(new Range(yearStart, yearEnd));
+	}
+	
+	@UiHandler("downloadBtn")
+	public void onDownloadBtnClicked(final ClickEvent event){
+		mapPresenter.onDownloadStarted();
 	}
 }
