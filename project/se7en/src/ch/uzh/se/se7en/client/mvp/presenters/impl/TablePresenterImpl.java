@@ -14,6 +14,7 @@ import ch.uzh.se.se7en.client.mvp.events.FilterAppliedHandler;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.TablePresenter;
 import ch.uzh.se.se7en.client.mvp.views.TableView;
+import ch.uzh.se.se7en.client.mvp.views.widgets.AdPanel;
 import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -32,7 +33,9 @@ public class TablePresenterImpl implements TablePresenter {
 
 	private FilmListServiceAsync filmListService;
 	private FilmListExportServiceAsync filmListExportService;
-
+	private AdPanel adPanelRight;
+	private AdPanel adPanelLeft;
+	
 
 	@Inject
 	public TablePresenterImpl(EventBus eventBus, TableView tableView, FilmDataModel filmDataModel,
@@ -42,6 +45,8 @@ public class TablePresenterImpl implements TablePresenter {
 		this.filmDataModel = filmDataModel;
 		this.filmListService = filmListService;
 		this.filmListExportService = filmListExportService;
+		adPanelLeft = new AdPanel();
+		adPanelRight = new AdPanel();
 		bind();
 		setupTableUpdate();
 	}
@@ -49,7 +54,9 @@ public class TablePresenterImpl implements TablePresenter {
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
+		container.add(adPanelLeft);
 		container.add(tableView.asWidget());
+		container.add(adPanelRight);
 	}
 
 	@Override

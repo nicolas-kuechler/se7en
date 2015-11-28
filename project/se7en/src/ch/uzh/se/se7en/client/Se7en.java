@@ -5,7 +5,6 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import ch.uzh.se.se7en.client.mvp.AppController;
-import ch.uzh.se.se7en.client.mvp.views.widgets.AdPanel;
 import ch.uzh.se.se7en.client.mvp.views.widgets.NavigationBar;
 
 
@@ -24,17 +23,10 @@ public class Se7en implements EntryPoint {
 		Panel container = new Panel();
 		Panel subContainer = new Panel();
 		NavigationBar navBar = new NavigationBar();
-		AdPanel adPanelLeft = new AdPanel();
-		AdPanel adPanelRight = new AdPanel();
 		
 		navBar.getElement().setId("navBar");
 		subContainer.getElement().setId("subContainer");
 		container.getElement().setId("container");
-		adPanelLeft.getElement().setId("adPanelLeft");
-		adPanelRight.getElement().setId("adPanelRight");
-		
-		container.add(adPanelLeft);
-		container.add(adPanelRight);
 		
 		RootPanel.get().add(navBar);
 		RootPanel.get().add(subContainer);

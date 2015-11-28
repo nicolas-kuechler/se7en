@@ -17,6 +17,7 @@ import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
+import ch.uzh.se.se7en.client.mvp.views.widgets.AdPanel;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
@@ -30,6 +31,8 @@ public class MapPresenterImpl implements MapPresenter {
 	private FilmDataModel filmDataModel;
 	private int rank =0;
 	private int lastNumberOfFilms =0;
+	private AdPanel adPanelRight;
+	private AdPanel adPanelLeft;
 
 	@Inject
 	public MapPresenterImpl(MapView mapView, EventBus eventBus, FilmListServiceAsync filmListService,
@@ -38,6 +41,8 @@ public class MapPresenterImpl implements MapPresenter {
 		this.eventBus = eventBus;
 		this.filmListService = filmListService;
 		this.filmDataModel = filmDataModel;
+		adPanelLeft = new AdPanel();
+		adPanelRight = new AdPanel();
 		bind();
 		setupMapUpdate();
 	}
@@ -45,7 +50,9 @@ public class MapPresenterImpl implements MapPresenter {
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
+		container.add(adPanelLeft);
 		container.add(mapView.asWidget());
+		container.add(adPanelRight);
 		mapView.setGenreVisible(false);
 
 	}
