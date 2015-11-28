@@ -159,9 +159,6 @@ public class TableViewImpl extends Composite implements TableView {
 	@Override
 	public void setTable(List<Film> films, int start) {
 		dataProvider.updateRowData(start, films);
-		
-		//TODO NK update the row count when new filter applied
-		//dataProvider.updateRowCount(films.size(), false);
 	}
 
 	/**
@@ -308,19 +305,11 @@ public class TableViewImpl extends Composite implements TableView {
 		nameColumn.setSortable(true);
 		lengthColumn.setSortable(true);
 		yearColumn.setSortable(true);
-		//TODO NK RS define if sortable
-//		countryColumn.setSortable(true);
-//		languageColumn.setSortable(true);
-//		genreColumn.setSortable(true);
 		
-		//TODO RS verify that these are the proper names for the sorting info
 		nameColumn.setDataStoreName("name");
 		lengthColumn.setDataStoreName("length");
 		yearColumn.setDataStoreName("year");
-		genreColumn.setDataStoreName("genre");
-		languageColumn.setDataStoreName("language");
-		countryColumn.setDataStoreName("country");
-		
+
 		
 
 		dataGrid.setColumnWidth(nameColumn, 18.5, Unit.PCT);
@@ -363,6 +352,18 @@ public class TableViewImpl extends Composite implements TableView {
 			}
 		}
 		return concatString;
+	}
+
+	@Override
+	public void setResultSize(int size) {
+		if(dataProvider!=null)
+		{
+			dataProvider.updateRowCount(size, true);
+		}
+		else
+		{
+			ClientLog.writeErr("Try to updateRowCount of datagrid before async datatProvider is set");
+		}
 	}
 
 }
