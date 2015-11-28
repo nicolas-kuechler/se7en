@@ -26,11 +26,15 @@ public class NavigationBar extends Composite {
 	@UiField AnchorListItem homeNav;
 	@UiField AnchorListItem mapNav;
 	@UiField AnchorListItem tableNav;
-	@UiField Modal licenseModal;
+	
 	@UiField AnchorListItem modalOpen;
+	@UiField Modal licenseModal;
+	
+	@UiField AnchorListItem adminNav;
+	@UiField Modal adminModal;
 	@UiField AnchorListItem loading;
 	@UiField Image logoLink;
-	
+
 	/**
 	 * Initialize the NavigationBar, the Creative Commons Modal and set a default Text for the loadingGrowl (workaround)
 	 * 
@@ -42,6 +46,7 @@ public class NavigationBar extends Composite {
 	 */
 	public NavigationBar() {
 		licenseModal = new Modal();
+		adminModal = new Modal();
 		initWidget(uiBinder.createAndBindUi(this));
 		loading.setText("Hello");
 		loading.setVisible(false);
@@ -143,6 +148,13 @@ public class NavigationBar extends Composite {
 			public void onClick(ClickEvent event) {
 				updateNavigationBar(true, false, false);
 				History.newItem(Tokens.HOME);
+			}
+		});
+		
+		adminNav.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				adminModal.show();
 			}
 		});
 	}

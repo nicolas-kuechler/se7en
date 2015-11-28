@@ -93,4 +93,5 @@ public interface MapView extends IsWidget{
 	 */
 	public void setGenreVisible(boolean visible);
 	
+	
 }

@@ -289,6 +289,10 @@ th {
 .paginator{
 	float: right;
 }
+
+.input-group{
+	margin-bottom: 2%;
+}
 /*############################################MAP VIEW SETTINGS####################################################*/
 
 .genreTable{

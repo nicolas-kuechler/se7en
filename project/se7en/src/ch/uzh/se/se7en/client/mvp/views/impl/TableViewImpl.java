@@ -11,14 +11,17 @@ import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.AsyncHandler;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.ColumnSortList;
@@ -68,6 +71,7 @@ public class TableViewImpl extends Composite implements TableView {
 	TextColumn<Film> languageColumn;
 	TextColumn<Film> yearColumn;
 	TextColumn<Film> genreColumn;
+	Column<Film,String> wikiColumn;
 
 
 	/**
@@ -223,6 +227,20 @@ public class TableViewImpl extends Composite implements TableView {
 	 */
 	private void buildTable() {
 	    
+		ButtonCell wikiButton = new ButtonCell();
+		wikiColumn = new Column<Film,String>(wikiButton) {
+			@Override
+			public String getValue(Film filmObject) {
+				return Integer.toString(filmObject.getId());
+			}
+		};
+		wikiColumn.setFieldUpdater(new FieldUpdater<Film, String>() {
+		        @Override
+		        public void update(int index, Film filmObject,String value) {
+		        	Window.open("http://www.wikipedia.org/?curid="+filmObject.getId(), "_blank", "");
+		        }
+		    });
+		
 		nameColumn = new TextColumn<Film>() {
 			@Override
 			public String getValue(Film filmObject) {
@@ -322,19 +340,21 @@ public class TableViewImpl extends Composite implements TableView {
 		countryColumn.setDataStoreName("country");
 		
 		
-
-		dataGrid.setColumnWidth(nameColumn, 18.5, Unit.PCT);
+		dataGrid.setColumnWidth(wikiColumn, 10, Unit.PCT);
+		dataGrid.addColumn(wikiColumn, "Wiki");
+		dataGrid.setColumnWidth(nameColumn, 15.5, Unit.PCT);
 		dataGrid.addColumn(nameColumn, "Name");
 		dataGrid.setColumnWidth(yearColumn, 11, Unit.PCT);
 		dataGrid.addColumn(yearColumn, "Year");
 		dataGrid.setColumnWidth(lengthColumn, 11, Unit.PCT);
-		dataGrid.addColumn(lengthColumn, "Length");
-		dataGrid.setColumnWidth(countryColumn, 19.5, Unit.PCT);
+		dataGrid.addColumn(lengthColumn, "Length (min)");
+		dataGrid.setColumnWidth(countryColumn, 16.5, Unit.PCT);
 		dataGrid.addColumn(countryColumn, "Country");
-		dataGrid.setColumnWidth(languageColumn, 19.5, Unit.PCT);
+		dataGrid.setColumnWidth(languageColumn, 16.5, Unit.PCT);
 		dataGrid.addColumn(languageColumn, "Language");
-		dataGrid.setColumnWidth(genreColumn, 20.5, Unit.PCT);
+		dataGrid.setColumnWidth(genreColumn, 19.5, Unit.PCT);
 		dataGrid.addColumn(genreColumn, "Genre");
+		
 
 	}
 

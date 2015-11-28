@@ -388,4 +388,5 @@ public class FilterPresenterImpl implements FilterPresenter {
 	{
 		areFilterOptionsLoaded = loaded;
 	}
+
 }

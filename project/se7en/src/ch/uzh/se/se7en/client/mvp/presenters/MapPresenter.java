@@ -17,4 +17,6 @@ public interface MapPresenter extends RootPresenter {
 	 */
 	public void onCountrySelected();
 	
+	public int returnRank(int numberOfFilms);
+	
 }

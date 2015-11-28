@@ -28,6 +28,8 @@ public class MapPresenterImpl implements MapPresenter {
 	private EventBus eventBus;
 	private FilmListServiceAsync filmListService;
 	private FilmDataModel filmDataModel;
+	private int rank =0;
+	private int lastNumberOfFilms =0;
 
 	@Inject
 	public MapPresenterImpl(MapView mapView, EventBus eventBus, FilmListServiceAsync filmListService,
@@ -111,6 +113,9 @@ public class MapPresenterImpl implements MapPresenter {
 		mapView.setGenrePieChart(entities);
 		//giving the genreTable a new genre list to display
 		mapView.setGenreTable(genres);
+		
+		lastNumberOfFilms = 0;
+		rank = 0;
 	}
 
 	/**
@@ -209,5 +214,16 @@ public class MapPresenterImpl implements MapPresenter {
 			}
 		});
 
+	}
+
+	@Override
+	public int returnRank(int numberOfFilms) {
+		if(lastNumberOfFilms == numberOfFilms){
+			return -1;
+		}else{
+			rank = rank +1;
+			lastNumberOfFilms = numberOfFilms;
+			return rank;
+		}
 	}
 }
