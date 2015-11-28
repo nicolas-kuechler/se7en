@@ -67,7 +67,6 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<Film> films = new ArrayList<Film>();
 
 		// convert each FilmDB instance to a Film DataTransferObject
-
 		for (FilmDB film : dbFilms) {
 			Film f = film.toFilm();
 			films.add(f);
@@ -89,6 +88,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Transactional
 	public List<FilmDB> getFilmEntitiesList(FilmFilter filter, int startRange, int numberOfResults) {
+		// if the same rpc is called again, return the cached result
 		if (cachedFilter != null 
 				&& cachedFilms != null 
 				&& filter.equals(cachedFilter)
@@ -99,7 +99,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		// defines the ordering of the query results
 		// TODO: security concerns? injection?
-		String ordering = filter.getOrderBy();
+		String ordering = filter.getOrderBy() != null ? filter.getOrderBy() : "f.name";
 
 		// create an empty list of film entities
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
@@ -162,15 +162,16 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			wheres += " AND fl.languageId IN (:languageIds)";
 		}
 
-		// concat the query string
+		// concat the query strings
 		String queryString = selector + joiners + " " + wheres + " ORDER BY " + ordering;
-		String countString = "SELECT COUNT(*) FROM FilmDB f" + joiners + " " + wheres;
+		joiners = joiners.replace("FETCH ", "");
+		String countString = "SELECT COUNT(DISTINCT f.id) FROM FilmDB f" + joiners + " " + wheres;
 		
 		// create a typed query from our query string
 		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
 		Query countQuery = em.get().createQuery(countString);
 
-		// set offset and limit
+		// set offset and limit for the main query
 		query.setFirstResult(startRange);
 		query.setMaxResults(numberOfResults);
 
@@ -220,6 +221,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// execute the query
 		dbFilms = query.getResultList();
 		
+		// if another filter is being used, fetch the total result count and send it in a pseudo film
 		if (!filter.equals(cachedFilter)) {
 			long longCount = (long) countQuery.getSingleResult();
 			int count = new BigDecimal(longCount).intValue();
@@ -555,14 +557,27 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		return availableLanguages;
 	}
 	
-	//TODO RS comment,test...
-	//TODO Ich han das eifach mal so für mich zum teste gmacht. Fallses ändere wettsch machsch eifach. -Nicolas
+	/**
+	 * Calls the other helper methods and creates a single rpc response for all select options
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre -
+	 * @post -
+	 * @return FilterOptions A filter options object
+	 */
 	@Override
 	public FilterOptions getSelectOptions() {
 		FilterOptions options = new FilterOptions();
+		
+		// get all the countries from the db
 		options.setCountrySelectOptions(getCountrySelectOption());
+		
+		// get all the genres from the db
 		options.setGenreSelectOptions(getGenreSelectOption());
+		
+		// get all the languages from the db
 		options.setLanguageSelectOptions(getLanguageSelectOption());
+		
 		return options;
 	}
 
