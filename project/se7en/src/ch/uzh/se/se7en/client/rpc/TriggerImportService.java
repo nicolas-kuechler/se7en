@@ -5,5 +5,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("triggerImportService")
 public interface TriggerImportService extends RemoteService {
-	public boolean importFile(String nameOfFile);
+	public String importFile(String nameOfFile, String password);
 }
