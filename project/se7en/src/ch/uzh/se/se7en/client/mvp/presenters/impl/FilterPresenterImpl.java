@@ -392,7 +392,18 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 	@Override
 	public void onFacebook() {
-		//Window.alert(Window.Location.getHref());
+		String url = Window.Location.getHref();
+		url = url.replaceAll("sb=0","sb=1");
+		url = url.replaceAll("&","%26");
+		url = url.replaceAll("/","%2F");
+		url = url.replaceAll(":","%3A");
+		url = url.replaceAll("#","%23");
+		
+		//Sobald de dinne isch tuet nüt meh? WTF
+		url = url.replaceAll("?","%3F");
+		//Window.alert(url);
+		Window.open("https://www.facebook.com/dialog/share?app_id=1664502907095620&display=popup&href="+url+"&redirect_uri="+url, "_blank", "");
+		
 	}
 
 }
