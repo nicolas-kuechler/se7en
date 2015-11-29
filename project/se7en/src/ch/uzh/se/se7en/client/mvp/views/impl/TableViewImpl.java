@@ -245,11 +245,12 @@ public class TableViewImpl extends Composite implements TableView {
 		wikiColumn.setFieldUpdater(new FieldUpdater<Film, String>() {
 		        @Override
 		        public void update(int index, Film filmObject,String value) {
-		        	if(Integer.toString(filmObject.getId()) == "0"){
+		        	if(filmObject.getWikipedia() == null){
 						
-					}else
-						Window.open("http://www.wikipedia.org/?curid="+filmObject.getId(), "_blank", "");
+					} else {
+						Window.open("http://www.wikipedia.org/?curid="+filmObject.getWikipedia(), "_blank", "");
 					} 
+		        }
 		    });
 		
 		nameColumn = new TextColumn<Film>() {
