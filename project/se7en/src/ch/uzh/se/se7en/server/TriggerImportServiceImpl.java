@@ -74,9 +74,10 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	 */
 	@Override
 	public String importFile(String nameOfFile, String password) {
-		if(password != "qBWdyY:t<{I*O@[R<3#_4{Of8:u%ar3r5i+].kC0'noeoc0v5;zQb|/%W6T22nu") {
+		// TODO: activate pw checking if implemented client-side
+		/*if(password != "qBWdyY:t<{I*O@[R<3#_4{Of8:u%ar3r5i+].kC0'noeoc0v5;zQb|/%W6T22nu") {
 			return "INVALID_PASSWORD";
-		}
+		}*/
 		
 		List<Film> importedFilms = null;
 		try {
@@ -183,6 +184,7 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 
 			// create a new FilmDB object with the basic content
 			FilmDB dbFilm = new FilmDB(film.getName(), film.getLength(), film.getYear());
+			dbFilm.setWikipedia(film.getWikipedia());
 
 			dbFilm.setCountryString(asSortedString(countries));
 			dbFilm.setGenreString(asSortedString(genres));
