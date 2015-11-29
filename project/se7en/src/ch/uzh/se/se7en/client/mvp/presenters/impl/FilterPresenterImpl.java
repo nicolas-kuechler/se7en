@@ -390,19 +390,28 @@ public class FilterPresenterImpl implements FilterPresenter {
 		areFilterOptionsLoaded = loaded;
 	}
 
+	/**
+	 * Handles onClick event on the facebook sharing button and calls the Facebook Share Dialog
+	 * @author Dominik Bünzli, Roland Schläfli
+	 * @pre -
+	 * @post -
+	 */
 	@Override
 	public void onFacebook() {
+		// get the current page url from window
 		String url = Window.Location.getHref();
+		
+		// escape all necessary characters in the url
 		url = url.replaceAll("sb=0","sb=1");
 		url = url.replaceAll("&","%26");
 		url = url.replaceAll("/","%2F");
 		url = url.replaceAll(":","%3A");
 		url = url.replaceAll("#","%23");
+		url = url.replaceAll("sprint5-dot-", ""); // TODO: replace with sprint\d-dot- or similar
+		url = url.replaceAll("\\?", "%3F");
 		
-		//Sobald de dinne isch tuet nüt meh? WTF
-		url = url.replaceAll("?","%3F");
-		//Window.alert(url);
-		Window.open("https://www.facebook.com/dialog/share?app_id=1664502907095620&display=popup&href="+url+"&redirect_uri="+url, "_blank", "");
+		// open the facebook sharing dialog with prefilled GIR-url
+		Window.open("https://www.facebook.com/dialog/share?app_id=1664502907095620&display=page&href="+url+"&redirect_uri="+url, "_self", "");
 		
 	}
 
