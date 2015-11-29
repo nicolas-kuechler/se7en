@@ -4,10 +4,7 @@
 	xmlns:slider="urn:import:org.gwtbootstrap3.extras.slider.client.ui"
 	xmlns:geochart="urn:import:com.googlecode.gwt.charts.client.geochart"
 	xmlns:c="urn:import:org.gwtbootstrap3.client.ui.gwt">
-	<ui:style>
 
-	</ui:style>
-	<b:Panel styleName="dataContainer" >
 		<b:Panel styleName="mapPanel">
 			<b:PanelHeader>
 				<b:Heading size="H3" text="Film World Map" />
@@ -21,5 +18,4 @@
 				<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
 			</b:PanelFooter>
 		</b:Panel>
-	</b:Panel>
 </ui:UiBinder> 

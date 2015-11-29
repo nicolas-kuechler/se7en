@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
+	<ui:with field='res' type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources'/>
+
+	<b:Panel width="10%">
+		<b:Panel styleName="Container" ui:field="adContainer">
+			<b:Button styleName="closeAdButton" ui:field="closeAd" icon="REMOVE"></b:Button>
+			<b:Image resource='{res.adImage}' ui:field="adImage"></b:Image>
+		</b:Panel>
+	</b:Panel>
+</ui:UiBinder> 

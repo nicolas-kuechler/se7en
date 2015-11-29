@@ -73,7 +73,11 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 	 *            nameOfFile The name of the csv file that should be imported
 	 */
 	@Override
-	public boolean importFile(String nameOfFile) {
+	public String importFile(String nameOfFile, String password) {
+		if(password != "qBWdyY:t<{I*O@[R<3#_4{Of8:u%ar3r5i+].kC0'noeoc0v5;zQb|/%W6T22nu") {
+			return "INVALID_PASSWORD";
+		}
+		
 		List<Film> importedFilms = null;
 		try {
 
@@ -93,15 +97,15 @@ public class TriggerImportServiceImpl extends RemoteServiceServlet implements Tr
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
+			return "IO_EXCEPTION";
 		}
 
 		// import the films into the db
 		if (importFilmsToDB(importedFilms)) {
-			return true;
+			return "SUCCESS";
 		}
 
-		return false;
+		return "UNKNOWN_ERROR";
 	}
 
 	/**

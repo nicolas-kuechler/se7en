@@ -52,6 +52,10 @@ public class FilterViewImpl extends Composite implements FilterView {
 	MultiSelect languageSelect;
 	@UiField
 	MultiSelect genreSelect;
+	@UiField
+	Button openCloseFilter;
+	@UiField
+	Button shareFacebook;
 
 	@UiField
 	Button clearBtn;
@@ -83,8 +87,8 @@ public class FilterViewImpl extends Composite implements FilterView {
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
 		initWidget(uiBinder.createAndBindUi(this));
-		collapseBox.setIn(true);
 		// Setting Up Listening for Enter Pressed Events to start the search
+		collapseBox.setIn(true);
 		focusPanel.addKeyDownHandler(new KeyDownHandler() {
 			@Override
 			public void onKeyDown(KeyDownEvent event) {
@@ -101,6 +105,19 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	/**
+	 * Sends a message to the presenter when the shareButton is clicked
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param event
+	 */
+	@UiHandler("shareFacebook")
+	public void onFacebookBtnClicked(final ClickEvent event) {
+		filterPresenter.onFacebook();
+	}
+	
+	/**
 	 * Sends a message to the presenter if the search button is clicked
 	 * 
 	 * @author Nicolas Küchler
@@ -110,7 +127,6 @@ public class FilterViewImpl extends Composite implements FilterView {
 	 */
 	@UiHandler("searchBtn")
 	public void onSearchBtnClick(final ClickEvent event) {
-		collapseBox.setIn(false);
 		filterPresenter.onSearch();
 	}
 
@@ -249,4 +265,5 @@ public class FilterViewImpl extends Composite implements FilterView {
 			genreSelect.select(selectedOptions);
 		}
 	}
+
 }

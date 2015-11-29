@@ -4,8 +4,6 @@
 	xmlns:c="urn:import:org.gwtbootstrap3.client.ui.gwt"
 	xmlns:pag="urn:import:com.google.gwt.user.cellview.client">
 	
-
-	<b:Panel styleName="dataContainer">
 		<b:Panel styleName="tablePanel">
 			<b:PanelHeader>
 				<b:Heading size="H3" text="Film Table" />
@@ -19,5 +17,4 @@
 				<b:Button ui:field='downloadButton' type="PRIMARY" icon="DOWNLOAD">Download</b:Button>
 			</b:PanelFooter>
 		</b:Panel>
-	</b:Panel>
 </ui:UiBinder> 
