@@ -8,13 +8,18 @@ import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import com.google.api.client.util.Base64;
+import com.google.appengine.tools.cloudstorage.GcsFileMetadata;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+import com.google.common.net.MediaType;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -102,28 +107,29 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 
 	//TODO: add comment
 	@Override
-	public String getMapImageDownloadUrl(String imageURI) {
+	public String getMapImageDownloadUrl(String imageURI){
 		//create GCS service
 		GcsService gcsService = GcsServiceFactory.createGcsService();
 		
-		//create unique file name
-		String uniqueFilename = "filtered_map_" + UUID.randomUUID().toString() + ".png";
+		
+		String uuid = UUID.randomUUID().toString();
+		
 		
 		//create GCS file name
-		GcsFilename filename = new GcsFilename(BUCKET_NAME, uniqueFilename);
+		GcsFilename pngFilename = new GcsFilename(BUCKET_NAME, "filtered_map_" + uuid + ".png");
 		
 		//create options for CSV file to be exported: set public read and mime-type
 		GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
 		
-		GcsFileOptions options = builder
+		GcsFileOptions pngOptions = builder
 				.mimeType("image/png")
 				.acl("public-read")
 				.build();
 		
 		//open channel for writing to file
-		GcsOutputChannel writeChannel = null;
+		GcsOutputChannel pngWriteChannel = null;
 		try {
-			writeChannel = gcsService.createOrReplace(filename, options);
+			pngWriteChannel = gcsService.createOrReplace(pngFilename, pngOptions);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
@@ -132,13 +138,105 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 		String [] parts = imageURI.split(",");
 		byte[] imageBytes = Base64.decodeBase64(parts[1].getBytes());
 		try {
-			writeChannel.write(ByteBuffer.wrap(imageBytes));
-			writeChannel.close();
+			pngWriteChannel.write(ByteBuffer.wrap(imageBytes));
+			pngWriteChannel.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+
+		
+		
+		final int fetchSize = 4 * 1024 * 1024;
+		final int readSize = 2 * 1024 * 1024;
+		GcsOutputChannel zipWriteChannel = null;
+		
+		//create unique file name
+		String uniqueFilename = "filtered_map_" + uuid + ".zip";
+		ZipOutputStream zip = null;
+		
+		try {
+			
+			
+		
+		
+			GcsFileOptions zipOptions = new GcsFileOptions.Builder()
+					.mimeType(MediaType.ZIP.toString())
+					.acl("public-read")
+					.build();
+			
+			GcsFilename zipFilename = new GcsFilename(BUCKET_NAME, uniqueFilename);
+			
+			
+			zipWriteChannel = gcsService.createOrReplace(zipFilename, zipOptions);
+			
+			zip = new ZipOutputStream(Channels.newOutputStream(zipWriteChannel));
+			
+			GcsInputChannel readChannel = null;
+				try {
+					final GcsFileMetadata meta = gcsService.getMetadata(pngFilename);
+					if (meta == null) {
+						ServerLog.writeErr(pngFilename.toString() + " NOT FOUND. Skipping.");
+					}
+					
+
+					ZipEntry entry = new ZipEntry(pngFilename.getObjectName());
+					zip.putNextEntry(entry);
+					readChannel = gcsService.openPrefetchingReadChannel(pngFilename, 0, fetchSize);
+					final ByteBuffer buffer = ByteBuffer.allocate(readSize);
+					int bytesRead = 0;
+					while (bytesRead >= 0) {
+						bytesRead = readChannel.read(buffer);
+						buffer.flip();
+						zip.write(buffer.array(), buffer.position(), buffer.limit());
+						buffer.rewind();
+						buffer.limit(buffer.capacity());
+					}
+					
+					GcsFilename sourceFilename = new GcsFilename(BUCKET_NAME, "source.txt");
+					
+					entry = new ZipEntry(sourceFilename.getObjectName());
+					zip.putNextEntry(entry);
+					readChannel = gcsService.openPrefetchingReadChannel(pngFilename, 0, fetchSize);
+					bytesRead = 0;
+					while (bytesRead >= 0) {
+						bytesRead = readChannel.read(buffer);
+						buffer.flip();
+						zip.write(buffer.array(), buffer.position(), buffer.limit());
+						buffer.rewind();
+						buffer.limit(buffer.capacity());
+					}
+
+				} finally {
+					zip.closeEntry();
+					readChannel.close();
+				}
+			
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+			
+		} finally {
+			
+			try {
+				zip.flush();
+				zip.close();
+				zipWriteChannel.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+
+		
+		
+		
+		
+		
 		//return URL of created file for download
 		String downloadURL = "https://storage.googleapis.com/" + BUCKET_NAME + "/" + uniqueFilename;
+		
+		
 
 		return downloadURL;
 
