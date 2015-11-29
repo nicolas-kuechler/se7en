@@ -414,7 +414,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 	/**
 	 * Generates a fb share dialog url by escaping necessary characters
 	 * 
-	 * @author Roland Schläfli
+	 * @author Roland Schläfli, Dominik Bünzli
 	 * @pre -
 	 * @post -
 	 * @param String url The url to be shared on facebook
