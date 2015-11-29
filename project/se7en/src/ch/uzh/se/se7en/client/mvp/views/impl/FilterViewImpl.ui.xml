@@ -8,16 +8,19 @@
 			<b:Row>
 				<b:Heading size="H3" text="Filter" />
 				<b:Column size="MD_4" styleName="expandFilter">
-					<b:Button icon="UNSORTED" dataToggle="COLLAPSE" dataTarget="#collapseOne"></b:Button>
+					<b:Button icon="UNSORTED" ui:field="openCloseFilter" dataToggle="COLLAPSE" dataTarget="#collapseOne"></b:Button>
+					<b:Button ui:field ="shareFacebook" type="PRIMARY" icon="FACEBOOK"></b:Button>
 				</b:Column>
 			</b:Row>
 			<b:Row styleName="appliedFilterRow">
 				<b:Column size="MD_4" >
 					<own:AppliedFilterBox ui:field="appliedFilter"></own:AppliedFilterBox>
 				</b:Column>
+				
 			</b:Row>
 		</b:PanelHeader>
 		<b:PanelCollapse ui:field ="collapseBox" b:id="collapseOne">
+		
 		<b:PanelBody>
 			<g:FocusPanel ui:field="focusPanel">
 				<b:Form>

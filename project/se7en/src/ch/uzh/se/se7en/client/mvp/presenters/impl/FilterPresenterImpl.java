@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
@@ -388,4 +389,10 @@ public class FilterPresenterImpl implements FilterPresenter {
 	{
 		areFilterOptionsLoaded = loaded;
 	}
+
+	@Override
+	public void onFacebook() {
+		//Window.alert(Window.Location.getHref());
+	}
+
 }

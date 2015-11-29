@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
-<ui:with field='res' type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources'/>
+	<ui:with field='res' type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources'/>
 	
 	<b:Navbar position="FIXED_TOP" >
 		<b:NavbarHeader width="23%">
@@ -15,12 +15,10 @@
 			<b:AnchorListItem ui:field="mapNav" icon="GLOBE">Map</b:AnchorListItem>
 			<b:AnchorListItem ui:field="tableNav" icon="TABLE">Table</b:AnchorListItem>
 			<b:AnchorListItem ui:field="modalOpen" icon="COMMENT">Creative Commons</b:AnchorListItem>
+			<b:AnchorListItem ui:field="adminNav" icon="WRENCH">Admin</b:AnchorListItem>
 			
 			</b:NavbarNav>
-			
-			
-			
-			   <b:Modal title="Creative Commons" ui:field="licenseModal" closable="true" fade="true" dataBackdrop="STATIC" dataKeyboard="true">
+			<b:Modal title="Creative Commons" ui:field="licenseModal" closable="true" fade="true" dataBackdrop="STATIC" dataKeyboard="true">
         			<b:ModalBody>
         					<b:Label styleName="modalText">
         					David Bamman, Brendan O'Connor and Noah Smith, "Learning Latent
@@ -33,6 +31,25 @@
 				   	 	<b:Button type="PRIMARY" dataDismiss="MODAL" icon="REMOVE">Close</b:Button>
 				 	</b:ModalFooter>
    			 </b:Modal>
+   			 
+   			 <b:Modal title="Admin" ui:field="adminModal" closable="true" fade="true" dataBackdrop="STATIC" dataKeyboard="true">
+        			<b:ModalBody>
+        					<b:InputGroup>
+  								<b:InputGroupAddon icon="FILE">Filename</b:InputGroupAddon>
+								<b:TextBox placeholder="Type here" autoComplete="false"/>
+							</b:InputGroup>
+							<b:Label styleName="adminSpacing"></b:Label>
+							<b:InputGroup>
+  								<b:InputGroupAddon icon="FILE">Security Token</b:InputGroupAddon>
+								<b:TextBox placeholder="Type here" autoComplete="false"/>
+							</b:InputGroup>
+					</b:ModalBody>
+					<b:ModalFooter>
+				   	 	<b:Button type="PRIMARY" dataDismiss="MODAL" icon="REMOVE">Close</b:Button>
+				   	 	<b:Button type="PRIMARY" dataDismiss="MODAL" icon="UPLOAD">Upload</b:Button>
+				 	</b:ModalFooter>
+   			 </b:Modal>
+   			 
 		</b:NavbarCollapse>
 	</b:Navbar>
 </ui:UiBinder> 
