@@ -17,6 +17,12 @@ public interface MapPresenter extends RootPresenter {
 	 */
 	public void onCountrySelected();
 	
-	public int returnRank(int numberOfFilms);
+	/**
+	
+	@author Dominik Bünzli
+	@pre	
+	@post	if numberOfFilms is the same as the film before, no new rank is created. Else rank is iterated by one
+	 */
+	public int getRank(int numberOfFilms);
 	
 }

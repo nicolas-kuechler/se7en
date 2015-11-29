@@ -54,6 +54,8 @@ public class FilterViewImpl extends Composite implements FilterView {
 	MultiSelect genreSelect;
 	@UiField
 	Button openCloseFilter;
+	@UiField
+	Button shareFacebook;
 
 	@UiField
 	Button clearBtn;
@@ -103,6 +105,19 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 
 	/**
+	 * Sends a message to the presenter when the shareButton is clicked
+	 * 
+	 * @author Dominik Bünzli
+	 * @pre container != null
+	 * @post -
+	 * @param event
+	 */
+	@UiHandler("shareFacebook")
+	public void onFacebookBtnClicked(final ClickEvent event) {
+		filterPresenter.onFacebook();
+	}
+	
+	/**
 	 * Sends a message to the presenter if the search button is clicked
 	 * 
 	 * @author Nicolas Küchler
@@ -113,9 +128,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	@UiHandler("searchBtn")
 	public void onSearchBtnClick(final ClickEvent event) {
 		filterPresenter.onSearch();
-		openCloseFilter.click();
 	}
-
 
 	/**
 	 * Sends a message to the presenter if the clear button is clicked
@@ -128,7 +141,6 @@ public class FilterViewImpl extends Composite implements FilterView {
 	@UiHandler("clearBtn")
 	public void onClearBtnClick(final ClickEvent event) {
 		filterPresenter.onClear();
-		openCloseFilter.click();
 	}
 
 	@Override

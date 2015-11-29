@@ -14,10 +14,13 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -227,18 +230,26 @@ public class TableViewImpl extends Composite implements TableView {
 	 */
 	private void buildTable() {
 	    
-		ButtonCell wikiButton = new ButtonCell();
+		ButtonCell wikiButton = new ButtonCell(IconType.WORDPRESS);
 		wikiColumn = new Column<Film,String>(wikiButton) {
 			@Override
 			public String getValue(Film filmObject) {
-				return Integer.toString(filmObject.getId());
-			}
+				if(Integer.toString(filmObject.getId()) == "0"){
+					return "";
+				}else{
+					return "";//Integer.toString(filmObject.getId());
+				}
+			}	
 		};
+		
 		wikiColumn.setFieldUpdater(new FieldUpdater<Film, String>() {
 		        @Override
 		        public void update(int index, Film filmObject,String value) {
-		        	Window.open("http://www.wikipedia.org/?curid="+filmObject.getId(), "_blank", "");
-		        }
+		        	if(Integer.toString(filmObject.getId()) == "0"){
+						
+					}else
+						Window.open("http://www.wikipedia.org/?curid="+filmObject.getId(), "_blank", "");
+					} 
 		    });
 		
 		nameColumn = new TextColumn<Film>() {

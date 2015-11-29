@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
-<ui:with field='res' type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources'/>
+	<ui:with field='res' type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources'/>
 	
 	<b:Navbar position="FIXED_TOP" >
 		<b:NavbarHeader width="23%">

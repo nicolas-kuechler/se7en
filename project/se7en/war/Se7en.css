@@ -30,15 +30,20 @@ img {
 	border: 1px solid #F5F5F5;
 }
 
+
 /** clear the horizontal border above the mapTable (little bug fix) */
 .mapPanel .table {
 	border: 0px !important;
+}
+.mapPanel .panel-body{
+	padding: 0% 0% 1% 0% !important;
 }
 
 /** set the padding of the cell elements */
 td{
 		padding: 1% 1% 1% 0.5%;
 		text-align:left !important;
+		vertical-align:middle !important;
 }
 
 /** change the table header of table view */
@@ -49,6 +54,7 @@ th {
 	color: #555;
 	font-size: 105%;
 	overflow:hidden;
+	vertical-align:middle !important;
 }
 
 /** change the dataGrid to only display horizontal borders and no vertical ones */
@@ -74,7 +80,7 @@ th {
 
 /** clear the default padding of the panel body*/
 .panel-body {
-	padding: 0px !important;
+	padding: 0% !important;
 	float: left;
 	width: 100%;
 }
@@ -98,15 +104,34 @@ th {
 .mapPanel{
 	float:left;
 	min-height: 80%;
-	width:100%;
-}
-.dataContainer{
-	float:left;
-	min-height: 95%;
-	width:100%;
-	margin-bottom: 0%
+	width:80%;
+	padding: 0% 1% 0% 1%;
 }
 
+.tablePanel{
+	float:left;
+	width:80%;
+	padding: 0% 1% 0% 1%;
+}
+
+
+.adPanelLeft{
+	float:left;
+	min-height: 100px;
+}
+
+.adPanelRight{
+	float:right;
+	min-height: 100px;	
+}
+
+.closeAd{
+	display:none;
+}
+
+.closeAdButton{
+	float:right;
+}
 /*############################################CONTAINER SETTINGS FOR HEADER AND FOOTER OF A PANEL####################################################*/
 
 /** don't display the header of the panels (Design descision / if reverted the headers get visible again)*/
@@ -132,9 +157,11 @@ th {
 
 /** little workaround so we can display the image on welcome view with 100%, but the rest in the containerPanel with 15% padding. dataContainer is a subElement of containerPanel*/
 .dataContainer {
-	
-	padding-left: 15% !important;
-	padding-right: 15% !important;
+	width:100%;
+	padding-left: 5% !important;
+	padding-right: 5% !important;
+	min-height: 95%;
+	float:left;
 }
 
 

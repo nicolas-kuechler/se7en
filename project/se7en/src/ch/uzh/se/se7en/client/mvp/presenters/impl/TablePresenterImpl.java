@@ -3,6 +3,8 @@ package ch.uzh.se.se7en.client.mvp.presenters.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.gwtbootstrap3.client.ui.Panel;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -35,6 +37,7 @@ public class TablePresenterImpl implements TablePresenter {
 	private FilmListExportServiceAsync filmListExportService;
 	private AdPanel adPanelRight;
 	private AdPanel adPanelLeft;
+	private Panel dataContainer;
 	
 
 	@Inject
@@ -47,6 +50,10 @@ public class TablePresenterImpl implements TablePresenter {
 		this.filmListExportService = filmListExportService;
 		adPanelLeft = new AdPanel();
 		adPanelRight = new AdPanel();
+		dataContainer = new Panel();
+		dataContainer.setStyleName("dataContainer");
+		adPanelLeft.setStyleName("adPanelLeft");
+		adPanelRight.setStyleName("adPanelRight");
 		bind();
 		setupTableUpdate();
 	}
@@ -54,9 +61,10 @@ public class TablePresenterImpl implements TablePresenter {
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
-		container.add(adPanelLeft);
-		container.add(tableView.asWidget());
-		container.add(adPanelRight);
+		container.add(dataContainer);
+		dataContainer.add(adPanelLeft);
+		dataContainer.add(tableView.asWidget());
+		dataContainer.add(adPanelRight);
 	}
 
 	@Override

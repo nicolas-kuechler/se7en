@@ -13,5 +13,8 @@ public interface Resources extends ClientBundle {
 	
 	@Source("backgroundTextSubtextWhite.png")
 	ImageResource backgroundText();
+	
+	@Source("banana.gif")
+	ImageResource adImage();
 
 }

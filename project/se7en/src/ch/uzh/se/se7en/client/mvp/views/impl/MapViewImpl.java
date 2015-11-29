@@ -280,7 +280,7 @@ public class MapViewImpl extends Composite implements MapView {
 			@Override
 			public String getValue(Genre genreObject) {
 
-				tempRankSave = mapPresenter.returnRank(genreObject.getNumberOfFilms());
+				tempRankSave = mapPresenter.getRank(genreObject.getNumberOfFilms());
 				
 				if(tempRankSave==-1){
 					return "";
