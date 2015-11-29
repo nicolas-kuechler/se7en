@@ -1,6 +1,7 @@
 package ch.uzh.se.se7en.junit.client.presenter;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
@@ -329,5 +330,19 @@ public class FilterPresenterTest {
 		assertThat(mapFilter, is(adjustedFilter));
 	}
 	
-
+	@Test
+	public void testGenerateFbUrl() {
+		String basicUrl = "http://sprint5-dot-se-team-se7en.appspot.com/#table?sb=0&le=0:600&ye=1890:2015";
+		String fullUrl = "http://sprint5-dot-se-team-se7en.appspot.com/#table?sb=0&na=ads&le=262:494&ye=1917:1947&ge=20&la=104&co=114";
+		
+		// assert that both urls are correctly converted
+		assertEquals(
+			filterPresenter.generateFbUrl(basicUrl), 
+			"https://www.facebook.com/dialog/share?app_id=1664502907095620&display=page&href=http%3A%2F%2Fse-team-se7en.appspot.com%2F%23table%3Fsb=1%26le=0%3A600%26ye=1890%3A2015&redirect_uri=http%3A%2F%2Fse-team-se7en.appspot.com%2F%23table%3Fsb=1%26le=0%3A600%26ye=1890%3A2015"
+		);
+		assertEquals(
+			filterPresenter.generateFbUrl(fullUrl), 
+			"https://www.facebook.com/dialog/share?app_id=1664502907095620&display=page&href=http%3A%2F%2Fse-team-se7en.appspot.com%2F%23table%3Fsb=1%26na=ads%26le=262%3A494%26ye=1917%3A1947%26ge=20%26la=104%26co=114&redirect_uri=http%3A%2F%2Fse-team-se7en.appspot.com%2F%23table%3Fsb=1%26na=ads%26le=262%3A494%26ye=1917%3A1947%26ge=20%26la=104%26co=114"
+		);
+	}
 }
