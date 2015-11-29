@@ -187,29 +187,46 @@ public class AppController implements ValueChangeHandler<String> {
 																				// has
 																				// format:
 																				// import=filename.csv
+		// TODO: get the password from the input field
+		String password = "TschegeTschege";
+		
 		navBar.setLoading(true, "Importing...");
 
 		TriggerImportServiceAsync triggerImportService = GWT.create(TriggerImportService.class);
-		triggerImportService.importFile(fileName, new AsyncCallback<Boolean>() {
+		triggerImportService.importFile(fileName, password, new AsyncCallback<String>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				navBar.setLoading(false, "");
 				go.setType(GrowlType.WARNING);
 				go.setPosition(GrowlPosition.TOP_CENTER);
-				Growl.growl("An unknown error occured while importing file: " + fileName, go);
+				Growl.growl("An RPC error occured while importing file: " + fileName, go);
 			}
 
 			@Override
-			public void onSuccess(Boolean result) {
+			public void onSuccess(String result) {
 				navBar.setLoading(false, "");
-				if (result) {
-					go.setType(GrowlType.SUCCESS);
-					go.setPosition(GrowlPosition.TOP_CENTER);
-					Growl.growl(fileName + " was successfully imported!", go);
-				} else {
-					go.setType(GrowlType.WARNING);
-					go.setPosition(GrowlPosition.TOP_CENTER);
-					Growl.growl("An unknown error occured while importing file: " + fileName, go);
+				
+				switch(result) {
+					case "SUCCESS":
+						go.setType(GrowlType.SUCCESS);
+						go.setPosition(GrowlPosition.TOP_CENTER);
+						Growl.growl(fileName + " was successfully imported!", go);
+						break;
+					case "INVALID_PASSWORD":
+						go.setType(GrowlType.WARNING);
+						go.setPosition(GrowlPosition.TOP_CENTER);
+						Growl.growl("The provided import password was invalid. Please try again.", go);
+						break;
+					case "IO_EXCEPTION":
+						go.setType(GrowlType.WARNING);
+						go.setPosition(GrowlPosition.TOP_CENTER);
+						Growl.growl("An IO exception occurred while importing file: " + fileName, go);
+						break;
+					case "UNKNOWN_ERROR":
+					default:
+						go.setType(GrowlType.WARNING);
+						go.setPosition(GrowlPosition.TOP_CENTER);
+						Growl.growl("An unknown error occured while importing file: " + fileName, go);
 				}
 			}
 		});
