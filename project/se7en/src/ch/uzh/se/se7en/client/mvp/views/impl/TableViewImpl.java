@@ -246,9 +246,9 @@ public class TableViewImpl extends Composite implements TableView {
 		        @Override
 		        public void update(int index, Film filmObject,String value) {
 		        	if(filmObject.getWikipedia() == null){
-						
+						// TODO DB disable button or similar
 					} else {
-						Window.open("http://www.wikipedia.org/?curid="+filmObject.getWikipedia(), "_blank", "");
+						Window.open("http://www.wikipedia.org/w/index.php?curid="+filmObject.getWikipedia(), "_blank", "");
 					} 
 		        }
 		    });
