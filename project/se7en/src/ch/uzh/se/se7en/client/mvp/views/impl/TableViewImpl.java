@@ -159,6 +159,7 @@ public class TableViewImpl extends Composite implements TableView {
 	@Override
 	public void setTable(List<Film> films, int start) {
 		dataProvider.updateRowData(start, films);
+		dataGrid.setVisibleRange(new Range(start, films.size()));
 	}
 
 	/**
@@ -359,6 +360,7 @@ public class TableViewImpl extends Composite implements TableView {
 		if(dataProvider!=null)
 		{
 			dataProvider.updateRowCount(size, true);
+			dataGrid.setRowCount(size);
 		}
 		else
 		{
