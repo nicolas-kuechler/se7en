@@ -128,7 +128,7 @@ public class TablePresenterImpl implements TablePresenter {
 		if(films.get(0).getName().equals("GIR_QUERY_COUNT"))
 		{
 			//set number of rows
-			tableView.setResultSize(films.get(0).getLength());
+			tableView.setResultSize(films.get(0).getLength());			
 			//delete pseudo film object from list
 			films.remove(0);
 		}
@@ -161,8 +161,6 @@ public class TablePresenterImpl implements TablePresenter {
 	@post tableView is updated and server response is saved in filmdatamodel
 	 */
 	public void fetchData(final int startRange, int numberOfResults) {
-		//create pseudo film that informs the user about the loading
-		updateTable(createPseudoFilmList("Loading..."), 0);
 
 		filmListService.getFilmList(filmDataModel.getAppliedFilter(), startRange, numberOfResults, new AsyncCallback<List<Film>>(){
 			@Override

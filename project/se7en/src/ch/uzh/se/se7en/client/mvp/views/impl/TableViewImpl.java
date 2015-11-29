@@ -60,6 +60,7 @@ public class TableViewImpl extends Composite implements TableView {
 	@UiField(provided = true)
 	DataGrid<Film> dataGrid;
 	@UiField(provided = true) SimplePager pager;
+	private int numberOfResults;
 	
 	@UiField 
 	Button downloadButton;
@@ -100,6 +101,7 @@ public class TableViewImpl extends Composite implements TableView {
 		
 	    SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 	    pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
+	    
 	    pager.setDisplay(dataGrid);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
@@ -165,8 +167,8 @@ public class TableViewImpl extends Composite implements TableView {
 
 	@Override
 	public void setTable(List<Film> films, int start) {
-		dataProvider.updateRowData(start, films);
-		dataGrid.setVisibleRange(new Range(start, films.size()));
+		dataGrid.setRowCount(numberOfResults, true);
+		dataGrid.setRowData(start, films);
 	}
 
 	/**
@@ -388,15 +390,9 @@ public class TableViewImpl extends Composite implements TableView {
 
 	@Override
 	public void setResultSize(int size) {
-		if(dataProvider!=null)
-		{
-			dataProvider.updateRowCount(size, true);
-			dataGrid.setRowCount(size);
-		}
-		else
-		{
-			ClientLog.writeErr("Try to updateRowCount of datagrid before async datatProvider is set");
-		}
+		numberOfResults = size;
+		dataGrid.setVisibleRangeAndClearData(new Range(0, 50), false);
+		
 	}
 
 }
