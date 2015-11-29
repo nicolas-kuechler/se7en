@@ -60,6 +60,7 @@ public class TableViewImpl extends Composite implements TableView {
 	@UiField(provided = true)
 	DataGrid<Film> dataGrid;
 	@UiField(provided = true) SimplePager pager;
+	private int numberOfResults;
 	
 	@UiField 
 	Button downloadButton;
@@ -100,6 +101,7 @@ public class TableViewImpl extends Composite implements TableView {
 		
 	    SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 	    pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
+	    
 	    pager.setDisplay(dataGrid);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
@@ -165,10 +167,8 @@ public class TableViewImpl extends Composite implements TableView {
 
 	@Override
 	public void setTable(List<Film> films, int start) {
-		dataProvider.updateRowData(start, films);
-		
-		//TODO NK update the row count when new filter applied
-		//dataProvider.updateRowCount(films.size(), false);
+		dataGrid.setRowCount(numberOfResults, true);
+		dataGrid.setRowData(start, films);
 	}
 
 	/**
@@ -337,19 +337,11 @@ public class TableViewImpl extends Composite implements TableView {
 		nameColumn.setSortable(true);
 		lengthColumn.setSortable(true);
 		yearColumn.setSortable(true);
-		//TODO NK RS define if sortable
-//		countryColumn.setSortable(true);
-//		languageColumn.setSortable(true);
-//		genreColumn.setSortable(true);
 		
-		//TODO RS verify that these are the proper names for the sorting info
 		nameColumn.setDataStoreName("name");
 		lengthColumn.setDataStoreName("length");
 		yearColumn.setDataStoreName("year");
-		genreColumn.setDataStoreName("genre");
-		languageColumn.setDataStoreName("language");
-		countryColumn.setDataStoreName("country");
-		
+
 		
 		dataGrid.setColumnWidth(wikiColumn, 10, Unit.PCT);
 		dataGrid.addColumn(wikiColumn, "Wiki");
@@ -394,6 +386,13 @@ public class TableViewImpl extends Composite implements TableView {
 			}
 		}
 		return concatString;
+	}
+
+	@Override
+	public void setResultSize(int size) {
+		numberOfResults = size;
+		dataGrid.setVisibleRangeAndClearData(new Range(0, 50), false);
+		
 	}
 
 }
