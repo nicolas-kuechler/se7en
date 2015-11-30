@@ -28,7 +28,7 @@ public class TestUtil {
 	 * @param List<T>
 	 *            returnValue A list of generic type which will be returned by
 	 *            the query
-	 * @return TypedQuery<T> mockjedQuery A mock of a typed query, returning the
+	 * @return TypedQuery<T> mockedQuery A mock of a typed query, returning the
 	 *         value specified on getResultList() call
 	 */
 	public static <T> TypedQuery<T> mockQuery(List<T> returnValue) {
@@ -36,6 +36,23 @@ public class TestUtil {
 
 		when(mockedQuery.getResultList()).thenReturn(returnValue);
 
+		return mockedQuery;
+	}
+	
+	/**
+	 * A generic test util for mocking untyped database queries returning single results
+	 *
+	 * @author Roland Schläfli
+	 * @pre -
+	 * @post -
+	 * @param int returnValue An int which will be returned by the query as the only result
+	 * @return Query mockedQuery A mock of an untyped query, returning the parameter passed as its result
+	 */
+	public static <T> Query mockSingleResultQuery(T returnValue) {
+		Query mockedQuery = (Query) mock(Query.class);
+		
+		when(mockedQuery.getSingleResult()).thenReturn(returnValue);
+		
 		return mockedQuery;
 	}
 	

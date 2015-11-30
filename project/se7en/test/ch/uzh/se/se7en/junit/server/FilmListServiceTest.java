@@ -1,7 +1,6 @@
 package ch.uzh.se.se7en.junit.server;
 
-import static ch.uzh.se.se7en.junit.server.TestUtil.mockQuery;
-import static ch.uzh.se.se7en.junit.server.TestUtil.mockUntypedQuery;
+import static ch.uzh.se.se7en.junit.server.TestUtil.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -75,6 +74,7 @@ public class FilmListServiceTest {
 	TypedQuery<CountryDB> countryQuery = mockQuery(dbCountries);
 	TypedQuery<GenreDB> genreQuery = mockQuery(dbGenres);
 	TypedQuery<LanguageDB> languageQuery = mockQuery(dbLanguages);
+	Query totalResultCount = mockSingleResultQuery((long) 3);
 	Query countryYearCount;
 	Query countryGenresQuery;
 
@@ -102,9 +102,10 @@ public class FilmListServiceTest {
 		fakeFilm.setGenreString("Horror");
 		fakeFilm.setLanguageString("German");
 		dbFilms.add(fakeFilm);
-
+		
 		// the mocked queries should return the fake results
 		doReturn(filmQuery).when(manager).createQuery(Matchers.anyString(), Matchers.same(FilmDB.class));
+		doReturn(totalResultCount).when(manager).createQuery(Matchers.anyString());
 		doReturn(countryQuery).when(manager).createQuery(Matchers.anyString(), Matchers.same(CountryDB.class));
 		doReturn(genreQuery).when(manager).createQuery(Matchers.anyString(), Matchers.same(GenreDB.class));
 		doReturn(languageQuery).when(manager).createQuery(Matchers.anyString(), Matchers.same(LanguageDB.class));
@@ -139,156 +140,200 @@ public class FilmListServiceTest {
 		// inject the mock into the class
 		rpcService.setEm(em);
 	}
-//TODO RS adjust tests to server with range
-//	@Test
-//	public void testGetFilmList() {
-//		/* INITIALIZATION BLOCK */
-//		// filter with the default filters
-//		FilmFilter filter = new FilmFilter();
-//
-//		/* EXECUTION BLOCK */
-//		List<Film> films = rpcService.getFilmList(filter);
-//		Film film = films.get(0);
-//
-//		/* VERIFICATION BLOCK */
-//		// assert that all the information in the film is correctly set
-//		assertEquals(films.size(), 1);
-//		assertEquals(film.getName(), "Film 1");
-//		assertEquals(film.getLength(), new Integer(90));
-//		assertEquals(film.getYear(), new Integer(2015));
-//		// TODO: update such that we only need to return the string
-//		assertEquals(film.getCountries().get(0), "Switzerland");
-//		assertEquals(film.getGenres().get(0), "Horror");
-//		assertEquals(film.getLanguages().get(0), "German");
-//	}
 
-//	@Test
-//	public void testGetFilmEntitiesListFilterDefault() {
-//		/* INITIALIZATION BLOCK */
-//		// filter with the default filters
-//		FilmFilter filter = new FilmFilter();
-//
-//		/* EXECUTION BLOCK */
-//		List<FilmDB> films = rpcService.getFilmEntitiesList(filter);
-//
-//		/* VERIFICATION BLOCK */
-//		// verify that the correct query string is generated
-//		verify(manager, times(1))
-//				.createQuery("SELECT DISTINCT f FROM FilmDB f WHERE 1=1 ORDER BY f.name", FilmDB.class);
-//
-//		// verify that the query is then executed
-//		verify(filmQuery, times(1)).getResultList();
-//
-//		// verify that min/max results are correctly set
-//		// TODO: other than default values
-//		verify(filmQuery, times(1)).setFirstResult(0);
-//		verify(filmQuery, times(1)).setMaxResults(80000);
-//
-//		// verify that the query isn't touched any further
-//		verifyNoMoreInteractions(filmQuery);
-//	}
+	@Test
+	public void testGetFilmList() {
+		/* INITIALIZATION BLOCK */
+		// filter with the default filters
+		FilmFilter filter = new FilmFilter();
 
-//	@Test
-//	public void testGetFilmEntitiesListFilterByNameAndCountryIds() {
-//		/* INITIALIZATION BLOCK */
-//		// set the filters
-//		FilmFilter filter = new FilmFilter("Hallo");
-//		Set<Integer> countryIds = new HashSet<Integer>();
-//		countryIds.add(1);
-//		countryIds.add(99);
-//		filter.setCountryIds(countryIds);
-//
-//		/* EXECUTION BLOCK */
-//		List<FilmDB> films = rpcService.getFilmEntitiesList(filter);
-//
-//		/* VERIFICATION BLOCK */
-//		// verify that the correct query string is generated
-//		verify(manager, times(1)).createQuery(
-//			"SELECT DISTINCT f " 
-//			+ "FROM FilmDB f "
-//				+ "LEFT JOIN FETCH f.filmCountryEntities fc " 
-//			+ "WHERE 1=1 " 
-//				+ "AND LOWER(f.name) LIKE :findName "
-//				+ "AND fc.countryId IN (:countryIds) " 
-//			+ "ORDER BY f.name", 
-//			FilmDB.class
-//		);
-//
-//		// verify that all the parameters are correctly set
-//		verify(filmQuery, times(1)).setParameter("findName", "%hallo%");
-//		verify(filmQuery, times(1)).setParameter("countryIds", filter.getCountryIds());
-//
-//		// verify that the query is then executed
-//		verify(filmQuery, times(1)).getResultList();
-//
-//		// verify that min/max results are correctly set
-//		// TODO: other than default values
-//		verify(filmQuery, times(1)).setFirstResult(0);
-//		verify(filmQuery, times(1)).setMaxResults(80000);
-//
-//		// verify that the query isn't touched any further
-//		verifyNoMoreInteractions(filmQuery);
-//	}
+		/* EXECUTION BLOCK */
+		List<Film> films = rpcService.getFilmList(filter, 0, 50);
+		Film pseudoFilm = films.get(0);
+		Film film = films.get(1);
 
-//	@Test
-//	public void testGetFilmEntitiesListFilterByEverything() {
-//		/* INITIALIZATION BLOCK */
-//		// set the filters
-//		FilmFilter filter = new FilmFilter();
-//		Set<Integer> ids = new HashSet<Integer>();
-//		ids.add(1);
-//		ids.add(99);
-//		filter.setName("Hallo");
-//		filter.setLengthStart(11);
-//		filter.setLengthEnd(22);
-//		filter.setYearStart(2013);
-//		filter.setYearEnd(2015);
-//		filter.setCountryIds(ids);
-//		filter.setGenreIds(ids);
-//		filter.setLanguageIds(ids);
-//
-//		/* EXECUTION BLOCK */
-//		List<FilmDB> films = rpcService.getFilmEntitiesList(filter);
-//
-//		/* VERIFICATION BLOCK */
-//		// verify that the correct query string is generated
-//		verify(manager, times(1)).createQuery(
-//			"SELECT DISTINCT f " 
-//			+ "FROM FilmDB f "
-//				+ "LEFT JOIN FETCH f.filmCountryEntities fc " 
-//				+ "LEFT JOIN f.filmGenreEntities fg "
-//				+ "LEFT JOIN f.filmLanguageEntities fl " 
-//			+ "WHERE (f.length BETWEEN :minLength AND :maxLength) "
-//				+ "AND (f.year BETWEEN :minYear AND :maxYear) " 
-//				+ "AND LOWER(f.name) LIKE :findName "
-//				+ "AND fc.countryId IN (:countryIds) " 
-//				+ "AND fg.genreId IN (:genreIds) "
-//				+ "AND fl.languageId IN (:languageIds) " 
-//			+ "ORDER BY f.name", 
-//			FilmDB.class
-//		);
-//
-//		// verify that all the parameters are correctly set
-//		verify(filmQuery, times(1)).setParameter("minLength", filter.getLengthStart());
-//		verify(filmQuery, times(1)).setParameter("maxLength", filter.getLengthEnd());
-//		verify(filmQuery, times(1)).setParameter("minYear", filter.getYearStart());
-//		verify(filmQuery, times(1)).setParameter("maxYear", filter.getYearEnd());
-//		verify(filmQuery, times(1)).setParameter("findName", "%hallo%");
-//		verify(filmQuery, times(1)).setParameter("countryIds", filter.getCountryIds());
-//		verify(filmQuery, times(1)).setParameter("genreIds", filter.getGenreIds());
-//		verify(filmQuery, times(1)).setParameter("languageIds", filter.getLanguageIds());
-//
-//		// verify that the query is then executed
-//		verify(filmQuery, times(1)).getResultList();
-//
-//		// verify that min/max results are correctly set
-//		// TODO: other than default values
-//		verify(filmQuery, times(1)).setFirstResult(0);
-//		verify(filmQuery, times(1)).setMaxResults(80000);
-//
-//		// verify that the query isn't touched any further
-//		verifyNoMoreInteractions(filmQuery);
-//	}
+		/* VERIFICATION BLOCK */
+		assertEquals(films.size(), 2);
+		
+		// assert that the query count pseudo film was correctly set
+		assertEquals(pseudoFilm.getName(), "GIR_QUERY_COUNT");
+		assertEquals(pseudoFilm.getLength(), new Integer(3));
+		
+		// assert that all the information in the film is correctly set
+		assertEquals(film.getName(), "Film 1");
+		assertEquals(film.getLength(), new Integer(90));
+		assertEquals(film.getYear(), new Integer(2015));
+		// TODO: update such that we only need to return the string
+		assertEquals(film.getCountries().get(0), "Switzerland");
+		assertEquals(film.getGenres().get(0), "Horror");
+		assertEquals(film.getLanguages().get(0), "German");
+	}
+
+	@Test
+	public void testGetFilmEntitiesListFilterDefault() {
+		/* INITIALIZATION BLOCK */
+		// filter with the default filters
+		FilmFilter filter = new FilmFilter();
+
+		/* EXECUTION BLOCK */
+		List<FilmDB> films = rpcService.getFilmEntitiesList(filter, 0, 50);
+
+		/* VERIFICATION BLOCK */
+		// verify that the correct query string is generated
+		verify(manager, times(1))
+				.createQuery("SELECT DISTINCT f FROM FilmDB f WHERE 1=1 ORDER BY f.name", FilmDB.class);
+		verify(manager, times(1))
+				.createQuery("SELECT COUNT(DISTINCT f.id) FROM FilmDB f WHERE 1=1");
+
+		// verify that the query is then executed
+		verify(filmQuery, times(1)).getResultList();
+		verify(totalResultCount, times(1)).getSingleResult();
+
+		// verify that min/max results are correctly set
+		verify(filmQuery, times(1)).setFirstResult(0);
+		verify(filmQuery, times(1)).setMaxResults(50);
+
+		// verify that the query isn't touched any further
+		verifyNoMoreInteractions(filmQuery);
+		verifyNoMoreInteractions(totalResultCount);
+	}
+
+	@Test
+	public void testGetFilmEntitiesListFilterByNameAndCountryIds() {
+		/* INITIALIZATION BLOCK */
+		// set the filters
+		FilmFilter filter = new FilmFilter("Hallo");
+		Set<Integer> countryIds = new HashSet<Integer>();
+		countryIds.add(1);
+		countryIds.add(99);
+		filter.setCountryIds(countryIds);
+		filter.setOrderBy("f.year desc");
+
+		/* EXECUTION BLOCK */
+		List<FilmDB> films = rpcService.getFilmEntitiesList(filter, 0, 50);
+
+		/* VERIFICATION BLOCK */
+		// verify that the correct query string is generated
+		verify(manager, times(1)).createQuery(
+			"SELECT DISTINCT f " 
+			+ "FROM FilmDB f "
+				+ "LEFT JOIN FETCH f.filmCountryEntities fc " 
+			+ "WHERE 1=1 " 
+				+ "AND LOWER(f.name) LIKE :findName "
+				+ "AND fc.countryId IN (:countryIds) " 
+			+ "ORDER BY f.year desc", 
+			FilmDB.class
+		);
+		verify(manager, times(1)).createQuery(
+			"SELECT COUNT(DISTINCT f.id) " 
+			+ "FROM FilmDB f "
+				+ "LEFT JOIN f.filmCountryEntities fc " 
+			+ "WHERE 1=1 " 
+				+ "AND LOWER(f.name) LIKE :findName "
+				+ "AND fc.countryId IN (:countryIds)"
+		);
+
+		// verify that all the parameters are correctly set
+		verify(filmQuery, times(1)).setParameter("findName", "%hallo%");
+		verify(filmQuery, times(1)).setParameter("countryIds", filter.getCountryIds());
+		verify(totalResultCount, times(1)).setParameter("findName", "%hallo%");
+		verify(totalResultCount, times(1)).setParameter("countryIds", filter.getCountryIds());
+
+		// verify that the query is then executed
+		verify(filmQuery, times(1)).getResultList();
+		verify(totalResultCount, times(1)).getSingleResult();
+
+		// verify that min/max results are correctly set
+		verify(filmQuery, times(1)).setFirstResult(0);
+		verify(filmQuery, times(1)).setMaxResults(50);
+
+		// verify that the query isn't touched any further
+		verifyNoMoreInteractions(filmQuery);
+		verifyNoMoreInteractions(totalResultCount);
+	}
+
+	@Test
+	public void testGetFilmEntitiesListFilterByEverything() {
+		/* INITIALIZATION BLOCK */
+		// set the filters
+		FilmFilter filter = new FilmFilter();
+		Set<Integer> ids = new HashSet<Integer>();
+		ids.add(1);
+		ids.add(99);
+		filter.setName("Hallo");
+		filter.setLengthStart(11);
+		filter.setLengthEnd(22);
+		filter.setYearStart(2013);
+		filter.setYearEnd(2015);
+		filter.setCountryIds(ids);
+		filter.setGenreIds(ids);
+		filter.setLanguageIds(ids);
+		filter.setOrderBy("f.name asc");
+
+		/* EXECUTION BLOCK */
+		List<FilmDB> films = rpcService.getFilmEntitiesList(filter, 0, 50);
+
+		/* VERIFICATION BLOCK */
+		// verify that the correct query string is generated
+		verify(manager, times(1)).createQuery(
+			"SELECT DISTINCT f " 
+			+ "FROM FilmDB f "
+				+ "LEFT JOIN FETCH f.filmCountryEntities fc " 
+				+ "LEFT JOIN f.filmGenreEntities fg "
+				+ "LEFT JOIN f.filmLanguageEntities fl " 
+			+ "WHERE (f.length BETWEEN :minLength AND :maxLength) "
+				+ "AND (f.year BETWEEN :minYear AND :maxYear) " 
+				+ "AND LOWER(f.name) LIKE :findName "
+				+ "AND fc.countryId IN (:countryIds) " 
+				+ "AND fg.genreId IN (:genreIds) "
+				+ "AND fl.languageId IN (:languageIds) " 
+			+ "ORDER BY f.name asc", 
+			FilmDB.class
+		);
+		verify(manager, times(1)).createQuery(
+			"SELECT COUNT(DISTINCT f.id) " 
+			+ "FROM FilmDB f "
+				+ "LEFT JOIN f.filmCountryEntities fc " 
+				+ "LEFT JOIN f.filmGenreEntities fg "
+				+ "LEFT JOIN f.filmLanguageEntities fl " 
+			+ "WHERE (f.length BETWEEN :minLength AND :maxLength) "
+				+ "AND (f.year BETWEEN :minYear AND :maxYear) " 
+				+ "AND LOWER(f.name) LIKE :findName "
+				+ "AND fc.countryId IN (:countryIds) " 
+				+ "AND fg.genreId IN (:genreIds) "
+				+ "AND fl.languageId IN (:languageIds)"
+		);
+
+		// verify that all the parameters are correctly set
+		verify(filmQuery, times(1)).setParameter("minLength", filter.getLengthStart());
+		verify(filmQuery, times(1)).setParameter("maxLength", filter.getLengthEnd());
+		verify(filmQuery, times(1)).setParameter("minYear", filter.getYearStart());
+		verify(filmQuery, times(1)).setParameter("maxYear", filter.getYearEnd());
+		verify(filmQuery, times(1)).setParameter("findName", "%hallo%");
+		verify(filmQuery, times(1)).setParameter("countryIds", filter.getCountryIds());
+		verify(filmQuery, times(1)).setParameter("genreIds", filter.getGenreIds());
+		verify(filmQuery, times(1)).setParameter("languageIds", filter.getLanguageIds());
+		verify(totalResultCount, times(1)).setParameter("minLength", filter.getLengthStart());
+		verify(totalResultCount, times(1)).setParameter("maxLength", filter.getLengthEnd());
+		verify(totalResultCount, times(1)).setParameter("minYear", filter.getYearStart());
+		verify(totalResultCount, times(1)).setParameter("maxYear", filter.getYearEnd());
+		verify(totalResultCount, times(1)).setParameter("findName", "%hallo%");
+		verify(totalResultCount, times(1)).setParameter("countryIds", filter.getCountryIds());
+		verify(totalResultCount, times(1)).setParameter("genreIds", filter.getGenreIds());
+		verify(totalResultCount, times(1)).setParameter("languageIds", filter.getLanguageIds());
+
+		// verify that the query is then executed
+		verify(filmQuery, times(1)).getResultList();
+		verify(totalResultCount, times(1)).getSingleResult();
+
+		// verify that min/max results are correctly set
+		verify(filmQuery, times(1)).setFirstResult(0);
+		verify(filmQuery, times(1)).setMaxResults(50);
+
+		// verify that the query isn't touched any further
+		verifyNoMoreInteractions(filmQuery);
+		verifyNoMoreInteractions(totalResultCount);
+	}
 
 	@Test
 	public void testGetCountryListFilterDefault() {

@@ -45,4 +45,12 @@ public interface FilterPresenter extends RootPresenter {
 	 */
 	public void setupMultiSelects();
 	
+	/**
+	Opens a new Tab where the user can share his filters to facebook
+	@author Dominik Bünzli
+	@pre -
+	@post Filter is shared
+	 */
+	public void onFacebook();
+	
 }

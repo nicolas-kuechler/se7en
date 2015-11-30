@@ -1,5 +1,6 @@
 package ch.uzh.se.se7en.server;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,12 +39,14 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	@Inject
 	Provider<EntityManager> em;
 
-	// TODO: find other way of caching stuff
-	public FilmFilter cachedFilter;
-	public List<FilmDB> cachedFilms;
-	public HashMap<Integer, String> cachedCountries;
-	public HashMap<Integer, String> cachedGenres;
-	public HashMap<Integer, String> cachedLanguages;
+	// create a local "cache" like storage in the singleton
+	public static FilmFilter cachedFilter;
+	public static List<FilmDB> cachedFilms;
+	public static int cachedStartRange;
+	public static int cachedNumResults;
+	public static HashMap<Integer, String> cachedCountries;
+	public static HashMap<Integer, String> cachedGenres;
+	public static HashMap<Integer, String> cachedLanguages;
 
 	/**
 	 * Returns a filtered list of films to the client
@@ -64,7 +67,6 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		List<Film> films = new ArrayList<Film>();
 
 		// convert each FilmDB instance to a Film DataTransferObject
-
 		for (FilmDB film : dbFilms) {
 			Film f = film.toFilm();
 			films.add(f);
@@ -86,23 +88,18 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 */
 	@Transactional
 	public List<FilmDB> getFilmEntitiesList(FilmFilter filter, int startRange, int numberOfResults) {
-		//TODO RS this caching does not work with the range stuff
-//		if (cachedFilter != null && cachedFilms != null && filter.equals(cachedFilter)) {
-//			return cachedFilms;
-//		}
-
-		// the starting position of the query
-		// TODO: replace by filter information?
-		int startPosition = startRange;
-
-		// the max number of results the query should return
-		// TODO: replace by filter information?
-		int maxResults = numberOfResults;
+		// if the same rpc is called again, return the cached result
+		if (cachedFilter != null 
+				&& cachedFilms != null 
+				&& filter.equals(cachedFilter)
+				&& cachedStartRange == startRange
+				&& cachedNumResults == numberOfResults) {
+			return cachedFilms;
+		}
 
 		// defines the ordering of the query results
-		// TODO: replace by filter information?
-		//String ordering = "f.name";
-		String ordering = filter.getOrderBy();
+		// TODO: security concerns? injection?
+		String ordering = filter.getOrderBy() != null ? filter.getOrderBy() : "f.name";
 
 		// create an empty list of film entities
 		List<FilmDB> dbFilms = new ArrayList<FilmDB>();
@@ -110,7 +107,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		// initialize the selector in the query
 		String selector = "SELECT DISTINCT f FROM FilmDB f";
 
-		// initialize the where string with the basic filters
+		// initialize the where strings
 		String wheres = "";
 		String whereLength = "";
 		String whereYear = "";
@@ -165,28 +162,26 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			wheres += " AND fl.languageId IN (:languageIds)";
 		}
 
-		// concat the query string
+		// concat the query strings
 		String queryString = selector + joiners + " " + wheres + " ORDER BY " + ordering;
-
+		joiners = joiners.replace("FETCH ", "");
+		String countString = "SELECT COUNT(DISTINCT f.id) FROM FilmDB f" + joiners + " " + wheres;
+		
 		// create a typed query from our query string
 		TypedQuery<FilmDB> query = em.get().createQuery(queryString, FilmDB.class);
+		Query countQuery = em.get().createQuery(countString);
 
-		// make the query cacheable if it is select *
-		// TODO: query cache
-		/*
-		 * if(wheres == "WHERE 1=1") { query.setHint(QueryHints.CACHEABLE,
-		 * true); }
-		 */
-
-		// set offset and limit
-		query.setFirstResult(startPosition);
-		query.setMaxResults(maxResults);
+		// set offset and limit for the main query
+		query.setFirstResult(startRange);
+		query.setMaxResults(numberOfResults);
 
 		// if filter for length != defaults
 		if (whereLength.length() > 0) {
 			// set the min & max length params
 			query.setParameter("minLength", filter.getLengthStart());
 			query.setParameter("maxLength", filter.getLengthEnd());
+			countQuery.setParameter("minLength", filter.getLengthStart());
+			countQuery.setParameter("maxLength", filter.getLengthEnd());
 		}
 
 		// if filter for year != defaults
@@ -194,35 +189,49 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 			// set the min & max year params
 			query.setParameter("minYear", filter.getYearStart());
 			query.setParameter("maxYear", filter.getYearEnd());
+			countQuery.setParameter("minYear", filter.getYearStart());
+			countQuery.setParameter("maxYear", filter.getYearEnd());
 		}
 
 		// if the name in the filter is set, set the param
 		if (filter.getName() != null) {
 			// use % to also find incomplete words
 			query.setParameter("findName", "%" + filter.getName().toLowerCase() + "%");
+			countQuery.setParameter("findName", "%" + filter.getName().toLowerCase() + "%");
 		}
 
 		// if there are countries specified as a list of Integers
 		if (filter.getCountryIds() != null) {
 			query.setParameter("countryIds", filter.getCountryIds());
+			countQuery.setParameter("countryIds", filter.getCountryIds());
 		}
 
 		// if there are genres specified as a list of Integers
 		if (filter.getGenreIds() != null) {
 			query.setParameter("genreIds", filter.getGenreIds());
+			countQuery.setParameter("genreIds", filter.getGenreIds());
 		}
 
 		// if there are languages specified as a list of Integers
 		if (filter.getLanguageIds() != null) {
 			query.setParameter("languageIds", filter.getLanguageIds());
+			countQuery.setParameter("languageIds", filter.getLanguageIds());
 		}
-
+		
 		// execute the query
 		dbFilms = query.getResultList();
-
+		
+		// if another filter is being used, fetch the total result count and send it in a pseudo film
+		if (!filter.equals(cachedFilter)) {
+			long longCount = (long) countQuery.getSingleResult();
+			int count = new BigDecimal(longCount).intValue();
+			dbFilms.add(0, new FilmDB("GIR_QUERY_COUNT", count, null));
+		}
+		
 		// fill the local "cache"
-		// TODO: use another way of caching
 		cachedFilter = filter;
+		cachedStartRange = startRange;
+		cachedNumResults = numberOfResults;
 		cachedFilms = dbFilms;
 
 		// return the list of film entities
@@ -548,14 +557,27 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		return availableLanguages;
 	}
 	
-	//TODO RS comment,test...
-	//TODO Ich han das eifach mal so für mich zum teste gmacht. Fallses ändere wettsch machsch eifach. -Nicolas
+	/**
+	 * Calls the other helper methods and creates a single rpc response for all select options
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre -
+	 * @post -
+	 * @return FilterOptions A filter options object
+	 */
 	@Override
 	public FilterOptions getSelectOptions() {
 		FilterOptions options = new FilterOptions();
+		
+		// get all the countries from the db
 		options.setCountrySelectOptions(getCountrySelectOption());
+		
+		// get all the genres from the db
 		options.setGenreSelectOptions(getGenreSelectOption());
+		
+		// get all the languages from the db
 		options.setLanguageSelectOptions(getLanguageSelectOption());
+		
 		return options;
 	}
 

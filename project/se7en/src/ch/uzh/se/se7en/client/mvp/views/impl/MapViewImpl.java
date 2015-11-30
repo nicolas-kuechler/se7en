@@ -76,6 +76,7 @@ public class MapViewImpl extends Composite implements MapView {
 
 	private int panelWidth;
 	private int panelHeight;
+	private int tempRankSave =0;
 	private boolean widthIsSet = false;
 	private boolean placeholderIsSet = false;
 	
@@ -277,6 +278,7 @@ public class MapViewImpl extends Composite implements MapView {
 		}
 	}
 	
+	
 	/**
 	Builds the Table for the GenreTable
 	@author Dominik Bünzli
@@ -293,7 +295,14 @@ public class MapViewImpl extends Composite implements MapView {
 			@Override
 			public String getValue(Genre genreObject) {
 
-				return Integer.toString(genreProvider.getList().indexOf(genreObject) + 1);
+				tempRankSave = mapPresenter.getRank(genreObject.getNumberOfFilms());
+				
+				if(tempRankSave==-1){
+					return "";
+				}else{
+					return Integer.toString(tempRankSave) + ".";
+				}
+				//return Integer.toString(genreProvider.getList().indexOf(genreObject) + 1);
 			}
 		};
 		

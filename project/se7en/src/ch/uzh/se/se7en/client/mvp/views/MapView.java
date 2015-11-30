@@ -112,4 +112,5 @@ public interface MapView extends IsWidget{
 	 */
 	public void startDownload(String result);
 	
+	
 }

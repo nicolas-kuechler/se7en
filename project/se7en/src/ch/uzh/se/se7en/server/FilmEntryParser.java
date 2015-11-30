@@ -35,6 +35,7 @@ public class FilmEntryParser implements CSVEntryParser<Film>{
 		List<String> languages = null;
 		Integer year = null;
 		List<String> genres = null;
+		String wikipedia = null;
 		
 		if (!data[0].trim().equals("")){
 			name = data[0];
@@ -55,8 +56,12 @@ public class FilmEntryParser implements CSVEntryParser<Film>{
 		if(!data[5].trim().equals("")){
 			genres = Arrays.asList(data[5].split("--"));
 		}
-		
-		Film importedFilm = new Film(name, length, year, countries, languages, genres);
+		// TODO CH check dass de RS da nix falsch gmacht het ;)
+		if (!data[6].trim().equals("")){
+			wikipedia = data[6];
+		}
+		// TODO CH check dass de RS da nix falsch gmacht het ;)
+		Film importedFilm = new Film(name, wikipedia, length, year, countries, languages, genres);
 		return importedFilm;
 		
 	}

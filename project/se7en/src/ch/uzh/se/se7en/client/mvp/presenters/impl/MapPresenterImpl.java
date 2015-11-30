@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.gwtbootstrap3.client.ui.Panel;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -18,6 +20,7 @@ import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
+import ch.uzh.se.se7en.client.mvp.views.widgets.AdPanel;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
@@ -30,6 +33,11 @@ public class MapPresenterImpl implements MapPresenter {
 	private FilmListServiceAsync filmListService;
 	private FilmDataModel filmDataModel;
 	private FilmListExportServiceAsync filmListExportService;
+	private int rank =0;
+	private int lastNumberOfFilms =0;
+	private AdPanel adPanelRight;
+	private AdPanel adPanelLeft;
+	private Panel dataContainer;
 
 	@Inject
 	public MapPresenterImpl(MapView mapView, EventBus eventBus, FilmListServiceAsync filmListService,
@@ -39,6 +47,13 @@ public class MapPresenterImpl implements MapPresenter {
 		this.filmListService = filmListService;
 		this.filmDataModel = filmDataModel;
 		this.filmListExportService = filmListExportService;
+		adPanelLeft = new AdPanel();
+		adPanelRight = new AdPanel();
+		dataContainer = new Panel();
+		dataContainer.setStyleName("dataContainer");
+		adPanelLeft.setStyleName("adPanelLeft");
+		adPanelRight.setStyleName("adPanelRight");
+>>>>>>> dev
 		bind();
 		setupMapUpdate();
 	}
@@ -46,7 +61,13 @@ public class MapPresenterImpl implements MapPresenter {
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
-		container.add(mapView.asWidget());
+		container.add(dataContainer);
+		dataContainer.add(adPanelLeft);
+		dataContainer.add(mapView.asWidget());
+		dataContainer.add(adPanelRight);
+//		container.add(adPanelLeft);
+//		container.add(mapView.asWidget());
+//		container.add(adPanelRight);
 		mapView.setGenreVisible(false);
 
 	}
@@ -114,6 +135,9 @@ public class MapPresenterImpl implements MapPresenter {
 		mapView.setGenrePieChart(entities);
 		//giving the genreTable a new genre list to display
 		mapView.setGenreTable(genres);
+		
+		lastNumberOfFilms = 0;
+		rank = 0;
 	}
 
 	/**
@@ -233,5 +257,16 @@ public class MapPresenterImpl implements MapPresenter {
 				mapView.startDownload(result);
 			}
 		});
+	}
+
+	@Override
+	public int getRank(int numberOfFilms) {
+		if(lastNumberOfFilms == numberOfFilms){
+			return -1;
+		}else{
+			rank = rank +1;
+			lastNumberOfFilms = numberOfFilms;
+			return rank;
+		}
 	}
 }
