@@ -218,6 +218,7 @@ public class MapViewImpl extends Composite implements MapView {
 
 	}
 
+	@Override
 	public String getGeoChartDownloadURI()
 	{
 		    return geoChart.chartObject.getImageURI();
@@ -400,6 +401,8 @@ public class MapViewImpl extends Composite implements MapView {
 	@UiHandler("downloadBtn")
 	public void onDownloadBtnClicked(final ClickEvent event){
 		downloadBtn.setText("Loading...");
+		downloadBtn.setIcon(IconType.REFRESH);
+		downloadBtn.setIconSpin(true);
 		mapPresenter.onDownloadStarted();
 	}
 
