@@ -90,6 +90,9 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 		CSVWriter<Film> csvWriter = new CSVWriterBuilder<Film>(writer).entryConverter(new FilmEntryConverter()).build();
 		try {
 			csvWriter.writeAll(filmListService.getFilmList(filter, 0, 80000)); //TODO RS CH check if possible to get all somehow without hardcoding it
+			
+			writer.write("\n\nData source:\n\nDavid Bamman, Brendan O'Connor and Noah Smith, 'Learning Latent Personas of Film Characters,' in:"
+					+ " Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL 2013), Sofia, Bulgaria, August 2013.");
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
