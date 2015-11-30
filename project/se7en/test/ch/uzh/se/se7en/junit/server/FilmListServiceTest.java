@@ -352,11 +352,14 @@ public class FilmListServiceTest {
 			+ "FROM films f "
 				+ "LEFT JOIN film_countries fc ON f.id = fc.film_id "
 				+ "JOIN countries c ON fc.country_id = c.id " 
-			+ "WHERE 1=1 "
+			+ "WHERE (f.year BETWEEN :minYear AND :maxYear) "
 			+ "GROUP BY c.name, f.year "
 			+ "HAVING f.year IS NOT NULL "
 			+ "ORDER BY c.name, f.year"
 		);
+		
+		verify(countryYearCount, times(1)).setParameter("minYear", 1890);
+		verify(countryYearCount, times(1)).setParameter("maxYear", 2015);
 
 		// assert that all 3 countries are present
 		assertEquals(countries.size(), 3);
@@ -419,7 +422,7 @@ public class FilmListServiceTest {
 				+ "JOIN countries c ON fc.country_id = c.id "
 				+ "LEFT JOIN film_genres fg ON f.id = fg.film_id " 
 				+ "LEFT JOIN film_languages fl ON f.id = fl.film_id "
-			+ "WHERE (f.length BETWEEN :minLength AND :maxLength) " 
+			+ "WHERE (f.year BETWEEN :minYear AND :maxYear) AND (f.length BETWEEN :minLength AND :maxLength) " 
 				+ "AND LOWER(f.name) LIKE :findName "
 				+ "AND fg.genre_id IN (:genreIds) " 
 				+ "AND fl.language_id IN (:languageIds) "
@@ -428,8 +431,9 @@ public class FilmListServiceTest {
 			+ "ORDER BY c.name, f.year"
 		);
 
-		// verify that all the parameters are correctly set (and year / country
-		// were not filtered by!)
+		// verify that all the parameters are correctly set (country was not filtered by!)
+		verify(countryYearCount, times(1)).setParameter("minYear", 1890);
+		verify(countryYearCount, times(1)).setParameter("maxYear", 2015);
 		verify(countryYearCount, times(1)).setParameter("minLength", 11);
 		verify(countryYearCount, times(1)).setParameter("maxLength", 22);
 		verify(countryYearCount, times(1)).setParameter("findName", "%hallo%");

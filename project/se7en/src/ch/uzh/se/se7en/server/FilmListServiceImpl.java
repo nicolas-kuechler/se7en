@@ -242,7 +242,7 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 	 * Returns a filtered list of countries to the client
 	 * 
 	 * @author Roland Schläfli
-	 * @pre There are only films with years 1890-2015 in the database
+	 * @pre -
 	 * @post -
 	 * @param FilmFilter
 	 *            filter A filter object
@@ -262,15 +262,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 		String selector = "SELECT DISTINCT c.id, c.name, f.year, COUNT(*)";
 
 		// initialize the where string with the basic filters
-		String wheres = "";
+		String wheres = "WHERE (f.year BETWEEN :minYear AND :maxYear)";
 		String whereLength = "";
 
 		if (filter.getLengthStart() > 0 || filter.getLengthEnd() < 600) {
-			whereLength = "WHERE (f.length BETWEEN :minLength AND :maxLength)";
+			whereLength = " AND (f.length BETWEEN :minLength AND :maxLength)";
 			wheres += whereLength;
-		} else {
-			wheres = "WHERE 1=1";
-		}
+		} 
 
 		String joiners = "LEFT JOIN film_countries fc ON f.id = fc.film_id JOIN countries c ON fc.country_id = c.id";
 
@@ -296,7 +294,13 @@ public class FilmListServiceImpl extends RemoteServiceServlet implements FilmLis
 
 		Query query = em.get().createNativeQuery(queryString);
 
-		if (whereLength.length() > 0) { // set the min & max length params
+		// set the boundaries for the min and max year
+		// TODO: dynamic boundaries?
+		query.setParameter("minYear", 1890);
+		query.setParameter("maxYear", 2015);
+		
+		// set the min & max length params
+		if (whereLength.length() > 0) {
 			query.setParameter("minLength", filter.getLengthStart());
 			query.setParameter("maxLength", filter.getLengthEnd());
 		}
