@@ -53,7 +53,6 @@ public class MapPresenterImpl implements MapPresenter {
 		dataContainer.setStyleName("dataContainer");
 		adPanelLeft.setStyleName("adPanelLeft");
 		adPanelRight.setStyleName("adPanelRight");
->>>>>>> dev
 		bind();
 		setupMapUpdate();
 	}
