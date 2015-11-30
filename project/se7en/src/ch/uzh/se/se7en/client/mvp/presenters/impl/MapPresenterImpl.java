@@ -214,7 +214,12 @@ public class MapPresenterImpl implements MapPresenter {
 		});
 	}
 
-	//TODO: add comments
+	/**
+	Method that is called upon click on download button. Starts rpc to retreive zipped png image of current geochart from server
+	@author Cyrill Halter
+	@pre	mapView.geoChart != null && mapView != null
+	@post	getMapImageDownloadUrl rpc started
+	 */
 	@Override
 	public void onDownloadStarted() {
 		

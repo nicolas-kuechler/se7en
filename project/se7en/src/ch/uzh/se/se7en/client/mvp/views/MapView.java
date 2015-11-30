@@ -28,7 +28,13 @@ public interface MapView extends IsWidget{
 	 */
 	public void setGeoChart(List<DataTableEntity> countries);
 	
-	//TODO: Add comment
+	/**
+	Retreives the data url of the geochart currently being displayed
+	@author Cyrill Halter
+	@pre 	geoChart != null && presenter != null
+	@post 	-
+	@return	the data url of the geochart currently being displayed	
+	 */
 	public String getGeoChartDownloadURI();
 	
 	
