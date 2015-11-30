@@ -17,4 +17,12 @@ public interface MapPresenter extends RootPresenter {
 	 */
 	public void onCountrySelected();
 	
+	/**
+	Handles the export of geochart after the user started the download by clicking on the button in the ui.
+	@author Cyrill Halter
+	@pre	mapView != null
+	@post	Download of the zip started
+	 */
+	public void onDownloadStarted();
+	
 }

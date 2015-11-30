@@ -18,6 +18,7 @@
 			</b:PanelBody>
 			<b:PanelFooter>
 				<b:Heading size="H5" text="Production Year" />
+				<b:Button ui:field="downloadBtn" type="PRIMARY" icon="DOWNLOAD">Download</b:Button>
 				<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
 			</b:PanelFooter>
 		</b:Panel>

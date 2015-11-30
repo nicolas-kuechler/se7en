@@ -8,5 +8,7 @@ import ch.uzh.se.se7en.shared.model.FilmFilter;
 @RemoteServiceRelativePath("filmListExportService")
 public interface FilmListExportService extends RemoteService{
 	public String getFilmListDownloadUrl(FilmFilter filter);
+	
+	public String getMapImageDownloadUrl(String imageURI);
 
 }
