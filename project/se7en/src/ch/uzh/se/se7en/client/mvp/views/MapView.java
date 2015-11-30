@@ -96,5 +96,14 @@ public interface MapView extends IsWidget{
 	@param visible determines if the components are visible or not.
 	 */
 	public void setGenreVisible(boolean visible);
+
+	/**
+	When the download Url is ready, the download can be started from the Ui
+	@author Cyrill Halter
+	@pre	-
+	@post	Download Window with zip File opened
+	@param 	downloadUrl 
+	 */
+	public void startDownload(String result);
 	
 }

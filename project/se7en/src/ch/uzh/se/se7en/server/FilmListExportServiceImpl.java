@@ -12,7 +12,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import com.google.api.client.util.Base64;
-import com.google.appengine.tools.cloudstorage.GcsFileMetadata;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsInputChannel;
@@ -54,7 +53,7 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 	 * 
 	 * @author Cyrill Halter
 	 * @pre a filter is set in the client data model
-	 * @post -
+	 * @post the generated csv file is in the GCS bucket
 	 * @param FilmFilter filter A filter object
 	 * @return String downloadURL a URL pointing to the generated CSV file in GCS
 	 */
@@ -105,18 +104,30 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 
 	}
 
-	//TODO: add comment
+	
+	
+	
+	/**
+	 * exports a zip file containing a png cenerated from the map widget and the
+	 * source of the film data in a txt file
+	 * 
+	 * @author Cyrill Halter
+	 * @pre -
+	 * @post the generated ZIP file is in the GCS bucket
+	 * @param String imageURI a data URI in base64 encoding representing the png to be downloaded
+	 * @return String downloadURL a URL pointing to the generated zip file in GCS
+	 */
 	@Override
 	public String getMapImageDownloadUrl(String imageURI){
 		//create GCS service
 		GcsService gcsService = GcsServiceFactory.createGcsService();
 		
 		
-		String uuid = UUID.randomUUID().toString();
+		String uuidFilename = "filtered_map_" + UUID.randomUUID().toString();
 		
 		
 		//create GCS file name
-		GcsFilename pngFilename = new GcsFilename(BUCKET_NAME, "filtered_map_" + uuid + ".png");
+		GcsFilename pngFilename = new GcsFilename(BUCKET_NAME, uuidFilename + ".png");
 		
 		//create options for CSV file to be exported: set public read and mime-type
 		GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
@@ -146,44 +157,39 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 		
 
 		
-		
+		//zip newly created png and source txt document
 		final int fetchSize = 4 * 1024 * 1024;
 		final int readSize = 2 * 1024 * 1024;
 		GcsOutputChannel zipWriteChannel = null;
 		
-		//create unique file name
-		String uniqueFilename = "filtered_map_" + uuid + ".zip";
+		//create unique file name for zip document
+		String uniqueFilename = uuidFilename + ".zip";
 		ZipOutputStream zip = null;
 		
 		try {
 			
-			
-		
-		
+			//create new file options for zip file
 			GcsFileOptions zipOptions = new GcsFileOptions.Builder()
 					.mimeType(MediaType.ZIP.toString())
 					.acl("public-read")
 					.build();
 			
+			//create new gcs filename for zip file
 			GcsFilename zipFilename = new GcsFilename(BUCKET_NAME, uniqueFilename);
 			
-			
+			//open output stream for writing zip file
 			zipWriteChannel = gcsService.createOrReplace(zipFilename, zipOptions);
-			
 			zip = new ZipOutputStream(Channels.newOutputStream(zipWriteChannel));
+			
 			
 			GcsInputChannel readChannel = null;
 				try {
-					final GcsFileMetadata meta = gcsService.getMetadata(pngFilename);
-					if (meta == null) {
-						ServerLog.writeErr(pngFilename.toString() + " NOT FOUND. Skipping.");
-					}
 					
-
+					//read png and add to zip
 					ZipEntry entry = new ZipEntry(pngFilename.getObjectName());
 					zip.putNextEntry(entry);
 					readChannel = gcsService.openPrefetchingReadChannel(pngFilename, 0, fetchSize);
-					final ByteBuffer buffer = ByteBuffer.allocate(readSize);
+					ByteBuffer buffer = ByteBuffer.allocate(readSize);
 					int bytesRead = 0;
 					while (bytesRead >= 0) {
 						bytesRead = readChannel.read(buffer);
@@ -193,11 +199,12 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 						buffer.limit(buffer.capacity());
 					}
 					
+					//read source.txt and add to zip
 					GcsFilename sourceFilename = new GcsFilename(BUCKET_NAME, "source.txt");
-					
 					entry = new ZipEntry(sourceFilename.getObjectName());
 					zip.putNextEntry(entry);
-					readChannel = gcsService.openPrefetchingReadChannel(pngFilename, 0, fetchSize);
+					readChannel = gcsService.openPrefetchingReadChannel(sourceFilename, 0, fetchSize);
+					buffer = ByteBuffer.allocate(readSize);
 					bytesRead = 0;
 					while (bytesRead >= 0) {
 						bytesRead = readChannel.read(buffer);
@@ -211,35 +218,23 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 					zip.closeEntry();
 					readChannel.close();
 				}
-			
+				
+				// close write channels
+				zip.flush();
+				zip.close();
+				zipWriteChannel.close();
+				
 		} catch (IOException e) {
 			
 			e.printStackTrace();
 			
-		} finally {
-			
-			try {
-				zip.flush();
-				zip.close();
-				zipWriteChannel.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
 		}
-
 		
-		
-		
-		
-		
-		//return URL of created file for download
+		//return URL of created zip file for download
 		String downloadURL = "https://storage.googleapis.com/" + BUCKET_NAME + "/" + uniqueFilename;
-		
-		
 
 		return downloadURL;
 
 	}
-
+	
 }

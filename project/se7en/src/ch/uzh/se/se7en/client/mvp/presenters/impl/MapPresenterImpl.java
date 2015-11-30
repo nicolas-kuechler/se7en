@@ -221,11 +221,11 @@ public class MapPresenterImpl implements MapPresenter {
 		filmListExportService.getMapImageDownloadUrl(mapView.getGeoChartDownloadURI(), new AsyncCallback<String>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				ClientLog.writeErr("getGenreList failed");
+				ClientLog.writeErr("startDownload failed");
 			}
 			@Override
 			public void onSuccess(String result) {
-				ClientLog.writeMsg(result);
+				mapView.startDownload(result);
 			}
 		});
 	}

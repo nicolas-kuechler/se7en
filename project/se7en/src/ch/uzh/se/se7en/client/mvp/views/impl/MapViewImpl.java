@@ -2,10 +2,14 @@ package ch.uzh.se.se7en.client.mvp.views.impl;
 
 import java.util.List;
 
+import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Label;
+import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.PanelBody;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
@@ -395,6 +399,48 @@ public class MapViewImpl extends Composite implements MapView {
 	
 	@UiHandler("downloadBtn")
 	public void onDownloadBtnClicked(final ClickEvent event){
+		downloadBtn.setText("Loading...");
 		mapPresenter.onDownloadStarted();
+	}
+
+	@Override
+	public void startDownload(String result) {
+		// Start the download
+		downloadBtn.setText("Download");
+		downloadBtn.setIcon(IconType.DOWNLOAD);
+		downloadBtn.setIconSpin(false);
+		Modal modal = new Modal();
+		ModalBody modalBody = new ModalBody();
+		Label downloadLabel = new Label();
+		
+		if(result != null){
+			
+			//download file at downloadUrl	
+			Window.open(result, "PNG Download", "");
+
+			//show modal to start download manually
+			modal.setTitle("Download PNG");
+			modal.setClosable(true);
+			modal.setFade(true);
+			downloadLabel.setText("If the download doesn't start automatically, deactivate your popup blocker or use this link: ");
+			downloadLabel.setStyleName("modalText");
+			Anchor downloadLink = new Anchor("Download Now", result);
+			modalBody.add(downloadLabel);
+			modalBody.add(downloadLink);
+			modal.add(modalBody);
+			modal.show();
+
+		}else{
+
+			modal.setTitle("PNG Download Failed");
+			modal.setClosable(true);
+			modal.setFade(true);
+			downloadLabel.setText("Something went wrong... Please try again later.");
+			downloadLabel.setStyleName("modalText");
+			modalBody.add(downloadLabel);
+			modal.add(modalBody);
+			modal.show();
+		}
+		
 	}
 }
