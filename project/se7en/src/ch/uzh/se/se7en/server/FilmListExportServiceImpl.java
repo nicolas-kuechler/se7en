@@ -5,14 +5,20 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import com.google.api.client.util.Base64;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+import com.google.common.net.MediaType;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -47,7 +53,7 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 	 * 
 	 * @author Cyrill Halter
 	 * @pre a filter is set in the client data model
-	 * @post -
+	 * @post the generated csv file is in the GCS bucket
 	 * @param FilmFilter filter A filter object
 	 * @return String downloadURL a URL pointing to the generated CSV file in GCS
 	 */
@@ -84,6 +90,9 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 		CSVWriter<Film> csvWriter = new CSVWriterBuilder<Film>(writer).entryConverter(new FilmEntryConverter()).build();
 		try {
 			csvWriter.writeAll(filmListService.getFilmList(filter, 0, 80000)); //TODO RS CH check if possible to get all somehow without hardcoding it
+			
+			writer.write("\n\nData source:\n\nDavid Bamman, Brendan O'Connor and Noah Smith, 'Learning Latent Personas of Film Characters,' in:"
+					+ " Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL 2013), Sofia, Bulgaria, August 2013.");
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
@@ -98,4 +107,137 @@ public class FilmListExportServiceImpl extends RemoteServiceServlet implements F
 
 	}
 
+	
+	
+	
+	/**
+	 * exports a zip file containing a png cenerated from the map widget and the
+	 * source of the film data in a txt file
+	 * 
+	 * @author Cyrill Halter
+	 * @pre -
+	 * @post the generated ZIP file is in the GCS bucket
+	 * @param String imageURI a data URI in base64 encoding representing the png to be downloaded
+	 * @return String downloadURL a URL pointing to the generated zip file in GCS
+	 */
+	@Override
+	public String getMapImageDownloadUrl(String imageURI){
+		//create GCS service
+		GcsService gcsService = GcsServiceFactory.createGcsService();
+		
+		
+		String uuidFilename = "filtered_map_" + UUID.randomUUID().toString();
+		
+		
+		//create GCS file name
+		GcsFilename pngFilename = new GcsFilename(BUCKET_NAME, uuidFilename + ".png");
+		
+		//create options for CSV file to be exported: set public read and mime-type
+		GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
+		
+		GcsFileOptions pngOptions = builder
+				.mimeType("image/png")
+				.acl("public-read")
+				.build();
+		
+		//open channel for writing to file
+		GcsOutputChannel pngWriteChannel = null;
+		try {
+			pngWriteChannel = gcsService.createOrReplace(pngFilename, pngOptions);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		String [] parts = imageURI.split(",");
+		byte[] imageBytes = Base64.decodeBase64(parts[1].getBytes());
+		try {
+			pngWriteChannel.write(ByteBuffer.wrap(imageBytes));
+			pngWriteChannel.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+
+		
+		//zip newly created png and source txt document
+		final int fetchSize = 4 * 1024 * 1024;
+		final int readSize = 2 * 1024 * 1024;
+		GcsOutputChannel zipWriteChannel = null;
+		
+		//create unique file name for zip document
+		String uniqueFilename = uuidFilename + ".zip";
+		ZipOutputStream zip = null;
+		
+		try {
+			
+			//create new file options for zip file
+			GcsFileOptions zipOptions = new GcsFileOptions.Builder()
+					.mimeType(MediaType.ZIP.toString())
+					.acl("public-read")
+					.build();
+			
+			//create new gcs filename for zip file
+			GcsFilename zipFilename = new GcsFilename(BUCKET_NAME, uniqueFilename);
+			
+			//open output stream for writing zip file
+			zipWriteChannel = gcsService.createOrReplace(zipFilename, zipOptions);
+			zip = new ZipOutputStream(Channels.newOutputStream(zipWriteChannel));
+			
+			
+			GcsInputChannel readChannel = null;
+				try {
+					
+					//read png and add to zip
+					ZipEntry entry = new ZipEntry(pngFilename.getObjectName());
+					zip.putNextEntry(entry);
+					readChannel = gcsService.openPrefetchingReadChannel(pngFilename, 0, fetchSize);
+					ByteBuffer buffer = ByteBuffer.allocate(readSize);
+					int bytesRead = 0;
+					while (bytesRead >= 0) {
+						bytesRead = readChannel.read(buffer);
+						buffer.flip();
+						zip.write(buffer.array(), buffer.position(), buffer.limit());
+						buffer.rewind();
+						buffer.limit(buffer.capacity());
+					}
+					
+					//read source.txt and add to zip
+					GcsFilename sourceFilename = new GcsFilename(BUCKET_NAME, "source.txt");
+					entry = new ZipEntry(sourceFilename.getObjectName());
+					zip.putNextEntry(entry);
+					readChannel = gcsService.openPrefetchingReadChannel(sourceFilename, 0, fetchSize);
+					buffer = ByteBuffer.allocate(readSize);
+					bytesRead = 0;
+					while (bytesRead >= 0) {
+						bytesRead = readChannel.read(buffer);
+						buffer.flip();
+						zip.write(buffer.array(), buffer.position(), buffer.limit());
+						buffer.rewind();
+						buffer.limit(buffer.capacity());
+					}
+
+				} finally {
+					zip.closeEntry();
+					readChannel.close();
+				}
+				
+				// close write channels
+				zip.flush();
+				zip.close();
+				zipWriteChannel.close();
+				
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+			
+		}
+		
+		//return URL of created zip file for download
+		String downloadURL = "https://storage.googleapis.com/" + BUCKET_NAME + "/" + uniqueFilename;
+
+		return downloadURL;
+
+	}
+	
 }
