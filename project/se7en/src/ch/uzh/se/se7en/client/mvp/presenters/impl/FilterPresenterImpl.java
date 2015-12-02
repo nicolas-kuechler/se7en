@@ -252,7 +252,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 	@Override
 	public void setFilter(final String filterToken) {
-		
+
 		if (filterToken.equals("")) // Url doesn't contain filter information
 									// (option1 Tab Change, optio2 No filter
 									// set)
@@ -271,10 +271,11 @@ public class FilterPresenterImpl implements FilterPresenter {
 		} else // Url contains Filter information
 		{
 			// Parse a filter object from the token
-			final FilmFilter filter = urlToken.parseFilter(filterToken); 
-			
+			final FilmFilter filter = urlToken.parseFilter(filterToken);
+
 			// This timer is necessary due to the fact that the multiselects
-			// cannot handle select(ids) and getSelectedIds() immediately after each other.
+			// cannot handle select(ids) and getSelectedIds() immediately after
+			// each other.
 			// Therefore this timer can be used to delay the search.
 			final Timer searchTimer = new Timer() {
 				@Override
@@ -320,12 +321,16 @@ public class FilterPresenterImpl implements FilterPresenter {
 	}
 
 	/**
-	Helper Method to fill the filterFields in the view with the information from a filter object
-	@author Nicolas küchler
-	@pre	filterView != null
-	@post	filterView filterFields are filled with filter information
-	
-	@param	a FilmFilter object that contains the filter which should be filled in the filterView
+	 * Helper Method to fill the filterFields in the view with the information
+	 * from a filter object
+	 * 
+	 * @author Nicolas küchler
+	 * @pre filterView != null
+	 * @post filterView filterFields are filled with filter information
+	 * 
+	 * @param a
+	 *            FilmFilter object that contains the filter which should be
+	 *            filled in the filterView
 	 */
 	public void updateFilterFieldsInView(FilmFilter filter) {
 		onClear(); // make sure all fields are set to default first
@@ -377,22 +382,56 @@ public class FilterPresenterImpl implements FilterPresenter {
 
 		return filter;
 	}
-	
+
 	/**
-	Helper Method for JUnit Test to set the information if the filterOptions are loaded or not.
-	@author Nicolas Küchler
-	@pre	-
-	@post	areFilterOptionsLoaded == loaded
-	@param loaded defines if the filterValues are already loaded from the server
+	 * Helper Method for JUnit Test to set the information if the filterOptions
+	 * are loaded or not.
+	 * 
+	 * @author Nicolas Küchler
+	 * @pre -
+	 * @post areFilterOptionsLoaded == loaded
+	 * @param loaded
+	 *            defines if the filterValues are already loaded from the server
 	 */
-	public void setFilterOptionsLoaded(boolean loaded)
-	{
+	public void setFilterOptionsLoaded(boolean loaded) {
 		areFilterOptionsLoaded = loaded;
 	}
 
+	/**
+	 * Handles onClick event on the facebook sharing button and calls the
+	 * Facebook Share Dialog
+	 * 
+	 * @author Dominik Bünzli, Roland Schläfli
+	 * @pre -
+	 * @post -
+	 */
 	@Override
 	public void onFacebook() {
-		//Window.alert(Window.Location.getHref());
+		// open the facebook sharing dialog with prefilled GIR-url
+		Window.open(generateFbUrl(Window.Location.getHref()), "_self", "");
+	}
+
+	/**
+	 * Generates a fb share dialog url by escaping necessary characters
+	 * 
+	 * @author Roland Schläfli, Dominik Bünzli
+	 * @pre -
+	 * @post -
+	 * @param String url The url to be shared on facebook
+	 * @return String url The url for sharing via the facebook share dialog
+	 */
+	public String generateFbUrl(String url) {
+		// escape all necessary characters in the url
+		url = url.replaceAll("sb=0", "sb=1");
+		url = url.replaceAll("&", "%26");
+		url = url.replaceAll("/", "%2F");
+		url = url.replaceAll(":", "%3A");
+		url = url.replaceAll("#", "%23");
+		url = url.replaceAll("sprint5-dot-", ""); // TODO: replace with sprint\d-dot- or similar
+		url = url.replaceAll("\\?", "%3F");
+
+		// return the prepared fb string
+		return "https://www.facebook.com/dialog/share?app_id=1664502907095620&display=page&href=" + url + "&redirect_uri=" + url;
 	}
 
 }
