@@ -36,7 +36,7 @@
 							<b:Column size="MD_4">
 								<b:FormGroup>
 									<b:FormLabel>Length</b:FormLabel>
-									<b:TextBox ui:field="lengthTextBox"/>
+									<b:TextBox ui:field="lengthTextBox" width="30%"/>
 									<b:HelpBlock text="" />
 									<slider:RangeSlider ui:field="lengthSlider"></slider:RangeSlider>
 								</b:FormGroup>
@@ -64,6 +64,7 @@
 							<b:Column size="MD_4">
 								<b:FormGroup ui:field="yearColumn">
 									<b:FormLabel>Year</b:FormLabel>
+									<b:TextBox ui:field="yearTextBox" width="30%"/>
 									<b:HelpBlock text="" />
 									<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
 								</b:FormGroup>

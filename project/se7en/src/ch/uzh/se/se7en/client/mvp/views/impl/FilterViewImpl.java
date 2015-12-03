@@ -21,6 +21,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -51,6 +52,8 @@ public class FilterViewImpl extends Composite implements FilterView {
 	
 	@UiField
 	TextBox lengthTextBox;
+	@UiField
+	TextBox yearTextBox;
 	
 	@UiField(provided = true)
 	RangeSlider lengthSlider;
@@ -108,7 +111,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 				}
 			}
 		});
-		lengthTextBox.setText(Boundaries.MIN_YEAR + ":" + Boundaries.MAX_YEAR);
+		lengthTextBox.setText(Boundaries.MIN_LENGTH + ":" + Boundaries.MAX_LENGTH);
 		
 		
 	}
@@ -145,7 +148,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	}
 	
 	@UiHandler("lengthSlider")
-	public void onRangeSlideChange(SlideEvent<Range> event) {
+	public void onRangeSlideValueChange(ValueChangeEvent<Range> event) {
 		String range = getLengthStart()+":"+getLengthEnd();
 		if(!lengthTextBox.getText().equals(range))
 		{
@@ -183,6 +186,47 @@ public class FilterViewImpl extends Composite implements FilterView {
 			}
 		}
 	}
+	
+	@UiHandler("yearSlider")
+	public void onYearRangeSlideValueChange(ValueChangeEvent<Range> event) {
+		String range = getYearStart()+":"+getYearEnd();
+		if(!yearTextBox.getText().equals(range))
+		{
+			yearTextBox.setText(range);
+		}
+	}
+	
+	@UiHandler("yearTextBox")
+	public void onYearTextBoxChange(ChangeEvent event)
+	{
+		String range = yearTextBox.getText();
+		if(!range.contains(":"))
+		{
+			yearTextBox.setText(Boundaries.MIN_YEAR+":"+Boundaries.MAX_YEAR);
+			setYearSlider(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR);
+		}
+		else
+		{
+			try
+			{
+				//parse min max from textbox input
+				int start = Integer.parseInt(range.split(":")[0]);
+				int end = Integer.parseInt(range.split(":")[1]);
+				
+				//only set the length slider if its current value is not already the new
+				if(start!=getYearStart() || end != getYearEnd())
+				{
+					setYearSlider(start, end);
+				}
+			}
+			catch (NumberFormatException e) //when textbox input is not valid
+			{
+				yearTextBox.setText(Boundaries.MIN_YEAR+":"+Boundaries.MAX_YEAR);
+				setYearSlider(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR);
+			}
+		}
+	}
+	
 
 	/**
 	 * Sends a message to the presenter if the clear button is clicked
@@ -225,7 +269,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 
 	@Override
 	public void setLengthSlider(int startLength, int endLength) {
-		lengthSlider.setValue(new Range(startLength, endLength));
+		lengthSlider.setValue(new Range(startLength, endLength),true);
 	}
 
 	@Override
@@ -320,15 +364,6 @@ public class FilterViewImpl extends Composite implements FilterView {
 		}
 	}
 
-	
-	@Override
-	public void collapseFilter(boolean isCollapsed) {
-		if(collapseBox.isIn()==isCollapsed)
-		{
-			openCloseFilter.click();
-		}
-	}
-	
-	
+		
 
 }
