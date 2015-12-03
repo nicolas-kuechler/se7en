@@ -100,6 +100,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 		yearSlider.setMin(Boundaries.MIN_YEAR);
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
+		yearSlider.setTooltip(TooltipType.HIDE);
 		initWidget(uiBinder.createAndBindUi(this));
 		// Setting Up Listening for Enter Pressed Events to start the search
 		collapseBox.setIn(true);
@@ -112,7 +113,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 			}
 		});
 		lengthTextBox.setText(Boundaries.MIN_LENGTH + ":" + Boundaries.MAX_LENGTH);
-		
+		yearTextBox.setText(Boundaries.MIN_YEAR + ":" + Boundaries.MAX_YEAR);
 		
 	}
 

@@ -63,10 +63,13 @@
 							
 							<b:Column size="MD_4">
 								<b:FormGroup ui:field="yearColumn">
-									<b:FormLabel>Year</b:FormLabel>
-									<b:TextBox ui:field="yearTextBox" width="30%"/>
-									<b:HelpBlock text="" />
-									<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
+									<b:InputGroup>
+  										<b:InputGroupAddon icon="CALENDAR">Year</b:InputGroupAddon>
+										<b:TextBox ui:field="yearTextBox" width="70%"/>
+										<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
+									</b:InputGroup>
+									
+							
 								</b:FormGroup>
 							</b:Column>
 
