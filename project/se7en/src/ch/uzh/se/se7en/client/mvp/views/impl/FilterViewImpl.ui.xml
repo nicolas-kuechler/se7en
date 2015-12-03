@@ -36,6 +36,7 @@
 							<b:Column size="MD_4">
 								<b:FormGroup>
 									<b:FormLabel>Length</b:FormLabel>
+									<b:TextBox ui:field="lengthTextBox"/>
 									<b:HelpBlock text="" />
 									<slider:RangeSlider ui:field="lengthSlider"></slider:RangeSlider>
 								</b:FormGroup>

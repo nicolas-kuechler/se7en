@@ -10,12 +10,18 @@ import org.gwtbootstrap3.client.ui.PanelCollapse;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
+import org.gwtbootstrap3.extras.slider.client.ui.base.constants.TooltipType;
+import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideEvent;
+import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideStopEvent;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -42,6 +48,10 @@ public class FilterViewImpl extends Composite implements FilterView {
 
 	@UiField
 	TextBox nameBox;
+	
+	@UiField
+	TextBox lengthTextBox;
+	
 	@UiField(provided = true)
 	RangeSlider lengthSlider;
 	@UiField(provided = true)
@@ -81,6 +91,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 		lengthSlider.setMax(Boundaries.MAX_LENGTH);
 		lengthSlider.setWidth("70%");
 		lengthSlider.setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
+		lengthSlider.setTooltip(TooltipType.HIDE);
 		yearSlider = new RangeSlider();
 		yearSlider.setWidth("70%");
 		yearSlider.setMin(Boundaries.MIN_YEAR);
@@ -97,6 +108,9 @@ public class FilterViewImpl extends Composite implements FilterView {
 				}
 			}
 		});
+		lengthTextBox.setText(Boundaries.MIN_YEAR + ":" + Boundaries.MAX_YEAR);
+		
+		
 	}
 
 	@Override
@@ -128,6 +142,46 @@ public class FilterViewImpl extends Composite implements FilterView {
 	@UiHandler("searchBtn")
 	public void onSearchBtnClick(final ClickEvent event) {
 		filterPresenter.onSearch();
+	}
+	
+	@UiHandler("lengthSlider")
+	public void onRangeSlideChange(SlideEvent<Range> event) {
+		String range = getLengthStart()+":"+getLengthEnd();
+		if(!lengthTextBox.getText().equals(range))
+		{
+			lengthTextBox.setText(range);
+		}
+	}
+	
+	@UiHandler("lengthTextBox")
+	public void onLengthTextBoxChange(ChangeEvent event)
+	{
+		String range = lengthTextBox.getText();
+		if(!range.contains(":"))
+		{
+			lengthTextBox.setText(Boundaries.MIN_LENGTH+":"+Boundaries.MAX_LENGTH);
+			setLengthSlider(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH);
+		}
+		else
+		{
+			try
+			{
+				//parse min max from textbox input
+				int start = Integer.parseInt(range.split(":")[0]);
+				int end = Integer.parseInt(range.split(":")[1]);
+				
+				//only set the length slider if its current value is not already the new
+				if(start!=getLengthStart() || end != getLengthEnd())
+				{
+					setLengthSlider(start, end);
+				}
+			}
+			catch (NumberFormatException e) //when textbox input is not valid
+			{
+				lengthTextBox.setText(Boundaries.MIN_LENGTH+":"+Boundaries.MAX_LENGTH);
+				setLengthSlider(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH);
+			}
+		}
 	}
 
 	/**
@@ -265,5 +319,16 @@ public class FilterViewImpl extends Composite implements FilterView {
 			genreSelect.select(selectedOptions);
 		}
 	}
+
+	
+	@Override
+	public void collapseFilter(boolean isCollapsed) {
+		if(collapseBox.isIn()==isCollapsed)
+		{
+			openCloseFilter.click();
+		}
+	}
+	
+	
 
 }

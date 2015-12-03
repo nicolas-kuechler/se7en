@@ -192,4 +192,12 @@ public interface FilterView extends IsWidget {
 	 */
 	public void setMode(String mode);
 	
+	/**
+	Is responsible for controlling the filter collapse
+	@author Nicolas Küchler
+	@pre	-
+	@post	filter collapse == isCollapsed
+	@param isCollapsed == true means filter will be collapsed after method
+	 */
+	public void collapseFilter(boolean isCollapsed);
 }

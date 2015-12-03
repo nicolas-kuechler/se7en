@@ -76,6 +76,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 			filterToken = Tokens.TABLE + urlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 		}
 		browserUtil.newHistoryItem(filterToken, false);
+		filterView.collapseFilter(true);
 	}
 
 	@Override
