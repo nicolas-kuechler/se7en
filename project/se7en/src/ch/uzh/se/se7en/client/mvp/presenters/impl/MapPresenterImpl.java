@@ -33,23 +33,14 @@ public class MapPresenterImpl implements MapPresenter {
 	private FilmDataModel filmDataModel;
 	private int rank =0;
 	private int lastNumberOfFilms =0;
-	private AdPanel adPanelRight;
-	private AdPanel adPanelLeft;
-	private Panel dataContainer;
 
 	@Inject
 	public MapPresenterImpl(MapView mapView, EventBus eventBus, FilmListServiceAsync filmListService,
-			FilmDataModel filmDataModel) {
+		FilmDataModel filmDataModel) {
 		this.mapView = mapView;
 		this.eventBus = eventBus;
 		this.filmListService = filmListService;
 		this.filmDataModel = filmDataModel;
-		adPanelLeft = new AdPanel();
-		adPanelRight = new AdPanel();
-		dataContainer = new Panel();
-		dataContainer.setStyleName("dataContainer");
-		adPanelLeft.setStyleName("adPanelLeft");
-		adPanelRight.setStyleName("adPanelRight");
 		bind();
 		setupMapUpdate();
 	}
@@ -57,13 +48,7 @@ public class MapPresenterImpl implements MapPresenter {
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
-		container.add(dataContainer);
-		dataContainer.add(adPanelLeft);
-		dataContainer.add(mapView.asWidget());
-		dataContainer.add(adPanelRight);
-//		container.add(adPanelLeft);
-//		container.add(mapView.asWidget());
-//		container.add(adPanelRight);
+		container.add(mapView.asWidget());
 		mapView.setGenreVisible(false);
 
 	}

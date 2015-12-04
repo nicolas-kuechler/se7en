@@ -54,9 +54,8 @@ public class TableViewImpl extends Composite implements TableView {
 
 	private TablePresenter tablePresenter;
 	private int panelHeight;
-	/**
-	 * The main DataGrid.
-	 */
+
+
 	@UiField(provided = true)
 	DataGrid<Film> dataGrid;
 	@UiField(provided = true) SimplePager pager;
@@ -87,6 +86,8 @@ public class TableViewImpl extends Composite implements TableView {
 	 * @param -
 	 */
 	public TableViewImpl() {
+
+		
 		dataGrid = new DataGrid<Film>();
 		dataGrid.setWidth("100%");
 		panelHeight= Window.getClientHeight();

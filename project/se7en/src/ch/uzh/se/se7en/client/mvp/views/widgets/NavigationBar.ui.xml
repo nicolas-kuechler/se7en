@@ -15,7 +15,7 @@
 			<b:AnchorListItem ui:field="mapNav" icon="GLOBE">Map</b:AnchorListItem>
 			<b:AnchorListItem ui:field="tableNav" icon="TABLE">Table</b:AnchorListItem>
 			<b:AnchorListItem ui:field="modalOpen" icon="COMMENT">Creative Commons</b:AnchorListItem>
-			<b:AnchorListItem ui:field="adminNav" icon="WRENCH">Admin</b:AnchorListItem>
+			<b:AnchorListItem ui:field="adminNav" icon="WRENCH"></b:AnchorListItem>
 			
 			</b:NavbarNav>
 			<b:Modal title="Creative Commons" ui:field="licenseModal" closable="true" fade="true" dataBackdrop="STATIC" dataKeyboard="true">

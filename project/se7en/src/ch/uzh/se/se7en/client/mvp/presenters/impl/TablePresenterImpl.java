@@ -35,25 +35,16 @@ public class TablePresenterImpl implements TablePresenter {
 
 	private FilmListServiceAsync filmListService;
 	private FilmListExportServiceAsync filmListExportService;
-	private AdPanel adPanelRight;
-	private AdPanel adPanelLeft;
-	private Panel dataContainer;
 	
 
 	@Inject
 	public TablePresenterImpl(EventBus eventBus, TableView tableView, FilmDataModel filmDataModel,
-			FilmListServiceAsync filmListService, FilmListExportServiceAsync filmListExportService) {
+		FilmListServiceAsync filmListService, FilmListExportServiceAsync filmListExportService) {
 		this.eventBus = eventBus;
 		this.tableView = tableView;
 		this.filmDataModel = filmDataModel;
 		this.filmListService = filmListService;
 		this.filmListExportService = filmListExportService;
-		adPanelLeft = new AdPanel();
-		adPanelRight = new AdPanel();
-		dataContainer = new Panel();
-		dataContainer.setStyleName("dataContainer");
-		adPanelLeft.setStyleName("adPanelLeft");
-		adPanelRight.setStyleName("adPanelRight");
 		bind();
 		setupTableUpdate();
 	}
@@ -61,10 +52,7 @@ public class TablePresenterImpl implements TablePresenter {
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
-		container.add(dataContainer);
-		dataContainer.add(adPanelLeft);
-		dataContainer.add(tableView.asWidget());
-		dataContainer.add(adPanelRight);
+		container.add(tableView.asWidget());
 	}
 
 	@Override
