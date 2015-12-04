@@ -52,6 +52,7 @@ import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.shared.model.Genre;
+import ch.uzh.se.se7en.client.ClientLog;
 
 public class MapViewImpl extends Composite implements MapView {
 
@@ -84,6 +85,8 @@ public class MapViewImpl extends Composite implements MapView {
 	private Panel placeholderGenreTable;
 	private Label placeholderLabelChart;
 	private Label placeholderLabelPie;
+	
+	@UiField Label genreCountryName;
 	
 	@UiField(provided = true)
 	RangeSlider yearSlider;
@@ -211,6 +214,7 @@ public class MapViewImpl extends Composite implements MapView {
 					@Override
 					public void onSelect(SelectEvent event) {
 							mapPresenter.onCountrySelected();	 //inform the mapPresenter that a country was selected
+									
 					}
 				});
 			}
@@ -230,6 +234,10 @@ public class MapViewImpl extends Composite implements MapView {
 	public int getGeoChartSelectionCountryId() {
 		//get information from selection which row in datatable was selected
 		int row = geoChart.getSelection().get(0).getRow();
+		
+		//sets the label that keeps the information about the selected genre
+		genreCountryName.setText(dataTableGeoChart.getValueString(row, 0));
+		
 		//get the country id information at the selected row
 		return (int) dataTableGeoChart.getValueNumber(row, 2);	
 	}
@@ -250,6 +258,7 @@ public class MapViewImpl extends Composite implements MapView {
 		//TODO DB/NK Fading Genre Information?
 		if(visible)
 		{
+			genreCountryName.setVisible(true);
 			if(genreTable!=null)
 			{
 				genreTable.setVisible(true);
@@ -261,6 +270,7 @@ public class MapViewImpl extends Composite implements MapView {
 		}
 		else
 		{
+			genreCountryName.setVisible(false);
 			if(genreTable!=null)
 			{
 				genreTable.setVisible(false);
