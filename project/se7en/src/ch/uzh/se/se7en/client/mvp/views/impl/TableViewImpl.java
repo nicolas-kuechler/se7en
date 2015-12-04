@@ -231,28 +231,7 @@ public class TableViewImpl extends Composite implements TableView {
 	 */
 	private void buildTable() {
 	    
-		ButtonCell wikiButton = new ButtonCell(IconType.WORDPRESS);
-		wikiColumn = new Column<Film,String>(wikiButton) {
-			@Override
-			public String getValue(Film filmObject) {
-				if(Integer.toString(filmObject.getId()) == "0"){
-					return "";
-				}else{
-					return "";//Integer.toString(filmObject.getId());
-				}
-			}	
-		};
 		
-		wikiColumn.setFieldUpdater(new FieldUpdater<Film, String>() {
-		        @Override
-		        public void update(int index, Film filmObject,String value) {
-		        	if(filmObject.getWikipedia() == null){
-						// TODO DB disable button or similar
-					} else {
-						Window.open("http://www.wikipedia.org/w/index.php?curid="+filmObject.getWikipedia(), "_blank", "");
-					} 
-		        }
-		    });
 		
 		nameColumn = new TextColumn<Film>() {
 			@Override
@@ -336,6 +315,29 @@ public class TableViewImpl extends Composite implements TableView {
 			}
 		};
 		
+		ButtonCell wikiButton = new ButtonCell(IconType.WORDPRESS);
+		wikiColumn = new Column<Film,String>(wikiButton) {
+			@Override
+			public String getValue(Film filmObject) {
+				if(Integer.toString(filmObject.getId()) == "0"){
+					return "";
+				}else{
+					return "";//Integer.toString(filmObject.getId());
+				}
+			}	
+		};
+		
+		wikiColumn.setFieldUpdater(new FieldUpdater<Film, String>() {
+		        @Override
+		        public void update(int index, Film filmObject,String value) {
+		        	if(filmObject.getWikipedia() == null){
+						// TODO DB disable button or similar
+					} else {
+						Window.open("http://www.wikipedia.org/w/index.php?curid="+filmObject.getWikipedia(), "_blank", "");
+					} 
+		        }
+		    });
+		
 		nameColumn.setSortable(true);
 		lengthColumn.setSortable(true);
 		yearColumn.setSortable(true);
@@ -345,8 +347,7 @@ public class TableViewImpl extends Composite implements TableView {
 		yearColumn.setDataStoreName("year");
 
 		
-		dataGrid.setColumnWidth(wikiColumn, 10, Unit.PCT);
-		dataGrid.addColumn(wikiColumn, "Wiki");
+
 		dataGrid.setColumnWidth(nameColumn, 15.5, Unit.PCT);
 		dataGrid.addColumn(nameColumn, "Name");
 		dataGrid.setColumnWidth(yearColumn, 11, Unit.PCT);
@@ -359,7 +360,8 @@ public class TableViewImpl extends Composite implements TableView {
 		dataGrid.addColumn(languageColumn, "Language");
 		dataGrid.setColumnWidth(genreColumn, 19.5, Unit.PCT);
 		dataGrid.addColumn(genreColumn, "Genre");
-		
+		dataGrid.setColumnWidth(wikiColumn, 10, Unit.PCT);
+		dataGrid.addColumn(wikiColumn, "Wiki");
 
 	}
 

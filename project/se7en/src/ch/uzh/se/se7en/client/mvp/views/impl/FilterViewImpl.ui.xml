@@ -28,24 +28,29 @@
 						<b:Row>
 							<b:Column size="MD_4">
 								<b:FormGroup>
-									<b:FormLabel>Name</b:FormLabel>
-									<b:TextBox ui:field="nameBox" width="100%"></b:TextBox>
+									<b:InputGroup>
+										<b:InputGroupAddon icon="FILE" width="35%">Name</b:InputGroupAddon>
+										<b:TextBox ui:field="nameBox" width="100%"></b:TextBox>
+									</b:InputGroup>
 								</b:FormGroup>
 							</b:Column>
 
 							<b:Column size="MD_4">
 								<b:FormGroup>
-									<b:FormLabel>Length</b:FormLabel>
-									<b:TextBox ui:field="lengthTextBox" width="30%"/>
-									<b:HelpBlock text="" />
-									<slider:RangeSlider ui:field="lengthSlider"></slider:RangeSlider>
+									<b:InputGroup>
+										<b:InputGroupAddon icon="REPEAT" width="35%">Length</b:InputGroupAddon>
+										<b:TextBox ui:field="lengthTextBox" width="100%"/>
+										<slider:RangeSlider ui:field="lengthSlider" width="100%"></slider:RangeSlider>
+									</b:InputGroup>
 								</b:FormGroup>
 							</b:Column>
 							
 							<b:Column size="MD_4">
 								<b:FormGroup>
-									<b:FormLabel>Language</b:FormLabel>
-									<own:MultiSelect ui:field="languageSelect" width="100%"></own:MultiSelect>
+									<b:InputGroup>
+										<b:InputGroupAddon icon="BULLHORN" width="35%">Language</b:InputGroupAddon>
+										<own:MultiSelect ui:field="languageSelect" width="100%"></own:MultiSelect>
+									</b:InputGroup>
 								</b:FormGroup>
 							</b:Column>
 
@@ -56,27 +61,29 @@
 						<b:Row>
 							<b:Column size="MD_4">
 								<b:FormGroup>
-									<b:FormLabel>Genre</b:FormLabel>
-									<own:MultiSelect ui:field="genreSelect" width="100%"></own:MultiSelect>
+									<b:InputGroup>
+										<b:InputGroupAddon icon="TAGS" width="35%">Genre</b:InputGroupAddon>
+										<own:MultiSelect ui:field="genreSelect" width="100%"></own:MultiSelect>
+									</b:InputGroup>
 								</b:FormGroup>
 							</b:Column>
 							
 							<b:Column size="MD_4">
 								<b:FormGroup ui:field="yearColumn">
 									<b:InputGroup>
-  										<b:InputGroupAddon icon="CALENDAR">Year</b:InputGroupAddon>
-										<b:TextBox ui:field="yearTextBox" width="70%"/>
-										<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
+  										<b:InputGroupAddon icon="CALENDAR" width="35%">Year</b:InputGroupAddon>
+										<b:TextBox ui:field="yearTextBox" width="100%"/>
+										<slider:RangeSlider ui:field="yearSlider" width="100%"></slider:RangeSlider>
 									</b:InputGroup>
-									
-							
 								</b:FormGroup>
 							</b:Column>
 
 							<b:Column size="MD_4">
 								<b:FormGroup ui:field="countryColumn">
-									<b:FormLabel>Country</b:FormLabel>
-									<own:MultiSelect ui:field="countrySelect" width="100%"></own:MultiSelect>
+									<b:InputGroup>
+										<b:InputGroupAddon icon="GLOBE" width="35%">Country</b:InputGroupAddon>
+										<own:MultiSelect ui:field="countrySelect" width="100%"></own:MultiSelect>
+									</b:InputGroup>
 								</b:FormGroup>
 							</b:Column>
 						</b:Row>

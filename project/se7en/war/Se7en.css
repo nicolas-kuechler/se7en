@@ -39,6 +39,18 @@ img {
 	padding: 0% 0% 1% 0% !important;
 }
 
+.mapPanel .mapYearSlider{
+	float:left;	
+}
+
+.mapPanel .input-group{
+	margin-bottom: 0 !important;
+}
+
+.mapPanel .form-group{
+	margin-bottom: 0 !important;
+}
+
 /** set the padding of the cell elements */
 td{
 		padding: 1% 1% 1% 0.5%;
@@ -170,7 +182,7 @@ th {
 /** default settings and positioning for the filterContainer*/
 #subContainer {
 	height:30%;
-	margin-top: 7%;
+	margin-top: 10em;
 	margin-bottom: 2%;
 	float: left;
 	width: 100%;
@@ -314,11 +326,16 @@ th {
 }
 /** set the paginator to the right border of the footer*/
 .paginator{
-	float: right;
+	float: left;
+}
+
+.downloadButton{
+	float:right;
 }
 
 .input-group{
 	margin-bottom: 2%;
+	width:100%;
 }
 /*############################################MAP VIEW SETTINGS####################################################*/
 
@@ -407,6 +424,7 @@ th {
 #navBar {
 	padding-top: 1.5%;
 	min-height:8em;
+	max-height:8em;
 	float: left;
 }
 

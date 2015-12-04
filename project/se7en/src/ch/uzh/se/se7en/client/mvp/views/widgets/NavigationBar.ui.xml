@@ -35,12 +35,12 @@
    			 <b:Modal title="Admin" ui:field="adminModal" closable="true" fade="true" dataBackdrop="STATIC" dataKeyboard="true">
         			<b:ModalBody>
         					<b:InputGroup>
-  								<b:InputGroupAddon icon="FILE">Filename</b:InputGroupAddon>
+  								<b:InputGroupAddon icon="FILE" width="45%">Filename</b:InputGroupAddon>
 								<b:TextBox placeholder="Type here" autoComplete="false"/>
 							</b:InputGroup>
 							<b:Label styleName="adminSpacing"></b:Label>
 							<b:InputGroup>
-  								<b:InputGroupAddon icon="FILE">Security Token</b:InputGroupAddon>
+  								<b:InputGroupAddon icon="EYE" width="45%">Security Token</b:InputGroupAddon>
 								<b:TextBox placeholder="Type here" autoComplete="false"/>
 							</b:InputGroup>
 					</b:ModalBody>
