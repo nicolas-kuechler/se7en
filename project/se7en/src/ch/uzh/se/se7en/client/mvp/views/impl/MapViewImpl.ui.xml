@@ -13,11 +13,13 @@
 				<b:Heading size="H3" text="Film World Map" />
 			</b:PanelHeader>
 			<b:PanelBody ui:field="panel">
+				<b:Label ui:field="genreCountryName">Country Name</b:Label>
 				<c:DataGrid ui:field='genreTable' styleName="genreTable"/>
 
 			</b:PanelBody>
 			<b:PanelFooter>
 				<b:Heading size="H5" text="Production Year" />
+				<b:Button ui:field="downloadBtn" type="PRIMARY" icon="DOWNLOAD">Download</b:Button>
 				<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
 			</b:PanelFooter>
 		</b:Panel>

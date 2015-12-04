@@ -14,6 +14,7 @@ public class Film implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
+	private String wikipedia;
 	private Integer length;
 	private Integer year;
 	private List<String> countries;
@@ -42,6 +43,12 @@ public class Film implements Serializable {
 		this(name, length, year, countries, languages, genres);
 
 		this.id = id;
+	}
+	
+	public Film(String name, String wikipedia, Integer length, Integer year, List<String> countries, List<String> languages,
+			List<String> genres) {
+		this(name, length, year, countries, languages, genres);
+		this.wikipedia = wikipedia;
 	}
 	
 	/* (non-Javadoc)
@@ -97,6 +104,11 @@ public class Film implements Serializable {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (wikipedia == null) {
+			if (other.wikipedia != null)
+				return false;
+		} else if (!wikipedia.equals(other.wikipedia))
+			return false;
 		if (year == null) {
 			if (other.year != null)
 				return false;
@@ -115,7 +127,7 @@ public class Film implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Id: " + id + " - Name: " + name + " - Länge: " + length + " - Länder: " + countries + " - Sprachen: "
+		return "Id: " + id + " - Name: " + name + " - WikipediaID: " + wikipedia + " - Länge: " + length + " - Länder: " + countries + " - Sprachen: "
 				+ languages + " - Genres: " + genres;
 	}
 
@@ -155,6 +167,24 @@ public class Film implements Serializable {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	@pre wikipedia!= null
+	@post -
+	@return the wikipedia
+	 */
+	public String getWikipedia() {
+		return wikipedia;
+	}
+
+	/**
+	@pre -
+	@post wikipedia==wikipedia
+	@param wikipedia the wikipedia to set
+	*/
+	public void setWikipedia(String wikipedia) {
+		this.wikipedia = wikipedia;
 	}
 
 	/**

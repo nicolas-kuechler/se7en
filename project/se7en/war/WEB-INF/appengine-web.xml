@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
 	<application>se-team-se7en</application>
-	<version>sprint5</version>
-	
+	<version>sprint3-3</version>
 	<instance-class>F4_1G</instance-class>
 	<!-- <instance-class>B8</instance-class>
     <basic-scaling>
         <max-instances>4</max-instances>
-    </basic-scaling>-->
+    </basic-scaling> -->
 
 	<!-- GIR uses the MySQL connector for CloudSQL access -->
 	<use-google-connector-j>true</use-google-connector-j>

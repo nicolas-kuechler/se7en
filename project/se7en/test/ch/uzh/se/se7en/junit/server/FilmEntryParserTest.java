@@ -16,13 +16,14 @@ public class FilmEntryParserTest {
 	@Test
 	public void test(){
 		
-		String[] data = new String[6];
+		String[] data = new String[7];
 		data[0] = "test";
 		data[1] = "100";
 		data[2] = "testistan--testania";
 		data[3] = "testistanian--testanian";
 		data[4] = "1000";
 		data[5] = "drama--comedy";
+		data[6] = "someId";
 		
 		FilmEntryParser filmEntryParser = new FilmEntryParser();
 		
@@ -47,6 +48,7 @@ public class FilmEntryParserTest {
 		assertTrue(film.getLanguages().equals(languages));
 		assertTrue(film.getYear() == 1000);
 		assertTrue(film.getGenres().equals(genres));
+		assertTrue(film.getWikipedia()== "someId");
 	}
 
 }

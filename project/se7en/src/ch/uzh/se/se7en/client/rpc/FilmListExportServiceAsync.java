@@ -7,4 +7,6 @@ import ch.uzh.se.se7en.shared.model.FilmFilter;
 public interface FilmListExportServiceAsync {
 	
 	void getFilmListDownloadUrl(FilmFilter filter, AsyncCallback<String> callback);
+
+	void getMapImageDownloadUrl(String imageURI, AsyncCallback<String> callback);
 }

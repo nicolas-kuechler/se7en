@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.gwtbootstrap3.client.ui.Panel;
-
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -19,7 +17,7 @@ import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
-import ch.uzh.se.se7en.client.mvp.views.widgets.AdPanel;
+import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
@@ -31,16 +29,19 @@ public class MapPresenterImpl implements MapPresenter {
 	private EventBus eventBus;
 	private FilmListServiceAsync filmListService;
 	private FilmDataModel filmDataModel;
+	private FilmListExportServiceAsync filmListExportService;
 	private int rank =0;
 	private int lastNumberOfFilms =0;
 
 	@Inject
 	public MapPresenterImpl(MapView mapView, EventBus eventBus, FilmListServiceAsync filmListService,
-		FilmDataModel filmDataModel) {
+			FilmDataModel filmDataModel, FilmListExportServiceAsync filmListExportService) {
+		
 		this.mapView = mapView;
 		this.eventBus = eventBus;
 		this.filmListService = filmListService;
 		this.filmDataModel = filmDataModel;
+		this.filmListExportService = filmListExportService;
 		bind();
 		setupMapUpdate();
 	}
@@ -182,6 +183,7 @@ public class MapPresenterImpl implements MapPresenter {
 		}
 		//set the geochart with the new list
 		mapView.setGeoChart(entities);
+		
 	}
 
 	/**
@@ -216,7 +218,27 @@ public class MapPresenterImpl implements MapPresenter {
 				updateGeoChart();
 			}
 		});
+	}
 
+	/**
+	Method that is called upon click on download button. Starts rpc to retreive zipped png image of current geochart from server
+	@author Cyrill Halter
+	@pre	mapView.geoChart != null && mapView != null
+	@post	getMapImageDownloadUrl rpc started
+	 */
+	@Override
+	public void onDownloadStarted() {
+		
+		filmListExportService.getMapImageDownloadUrl(mapView.getGeoChartDownloadURI(), new AsyncCallback<String>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				ClientLog.writeErr("startDownload failed");
+			}
+			@Override
+			public void onSuccess(String result) {
+				mapView.startDownload(result);
+			}
+		});
 	}
 
 	@Override

@@ -27,6 +27,16 @@ public interface TableView extends IsWidget {
 	public void setTable(List<Film> films, int start);
 	
 	/**
+	Gives the table the information about how many entities it potentially contains.
+	(It actually contains less due to the async nature of the table)
+	@author Nicolas Küchler
+	@pre	tablePresenter != null, dataGrid != null
+	@post	row count of datagrid is updated
+	@param	size the number of results which match a given search (without range limitations)
+	 */
+	public void setResultSize(int size);
+	
+	/**
 	When the download Url is ready, the download can be started from the Ui
 	@author Nicolas Küchler
 	@pre	-

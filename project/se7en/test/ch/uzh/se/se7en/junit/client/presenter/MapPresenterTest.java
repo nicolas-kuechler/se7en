@@ -31,6 +31,7 @@ import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.impl.MapPresenterImpl;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
+import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.Film;
@@ -52,6 +53,8 @@ public class MapPresenterTest {
 	HasWidgets container;
 
 	@Inject FilmListServiceAsync filmService;
+	
+	@Inject FilmListExportServiceAsync filmListExportService;
 
 	List<DataTableEntity> entities;
 	List<Country> countries;
@@ -130,7 +133,7 @@ public class MapPresenterTest {
 			}
 		}).when(filmService).getGenreList(Matchers.any(FilmFilter.class),(AsyncCallback<List<Genre>>) Mockito.any());
 
-		mapPresenter = new MapPresenterImpl(mapView, eventBus, filmService, filmDataModel);
+		mapPresenter = new MapPresenterImpl(mapView, eventBus, filmService, filmDataModel, filmListExportService);
 	}
 
 	@Test

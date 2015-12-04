@@ -217,6 +217,8 @@ public class FilmFilter implements Serializable {
 				+ ", genreIds=" + genreIds + "]";
 	}
 
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -226,7 +228,7 @@ public class FilmFilter implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof FilmFilter))
+		if (getClass() != obj.getClass())
 			return false;
 		FilmFilter other = (FilmFilter) obj;
 		if (countryIds == null) {
@@ -252,6 +254,11 @@ public class FilmFilter implements Serializable {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (orderBy == null) {
+			if (other.orderBy != null)
+				return false;
+		} else if (!orderBy.equals(other.orderBy))
 			return false;
 		if (yearEnd != other.yearEnd)
 			return false;

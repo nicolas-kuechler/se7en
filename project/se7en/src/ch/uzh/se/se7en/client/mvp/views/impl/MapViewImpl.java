@@ -2,9 +2,14 @@ package ch.uzh.se.se7en.client.mvp.views.impl;
 
 import java.util.List;
 
+import org.gwtbootstrap3.client.ui.Anchor;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Label;
+import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.PanelBody;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
@@ -12,7 +17,9 @@ import org.gwtbootstrap3.extras.slider.client.ui.base.constants.TooltipType;
 import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideStopEvent;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -45,6 +52,7 @@ import ch.uzh.se.se7en.client.mvp.model.DataTableEntity;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.shared.model.Genre;
+import ch.uzh.se.se7en.client.ClientLog;
 
 public class MapViewImpl extends Composite implements MapView {
 
@@ -78,6 +86,8 @@ public class MapViewImpl extends Composite implements MapView {
 	private Label placeholderLabelChart;
 	private Label placeholderLabelPie;
 	
+	@UiField Label genreCountryName;
+	
 	@UiField(provided = true)
 	RangeSlider yearSlider;
 	@UiField
@@ -85,7 +95,8 @@ public class MapViewImpl extends Composite implements MapView {
 	@UiField (provided = true)
 	DataGrid<Genre> genreTable;
 
-
+	@UiField
+	Button downloadBtn;
 	
 	ListDataProvider<Genre> genreProvider = new ListDataProvider<Genre>();
 
@@ -203,6 +214,7 @@ public class MapViewImpl extends Composite implements MapView {
 					@Override
 					public void onSelect(SelectEvent event) {
 							mapPresenter.onCountrySelected();	 //inform the mapPresenter that a country was selected
+									
 					}
 				});
 			}
@@ -212,9 +224,20 @@ public class MapViewImpl extends Composite implements MapView {
 	}
 
 	@Override
+	public String getGeoChartDownloadURI()
+	{
+		    return geoChart.chartObject.getImageURI();
+	}
+	
+	
+	@Override
 	public int getGeoChartSelectionCountryId() {
 		//get information from selection which row in datatable was selected
 		int row = geoChart.getSelection().get(0).getRow();
+		
+		//sets the label that keeps the information about the selected genre
+		genreCountryName.setText(dataTableGeoChart.getValueString(row, 0));
+		
 		//get the country id information at the selected row
 		return (int) dataTableGeoChart.getValueNumber(row, 2);	
 	}
@@ -235,6 +258,7 @@ public class MapViewImpl extends Composite implements MapView {
 		//TODO DB/NK Fading Genre Information?
 		if(visible)
 		{
+			genreCountryName.setVisible(true);
 			if(genreTable!=null)
 			{
 				genreTable.setVisible(true);
@@ -246,6 +270,7 @@ public class MapViewImpl extends Composite implements MapView {
 		}
 		else
 		{
+			genreCountryName.setVisible(false);
 			if(genreTable!=null)
 			{
 				genreTable.setVisible(false);
@@ -390,5 +415,54 @@ public class MapViewImpl extends Composite implements MapView {
 	@Override
 	public void setYearRange(int yearStart, int yearEnd) {
 		yearSlider.setValue(new Range(yearStart, yearEnd));
+	}
+	
+	@UiHandler("downloadBtn")
+	public void onDownloadBtnClicked(final ClickEvent event){
+		downloadBtn.setText("Loading...");
+		downloadBtn.setIcon(IconType.REFRESH);
+		downloadBtn.setIconSpin(true);
+		mapPresenter.onDownloadStarted();
+	}
+
+	@Override
+	public void startDownload(String result) {
+		// Start the download
+		downloadBtn.setText("Download");
+		downloadBtn.setIcon(IconType.DOWNLOAD);
+		downloadBtn.setIconSpin(false);
+		Modal modal = new Modal();
+		ModalBody modalBody = new ModalBody();
+		Label downloadLabel = new Label();
+		
+		if(result != null){
+			
+			//download file at downloadUrl	
+			Window.open(result, "PNG Download", "");
+
+			//show modal to start download manually
+			modal.setTitle("Download PNG");
+			modal.setClosable(true);
+			modal.setFade(true);
+			downloadLabel.setText("If the download doesn't start automatically, deactivate your popup blocker or use this link: ");
+			downloadLabel.setStyleName("modalText");
+			Anchor downloadLink = new Anchor("Download Now", result);
+			modalBody.add(downloadLabel);
+			modalBody.add(downloadLink);
+			modal.add(modalBody);
+			modal.show();
+
+		}else{
+
+			modal.setTitle("PNG Download Failed");
+			modal.setClosable(true);
+			modal.setFade(true);
+			downloadLabel.setText("Something went wrong... Please try again later.");
+			downloadLabel.setStyleName("modalText");
+			modalBody.add(downloadLabel);
+			modal.add(modalBody);
+			modal.show();
+		}
+		
 	}
 }

@@ -29,6 +29,16 @@ public interface MapView extends IsWidget{
 	public void setGeoChart(List<DataTableEntity> countries);
 	
 	/**
+	Retreives the data url of the geochart currently being displayed
+	@author Cyrill Halter
+	@pre 	geoChart != null && presenter != null
+	@post 	-
+	@return	the data url of the geochart currently being displayed	
+	 */
+	public String getGeoChartDownloadURI();
+	
+	
+	/**
 	Allows the mapPresenter to get access to the current selection from the geoChart
 	@author Nicolas Küchler
 	@pre 	geoChart != null && presenter != null
@@ -92,6 +102,15 @@ public interface MapView extends IsWidget{
 	@param visible determines if the components are visible or not.
 	 */
 	public void setGenreVisible(boolean visible);
+
+	/**
+	When the download Url is ready, the download can be started from the Ui
+	@author Cyrill Halter
+	@pre	-
+	@post	Download Window with zip File opened
+	@param 	downloadUrl 
+	 */
+	public void startDownload(String result);
 	
 	
 }

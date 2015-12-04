@@ -110,7 +110,10 @@ public class FilmDB {
 			filmLanguageEntityNames.add(languageString);
 		}
 
-		return new Film(id, name, length, year, filmCountryEntityNames, filmLanguageEntityNames, filmGenreEntityNames);
+		Film f = new Film(id, name, length, year, filmCountryEntityNames, filmLanguageEntityNames, filmGenreEntityNames);
+		f.setWikipedia(wikipedia);
+		
+		return f;
 	}
 
 	/**

@@ -61,7 +61,8 @@ public class FilmTest {
 		languages.add("German");
 		genres.add("Action");
 		Film film = new Film(10,"TestName",100,2000,countries,languages,genres);
-		assertEquals(film.toString(),"Id: 10 - Name: TestName - Länge: 100 - Länder: [Switzerland] - Sprachen: [German] - Genres: [Action]");
+		film.setWikipedia("someId");
+		assertEquals(film.toString(),"Id: 10 - Name: TestName - WikipediaID: someId - Länge: 100 - Länder: [Switzerland] - Sprachen: [German] - Genres: [Action]");
 	}
 
 	@Test
