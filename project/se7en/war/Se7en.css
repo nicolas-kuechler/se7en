@@ -117,7 +117,7 @@ th {
 .panel-body {
 	padding: 0% !important;
 	float: left;
-	width: 100%;
+	width: 99.8%;
 }
 
 /** added a margin to the panel footer so there is a little space between the end of the document and the footer */
@@ -370,6 +370,9 @@ th {
 	font-size: 16px !important;
 	font-size: 15px !important;
 	padding-top:10% !important;	
+	background-color: #F5F5F5 !important;
+	color:#222 !important;
+	margin-bottom:2.5%;
 }
 
 .genreTable{

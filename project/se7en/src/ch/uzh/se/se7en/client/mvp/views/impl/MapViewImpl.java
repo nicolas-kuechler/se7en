@@ -219,13 +219,13 @@ public class MapViewImpl extends Composite implements MapView {
 		placeholderLabelPie= new Label();
 		
 		placeholderGenreTable.setWidth((panelWidth*2)/10+"px");
-		placeholderGenreTable.setHeight((panelHeight*2.5)/10+"px");
+		placeholderGenreTable.setHeight((panelHeight*2.75)/10+"px");
 		
 		placeholderPieChart.setWidth((panelWidth*2)/10+"px");
 		placeholderPieChart.setHeight((panelHeight*3)/10+"px");
 		
 		placeholderName.setWidth((panelWidth*2)/10+"px");
-		placeholderName.setHeight((panelHeight*0.5)/10+"px");
+		placeholderName.setHeight((panelHeight*0.25)/10+"px");
 		
 		placeholderGenreTable.setStyleName("placeholderGenreTable");
 		placeholderPieChart.setStyleName("placeholderPieChart");
