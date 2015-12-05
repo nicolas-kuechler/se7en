@@ -45,15 +45,18 @@
 								</b:FormGroup>
 							</b:Column>
 							
+							
 							<b:Column size="MD_4">
-								<b:FormGroup>
+								<b:FormGroup ui:field="yearColumn">
 									<b:InputGroup>
-										<b:InputGroupAddon icon="BULLHORN" width="35%">Language</b:InputGroupAddon>
-										<own:MultiSelect ui:field="languageSelect" width="100%"></own:MultiSelect>
+  										<b:InputGroupAddon icon="CALENDAR" width="35%">Year</b:InputGroupAddon>
+										<b:TextBox ui:field="yearTextBox" width="100%"/>
+										<slider:RangeSlider ui:field="yearSlider" width="100%"></slider:RangeSlider>
 									</b:InputGroup>
 								</b:FormGroup>
 							</b:Column>
-
+							
+							
 							
 
 						</b:Row>
@@ -69,15 +72,14 @@
 							</b:Column>
 							
 							<b:Column size="MD_4">
-								<b:FormGroup ui:field="yearColumn">
+								<b:FormGroup>
 									<b:InputGroup>
-  										<b:InputGroupAddon icon="CALENDAR" width="35%">Year</b:InputGroupAddon>
-										<b:TextBox ui:field="yearTextBox" width="100%"/>
-										<slider:RangeSlider ui:field="yearSlider" width="100%"></slider:RangeSlider>
+										<b:InputGroupAddon icon="BULLHORN" width="35%">Language</b:InputGroupAddon>
+										<own:MultiSelect ui:field="languageSelect" width="100%"></own:MultiSelect>
 									</b:InputGroup>
 								</b:FormGroup>
 							</b:Column>
-
+			
 							<b:Column size="MD_4">
 								<b:FormGroup ui:field="countryColumn">
 									<b:InputGroup>

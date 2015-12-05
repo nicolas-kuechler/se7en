@@ -51,6 +51,10 @@ img {
 	float:right;	
 }
 
+.mapPanel .slider{
+	margin-left:1%;	
+}
+
 .loadingPanel{
 	float:left;
 	width:80%;
@@ -359,6 +363,10 @@ th {
 .input-group{
 	margin-bottom: 2%;
 	width:100%;
+}
+
+#subContainer .sliderPlaceholder{
+	display:none;
 }
 /*############################################MAP VIEW SETTINGS####################################################*/
 

@@ -2,6 +2,7 @@ package ch.uzh.se.se7en.client.mvp.views.widgets;
 
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
+import org.gwtbootstrap3.client.ui.Input;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.constants.IconType;
@@ -45,7 +46,7 @@ public class NavigationBar extends Composite {
 	@UiField AnchorListItem loading;
 	@UiField Image logoLink;
 	@UiField TextBox filename;
-	@UiField TextBox password;
+	@UiField Input password;
 	private GrowlOptions go = new GrowlOptions();
 
 	/**

@@ -41,7 +41,7 @@
 							<b:Label styleName="adminSpacing"></b:Label>
 							<b:InputGroup>
   								<b:InputGroupAddon icon="EYE" width="45%">Security Token</b:InputGroupAddon>
-								<b:TextBox ui:field="password" placeholder="Type here" autoComplete="false"/>
+								<b:Input type="PASSWORD" ui:field="password" placeholder="Type here" autoComplete="false"></b:Input>
 							</b:InputGroup>
 					</b:ModalBody>
 					<b:ModalFooter>

@@ -25,11 +25,9 @@
 				</b:Panel>
 			</b:PanelBody>
 			<b:PanelFooter>
-				<b:FormGroup width="65%" styleName="form-group mapYearSlider">
-					<b:InputGroup>
-						<b:InputGroupAddon icon="CALENDAR" width="20%">Production Year</b:InputGroupAddon>
-						<slider:RangeSlider ui:field="yearSlider" width="100%"></slider:RangeSlider>
-					</b:InputGroup>
+				<b:FormGroup width="80%" styleName="form-group mapYearSlider">
+					 	<b:Heading size="H5" text="Production Year" />
+						<slider:RangeSlider ui:field="yearSlider" width="84%"></slider:RangeSlider>
 				</b:FormGroup>
 				<b:Button ui:field="downloadBtn" type="PRIMARY" icon="DOWNLOAD" styleName="btn btn-primary downloadButton">Download</b:Button>
 				
