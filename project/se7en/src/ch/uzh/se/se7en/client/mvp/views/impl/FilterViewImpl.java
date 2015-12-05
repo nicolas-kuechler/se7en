@@ -10,12 +10,19 @@ import org.gwtbootstrap3.client.ui.PanelCollapse;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.extras.slider.client.ui.Range;
 import org.gwtbootstrap3.extras.slider.client.ui.RangeSlider;
+import org.gwtbootstrap3.extras.slider.client.ui.base.constants.TooltipType;
+import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideEvent;
+import org.gwtbootstrap3.extras.slider.client.ui.base.event.SlideStopEvent;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -42,6 +49,12 @@ public class FilterViewImpl extends Composite implements FilterView {
 
 	@UiField
 	TextBox nameBox;
+	
+	@UiField
+	TextBox lengthTextBox;
+	@UiField
+	TextBox yearTextBox;
+	
 	@UiField(provided = true)
 	RangeSlider lengthSlider;
 	@UiField(provided = true)
@@ -81,11 +94,13 @@ public class FilterViewImpl extends Composite implements FilterView {
 		lengthSlider.setMax(Boundaries.MAX_LENGTH);
 		lengthSlider.setWidth("70%");
 		lengthSlider.setValue(new Range(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH));
+		lengthSlider.setTooltip(TooltipType.HIDE);
 		yearSlider = new RangeSlider();
 		yearSlider.setWidth("70%");
 		yearSlider.setMin(Boundaries.MIN_YEAR);
 		yearSlider.setMax(Boundaries.MAX_YEAR);
 		yearSlider.setValue(new Range(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR));
+		yearSlider.setTooltip(TooltipType.HIDE);
 		initWidget(uiBinder.createAndBindUi(this));
 		// Setting Up Listening for Enter Pressed Events to start the search
 		collapseBox.setIn(true);
@@ -97,6 +112,9 @@ public class FilterViewImpl extends Composite implements FilterView {
 				}
 			}
 		});
+		lengthTextBox.setText(Boundaries.MIN_LENGTH + ":" + Boundaries.MAX_LENGTH);
+		yearTextBox.setText(Boundaries.MIN_YEAR + ":" + Boundaries.MAX_YEAR);
+		
 	}
 
 	@Override
@@ -129,6 +147,87 @@ public class FilterViewImpl extends Composite implements FilterView {
 	public void onSearchBtnClick(final ClickEvent event) {
 		filterPresenter.onSearch();
 	}
+	
+	@UiHandler("lengthSlider")
+	public void onRangeSlideValueChange(ValueChangeEvent<Range> event) {
+		String range = getLengthStart()+":"+getLengthEnd();
+		if(!lengthTextBox.getText().equals(range))
+		{
+			lengthTextBox.setText(range);
+		}
+	}
+	
+	@UiHandler("lengthTextBox")
+	public void onLengthTextBoxChange(ChangeEvent event)
+	{
+		String range = lengthTextBox.getText();
+		if(!range.contains(":"))
+		{
+			lengthTextBox.setText(Boundaries.MIN_LENGTH+":"+Boundaries.MAX_LENGTH);
+			setLengthSlider(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH);
+		}
+		else
+		{
+			try
+			{
+				//parse min max from textbox input
+				int start = Integer.parseInt(range.split(":")[0]);
+				int end = Integer.parseInt(range.split(":")[1]);
+				
+				//only set the length slider if its current value is not already the new
+				if(start!=getLengthStart() || end != getLengthEnd())
+				{
+					setLengthSlider(start, end);
+				}
+			}
+			catch (NumberFormatException e) //when textbox input is not valid
+			{
+				lengthTextBox.setText(Boundaries.MIN_LENGTH+":"+Boundaries.MAX_LENGTH);
+				setLengthSlider(Boundaries.MIN_LENGTH, Boundaries.MAX_LENGTH);
+			}
+		}
+	}
+	
+	@UiHandler("yearSlider")
+	public void onYearRangeSlideValueChange(ValueChangeEvent<Range> event) {
+		String range = getYearStart()+":"+getYearEnd();
+		if(!yearTextBox.getText().equals(range))
+		{
+			yearTextBox.setText(range);
+		}
+	}
+	
+	@UiHandler("yearTextBox")
+	public void onYearTextBoxChange(ChangeEvent event)
+	{
+		String range = yearTextBox.getText();
+		if(!range.contains(":"))
+		{
+			yearTextBox.setText(Boundaries.MIN_YEAR+":"+Boundaries.MAX_YEAR);
+			setYearSlider(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR);
+		}
+		else
+		{
+			try
+			{
+				//parse min max from textbox input
+				int start = Integer.parseInt(range.split(":")[0]);
+				int end = Integer.parseInt(range.split(":")[1]);
+				
+				//only set the length slider if its current value is not already the new
+				if(start!=getYearStart() || end != getYearEnd())
+				{
+					setYearSlider(start, end);
+				}
+			}
+			catch (NumberFormatException e) //when textbox input is not valid
+			{
+				yearTextBox.setText(Boundaries.MIN_YEAR+":"+Boundaries.MAX_YEAR);
+				setYearSlider(Boundaries.MIN_YEAR, Boundaries.MAX_YEAR);
+			}
+		}
+	}
+	
 
 	/**
 	 * Sends a message to the presenter if the clear button is clicked
@@ -171,7 +270,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 
 	@Override
 	public void setLengthSlider(int startLength, int endLength) {
-		lengthSlider.setValue(new Range(startLength, endLength));
+		lengthSlider.setValue(new Range(startLength, endLength),true);
 	}
 
 	@Override
@@ -265,5 +364,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 			genreSelect.select(selectedOptions);
 		}
 	}
+
+		
 
 }

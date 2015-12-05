@@ -3,20 +3,38 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
 	xmlns:slider="urn:import:org.gwtbootstrap3.extras.slider.client.ui"
 	xmlns:geochart="urn:import:com.googlecode.gwt.charts.client.geochart"
-	xmlns:c="urn:import:org.gwtbootstrap3.client.ui.gwt">
+	xmlns:c="urn:import:org.gwtbootstrap3.client.ui.gwt"
+	xmlns:adPanel="urn:import:ch.uzh.se.se7en.client.mvp.views.widgets">
+	
+	<ui:with field='res' type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources' />
+		
+	<b:Panel styleName="dataContainer">
 
-		<b:Panel styleName="mapPanel">
+		<adPanel:AdPanel styleName="adPanelLeft"></adPanel:AdPanel>
+		<b:Panel styleName="loadingPanel" ui:field="loadingPanel">
+				<g:Image resource='{res.mapLoading}' width="15%" />
+		</b:Panel>
+		<b:Panel styleName="mapPanel" ui:field="mapPanel">
 			<b:PanelHeader>
 				<b:Heading size="H3" text="Film World Map" />
 			</b:PanelHeader>
 			<b:PanelBody ui:field="panel">
-				<c:DataGrid ui:field='genreTable' styleName="genreTable"/>
-
+				<b:Panel ui:field="additionalInfo" styleName="additionalInfo">
+					<b:Label ui:field="genreCountryName" styleName="label label-default genreCountryName">Country Name</b:Label>
+					<c:DataGrid ui:field='genreTable' styleName="genreTable"/>
+				</b:Panel>
 			</b:PanelBody>
 			<b:PanelFooter>
-				<b:Heading size="H5" text="Production Year" />
-				<b:Button ui:field="downloadBtn" type="PRIMARY" icon="DOWNLOAD">Download</b:Button>
-				<slider:RangeSlider ui:field="yearSlider"></slider:RangeSlider>
+				<b:FormGroup width="65%" styleName="form-group mapYearSlider">
+					<b:InputGroup>
+						<b:InputGroupAddon icon="CALENDAR" width="20%">Production Year</b:InputGroupAddon>
+						<slider:RangeSlider ui:field="yearSlider" width="100%"></slider:RangeSlider>
+					</b:InputGroup>
+				</b:FormGroup>
+				<b:Button ui:field="downloadBtn" type="PRIMARY" icon="DOWNLOAD" styleName="btn btn-primary downloadButton">Download</b:Button>
+				
 			</b:PanelFooter>
 		</b:Panel>
+		<adPanel:AdPanel styleName="adPanelRight"></adPanel:AdPanel>
+	</b:Panel>
 </ui:UiBinder> 

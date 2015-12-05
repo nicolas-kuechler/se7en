@@ -8,7 +8,7 @@ public interface Resources extends ClientBundle {
 	@Source("SevenBlack.png")
 	ImageResource sevenBlack();
 	
-	@Source("backgroundNewYork.jpg")
+	@Source("backgroundNewYorkSmall.png")
 	ImageResource backgroundSkyline();
 	
 	@Source("backgroundTextSubtextWhite.png")
@@ -16,5 +16,8 @@ public interface Resources extends ClientBundle {
 	
 	@Source("banana.gif")
 	ImageResource adImage();
+	
+	@Source("download.gif")
+	ImageResource mapLoading();
 
 }

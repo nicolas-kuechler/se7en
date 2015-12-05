@@ -15,7 +15,7 @@
 			<b:AnchorListItem ui:field="mapNav" icon="GLOBE">Map</b:AnchorListItem>
 			<b:AnchorListItem ui:field="tableNav" icon="TABLE">Table</b:AnchorListItem>
 			<b:AnchorListItem ui:field="modalOpen" icon="COMMENT">Creative Commons</b:AnchorListItem>
-			<b:AnchorListItem ui:field="adminNav" icon="WRENCH">Admin</b:AnchorListItem>
+			<b:AnchorListItem ui:field="adminNav" icon="WRENCH"></b:AnchorListItem>
 			
 			</b:NavbarNav>
 			<b:Modal title="Creative Commons" ui:field="licenseModal" closable="true" fade="true" dataBackdrop="STATIC" dataKeyboard="true">
@@ -35,18 +35,18 @@
    			 <b:Modal title="Admin" ui:field="adminModal" closable="true" fade="true" dataBackdrop="STATIC" dataKeyboard="true">
         			<b:ModalBody>
         					<b:InputGroup>
-  								<b:InputGroupAddon icon="FILE">Filename</b:InputGroupAddon>
-								<b:TextBox placeholder="Type here" autoComplete="false"/>
+  								<b:InputGroupAddon icon="FILE" width="45%">Filename</b:InputGroupAddon>
+								<b:TextBox ui:field="filename" placeholder="Type here" autoComplete="false"/>
 							</b:InputGroup>
 							<b:Label styleName="adminSpacing"></b:Label>
 							<b:InputGroup>
-  								<b:InputGroupAddon icon="FILE">Security Token</b:InputGroupAddon>
-								<b:TextBox placeholder="Type here" autoComplete="false"/>
+  								<b:InputGroupAddon icon="EYE" width="45%">Security Token</b:InputGroupAddon>
+								<b:TextBox ui:field="password" placeholder="Type here" autoComplete="false"/>
 							</b:InputGroup>
 					</b:ModalBody>
 					<b:ModalFooter>
 				   	 	<b:Button type="PRIMARY" dataDismiss="MODAL" icon="REMOVE">Close</b:Button>
-				   	 	<b:Button type="PRIMARY" dataDismiss="MODAL" icon="UPLOAD">Upload</b:Button>
+				   	 	<b:Button type="PRIMARY" dataDismiss="MODAL" icon="UPLOAD" ui:field="startUpload">Upload</b:Button>
 				 	</b:ModalFooter>
    			 </b:Modal>
    			 

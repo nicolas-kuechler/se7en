@@ -5,9 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.gwtbootstrap3.client.ui.Panel;
-
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
@@ -20,7 +19,6 @@ import ch.uzh.se.se7en.client.mvp.model.FilmDataModel;
 import ch.uzh.se.se7en.client.mvp.presenters.MapPresenter;
 import ch.uzh.se.se7en.client.mvp.views.MapView;
 import ch.uzh.se.se7en.client.rpc.FilmListExportServiceAsync;
-import ch.uzh.se.se7en.client.mvp.views.widgets.AdPanel;
 import ch.uzh.se.se7en.client.rpc.FilmListServiceAsync;
 import ch.uzh.se.se7en.shared.model.Country;
 import ch.uzh.se.se7en.shared.model.FilmFilter;
@@ -35,24 +33,16 @@ public class MapPresenterImpl implements MapPresenter {
 	private FilmListExportServiceAsync filmListExportService;
 	private int rank =0;
 	private int lastNumberOfFilms =0;
-	private AdPanel adPanelRight;
-	private AdPanel adPanelLeft;
-	private Panel dataContainer;
 
 	@Inject
 	public MapPresenterImpl(MapView mapView, EventBus eventBus, FilmListServiceAsync filmListService,
 			FilmDataModel filmDataModel, FilmListExportServiceAsync filmListExportService) {
+		
 		this.mapView = mapView;
 		this.eventBus = eventBus;
 		this.filmListService = filmListService;
 		this.filmDataModel = filmDataModel;
 		this.filmListExportService = filmListExportService;
-		adPanelLeft = new AdPanel();
-		adPanelRight = new AdPanel();
-		dataContainer = new Panel();
-		dataContainer.setStyleName("dataContainer");
-		adPanelLeft.setStyleName("adPanelLeft");
-		adPanelRight.setStyleName("adPanelRight");
 		bind();
 		setupMapUpdate();
 	}
@@ -60,13 +50,7 @@ public class MapPresenterImpl implements MapPresenter {
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();
-		container.add(dataContainer);
-		dataContainer.add(adPanelLeft);
-		dataContainer.add(mapView.asWidget());
-		dataContainer.add(adPanelRight);
-//		container.add(adPanelLeft);
-//		container.add(mapView.asWidget());
-//		container.add(adPanelRight);
+		container.add(mapView.asWidget());
 		mapView.setGenreVisible(false);
 
 	}
@@ -174,6 +158,8 @@ public class MapPresenterImpl implements MapPresenter {
 	{	
 		//whenever the geochart is updated, the genre info needs to be hidden.
 		mapView.setGenreVisible(false);
+		//whenever the geochart is updated, the map needs to be shown and the loading to be hidden.
+		
 		
 		//get country list according to currently applied filter from client side data model
 		List<Country> countries = filmDataModel.getCountryList();
@@ -199,6 +185,7 @@ public class MapPresenterImpl implements MapPresenter {
 			}
 		}
 		//set the geochart with the new list
+		
 		mapView.setGeoChart(entities);
 		
 	}
@@ -210,6 +197,7 @@ public class MapPresenterImpl implements MapPresenter {
 	@post	mapView map is updated and server response is saved in filmdatamodel
 	 */
 	public void fetchData() {
+		mapView.setCurrentState(true);
 		//update of the yearSlider in the mapView
 		mapView.setYearRange(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd());
 		filmDataModel.setCountryList(new ArrayList<Country>());
@@ -233,6 +221,7 @@ public class MapPresenterImpl implements MapPresenter {
 
 				//updates the geochart in the view
 				updateGeoChart();
+				mapView.setCurrentState(false);
 			}
 		});
 	}
@@ -268,4 +257,5 @@ public class MapPresenterImpl implements MapPresenter {
 			return rank;
 		}
 	}
+	
 }

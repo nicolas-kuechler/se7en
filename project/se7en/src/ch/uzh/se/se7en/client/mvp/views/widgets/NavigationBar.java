@@ -3,6 +3,12 @@ package ch.uzh.se.se7en.client.mvp.views.widgets;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.TextBox;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.extras.growl.client.ui.Growl;
+import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
+import org.gwtbootstrap3.extras.growl.client.ui.GrowlPosition;
+import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Cursor;
@@ -10,11 +16,15 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 import ch.uzh.se.se7en.client.mvp.Tokens;
+import ch.uzh.se.se7en.client.rpc.TriggerImportService;
+import ch.uzh.se.se7en.client.rpc.TriggerImportServiceAsync;
 
 public class NavigationBar extends Composite {
 
@@ -34,6 +44,9 @@ public class NavigationBar extends Composite {
 	@UiField Modal adminModal;
 	@UiField AnchorListItem loading;
 	@UiField Image logoLink;
+	@UiField TextBox filename;
+	@UiField TextBox password;
+	private GrowlOptions go = new GrowlOptions();
 
 	/**
 	 * Initialize the NavigationBar, the Creative Commons Modal and set a default Text for the loadingGrowl (workaround)
@@ -178,5 +191,53 @@ public class NavigationBar extends Composite {
 		mapNav.setActive(isMapActive);
 		tableNav.setActive(isTableActive);
 	}
+	
+	@UiHandler("startUpload")
+	public void onUploadBtnClicked(final ClickEvent event){
+		
+		setLoading(true, "Importing...");
+
+		TriggerImportServiceAsync triggerImportService = GWT.create(TriggerImportService.class);
+		triggerImportService.importFile(filename.getText(), password.getText(), new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				setLoading(false, "");
+				go.setType(GrowlType.WARNING);
+				go.setPosition(GrowlPosition.TOP_CENTER);
+				Growl.growl("An RPC error occured while importing file: " + filename.getText(), go);
+			}
+
+			@Override
+			public void onSuccess(String result) {
+				setLoading(false, "");
+				
+				switch(result) {
+					case "SUCCESS":
+						go.setType(GrowlType.SUCCESS);
+						go.setPosition(GrowlPosition.TOP_CENTER);
+						Growl.growl(filename.getText() + " was successfully imported!", go);
+						break;
+					case "INVALID_PASSWORD":
+						go.setType(GrowlType.WARNING);
+						go.setPosition(GrowlPosition.TOP_CENTER);
+						Growl.growl("The provided import password was invalid. Please try again.", go);
+						break;
+					case "IO_EXCEPTION":
+						go.setType(GrowlType.WARNING);
+						go.setPosition(GrowlPosition.TOP_CENTER);
+						Growl.growl("An IO exception occurred while importing file: " + filename.getText()+ "password = " + password.getText(), go);
+						break;
+					case "UNKNOWN_ERROR":
+					default:
+						go.setType(GrowlType.WARNING);
+						go.setPosition(GrowlPosition.TOP_CENTER);
+						Growl.growl("An unknown error occured while importing file: " + filename.getText()+ "password = " + password.getText(), go);
+				}
+			}
+		});
+	}
+
+	
+		
 
 }
