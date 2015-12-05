@@ -81,8 +81,10 @@ public class MapViewImpl extends Composite implements MapView {
 	private boolean widthIsSet = false;
 	private boolean placeholderIsSet = false;
 	
+	private Panel placeholderName;
 	private Panel placeholderPieChart;
 	private Panel placeholderGenreTable;
+	private Label placeholderLabelName;
 	private Label placeholderLabelChart;
 	private Label placeholderLabelPie;
 	
@@ -92,6 +94,13 @@ public class MapViewImpl extends Composite implements MapView {
 	RangeSlider yearSlider;
 	@UiField
 	PanelBody panel;
+	@UiField
+	Panel loadingPanel;
+	@UiField
+	Panel additionalInfo;
+	@UiField
+	Panel mapPanel;
+	
 	@UiField (provided = true)
 	DataGrid<Genre> genreTable;
 
@@ -117,7 +126,7 @@ public class MapViewImpl extends Composite implements MapView {
 		yearSlider.setTooltip(TooltipType.ALWAYS);
 
 		initWidget(uiBinder.createAndBindUi(this));
-
+		setCurrentState(false);
 		buildTable();
 		
 		
@@ -151,29 +160,7 @@ public class MapViewImpl extends Composite implements MapView {
 					if(placeholderIsSet){
 						//ClientLog.writeMsg("placeholderIsSet");
 					}else{
-						placeholderPieChart= new Panel();
-						placeholderGenreTable = new Panel();
-						placeholderLabelChart= new Label();
-						placeholderLabelPie= new Label();
-						
-						placeholderGenreTable.setWidth((panelWidth*2)/10+"px");
-						placeholderGenreTable.setHeight((panelHeight*3)/10+"px");
-						
-						placeholderPieChart.setWidth((panelWidth*2)/10+"px");
-						placeholderPieChart.setHeight((panelHeight*3)/10+"px");
-						
-						placeholderGenreTable.setStyleName("placeholderGenreTable");
-						placeholderPieChart.setStyleName("placeholderPieChart");
-						placeholderLabelChart.setStyleName("placeholderLabelChart");
-						placeholderLabelPie.setStyleName("placeholderLabelPie");
-
-						placeholderLabelPie.setText("Please select a country to show more details");
-
-						placeholderPieChart.add(placeholderLabelPie);
-						
-						panel.add(placeholderGenreTable);
-						panel.add(placeholderPieChart);
-						placeholderIsSet = true;
+						constructPlaceholder();
 					}
 					
 					GeoChartColorAxis colorAxis = GeoChartColorAxis.create();
@@ -218,11 +205,44 @@ public class MapViewImpl extends Composite implements MapView {
 					}
 				});
 			}
-		});
-		
+		});		
 
 	}
 
+	public void constructPlaceholder(){
+		additionalInfo.setWidth((panelWidth*2)/10+"px");
+		additionalInfo.setHeight((panelHeight*6)/10+"px");
+		placeholderPieChart= new Panel();
+		placeholderGenreTable = new Panel();
+		placeholderName= new Panel();
+		placeholderLabelChart= new Label();
+		placeholderLabelPie= new Label();
+		
+		placeholderGenreTable.setWidth((panelWidth*2)/10+"px");
+		placeholderGenreTable.setHeight((panelHeight*2.5)/10+"px");
+		
+		placeholderPieChart.setWidth((panelWidth*2)/10+"px");
+		placeholderPieChart.setHeight((panelHeight*3)/10+"px");
+		
+		placeholderName.setWidth((panelWidth*2)/10+"px");
+		placeholderName.setHeight((panelHeight*0.5)/10+"px");
+		
+		placeholderGenreTable.setStyleName("placeholderGenreTable");
+		placeholderPieChart.setStyleName("placeholderPieChart");
+		placeholderLabelChart.setStyleName("placeholderLabelChart");
+		placeholderLabelPie.setStyleName("placeholderLabelPie");
+		placeholderName.setStyleName("placeholderName");
+
+		placeholderLabelPie.setText("Please select a country to show more details");
+
+		placeholderPieChart.add(placeholderLabelPie);
+		
+		additionalInfo.add(placeholderName);
+		additionalInfo.add(placeholderGenreTable);
+		additionalInfo.add(placeholderPieChart);
+		placeholderIsSet = true;
+	}
+	
 	@Override
 	public String getGeoChartDownloadURI()
 	{
@@ -237,6 +257,8 @@ public class MapViewImpl extends Composite implements MapView {
 		
 		//sets the label that keeps the information about the selected genre
 		genreCountryName.setText(dataTableGeoChart.getValueString(row, 0));
+		genreCountryName.setWidth((panelWidth*2)/10+"px");
+		genreCountryName.setHeight((panelHeight*1)/10+"px");
 		
 		//get the country id information at the selected row
 		return (int) dataTableGeoChart.getValueNumber(row, 2);	
@@ -258,7 +280,10 @@ public class MapViewImpl extends Composite implements MapView {
 		//TODO DB/NK Fading Genre Information?
 		if(visible)
 		{
-			genreCountryName.setVisible(true);
+			if(genreCountryName!=null)
+			{
+				genreCountryName.setVisible(true);
+			}	
 			if(genreTable!=null)
 			{
 				genreTable.setVisible(true);
@@ -270,19 +295,21 @@ public class MapViewImpl extends Composite implements MapView {
 		}
 		else
 		{
-			genreCountryName.setVisible(false);
+			
+			if(genreCountryName!=null)
+			{
+				genreCountryName.setVisible(false);
+			}
 			if(genreTable!=null)
 			{
 				genreTable.setVisible(false);
-				
-
 			}
 			if(pieChart!=null)
 			{
 				pieChart.setVisible(false);
 				placeholderPieChart.setStyleName("placeholderPieChart");
 				placeholderGenreTable.setStyleName("placeholderGenreTable");
-
+				placeholderName.setStyleName("placeholderName");
 
 			}
 		}
@@ -364,6 +391,7 @@ public class MapViewImpl extends Composite implements MapView {
 	@Override
 	public void setGenrePieChart(final List<DataTableEntity> genres) {
 		placeholderPieChart.setStyleName("placeholderHidden");
+		placeholderName.setStyleName("placeholderHidden");
 		chartLoaderPieChart.loadApi(new Runnable(){
 			@Override
 			public void run() {
@@ -372,7 +400,7 @@ public class MapViewImpl extends Composite implements MapView {
 					pieChart.setStyleName("pieChart");
 					pieChartOptions = PieChartOptions.create();
 					pieChartOptions.setWidth((panelWidth*2)/10);
-					pieChartOptions.setHeight((panelHeight*3)/10);
+					pieChartOptions.setHeight((panelHeight*2)/10);
 					//hide legend
 					pieChartOptions.setLegend(Legend.create(LegendPosition.RIGHT));
 					//all slices under 3% are grouped together under "others"
@@ -380,7 +408,7 @@ public class MapViewImpl extends Composite implements MapView {
 					//TODO NK Need to define way more piechart colors (at least max depending on threshold in line above)
 					pieChartOptions.setColors("#8598C4", "#566EA4", "#39538D", "#243E79", "#122960");
 					pieChartOptions.setTitle("Genre Chart");
-					panel.add(pieChart);
+					additionalInfo.add(pieChart);
 					
 				}
 				
@@ -463,6 +491,20 @@ public class MapViewImpl extends Composite implements MapView {
 			modal.add(modalBody);
 			modal.show();
 		}
+		
+	}
+
+	@Override
+	public void setCurrentState(boolean state) {
+		
+		if(state){
+			loadingPanel.setStyleName("loadingPanel loadingPanelShow");
+			mapPanel.setStyleName("mapPanel loadingPanelHide");
+		}else{
+			loadingPanel.setStyleName("loadingPanel loadingPanelHide");
+			mapPanel.setStyleName("mapPanel loadingPanelShow");
+		}
+
 		
 	}
 }

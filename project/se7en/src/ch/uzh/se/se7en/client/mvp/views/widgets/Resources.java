@@ -16,5 +16,8 @@ public interface Resources extends ClientBundle {
 	
 	@Source("banana.gif")
 	ImageResource adImage();
+	
+	@Source("download.gif")
+	ImageResource mapLoading();
 
 }

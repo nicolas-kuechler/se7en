@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
@@ -157,6 +158,8 @@ public class MapPresenterImpl implements MapPresenter {
 	{	
 		//whenever the geochart is updated, the genre info needs to be hidden.
 		mapView.setGenreVisible(false);
+		//whenever the geochart is updated, the map needs to be shown and the loading to be hidden.
+		
 		
 		//get country list according to currently applied filter from client side data model
 		List<Country> countries = filmDataModel.getCountryList();
@@ -182,6 +185,7 @@ public class MapPresenterImpl implements MapPresenter {
 			}
 		}
 		//set the geochart with the new list
+		
 		mapView.setGeoChart(entities);
 		
 	}
@@ -193,6 +197,7 @@ public class MapPresenterImpl implements MapPresenter {
 	@post	mapView map is updated and server response is saved in filmdatamodel
 	 */
 	public void fetchData() {
+		mapView.setCurrentState(true);
 		//update of the yearSlider in the mapView
 		mapView.setYearRange(filmDataModel.getAppliedFilter().getYearStart(), filmDataModel.getAppliedFilter().getYearEnd());
 		filmDataModel.setCountryList(new ArrayList<Country>());
@@ -216,6 +221,7 @@ public class MapPresenterImpl implements MapPresenter {
 
 				//updates the geochart in the view
 				updateGeoChart();
+				mapView.setCurrentState(false);
 			}
 		});
 	}
@@ -251,4 +257,5 @@ public class MapPresenterImpl implements MapPresenter {
 			return rank;
 		}
 	}
+	
 }

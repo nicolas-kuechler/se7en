@@ -60,6 +60,8 @@ public class MapPresenterTest {
 	List<Country> countries;
 	int[] filmsInEachYear;
 	
+	int lastNumberOfFilms =0;
+	
 	FilmFilter genreFilter;
 	List<Genre> genres;
 
@@ -264,6 +266,12 @@ public class MapPresenterTest {
 		// Two times because updateGeoChart is called 1 time in the
 		// constructor
 		verify(mapView, times(2)).setGeoChart(Matchers.eq(entities));
+	}
+	
+
+	@Test
+	public void getRank(int numberOfFilms) {
+		assertEquals(mapPresenter.getRank(20),1);
 	}
 
 }

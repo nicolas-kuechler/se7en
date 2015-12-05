@@ -24,6 +24,10 @@ img {
 	height: 100%;
 }
 
+.slider{
+
+}
+
 /** set the border around the TableView and clear the margin between the footer and the table */
 .tablePanel .table {
 	margin-bottom: 0px !important;
@@ -41,6 +45,25 @@ img {
 
 .mapPanel .mapYearSlider{
 	float:left;	
+}
+
+.genreCountryName{
+	float:right;	
+}
+
+.loadingPanel{
+	float:left;
+	width:80%;
+	margin:auto;
+	padding:10% 0% 0% 35%;
+}
+
+.loadingPanelHide{
+	display:none !important;
+}
+
+.loadingPanelShow{
+	display:block !important;
 }
 
 .mapPanel .input-group{
@@ -339,43 +362,62 @@ th {
 }
 /*############################################MAP VIEW SETTINGS####################################################*/
 
+.geoChart{
+	float:left;
+	width:60%;
+}
+.genreCountryName{
+	font-size: 16px !important;
+	font-size: 15px !important;
+	padding-top:10% !important;	
+}
+
 .genreTable{
-	float:right;
+	float:left;
 	border:1px solid #F5F5F5;
 	padding: 2%;
 }
 
 .pieChart{
-	float:right;
+	float:left;
 	border:1px solid #F5F5F5;
 }
-.geoChart{
-	float:left;
+
+.additionalInfo{
+	float:right;
 }
 
 .panelGenreTable{
-	float:right;
+	float:left;
 }
 .panelPieChart{
-	float:right;
+	float:left;
 }
 .placeholderGenreTable{
-	float:right;
+	float:left;
 	text-align:center;
-	border-top:1px solid #F5F5F5;
 	border-right:1px solid #F5F5F5;
 	border-bottom:0px solid #F5F5F5;
 	border-left:1px solid #F5F5F5;
 }
 
 .placeholderPieChart{
-	float:right;
+	float:left;
 	text-align:center;
 	border-top:0px solid #F5F5F5;
 	border-right:1px solid #F5F5F5;
 	border-bottom:1px solid #F5F5F5;
 	border-left:1px solid #F5F5F5;
 	
+}
+
+.placeholderName{
+	float:left;
+	text-align:center;
+	border-top:1px solid #F5F5F5;
+	border-right:1px solid #F5F5F5;
+	border-bottom:0px solid #F5F5F5;
+	border-left:1px solid #F5F5F5;
 }
 
 .placeholderLabelPie{

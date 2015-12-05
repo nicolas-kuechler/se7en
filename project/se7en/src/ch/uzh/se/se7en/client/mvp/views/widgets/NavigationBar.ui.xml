@@ -36,17 +36,17 @@
         			<b:ModalBody>
         					<b:InputGroup>
   								<b:InputGroupAddon icon="FILE" width="45%">Filename</b:InputGroupAddon>
-								<b:TextBox placeholder="Type here" autoComplete="false"/>
+								<b:TextBox ui:field="filename" placeholder="Type here" autoComplete="false"/>
 							</b:InputGroup>
 							<b:Label styleName="adminSpacing"></b:Label>
 							<b:InputGroup>
   								<b:InputGroupAddon icon="EYE" width="45%">Security Token</b:InputGroupAddon>
-								<b:TextBox placeholder="Type here" autoComplete="false"/>
+								<b:TextBox ui:field="password" placeholder="Type here" autoComplete="false"/>
 							</b:InputGroup>
 					</b:ModalBody>
 					<b:ModalFooter>
 				   	 	<b:Button type="PRIMARY" dataDismiss="MODAL" icon="REMOVE">Close</b:Button>
-				   	 	<b:Button type="PRIMARY" dataDismiss="MODAL" icon="UPLOAD">Upload</b:Button>
+				   	 	<b:Button type="PRIMARY" dataDismiss="MODAL" icon="UPLOAD" ui:field="startUpload">Upload</b:Button>
 				 	</b:ModalFooter>
    			 </b:Modal>
    			 

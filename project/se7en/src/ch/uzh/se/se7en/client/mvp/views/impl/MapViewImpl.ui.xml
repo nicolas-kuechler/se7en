@@ -6,16 +6,23 @@
 	xmlns:c="urn:import:org.gwtbootstrap3.client.ui.gwt"
 	xmlns:adPanel="urn:import:ch.uzh.se.se7en.client.mvp.views.widgets">
 	
+	<ui:with field='res' type='ch.uzh.se.se7en.client.mvp.views.widgets.Resources' />
+		
 	<b:Panel styleName="dataContainer">
+
 		<adPanel:AdPanel styleName="adPanelLeft"></adPanel:AdPanel>
-		<b:Panel styleName="mapPanel">
+		<b:Panel styleName="loadingPanel" ui:field="loadingPanel">
+				<g:Image resource='{res.mapLoading}' width="15%" />
+		</b:Panel>
+		<b:Panel styleName="mapPanel" ui:field="mapPanel">
 			<b:PanelHeader>
 				<b:Heading size="H3" text="Film World Map" />
 			</b:PanelHeader>
 			<b:PanelBody ui:field="panel">
-				<b:Label ui:field="genreCountryName">Country Name</b:Label>
-				<c:DataGrid ui:field='genreTable' styleName="genreTable"/>
-
+				<b:Panel ui:field="additionalInfo" styleName="additionalInfo">
+					<b:Label ui:field="genreCountryName" styleName="label label-default genreCountryName">Country Name</b:Label>
+					<c:DataGrid ui:field='genreTable' styleName="genreTable"/>
+				</b:Panel>
 			</b:PanelBody>
 			<b:PanelFooter>
 				<b:FormGroup width="65%" styleName="form-group mapYearSlider">

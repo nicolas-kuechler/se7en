@@ -112,5 +112,13 @@ public interface MapView extends IsWidget{
 	 */
 	public void startDownload(String result);
 	
+	/**
+	Hide or Show loading Info if Map is loading it's data
+	@author Dominik Bünzli
+	@pre	-
+	@post	hide or show flag is set
+	@param 	boolean state 
+	 */
+	public void setCurrentState(boolean state);
 	
 }
