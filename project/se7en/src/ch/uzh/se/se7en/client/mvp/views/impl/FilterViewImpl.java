@@ -26,6 +26,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -66,7 +67,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 	@UiField
 	MultiSelect genreSelect;
 	@UiField
-	Button openCloseFilter;
+	Button collapseFilter;
 	@UiField
 	Button shareFacebook;
 
@@ -363,6 +364,11 @@ public class FilterViewImpl extends Composite implements FilterView {
 		{
 			genreSelect.select(selectedOptions);
 		}
+	}
+
+	@Override
+	public void collapseFilter() {
+		collapseFilter.toggle();
 	}
 
 		

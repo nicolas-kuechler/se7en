@@ -192,4 +192,13 @@ public interface FilterView extends IsWidget {
 	 */
 	public void setMode(String mode);
 	
+	/**
+	Method that closes the Filter if Search is pressed
+	@author Dominik Bünzli
+	@pre	-
+	@post	Filter is collapsed
+	@param 	
+	 */
+	public void collapseFilter();
+	
 }

@@ -8,7 +8,7 @@
 			<b:Row>
 				<b:Heading size="H3" text="Filter" />
 				<b:Column size="MD_4" styleName="expandFilter">
-					<b:Button icon="UNSORTED" ui:field="openCloseFilter" dataToggle="COLLAPSE" dataTarget="#collapseOne"></b:Button>
+					<b:Button icon="UNSORTED" ui:field="collapseFilter" dataToggle="COLLAPSE" dataTarget="#collapseOne"></b:Button>
 					<b:Button ui:field ="shareFacebook" type="PRIMARY" icon="FACEBOOK"></b:Button>
 				</b:Column>
 			</b:Row>

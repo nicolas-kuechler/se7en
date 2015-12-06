@@ -5,7 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Input;
+
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -37,6 +43,8 @@ public class FilterPresenterImpl implements FilterPresenter {
 	private BrowserUtil browserUtil;
 	private UrlToken urlToken;
 	private boolean areFilterOptionsLoaded = false;
+	
+	@UiField Button collapseFilter;
 
 	@Inject
 	public FilterPresenterImpl(EventBus eventBus, final FilterView filterView, FilmDataModel filmDataModel,
@@ -63,6 +71,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 		filterView.setPresenter(this);
 	}
 
+	
 	@Override
 	public void onSearch() {
 		updateFilterFromView();
@@ -76,6 +85,7 @@ public class FilterPresenterImpl implements FilterPresenter {
 			filterToken = Tokens.TABLE + urlToken.createUrlToken(filmDataModel.getAppliedFilter(), false);
 		}
 		browserUtil.newHistoryItem(filterToken, false);
+		filterView.collapseFilter();
 	}
 
 	@Override
